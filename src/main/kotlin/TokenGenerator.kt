@@ -34,8 +34,8 @@ object TokenGenerator {
         val numberPattern = """^-?\d+(\.\d+)?$"""
         val stringPattern = """^".*"$"""
         val operatorPattern = """^[\+\-\*/]$"""
-        val punctuationPattern = """^[,;:.()]$"""
-        val declarationPattern = """\b(let|const)\b"""
+        val punctuationPattern = """^[,;.()]$"""
+        val declarationPattern = """^(let|const|:)$"""
 
         return mapOf(
             assignmentPattern to TokenType.ASSIGNMENT,

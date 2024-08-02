@@ -52,6 +52,15 @@ object TokenTypeTest {
         assertEquals(expected, actual)
     }
 
+    @Test
+    fun testTokenTypeDeclaration() {
+        val string = ":"
+        val expected = TokenType.DECLARATION
+
+        val actual = TokenGenerator.getTypeFromValue(string)
+        assertEquals(expected, actual)
+    }
+
 
 
 }
