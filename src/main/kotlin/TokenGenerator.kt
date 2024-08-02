@@ -1,18 +1,57 @@
 package org.example
 
 object TokenGenerator {
+
     fun generateToken(value: String, row : Int, symbolNumber: Int): Token {
-        return Token(getTypeFromValue(value), value, Position(row, symbolNumber))
+
+        val type = getTypeFromValue(value)
+        val position = Position(row, symbolNumber)
+
+        return Token(type, value, position)
     }
 
+
     private fun getTypeFromValue(value: String): TokenType {
-        /*
+
+        val typesMap = getTypesMap()
+        
+        for ((pattern, type) in typesMap) {
+
+            val patternInMap = Regex(pattern)
+            val hasType = value.matches(patternInMap)
+
+            if (hasType) {
+                return type
+            }
+
+        }
+        return TokenType.UNKNOWN
+    }
+
+
+    private fun getTypesMap(): Map<String, TokenType> {
+        val assignmentPattern = "="
+        val numberPattern = """^-?\d+(\.\d+)?$"""
+        val stringPattern = """^".*"$"""
+        val operatorPattern = """^[\+\-\*/]$"""
+        val punctuationPattern = """^[,;:.()]$"""
+
+        return mapOf(
+            assignmentPattern to TokenType.ASSIGNMENT,
+            numberPattern to TokenType.NUMBER,
+            stringPattern to TokenType.STRING,
+            operatorPattern to TokenType.OPERATOR,
+            punctuationPattern to TokenType.PUNCTUATION
+        )
+
+    }
+
+
+    /*
             Should return the type of the token based on the value
             Ej: "1" -> TokenType.NUMBER
                 ""hola"" -> TokenType.STRING
                 "let" -> TokenType.ASSIGNMENT
                 "+" -> TokenType.OPERATOR
          */
-        TODO("Not yet implemented")
-    }
 }
