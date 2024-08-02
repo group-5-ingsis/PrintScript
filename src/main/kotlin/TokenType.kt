@@ -6,5 +6,6 @@ enum class TokenType {
     STRING,
     OPERATOR,
     PUNCTUATION,
+    DECLARATION,
     UNKNOWN,
 }

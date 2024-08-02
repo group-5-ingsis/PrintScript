@@ -11,10 +11,10 @@ object TokenGenerator {
     }
 
 
-    private fun getTypeFromValue(value: String): TokenType {
+    fun getTypeFromValue(value: String): TokenType {
 
         val typesMap = getTypesMap()
-        
+
         for ((pattern, type) in typesMap) {
 
             val patternInMap = Regex(pattern)
@@ -35,13 +35,15 @@ object TokenGenerator {
         val stringPattern = """^".*"$"""
         val operatorPattern = """^[\+\-\*/]$"""
         val punctuationPattern = """^[,;:.()]$"""
+        val declarationPattern = """\b(let|const)\b"""
 
         return mapOf(
             assignmentPattern to TokenType.ASSIGNMENT,
             numberPattern to TokenType.NUMBER,
             stringPattern to TokenType.STRING,
             operatorPattern to TokenType.OPERATOR,
-            punctuationPattern to TokenType.PUNCTUATION
+            punctuationPattern to TokenType.PUNCTUATION,
+            declarationPattern to TokenType.DECLARATION
         )
 
     }
