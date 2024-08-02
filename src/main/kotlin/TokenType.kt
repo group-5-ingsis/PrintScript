@@ -7,5 +7,6 @@ enum class TokenType {
     OPERATOR,
     PUNCTUATION,
     DECLARATION,
+    VARIABLETYPE,
     UNKNOWN,
 }

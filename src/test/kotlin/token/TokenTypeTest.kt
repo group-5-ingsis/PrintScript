@@ -61,6 +61,24 @@ object TokenTypeTest {
         assertEquals(expected, actual)
     }
 
+    @Test
+    fun testTokenTypeNumberType() {
+        val string = "number"
+        val expected = TokenType.VARIABLETYPE
+
+        val actual = TokenGenerator.getTypeFromValue(string)
+        assertEquals(expected, actual)
+    }
+
+    @Test
+    fun testTokenTypeStringType() {
+        val string = "string"
+        val expected = TokenType.VARIABLETYPE
+
+        val actual = TokenGenerator.getTypeFromValue(string)
+        assertEquals(expected, actual)
+    }
+
 
 
 }
