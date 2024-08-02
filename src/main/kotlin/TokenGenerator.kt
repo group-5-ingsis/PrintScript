@@ -6,6 +6,13 @@ object TokenGenerator {
     }
 
     private fun getTypeFromValue(value: String): TokenType {
+        /*
+            Should return the type of the token based on the value
+            Ej: "1" -> TokenType.NUMBER
+                ""hola"" -> TokenType.STRING
+                "let" -> TokenType.ASSIGNMENT
+                "+" -> TokenType.OPERATOR
+         */
         TODO("Not yet implemented")
     }
 }

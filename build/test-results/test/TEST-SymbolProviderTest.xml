@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="SymbolProviderTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2024-08-02T20:19:51" hostname="Mateos-MacBook-Pro.local" time="0.022">
+  <properties/>
+  <testcase name="testGetKeywordsWithOnlySymbols()" classname="SymbolProviderTest" time="0.018"/>
+  <testcase name="testGetKeywordsWithEmptyString()" classname="SymbolProviderTest" time="0.001"/>
+  <testcase name="testGetKeywordsWithSimpleString()" classname="SymbolProviderTest" time="0.001"/>
+  <testcase name="testGetKeywordsWithMultiLineString()" classname="SymbolProviderTest" time="0.0"/>
+  <testcase name="testGetKeywordsWithQuotedText()" classname="SymbolProviderTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
