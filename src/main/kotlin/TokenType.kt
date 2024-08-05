@@ -8,5 +8,6 @@ enum class TokenType {
     PUNCTUATION,
     DECLARATION,
     VARIABLETYPE,
+    VARIABLENAME,
     UNKNOWN,
 }

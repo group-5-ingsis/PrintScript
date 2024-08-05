@@ -1,0 +1,3 @@
+OPERATOR : \+, \-, \*, /
+DECLARATION : let, const
+VARIABLETYPE : string, number

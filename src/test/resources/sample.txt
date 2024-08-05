@@ -1,2 +1,1 @@
-let a : String = "Hello, playground";
-let b: String = /"Goodbye, playgrou/nd"//;
+let arbol : string = "Hello, playground" + "other";
