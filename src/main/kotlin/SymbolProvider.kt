@@ -12,7 +12,7 @@ object SymbolProvider {
         val adjustedInput: List<String> = input.split("\n")
 
         // Regular expression to match quoted text with quotes, words, and semicolons
-        val regex = Regex("\'[^\']*\"\'|\"[^\"]*\"|[\\w]+|[;\\-+*/=:]")
+        val regex = Regex("\'[^\']*\"\'|\"[^\"]*\"|[\\w]+|[;\\-+*/=:(){},.]")
 
         // List to store matches
         val matches: MutableList<List<String>> = mutableListOf()
