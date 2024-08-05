@@ -1,4 +1,3 @@
-import org.example.Lexer
 import org.junit.jupiter.api.Test
 
 class LexerTest {

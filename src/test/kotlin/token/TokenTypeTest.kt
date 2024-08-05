@@ -1,7 +1,5 @@
 package token
 
-import org.example.TokenGenerator
-import org.example.TokenType
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 

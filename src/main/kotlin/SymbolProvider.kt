@@ -1,5 +1,3 @@
-package org.example
-
 object SymbolProvider {
     fun getKeywordMatrix(input: String): List<List<String>> {
         // Calls a new method to hide implementation details
@@ -24,7 +22,7 @@ object SymbolProvider {
             matches.add(regex.findAll(i).map { it.value }.toList())
         }
 
-        return matches;
+        return matches
     }
     /*
     EXPLANATION:

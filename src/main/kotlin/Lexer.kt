@@ -1,7 +1,6 @@
-package org.example
-
-import org.example.SymbolProvider.getKeywordMatrix
-import org.example.TokenGenerator.generateToken
+import SymbolProvider.getKeywordMatrix
+import token.TokenGenerator.generateToken
+import token.Token
 
 object Lexer {
 

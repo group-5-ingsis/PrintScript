@@ -1,4 +1,6 @@
-package org.example
+package token
+
+import Position
 
 data class Token(
     val type: TokenType,

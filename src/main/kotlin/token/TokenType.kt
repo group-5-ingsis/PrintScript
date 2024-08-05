@@ -1,4 +1,4 @@
-package org.example
+package token
 
 enum class TokenType {
     ASSIGNMENT,

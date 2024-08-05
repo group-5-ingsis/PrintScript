@@ -1,5 +1,6 @@
-package org.example
+package token
 
+import Position
 import java.io.File
 
 object TokenGenerator {
@@ -7,7 +8,7 @@ object TokenGenerator {
     fun generateToken(value: String, row : Int, symbolNumber: Int): Token {
 
         val type = getTypeFromValue(value)
-        val position = Position(row+1, symbolNumber+1)
+        val position = Position(row + 1, symbolNumber + 1)
 
         return Token(type, value, position)
     }
@@ -38,7 +39,7 @@ object TokenGenerator {
         val punctuationPattern = """^[,;.(){}:]$"""
         val variableNamePatter = """^[a-zA-Z_][a-zA-Z0-9_]*$"""
 
-        val variablePattensMap = getVariablePatternsMap();
+        val variablePattensMap = getVariablePatternsMap()
 
         val operatorPattern = createPattern(variablePattensMap["OPERATOR"])
         val variableTypePattern = createPattern(variablePattensMap["VARIABLETYPE"])
@@ -61,7 +62,7 @@ object TokenGenerator {
         var pattern = "^("
         if (symbols != null) {
             for (symbol in symbols) {
-                pattern += symbol + "|"
+                pattern += "$symbol|"
             }
         }
         pattern = pattern.dropLast(1)
@@ -71,7 +72,7 @@ object TokenGenerator {
 
     private fun getVariablePatternsMap(): Map<String, List<String>> {
         // Define the path to the text file
-        val filePath = "/Users/mateopiccinini/Desktop/devel/projects/PrintScript/src/main/resources/token_types.txt"
+        val filePath = "src/main/resources/token_types.txt"
 
         // Create a map to store the key-value pairs
         val map = mutableMapOf<String, List<String>>()
@@ -86,18 +87,10 @@ object TokenGenerator {
             val values = parts[1].trim().split(",")
 
             // Add the key-value pair to the map
-            map[key] = values;
+            map[key] = values
         }
 
         return map
     }
 
-
-    /*
-            Should return the type of the token based on the value
-            Ej: "1" -> TokenType.NUMBER
-                ""hola"" -> TokenType.STRING
-                "let" -> TokenType.ASSIGNMENT
-                "+" -> TokenType.OPERATOR
-         */
 }
