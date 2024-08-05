@@ -8,7 +8,7 @@ object TokenTypeTest {
     @Test
     fun testTokenTypeLet() {
         val string = "let"
-        val expected = TokenType.DECLARATION
+        val expected = TokenType.KEYWORD
 
         val actual = TokenGenerator.getTypeFromValue(string)
         assertEquals(expected, actual)
@@ -17,7 +17,7 @@ object TokenTypeTest {
     @Test
     fun testTokenTypeConst() {
         val string = "const"
-        val expected = TokenType.DECLARATION
+        val expected = TokenType.KEYWORD
 
         val actual = TokenGenerator.getTypeFromValue(string)
         assertEquals(expected, actual)
@@ -62,7 +62,7 @@ object TokenTypeTest {
     @Test
     fun testTokenTypeDeclaration() {
         val string = ":"
-        val expected = TokenType.DECLARATION
+        val expected = TokenType.PUNCTUATION
 
         val actual = TokenGenerator.getTypeFromValue(string)
         assertEquals(expected, actual)
@@ -85,8 +85,5 @@ object TokenTypeTest {
         val actual = TokenGenerator.getTypeFromValue(string)
         assertEquals(expected, actual)
     }
-
-
-
 }
 

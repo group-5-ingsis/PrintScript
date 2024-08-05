@@ -36,14 +36,14 @@ object TokenGenerator {
         val assignmentPattern = "="
         val numberPattern = """^-?\d+(\.\d+)?$"""
         val stringPattern = """^".*"$"""
-        val punctuationPattern = """^[,;.(){}]$"""
+        val punctuationPattern = """^[,;.(){}:]$"""
         val variableNamePatter = """^[a-zA-Z_][a-zA-Z0-9_]*$"""
 
         val variablePattensMap = getVariablePatternsMap()
 
         val operatorPattern = createPattern(variablePattensMap["OPERATOR"])
         val variableTypePattern = createPattern(variablePattensMap["VARIABLETYPE"])
-        val declarationPattern = createPattern(variablePattensMap["DECLARATION"])
+        val keywordPattern = createPattern(variablePattensMap["KEYWORD"])
 
         return mapOf(
             assignmentPattern to TokenType.ASSIGNMENT,
@@ -51,7 +51,7 @@ object TokenGenerator {
             stringPattern to TokenType.STRING,
             operatorPattern to TokenType.OPERATOR,
             punctuationPattern to TokenType.PUNCTUATION,
-            declarationPattern to TokenType.DECLARATION,
+            keywordPattern to TokenType.KEYWORD,
             variableTypePattern to TokenType.VARIABLETYPE,
             variableNamePatter to TokenType.VARIABLENAME
         )
@@ -71,22 +71,16 @@ object TokenGenerator {
     }
 
     private fun getVariablePatternsMap(): Map<String, List<String>> {
-        // Define the path to the text file
         val filePath = "src/main/resources/token_types.txt"
 
-        // Create a map to store the key-value pairs
         val map = mutableMapOf<String, List<String>>()
 
-        // Read the file line by line
         File(filePath).forEachLine { line ->
-            // Split each line into key and value using the delimiter ":"
             val parts = line.split("::")
 
-            // Ensure the line has exactly two parts: key and value
-            val key = parts[0].trim() // Convert key to Int
+            val key = parts[0].trim()
             val values = parts[1].trim().split(",")
 
-            // Add the key-value pair to the map
             map[key] = values
         }
 

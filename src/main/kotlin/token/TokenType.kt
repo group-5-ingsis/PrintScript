@@ -6,7 +6,7 @@ enum class TokenType {
     STRING,
     OPERATOR,
     PUNCTUATION,
-    DECLARATION,
+    KEYWORD,
     VARIABLETYPE,
     VARIABLENAME,
     UNKNOWN,
