@@ -36,7 +36,7 @@ object TokenGenerator {
         val assignmentPattern = "="
         val numberPattern = """^-?\d+(\.\d+)?$"""
         val stringPattern = """^".*"$"""
-        val punctuationPattern = """^[,;.(){}:]$"""
+        val punctuationPattern = """^[,;.(){}]$"""
         val variableNamePatter = """^[a-zA-Z_][a-zA-Z0-9_]*$"""
 
         val variablePattensMap = getVariablePatternsMap()
@@ -80,7 +80,7 @@ object TokenGenerator {
         // Read the file line by line
         File(filePath).forEachLine { line ->
             // Split each line into key and value using the delimiter ":"
-            val parts = line.split(":")
+            val parts = line.split("::")
 
             // Ensure the line has exactly two parts: key and value
             val key = parts[0].trim() // Convert key to Int

@@ -15,6 +15,15 @@ object TokenTypeTest {
     }
 
     @Test
+    fun testTokenTypeConst() {
+        val string = "const"
+        val expected = TokenType.DECLARATION
+
+        val actual = TokenGenerator.getTypeFromValue(string)
+        assertEquals(expected, actual)
+    }
+
+    @Test
     fun testTokenTypeString() {
         val string = "\"car\""
         val expected = TokenType.STRING
