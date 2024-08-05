@@ -1,15 +1,22 @@
 package parser.composite
 
-class CompositeNode : Node {
+import Position
+import token.TokenType
+
+class CompositeNode(private val type: TokenType, private val location: Position) : Node {
+    private val children = mutableListOf<Node>()
+
     override fun addChild(node: Node) {
-        TODO("Not yet implemented")
+        children.add(node)
     }
 
     override fun removeChild(node: Node) {
-        TODO("Not yet implemented")
+        children.remove(node)
     }
 
-    override fun solve(): Void {
-        TODO("Not yet implemented")
+    override fun solve() {
+        for (child: Node in children) {
+            child.solve()
+        }
     }
 }
