@@ -11,13 +11,24 @@ object Lexer {
     }
 
     private fun getTokenList(keywords: String): List<Token> {
+
         val keywordMatrix : List<List<String>> = getKeywordMatrix(keywords)
 
         val tokens: MutableList<Token> = mutableListOf()
-        for (i in keywordMatrix.indices) {
-            for (j in keywordMatrix[i].indices) {
-                val keyword = keywordMatrix[i][j]
-                tokens.add(generateToken(keyword, i, j))
+
+        val lines = keywordMatrix.indices
+
+        for (line in lines) {
+
+            val words = keywordMatrix[line].indices
+
+            for (wordPosition in words) {
+
+                val keyword = keywordMatrix[line][wordPosition]
+
+                val token = generateToken(keyword, line, wordPosition)
+
+                tokens.add(token)
             }
         }
 
