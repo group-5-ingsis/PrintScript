@@ -4,7 +4,7 @@ import Position
 
 object TokenGenerator {
 
-    fun generateToken(value: String, row : Int, symbolNumber: Int): Token {
+    fun generateToken(value: String, row: Int, symbolNumber: Int): Token {
 
         val type = getTypeFromValue(value)
         val position = Position(row + 1, symbolNumber + 1)
@@ -26,8 +26,17 @@ object TokenGenerator {
                 return type
             }
 
+
+
         }
-        return TokenType.VARIABLENAME
+
+        val isValidVariableName = TypesMapGenerator.isValidVariableName(value)
+        if (isValidVariableName) {
+            return TokenType.VARIABLENAME
+        }
+
+        return TokenType.UNKNOWN
+
     }
 
 }

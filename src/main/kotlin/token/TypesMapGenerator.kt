@@ -58,5 +58,10 @@ object TypesMapGenerator {
         return "^(${symbols.joinToString("|")})$"
     }
 
+    fun isValidVariableName(value: String): Boolean {
+        val variableNamePattern = "^[a-zA-Z_][a-zA-Z0-9_]*$"
+        return value.matches(Regex(variableNamePattern))
+    }
+
 
 }
