@@ -1,0 +1,90 @@
+@startuml
+
+package "java.io" {
+}
+
+package "token" {
+    enum TokenType {
+        ASSIGNMENT
+        NUMBER
+        STRING
+        OPERATOR
+        PUNCTUATION
+        KEYWORD
+        VARIABLETYPE
+        VARIABLENAME
+        UNKNOWN
+    }
+    class Token {
+        -type: TokenType
+        -value: String
+        -position: Position
+    }
+}
+
+package "parser" {
+    class SyntacticParser {
+        +run(tokens: List<Token>): Node
+    }
+    class SemanticParser {
+        +run(ast: Node): Node
+        @throws SemanticErrorException
+    }
+    class Parser {
+        -syntacticParser: SyntacticParser
+        -semanticParser: SemanticParser
+        +run(tokens: List<Token>): Node
+        @throws SemanticErrorException
+    }
+}
+
+package "parser.composite" {
+    interface Node {
+        +addChild(node: Node)
+        +removeChild(node: Node)
+        +solve()
+    }
+    class CompositeNode {
+        -type: TokenType
+        -location: Position
+        -children: MutableList<Node>
+        +addChild(node: Node)
+        +removeChild(node: Node)
+        +solve()
+    }
+    class Leaf {
+        -type: TokenType
+        -location: Position
+        +addChild(node: Node)
+        +removeChild(node: Node)
+        +solve()
+    }
+}
+
+class SemanticErrorException {
+    -message: String
+}
+
+class Position {
+    -line: Int
+    -symbolNumber: Int
+}
+
+class SymbolProvider {
+    +getKeywordMatrix(input: String): List<List<String>>
+    +getSymbolsFor(input: String): List<List<String>>
+}
+
+class TokenGenerator {
+    +generateToken(value: String, row: Int, symbolNumber: Int): Token
+    +getTypeFromValue(value: String): TokenType
+    +getTypesMap(): Map<String, TokenType>
+    +createPattern(symbols: List<String>?): String
+    +getVariablePatternsMap(): Map<String, List<String>>
+}
+
+class TxtConverter {
+    +readFileAsString(filePath: String): String
+}
+
+@enduml
