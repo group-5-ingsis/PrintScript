@@ -6,57 +6,57 @@ object TypesMapGenerator {
 
     fun getTypesMap(): Map<String, TokenType> {
 
-        val assignmentPattern = "="
-        val numberPattern = """^-?\d+(\.\d+)?$"""
-        val stringPattern = """^".*"$"""
-        val punctuationPattern = """^[,;.(){}:]$"""
-        val variableNamePatter = """^[a-zA-Z_][a-zA-Z0-9_]*$"""
-
+        val defaultPatternsMap = getDefaultPatternsMap()
         val variablePattensMap = getVariablePatternsMap()
 
-        val operatorPattern = createPattern(variablePattensMap["OPERATOR"])
-        val variableTypePattern = createPattern(variablePattensMap["VARIABLETYPE"])
-        val keywordPattern = createPattern(variablePattensMap["KEYWORD"])
+        return defaultPatternsMap + variablePattensMap
+    }
 
+    private fun getDefaultPatternsMap(): Map<String, TokenType> {
         return mapOf(
-            assignmentPattern to TokenType.ASSIGNMENT,
-            numberPattern to TokenType.NUMBER,
-            stringPattern to TokenType.STRING,
-            operatorPattern to TokenType.OPERATOR,
-            punctuationPattern to TokenType.PUNCTUATION,
-            keywordPattern to TokenType.KEYWORD,
-            variableTypePattern to TokenType.VARIABLETYPE,
-            variableNamePatter to TokenType.VARIABLENAME
-        )
-
+            "=" to TokenType.ASSIGNMENT,
+            """^-?\d+(\.\d+)?$""" to TokenType.NUMBER,
+            """^".*"$""" to TokenType.STRING,
+            """^[,;.(){}:]$""" to TokenType.PUNCTUATION)
     }
 
-    private fun createPattern(symbols: List<String>?): String {
-        var pattern = "^("
-        if (symbols != null) {
-            for (symbol in symbols) {
-                pattern += "$symbol|"
-            }
-        }
-        pattern = pattern.dropLast(1)
-        pattern += ")$"
-        return pattern
-    }
+    private fun getVariablePatternsMap(): Map<String, TokenType> {
 
-    private fun getVariablePatternsMap(): Map<String, List<String>> {
         val filePath = "src/main/resources/token_types.txt"
 
-        val map = mutableMapOf<String, List<String>>()
+        val tokenTypeMapping = mapOf(
+            "OPERATOR" to TokenType.OPERATOR,
+            "VARIABLETYPE" to TokenType.VARIABLETYPE,
+            "KEYWORD" to TokenType.KEYWORD
+        )
+
+        val map = mutableMapOf<String, TokenType>()
 
         File(filePath).forEachLine { line ->
+
             val parts = line.split("::")
+            if (parts.size == 2) {
 
-            val key = parts[0].trim()
-            val values = parts[1].trim().split(",")
+                val key = parts[0].trim()
+                val values = parts[1].trim().split(",").map { it.trim() }
 
-            map[key] = values
+                val pattern = createPattern(values)
+
+                val tokenType = tokenTypeMapping[key]
+
+                if (tokenType != null && pattern.isNotEmpty()) {
+                    map[pattern] = tokenType
+                }
+            }
         }
-
         return map
     }
+
+
+    private fun createPattern(symbols: List<String>): String {
+        if (symbols.isEmpty()) return ""
+        return "^(${symbols.joinToString("|")})$"
+    }
+
+
 }

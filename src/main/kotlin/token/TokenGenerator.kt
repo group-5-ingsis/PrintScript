@@ -27,7 +27,7 @@ object TokenGenerator {
             }
 
         }
-        return TokenType.UNKNOWN
+        return TokenType.VARIABLENAME
     }
 
 }
