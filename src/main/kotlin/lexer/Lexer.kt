@@ -1,10 +1,12 @@
+package lexer
+
 import SymbolProvider.getKeywordMatrix
 import token.TokenGenerator.generateToken
 import token.Token
 
 object Lexer {
 
-    fun lex(input: String): List<Token> {
+    fun lex(input: String, parameters: List<String>): List<Token> {
         return getTokenList(input)
     }
 
