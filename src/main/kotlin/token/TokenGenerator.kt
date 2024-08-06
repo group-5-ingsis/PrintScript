@@ -26,10 +26,10 @@ object TokenGenerator {
                 return type
             }
 
-
-
         }
 
+
+        // cambiar de lugar -> Interpreter o StaticCodeAnalyzer
         val isValidVariableName = TypesMapGenerator.isValidVariableName(value)
         if (isValidVariableName) {
             return TokenType.VARIABLENAME
