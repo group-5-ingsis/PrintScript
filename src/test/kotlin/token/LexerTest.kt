@@ -7,7 +7,8 @@ class LexerTest {
     fun printLexResult() {
         val filePath = "src/test/resources/sample.txt"
         val input = TxtConverter.readFileAsString(filePath)
-        val result = Lexer.lex(input)
+        val result = Lexer.lex(input, listOf())
         println(result)
     }
+
 }
