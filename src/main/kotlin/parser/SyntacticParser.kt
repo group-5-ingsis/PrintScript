@@ -1,29 +1,46 @@
 package parser
 
-import Position
-import parser.composite.Leaf
 import parser.composite.Node
 import token.Token
 
-/* Singleton? TODO check */
 class SyntacticParser {
 
   /* Client method for calls to the syntactic parser. */
-  fun run(tokens: List<Token>): Node {
-    return buildAST(tokens)
+  fun run(tokens: List<Token>): List<Node> {
+    return parse(tokens)
   }
 
   /* Returns the reference to the root node. */
-  private fun buildAST(tokens: List<Token>): Node {
+  /* let a: string -> Declaration
+  * let a : String = "a" -> AssignDeclare
+  * class ASTBuilder.build(type). */
+  private fun parse(tokens: List<Token>): List<Node> {
     val tokenSublists : List<List<Token>> = getTokenSublists(tokens)
-    TODO()
+    val statementList: List<Statement> = buildStatementList(tokenSublists)
+    return buildAST(tokenSublists)
+  }
+
+  private fun buildStatementList(tokenSublists: List<List<Token>>): List<Statement> {
+    val statementList = mutableListOf<Statement>()
+    for (tokenSublist in tokenSublists) {
+      statementList.add(Statement(tokenSublist))
+    }
+    return statementList
+  }
+
+  private fun buildAST(tokenSublists: List<List<Token>>): List<Node> {
+    TODO("Not yet implemented")
   }
 
   private fun getTokenSublists(tokens: List<Token>): List<List<Token>> {
     val tokenSublists = mutableListOf<List<Token>>()
+    var j = 0
     for ((index, token) in tokens.withIndex()) {
-
+      if (token.type == "punctuation" && token.value == ";") {
+        tokenSublists.add(tokens.subList(j, index))
+        j += index + 1
+      }
     }
-    TODO()
+    return tokenSublists
   }
 }

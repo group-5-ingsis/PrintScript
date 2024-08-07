@@ -6,7 +6,7 @@ import token.Token
 
 object Lexer {
 
-    fun lex(input: String): List<Token> {
+    fun lex(input: String, paramsList: List<String>): List<Token> {
         return getTokenList(input)
     }
 
