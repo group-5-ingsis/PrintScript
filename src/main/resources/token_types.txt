@@ -1,4 +1,4 @@
 OPERATOR :: \+, \-, \*, /
-KEYWORD :: let,const
+ASSIGNATION_KEYWORD :: let
 VARIABLE_TYPE :: String,Number
-CONDITIONAL :: if,else
+PREDEF_METHODS :: println
