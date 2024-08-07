@@ -1,9 +1,8 @@
 package parser.composite
 
 import Position
-import token.TokenType
 
-class CompositeNode(private val type: TokenType, private val value: String, private val location: Position) : Node {
+class CompositeNode(private val type: String, private val value: String, private val location: Position) : Node {
   private val children = mutableListOf<Node>()
 
   override fun addChild(node: Node) {

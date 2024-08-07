@@ -3,7 +3,7 @@ package token
 import Position
 
 data class Token(
-    val type: TokenType,
+    val type: String,
     val value: String,
     val position: Position
 )

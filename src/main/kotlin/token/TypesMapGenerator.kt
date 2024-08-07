@@ -4,7 +4,7 @@ import java.io.File
 
 object TypesMapGenerator {
 
-    fun getTypesMap(): Map<String, TokenType> {
+    fun getTypesMap(): Map<String, String> {
 
         val defaultPatternsMap = getDefaultPatternsMap()
         val variablePattensMap = getVariablePatternsMap()
@@ -12,25 +12,19 @@ object TypesMapGenerator {
         return defaultPatternsMap + variablePattensMap
     }
 
-    private fun getDefaultPatternsMap(): Map<String, TokenType> {
+    private fun getDefaultPatternsMap(): Map<String, String> {
         return mapOf(
-            "=" to TokenType.ASSIGNMENT,
-            """^-?\d+(\.\d+)?$""" to TokenType.NUMBER,
-            """^".*"$""" to TokenType.STRING,
-            """^[,;.(){}:]$""" to TokenType.PUNCTUATION)
+            "=" to "ASSIGNMENT",
+            """^-?\d+(\.\d+)?$""" to "NUMBER",
+            """^".*"$""" to "STRING",
+            """^[,;.(){}:]$""" to "PUNCTUATION")
     }
 
-    private fun getVariablePatternsMap(): Map<String, TokenType> {
+    private fun getVariablePatternsMap(): Map<String, String> {
 
         val filePath = "src/main/resources/token_types.txt"
 
-        val tokenTypeMapping = mapOf(
-            "OPERATOR" to TokenType.OPERATOR,
-            "VARIABLETYPE" to TokenType.VARIABLETYPE,
-            "KEYWORD" to TokenType.KEYWORD
-        )
-
-        val map = mutableMapOf<String, TokenType>()
+        val map = mutableMapOf<String, String>()
 
         File(filePath).forEachLine { line ->
 
@@ -42,10 +36,8 @@ object TypesMapGenerator {
 
                 val pattern = createPattern(values)
 
-                val tokenType = tokenTypeMapping[key]
-
-                if (tokenType != null && pattern.isNotEmpty()) {
-                    map[pattern] = tokenType
+                if (key != "" && pattern.isNotEmpty()) {
+                    map[pattern] = key
                 }
             }
         }

@@ -8,7 +8,7 @@ object SymbolProvider {
 
         val adjustedInput: List<String> = input.split("\n")
 
-        val regex = Regex("\'[^\']*\"\'|\"[^\"]*\"|[\\w]+|[;\\-+*/=:(){},.]")
+        val regex = Regex("'[^']*\"'|\"[^\"]*\"|\\d+(\\.\\d+)?|\\w+|[;\\-+*/=:(){},]")
 
         val matches: MutableList<List<String>> = mutableListOf()
 

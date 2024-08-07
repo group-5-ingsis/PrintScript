@@ -1,11 +1,9 @@
 package parser
 
 import Position
-import parser.composite.CompositeNode
 import parser.composite.Leaf
 import parser.composite.Node
 import token.Token
-import token.TokenType
 
 /* Singleton? TODO check */
 class SyntacticParser {
@@ -17,6 +15,15 @@ class SyntacticParser {
 
   /* Returns the reference to the root node. */
   private fun buildAST(tokens: List<Token>): Node {
-    return Leaf(TokenType.UNKNOWN, "", Position(-1, -1))
+    val tokenSublists : List<List<Token>> = getTokenSublists(tokens)
+    TODO()
+  }
+
+  private fun getTokenSublists(tokens: List<Token>): List<List<Token>> {
+    val tokenSublists = mutableListOf<List<Token>>()
+    for ((index, token) in tokens.withIndex()) {
+
+    }
+    TODO()
   }
 }

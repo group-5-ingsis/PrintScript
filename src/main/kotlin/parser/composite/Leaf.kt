@@ -1,10 +1,9 @@
 package parser.composite
 
 import Position
-import token.TokenType
 import kotlin.jvm.Throws
 
-class Leaf(private val type: TokenType, private val value: String, private val location: Position): Node {
+class Leaf(private val type: String, private val value: String, private val location: Position): Node {
 
   override fun addChild(node: Node) {
     throw IllegalArgumentException("Illegal operation for leaf node")

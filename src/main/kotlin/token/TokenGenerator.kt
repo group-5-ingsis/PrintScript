@@ -13,7 +13,7 @@ object TokenGenerator {
     }
 
 
-    fun getTypeFromValue(value: String): TokenType {
+    fun getTypeFromValue(value: String): String {
 
         val typesMap = TypesMapGenerator.getTypesMap()
 
@@ -32,10 +32,10 @@ object TokenGenerator {
         // cambiar de lugar -> Interpreter o StaticCodeAnalyzer
         val isValidVariableName = TypesMapGenerator.isValidVariableName(value)
         if (isValidVariableName) {
-            return TokenType.VARIABLENAME
+            return "VARIABLE_NAME"
         }
 
-        return TokenType.UNKNOWN
+        return "UNKNOWN "
 
     }
 
