@@ -1,9 +1,12 @@
 package parser
 
 import parser.composite.Node
+import parser.statement.Statement
+import parser.statement.UnknownStatement
 import token.Token
 
 class SyntacticParser {
+
   private val categorizer: StatementCategorizer = StatementCategorizer()
 
   /* Client method for calls to the syntactic parser. */
@@ -11,17 +14,23 @@ class SyntacticParser {
     return parse(tokens)
   }
 
-  /* Returns the reference to the root node. */
   private fun parse(tokens: List<Token>): List<Node> {
-    val tokenSublists : List<List<Token>> = getTokenSublists(tokens)
-    val statementList: List<Statement> = buildStatementList(tokenSublists)
-    return buildAST(categorizer.categorize(statementList))
+
+    val tokenSublist : List<List<Token>> = getTokenSublists(tokens)
+    val statementList: List<Statement> = buildStatementList(tokenSublist)
+    val categorizedStatements = categorizer.categorize(statementList)
+
+    return buildAST(categorizedStatements)
   }
 
   private fun buildStatementList(tokenSublists: List<List<Token>>): List<Statement> {
+
     val statementList = mutableListOf<Statement>()
     for (tokenSublist in tokenSublists) {
-      statementList.add(Statement(tokenSublist))
+
+      val statement = Statement(tokenSublist, UnknownStatement())
+      statementList.add(statement)
+
     }
     return statementList
   }
