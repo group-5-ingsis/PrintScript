@@ -7,6 +7,8 @@ class AssignationDeclarationStatement: StatementType {
 
         val content = statement.content
 
+        if (content.size < 6) return false
+
         val firstToken = content[0]
         val secondToken = content[1]
         val thirdToken = content[2]

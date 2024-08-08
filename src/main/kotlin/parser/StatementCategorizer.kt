@@ -1,6 +1,7 @@
 package parser
 
 import parser.statement.AssignationDeclarationStatement
+import parser.statement.AssignationStatement
 import parser.statement.Statement
 import parser.statement.StatementType
 
@@ -26,6 +27,7 @@ class StatementCategorizer {
   private fun getAllowedStatements(): List<StatementType> {
     val statements: MutableList<StatementType> = mutableListOf()
     statements.add(AssignationDeclarationStatement())
+    statements.add(AssignationStatement())
     return statements
   }
 
