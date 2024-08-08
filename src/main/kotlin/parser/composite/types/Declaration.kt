@@ -1,24 +1,21 @@
 package parser.composite.types
 
+import parser.NodeResult
 import parser.composite.Node
 
-class Declaration(private val type: String, private val identifier: String) : Node {
-  private val children: MutableList<Node> = mutableListOf()
+class Declaration(private val left: Node, private val right: Node) : Node {
+  override fun solve() : NodeResult{
+    val identifier = left.solve()
+    val type = right.solve()
 
-  override fun addChild(node: Node) {
-    children.add(node)
-  }
+    if (identifier.type != ResultType.IDENTIFIER) {
+      throw Exception("Expected an identifier, got ${identifier.type}")
+    }
+    if (type.type != ResultType.DATA_TYPE) {
+      throw Exception("Expected a type, got ${type.type}")
+    }
 
-  override fun removeChild(node: Node) {
-    children.remove(node)
-  }
-
-  override fun solve() {
-
-    /* Consigna:
-          Para hacer más cómoda la experiencia del usuario del CLI, mientras se realiza el proceso de
-          “parsing” del archivo se debe ir mostrando en pantalla el progreso.
-    */
     println("Declared variable '${identifier}' as type $type")
+    return NodeResult(ResultType.DECLARATION, identifier.primaryValue, type.primaryValue)
   }
 }

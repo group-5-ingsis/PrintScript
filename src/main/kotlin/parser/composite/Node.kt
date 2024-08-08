@@ -1,7 +1,8 @@
 package parser.composite
 
+import parser.NodeResult
+import parser.composite.types.ResultType
+
 interface Node {
-  fun addChild(node: Node)
-  fun removeChild(node: Node)
-  fun solve()
+  fun solve() : NodeResult
 }

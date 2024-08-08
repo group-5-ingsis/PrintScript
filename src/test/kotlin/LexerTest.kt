@@ -14,7 +14,7 @@ class LexerTest {
       Token("=", "ASSIGNMENT", Position(1, 3)),
       Token("10", "NUMBER", Position(1, 4))
     )
-    val actual = Lexer.lex(input)
+    val actual = Lexer.lex(input, listOf())
     assertEquals(expected, actual)
   }
 
@@ -27,7 +27,7 @@ class LexerTest {
       Token("=", "ASSIGNMENT", Position(1, 3)),
       Token("\"hello\"", "STRING", Position(1, 4))
     )
-    val actual = Lexer.lex(input)
+    val actual = Lexer.lex(input, listOf())
     assertEquals(expected, actual)
   }
 
@@ -41,7 +41,7 @@ class LexerTest {
       Token("-", "OPERATOR", Position(1, 4)),
       Token("z", "IDENTIFIER", Position(1, 5))
     )
-    val actual = Lexer.lex(input)
+    val actual = Lexer.lex(input, listOf())
     assertEquals(expected, actual)
   }
 
@@ -58,7 +58,7 @@ class LexerTest {
       Token("=", "ASSIGNMENT", Position(2, 3)),
       Token("20", "NUMBER", Position(2, 4))
     )
-    val actual = Lexer.lex(input)
+    val actual = Lexer.lex(input, listOf())
     assertEquals(expected, actual)
   }
 }
