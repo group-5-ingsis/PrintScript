@@ -9,7 +9,7 @@ object TokenGenerator {
         val type = getTypeFromValue(value)
         val position = Position(row + 1, symbolIndex + 1)
 
-        return Token(type, value, position)
+        return Token(value, type, position)
     }
 
 
@@ -32,10 +32,10 @@ object TokenGenerator {
         // cambiar de lugar -> Interpreter o StaticCodeAnalyzer
         val isValidVariableName = TypesMapGenerator.isValidVariableName(value)
         if (isValidVariableName) {
-            return "VARIABLE_NAME"
+            return "IDENTIFIER"
         }
 
-        return "UNKNOWN "
+        return "UNKNOWN"
 
     }
 
