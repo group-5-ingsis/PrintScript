@@ -4,6 +4,7 @@ import parser.composite.Node
 import token.Token
 
 class SyntacticParser {
+  private val categorizer: StatementCategorizer = StatementCategorizer()
 
   /* Client method for calls to the syntactic parser. */
   fun run(tokens: List<Token>): List<Node> {
@@ -11,13 +12,10 @@ class SyntacticParser {
   }
 
   /* Returns the reference to the root node. */
-  /* let a: string -> Declaration
-  * let a : String = "a" -> AssignDeclare
-  * class ASTBuilder.build(type). */
   private fun parse(tokens: List<Token>): List<Node> {
     val tokenSublists : List<List<Token>> = getTokenSublists(tokens)
     val statementList: List<Statement> = buildStatementList(tokenSublists)
-    return buildAST(tokenSublists)
+    return buildAST(categorizer.categorize(statementList))
   }
 
   private fun buildStatementList(tokenSublists: List<List<Token>>): List<Statement> {
@@ -28,7 +26,7 @@ class SyntacticParser {
     return statementList
   }
 
-  private fun buildAST(tokenSublists: List<List<Token>>): List<Node> {
+  private fun buildAST(statements: List<Statement>): List<Node> {
     TODO("Not yet implemented")
   }
 
