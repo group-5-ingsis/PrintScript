@@ -1,5 +1,6 @@
 package parser.composite.types
 
+import interpreter.NodeVisitor
 import parser.NodeResult
 import parser.composite.Node
 
@@ -16,5 +17,9 @@ class Assignation(private val left: Node, private val right: Node) : Node {
     }
 
     return NodeResult(ResultType.ASSIGNATION, declaration.primaryValue, value.primaryValue)
+  }
+
+  override fun accept(visitor: NodeVisitor): NodeResult {
+    return visitor.visitAssignation(this)
   }
 }
