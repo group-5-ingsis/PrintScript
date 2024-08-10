@@ -1,5 +1,7 @@
 package parser
 
+import parser.builders.ASTBuilder
+import parser.builders.DeclarationASTBuilder
 import parser.composite.Node
 import parser.statement.Statement
 import parser.statement.StatementCategorizer
@@ -7,8 +9,12 @@ import parser.statement.UnknownStatement
 import token.Token
 
 class SyntacticParser {
-
   private val categorizer: StatementCategorizer = StatementCategorizer()
+  /* Command pattern */
+  private val builders: Map<String, ASTBuilder> = mapOf(
+    "Declaration" to DeclarationASTBuilder(),
+
+  )
 
   /* Client method for calls to the syntactic parser. */
   fun run(tokens: List<Token>): RootNode {
@@ -16,12 +22,23 @@ class SyntacticParser {
   }
 
   private fun parse(tokens: List<Token>): RootNode {
-
     val tokenSublist : List<List<Token>> = getTokenSublists(tokens)
     val statementList: List<Statement> = buildStatementList(tokenSublist)
     val categorizedStatements = categorizer.categorize(statementList)
-
     return buildAST(categorizedStatements)
+  }
+
+  private fun buildAST(categorizedStatements: List<Statement>): RootNode {
+    val root = RootNode.create()
+    for (statement in categorizedStatements) {
+      val builder = builders[statement.statementType.toString()]
+      if (builder != null) {
+        root.addChild(builder.build(statement, root))
+      } else {
+        throw UnsupportedOperationException("Unexpected statement")
+      }
+    }
+    return root
   }
 
   private fun buildStatementList(tokenSublists: List<List<Token>>): List<Statement> {
@@ -36,16 +53,11 @@ class SyntacticParser {
     return statementList
   }
 
-  private fun buildAST(statements: List<Statement>): RootNode {
-    val root = RootNode.create()
-    TODO("Not yet implemented")
-  }
-
   private fun getTokenSublists(tokens: List<Token>): List<List<Token>> {
     val tokenSublists = mutableListOf<List<Token>>()
     var j = 0
     for ((index, token) in tokens.withIndex()) {
-      if (token.type == "punctuation" && token.value == ";") {
+      if (token.type == "PUNCTUATION" && token.value == ";") {
         tokenSublists.add(tokens.subList(j, index))
         j += index + 1
       }
@@ -55,7 +67,7 @@ class SyntacticParser {
 
   /* Represents the root of an AST. */
   class RootNode private constructor() {
-    val children = mutableListOf<Node>() // Each Node is a reference to a subtree. Each subtree is a Statement.
+    private val children = mutableListOf<Node>() // Each Node is a reference to a subtree. Each subtree is a Statement.
 
     fun addChild(child: Node) {
       children.add(child)
@@ -63,6 +75,10 @@ class SyntacticParser {
 
     fun removeChild(child: Node) {
       children.remove(child)
+    }
+
+    fun getChildren(): List<Node> {
+      return children
     }
 
     companion object {

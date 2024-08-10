@@ -23,6 +23,7 @@ class StatementCategorizer {
     val statements: MutableList<StatementType> = mutableListOf()
     statements.add(AssignationDeclarationStatement())
     statements.add(AssignationStatement())
+    statements.add(DeclarationStatement())
     return statements
   }
 

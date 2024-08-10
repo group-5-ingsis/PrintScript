@@ -15,7 +15,7 @@ class Declaration(private val left: Node, private val right: Node) : Node {
       throw Exception("Expected a type, got ${type.type}")
     }
 
-    println("Declared variable '${identifier}' as type $type")
+    println("Declared variable '${identifier.primaryValue}' as type ${type.primaryValue}")
     return NodeResult(ResultType.DECLARATION, identifier.primaryValue, type.primaryValue)
   }
 }

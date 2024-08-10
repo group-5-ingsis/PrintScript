@@ -24,4 +24,16 @@ class ParserTester {
     val tokens: List<Token> = lexer.lex("const a: number = 21; let b: string;", listOf())
     println(getTokenSublists(tokens))
   }
+
+  @Test
+  fun testBuildDeclarationAST() {
+    val lexer = Lexer
+    val syntaxParser = SyntacticParser()
+    val tokens: List<Token> = lexer.lex("let a: Number;", listOf())
+    val result: SyntacticParser.RootNode = syntaxParser.run(tokens)
+    println(result.getChildren())
+    for (node in result.getChildren()) {
+      println(node.solve())
+    }
+  }
 }
