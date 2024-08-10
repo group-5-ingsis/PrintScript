@@ -2,7 +2,6 @@ package parser
 
 import parser.builders.ASTBuilder
 import parser.builders.AssignDeclareASTBuilder
-import parser.builders.AssignationASTBuilder
 import parser.builders.DeclarationASTBuilder
 import parser.composite.Node
 import parser.statement.Statement
@@ -15,7 +14,7 @@ class SyntacticParser {
   /* Command pattern */
   private val builders: Map<String, ASTBuilder> = mapOf(
     "Declaration" to DeclarationASTBuilder(),
-    "Assignation" to AssignationASTBuilder(),
+    //"Assignation" to AssignationASTBuilder(),
     "AssignDeclare" to AssignDeclareASTBuilder(),
 
   )
