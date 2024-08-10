@@ -8,7 +8,7 @@ object TokenTypeTest {
     @Test
     fun testTokenTypeLet() {
         val string = "let"
-        val expected = "ASSIGNATION_KEYWORD"
+        val expected = "DECLARATION_KEYWORD"
 
         val actual = TokenGenerator.getTypeFromValue(string)
         assertEquals(expected, actual)

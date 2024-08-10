@@ -8,7 +8,7 @@ class TokenGeneratorTest {
   @Test
   fun testGenerateTokenSimpleString() {
     val input = "let"
-    val expected = Token("let", "ASSIGNATION_KEYWORD", Position(1, 1))
+    val expected = Token("let", "DECLARATION_KEYWORD", Position(1, 1))
     val actual = TokenGenerator.generateToken(input, 0, 0)
     assertEquals(expected, actual)
   }
