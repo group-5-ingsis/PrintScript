@@ -9,8 +9,13 @@ class AssignationStatement: StatementType {
         val secondToken = content[1]
         val thirdToken = content[2]
 
-        return (firstToken.type == "VARIABLE_NAME") &&
+        val isLeafNode = (
+                   thirdToken.type == "NUMBER"
+                || thirdToken.type == "STRING"
+                || thirdToken.type == "IDENTIFIER")
+
+        return (firstToken.type == "IDENTIFIER") &&
                 (secondToken.type == "ASSIGNMENT") &&
-                (thirdToken.type == "NUMBER")
+                (isLeafNode)
     }
 }

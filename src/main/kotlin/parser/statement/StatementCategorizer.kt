@@ -13,6 +13,7 @@ class StatementCategorizer {
         if (isType) {
           statement.statementType = allowedStatement
           categorizedStatements.add(statement)
+          break
         }
       }
     }

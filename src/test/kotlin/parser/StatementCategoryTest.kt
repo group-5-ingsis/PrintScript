@@ -12,7 +12,7 @@ class StatementCategoryTest {
 
     @Test
     fun testAssignationDeclaration(){
-        val testString = "let a: Number = 4"
+        val testString = "let a: Number = 4;"
         val tokens = Lexer.lex(testString, listOf())
 
         val statement = Statement(tokens, UnknownStatement())
