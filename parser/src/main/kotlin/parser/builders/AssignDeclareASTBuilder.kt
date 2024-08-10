@@ -9,7 +9,7 @@ import token.Token
 class AssignDeclareASTBuilder : ASTBuilder {
 
   /* ASSIGNDECLARE STRUCTURE: let a: Number = 22; */
-  override fun build(statement: Statement, root: SyntacticParser.RootNode): Node {
+  override fun build(statement: Statement): Node {
     val tokens: List<Token> = statement.content
     val assignation: Node = Assignation(
       Declaration(

@@ -10,8 +10,8 @@ import token.Token
 
 class DeclarationASTBuilder : ASTBuilder {
 
-  override fun build(statement: Statement, root: SyntacticParser.RootNode): Node {
-    /* DECLARATION STRUCTURE: let a: Number; */
+  /* DECLARATION STRUCTURE: let a: Number; */
+  override fun build(statement: Statement): Node {
     val tokens: List<Token> = statement.content
     return Declaration(
       Identifier(tokens[1].value),
