@@ -36,4 +36,52 @@ class ParserTester {
       println(node.solve())
     }
   }
+
+  @Test
+  fun testBuildAssignationASTWithNumber() {
+    val lexer = Lexer
+    val syntaxParser = SyntacticParser()
+    val tokens: List<Token> = lexer.lex("x = 4;", listOf())
+    val result: SyntacticParser.RootNode = syntaxParser.run(tokens)
+    println(result.getChildren())
+    for (node in result.getChildren()) {
+      println(node.solve())
+    }
+  }
+
+  @Test
+  fun testBuildAssignationASTWithString() {
+    val lexer = Lexer
+    val syntaxParser = SyntacticParser()
+    val tokens: List<Token> = lexer.lex("x = 'test';", listOf())
+    val result: SyntacticParser.RootNode = syntaxParser.run(tokens)
+    println(result.getChildren())
+    for (node in result.getChildren()) {
+      println(node.solve())
+    }
+  }
+
+  @Test
+  fun testBuildAssignationASTWithVariable() {
+    val lexer = Lexer
+    val syntaxParser = SyntacticParser()
+    val tokens: List<Token> = lexer.lex("x = y;", listOf())
+    val result: SyntacticParser.RootNode = syntaxParser.run(tokens)
+    println(result.getChildren())
+    for (node in result.getChildren()) {
+      println(node.solve())
+    }
+  }
+
+  @Test
+  fun testBuildAssignDeclareAST() {
+    val lexer = Lexer
+    val syntaxParser = SyntacticParser()
+    val tokens: List<Token> = lexer.lex("let a: Number = 7;", listOf())
+    val result: SyntacticParser.RootNode = syntaxParser.run(tokens)
+    println(result.getChildren())
+    for (node in result.getChildren()) {
+      println(node.solve())
+    }
+  }
 }

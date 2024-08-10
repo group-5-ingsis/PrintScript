@@ -16,12 +16,22 @@ class AssignationDeclarationStatement: StatementType {
         val fifthToken = content[4]
         val sixthToken = content[5]
 
+        val isLeafType = (
+                   sixthToken.type == "NUMBER"
+                || sixthToken.type == "STRING"
+                || sixthToken.type == "IDENTIFIER")
+
         return (firstToken.type == "KEYWORD") &&
                 (secondToken.type == "VARIABLE_NAME") &&
                 (thirdToken.type == "PUNCTUATION") &&
                 (fourthToken.type == "VARIABLE_TYPE") &&
                 (fifthToken.type == "ASSIGNMENT") &&
-                (sixthToken.type == "NUMBER")
+                (isLeafType)
     }
+
+    override fun toString(): String {
+        return "AssignDeclare"
+    }
+
 
 }
