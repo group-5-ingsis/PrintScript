@@ -15,7 +15,7 @@ class DeclarationASTBuilder : ASTBuilder {
     val tokens: List<Token> = statement.content
     return Declaration(
       Identifier(tokens[1].value),
-      VariableType(tokens[3].type)
+      VariableType(tokens[3].value)
     )
   }
 }
