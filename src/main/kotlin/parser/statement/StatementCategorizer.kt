@@ -17,6 +17,7 @@ class StatementCategorizer {
         }
       }
     }
+    
     return categorizedStatements
   }
 
