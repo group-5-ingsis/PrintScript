@@ -1,6 +1,8 @@
 package token
 
+import java.io.BufferedReader
 import java.io.File
+import java.io.InputStreamReader
 
 object TypesMapGenerator {
 
@@ -22,26 +24,30 @@ object TypesMapGenerator {
 
     private fun getVariablePatternsMap(): Map<String, String> {
 
-        val filePath = "src/main/resources/token_types.txt"
+      val fileName = "token_types.txt"
+      val map = mutableMapOf<String, String>()
 
-        val map = mutableMapOf<String, String>()
+      // Access the file as a resource from the classpath
+      val inputStream = this::class.java.classLoader.getResourceAsStream(fileName)
+        ?: throw IllegalArgumentException("Resource not found: $fileName")
 
-        File(filePath).forEachLine { line ->
+      BufferedReader(InputStreamReader(inputStream)).use { reader ->
+        reader.forEachLine { line ->
+          val parts = line.split("::")
+          if (parts.size == 2) {
+            val key = parts[0].trim()
+            val values = parts[1].trim().split(",").map { it.trim() }
 
-            val parts = line.split("::")
-            if (parts.size == 2) {
+            val pattern = createPattern(values)
 
-                val key = parts[0].trim()
-                val values = parts[1].trim().split(",").map { it.trim() }
-
-                val pattern = createPattern(values)
-
-                if (key != "" && pattern.isNotEmpty()) {
-                    map[pattern] = key
-                }
+            if (key.isNotEmpty() && pattern.isNotEmpty()) {
+              map[pattern] = key
             }
+          }
         }
-        return map
+      }
+
+      return map
     }
 
 
