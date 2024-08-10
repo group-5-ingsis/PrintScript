@@ -3,6 +3,7 @@ package parser
 import lexer.Lexer
 import org.junit.jupiter.api.Test
 import parser.statement.Statement
+import parser.statement.StatementCategorizer
 import parser.statement.UnknownStatement
 
 class StatementCategoryTest {

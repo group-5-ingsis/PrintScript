@@ -2,6 +2,7 @@ package parser
 
 import parser.composite.Node
 import parser.statement.Statement
+import parser.statement.StatementCategorizer
 import parser.statement.UnknownStatement
 import token.Token
 
@@ -10,11 +11,11 @@ class SyntacticParser {
   private val categorizer: StatementCategorizer = StatementCategorizer()
 
   /* Client method for calls to the syntactic parser. */
-  fun run(tokens: List<Token>): List<Node> {
+  fun run(tokens: List<Token>): RootNode {
     return parse(tokens)
   }
 
-  private fun parse(tokens: List<Token>): List<Node> {
+  private fun parse(tokens: List<Token>): RootNode {
 
     val tokenSublist : List<List<Token>> = getTokenSublists(tokens)
     val statementList: List<Statement> = buildStatementList(tokenSublist)
@@ -35,7 +36,8 @@ class SyntacticParser {
     return statementList
   }
 
-  private fun buildAST(statements: List<Statement>): List<Node> {
+  private fun buildAST(statements: List<Statement>): RootNode {
+    val root = RootNode.create()
     TODO("Not yet implemented")
   }
 
@@ -49,5 +51,24 @@ class SyntacticParser {
       }
     }
     return tokenSublists
+  }
+
+  /* Represents the root of an AST. */
+  class RootNode private constructor() {
+    val children = mutableListOf<Node>() // Each Node is a reference to a subtree. Each subtree is a Statement.
+
+    fun addChild(child: Node) {
+      children.add(child)
+    }
+
+    fun removeChild(child: Node) {
+      children.remove(child)
+    }
+
+    companion object {
+      internal fun create(): RootNode {
+        return RootNode()
+      }
+    }
   }
 }

@@ -1,9 +1,4 @@
-package parser
-
-import parser.statement.AssignationDeclarationStatement
-import parser.statement.AssignationStatement
-import parser.statement.Statement
-import parser.statement.StatementType
+package parser.statement
 
 class StatementCategorizer {
 

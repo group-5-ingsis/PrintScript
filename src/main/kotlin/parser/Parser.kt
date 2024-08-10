@@ -1,6 +1,7 @@
 package parser
 
 import parser.composite.Node
+import parser.exceptions.SemanticErrorException
 import token.Token
 
 /* Singleton object since it can be reused with different arguments. */
@@ -10,8 +11,8 @@ class Parser {
 
   /* Performs a call to both parsers. */
   @Throws(SemanticErrorException::class)
-  fun run(tokens: List<Token>, parameters: List<String>): List<Node> {
-    val ast: List<Node> = syntacticParser.run(tokens)
+  fun run(tokens: List<Token>, parameters: List<String>): SyntacticParser.RootNode {
+    val ast: SyntacticParser.RootNode = syntacticParser.run(tokens)
     return semanticParser.run(ast)
   }
 }
