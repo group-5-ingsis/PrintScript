@@ -1,13 +1,12 @@
 package parser.builders
 
-import arrow.core.Either
-import arrow.core.left
-import arrow.core.right
-import parser.SyntacticParser
-import parser.composite.Node
-import parser.composite.types.*
-import parser.exceptions.UnsupportedLeafTypeException
 import parser.statement.Statement
+import parser.composite.Node
+import parser.composite.types.Assignation
+import parser.composite.types.Identifier
+import parser.composite.types.NumericLiteral
+import parser.composite.types.StringLiteral
+import parser.exceptions.UnsupportedLeafTypeException
 import token.Token
 
 class AssignationASTBuilder : ASTBuilder {

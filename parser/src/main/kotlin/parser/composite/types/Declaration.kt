@@ -2,6 +2,7 @@ package parser.composite.types
 
 import parser.NodeResult
 import parser.composite.Node
+import parser.composite.ResultType
 
 class Declaration(private val left: Node, private val right: Node) : Node {
   override fun solve() : NodeResult{

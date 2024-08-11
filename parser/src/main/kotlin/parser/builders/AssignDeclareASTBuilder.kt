@@ -1,9 +1,8 @@
 package parser.builders
 
-import parser.SyntacticParser
+import parser.statement.Statement
 import parser.composite.Node
 import parser.composite.types.*
-import parser.statement.Statement
 import token.Token
 
 class AssignDeclareASTBuilder : ASTBuilder {

@@ -1,4 +1,4 @@
-package parser.composite.types
+package parser.composite
 
 enum class ResultType {
   ASSIGNATION,

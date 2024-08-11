@@ -3,23 +3,22 @@ package parser
 import lexer.Lexer
 import org.junit.jupiter.api.Test
 import parser.statement.Statement
-import parser.statement.StatementCategorizer
-import parser.statement.UnknownStatement
+import parser.statement.StatementType
+
 
 class StatementCategoryTest {
 
-    private val categorizer: StatementCategorizer = StatementCategorizer()
+
 
     @Test
     fun testAssignationDeclaration(){
         val testString = "let a: Number = 4;"
         val tokens = Lexer.lex(testString, listOf())
 
-        val statement = Statement(tokens, UnknownStatement())
-
+        val statement = Statement(tokens, "Unknown")
 
         val statements = listOf(statement)
-        val categorizedStatements = categorizer.categorize(statements)
+        val categorizedStatements = StatementType.categorize(statements)
         println(categorizedStatements)
     }
 
@@ -28,11 +27,11 @@ class StatementCategoryTest {
         val testString = "a = 3"
         val tokens = Lexer.lex(testString, listOf())
 
-        val statement = Statement(tokens, UnknownStatement())
+        val statement = Statement(tokens, "Unknown")
 
 
         val statements = listOf(statement)
-        val categorizedStatements = categorizer.categorize(statements)
+        val categorizedStatements = StatementType.categorize(statements)
         println(categorizedStatements)
     }
 }
