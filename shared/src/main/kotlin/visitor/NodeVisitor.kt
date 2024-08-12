@@ -3,7 +3,7 @@ package visitor
 import composite.types.Assignation
 
 
-class NodeVisitor(private val variableTable: VariableTable): Visitor {
+class NodeVisitor: Visitor {
 
     override fun visitAssignation(assignation: Assignation){
         val assignationInfo = assignation.solve()
@@ -11,7 +11,7 @@ class NodeVisitor(private val variableTable: VariableTable): Visitor {
         val identifier = assignationInfo.primaryValue
         val value = assignationInfo.secondaryValue
 
-        variableTable.setVariable(identifier.toString(), value)
+        VariableTable.setVariable(identifier.toString(), value)
     }
 
 }
