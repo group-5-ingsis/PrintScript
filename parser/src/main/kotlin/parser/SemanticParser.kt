@@ -1,6 +1,6 @@
 package parser
 
-import parser.composite.Node
+import composite.Node
 import parser.exceptions.SemanticErrorException
 import kotlin.jvm.Throws
 

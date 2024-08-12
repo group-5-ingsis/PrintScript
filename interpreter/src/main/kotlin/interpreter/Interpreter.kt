@@ -1,7 +1,8 @@
 package interpreter
 
-import parser.composite.Node
+import composite.Node
 import visitor.NodeVisitor
+import visitor.VariableTable
 
 class Interpreter {
 

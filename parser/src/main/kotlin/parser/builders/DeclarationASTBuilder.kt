@@ -1,10 +1,10 @@
 package parser.builders
 
 import parser.SyntacticParser
-import parser.composite.Node
-import parser.composite.types.Declaration
-import parser.composite.types.Identifier
-import parser.composite.types.VariableType
+import composite.Node
+import composite.types.Declaration
+import composite.types.Identifier
+import composite.types.VariableType
 import parser.statement.Statement
 import token.Token
 

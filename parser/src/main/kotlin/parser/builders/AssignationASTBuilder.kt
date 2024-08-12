@@ -1,11 +1,10 @@
 package parser.builders
 
-import arrow.core.Either
-import arrow.core.left
-import arrow.core.right
-import parser.SyntacticParser
-import parser.composite.Node
-import parser.composite.types.*
+import composite.types.Identifier
+import composite.Node
+import composite.types.Assignation
+import composite.types.NumericLiteral
+import composite.types.StringLiteral
 import parser.exceptions.UnsupportedLeafTypeException
 import parser.statement.Statement
 import token.Token

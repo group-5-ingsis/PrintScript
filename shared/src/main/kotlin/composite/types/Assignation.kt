@@ -1,8 +1,8 @@
-package parser.composite.types
+package composite.types
 
-import interpreter.NodeVisitor
-import parser.NodeResult
-import parser.composite.Node
+import composite.Node
+import visitor.NodeResult
+import visitor.NodeVisitor
 
 class Assignation(private val left: Identifier, private val right: Node) : Node {
 
@@ -14,15 +14,11 @@ class Assignation(private val left: Identifier, private val right: Node) : Node 
       return right.solve()
     }
 
-    return NodeResult(ResultType.ASSIGNATION, declaration.primaryValue, value.primaryValue)
+    return NodeResult(ResultType.ASSIGNATION, identifier.primaryValue, value.primaryValue)
   }
 
   override fun accept(visitor: NodeVisitor): NodeResult {
     return visitor.visitAssignation(this)
-  }
-
-  fun getVariableName(): String{
-    return left.getName()
   }
 
 }

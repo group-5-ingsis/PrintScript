@@ -4,7 +4,7 @@ import parser.builders.ASTBuilder
 import parser.builders.AssignDeclareASTBuilder
 import parser.builders.AssignationASTBuilder
 import parser.builders.DeclarationASTBuilder
-import parser.composite.Node
+import composite.Node
 import parser.statement.Statement
 import parser.statement.StatementCategorizer
 import parser.statement.UnknownStatement

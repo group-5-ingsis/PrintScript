@@ -1,7 +1,7 @@
-package parser.composite
+package composite
 
-import interpreter.NodeVisitor
-import parser.NodeResult
+import visitor.NodeResult
+import visitor.NodeVisitor
 
 interface Node {
   fun solve() : NodeResult

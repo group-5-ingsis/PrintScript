@@ -1,9 +1,10 @@
-package parser.composite.types
+package composite.types
 
-import parser.NodeResult
-import parser.composite.Node
+import composite.Node
+import visitor.NodeResult
+import visitor.NodeVisitor
 
-class Subtraction(private val left : Node, private val right : Node) : Node{
+class Subtraction(private val left : Node, private val right : Node) : Node {
   override fun solve(): NodeResult {
     val minuend = left.solve()
     val subtrahend = right.solve()
@@ -13,5 +14,9 @@ class Subtraction(private val left : Node, private val right : Node) : Node{
     }
 
     return NodeResult(ResultType.LITERAL, (minuend.primaryValue).toDouble() - (subtrahend.primaryValue).toDouble(), null)
+  }
+
+  override fun accept(visitor: NodeVisitor): NodeResult {
+    TODO("Not yet implemented")
   }
 }

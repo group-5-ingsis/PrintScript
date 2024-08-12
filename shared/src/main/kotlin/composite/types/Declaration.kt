@@ -1,7 +1,8 @@
-package parser.composite.types
+package composite.types
 
-import parser.NodeResult
-import parser.composite.Node
+import composite.Node
+import visitor.NodeResult
+import visitor.NodeVisitor
 
 class Declaration(private val left: Node, private val right: Node) : Node {
   override fun solve() : NodeResult{
@@ -17,5 +18,9 @@ class Declaration(private val left: Node, private val right: Node) : Node {
 
     println("Declared variable '${identifier.primaryValue}' as type ${type.primaryValue}")
     return NodeResult(ResultType.DECLARATION, identifier.primaryValue, type.primaryValue)
+  }
+
+  override fun accept(visitor: NodeVisitor): NodeResult {
+    TODO("Not yet implemented")
   }
 }

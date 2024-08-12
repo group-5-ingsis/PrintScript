@@ -1,4 +1,4 @@
-package interpreter
+package visitor
 
 class VariableTable {
     private val variables = mutableMapOf<String, Any?>()

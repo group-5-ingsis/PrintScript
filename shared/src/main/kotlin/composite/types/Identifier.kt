@@ -1,7 +1,7 @@
-package parser.composite.types
+package composite.types
 
-import parser.NodeResult
-import parser.composite.Node
+import composite.Node
+import visitor.NodeResult
 import visitor.NodeVisitor
 
 

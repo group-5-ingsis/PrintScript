@@ -11,9 +11,9 @@ repositories {
 
 dependencies {
     testImplementation 'org.jetbrains.kotlin:kotlin-test'
-    implementation project(':lexer')
-    implementation("io.arrow-kt:arrow-core:1.2.0")
+    implementation('io.arrow-kt:arrow-core:1.2.4')
     implementation project(':shared')
+    implementation project(':lexer')
     implementation project(':parser')
 }
 

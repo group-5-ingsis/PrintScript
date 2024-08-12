@@ -1,7 +1,9 @@
-package parser.composite.types
+package composite.types
 
-import parser.NodeResult
-import parser.composite.Node
+
+import composite.Node
+import visitor.NodeResult
+import visitor.NodeVisitor
 
 class Addition(private val left : Node, private val right : Node) : Node {
   override fun solve(): NodeResult {
@@ -22,5 +24,9 @@ class Addition(private val left : Node, private val right : Node) : Node {
     } else {
       throw Exception("Expected strings or numbers, got ${addendA.primaryValue} and ${addendB.primaryValue}")
     }
+  }
+
+  override fun accept(visitor: NodeVisitor): NodeResult {
+    TODO("Not yet implemented")
   }
 }
