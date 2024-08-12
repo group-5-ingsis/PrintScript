@@ -1,32 +1,28 @@
 package parser.statement
 
+import token.Token
+
 class StatementType(private val elements: List<TokensNamesForStatements>, val  name: String) {
 
     init {
         addThisStatementToAllExistingStatementList()
     }
 
-
-
     private fun addThisStatementToAllExistingStatementList(){
-        val newList = allExistingStatements.toList()
-        for(statement in newList){
-            if (statement.name == name){
-                return
-            }
+        if (allExistingStatements.any { it.name == name }) {
+            return
         }
         allExistingStatements.add(this)
-
-        }
+    }
 
 
     fun isType(statement: Statement): Boolean{
 
-        if (statement.content.size != elements.size) return false
+        if (statement.content.size < elements.size) return false
 
         val content = statement.content
 
-        for (i in content.indices) {
+        for (i in elements.indices) {
             when (val element = elements[i]) {
                 is TokensNamesForStatements.MultipleNames -> {
                     // Check if any of the names in the list match the content at index i
@@ -44,7 +40,7 @@ class StatementType(private val elements: List<TokensNamesForStatements>, val  n
 
     }
     companion object {
-        val allExistingStatements: MutableList<StatementType> = mutableListOf()
+        val allExistingStatements: MutableSet<StatementType> = mutableSetOf()
 
         init {
             allExistingStatements.add(StatementType(listOf(), "Unknown"))
@@ -84,16 +80,16 @@ class StatementType(private val elements: List<TokensNamesForStatements>, val  n
             data class MultipleNames(val values: List<String>) : TokensNamesForStatements()
         }
 
-        fun getStatementName(thisStatement: Statement): String {
+        fun getStatementNameCorrespondingToTokens(tokens : List<Token>): String {
             for (aStatement in allExistingStatements){
-                if (aStatement.isType(thisStatement)){
+                if (aStatement.isType(Statement(tokens, ""))){
                     return aStatement.name
                 }
             }
             return "Unknown"
         }
 
-        fun getAllowedStatements() : List<StatementType>{
+        fun getAllowedStatements() : Set<StatementType>{
             return allExistingStatements
         }
 

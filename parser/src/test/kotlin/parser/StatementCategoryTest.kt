@@ -4,6 +4,7 @@ import lexer.Lexer
 import org.junit.jupiter.api.Test
 import parser.statement.Statement
 import parser.statement.StatementType
+import kotlin.test.assertEquals
 
 
 class StatementCategoryTest {
@@ -19,8 +20,24 @@ class StatementCategoryTest {
 
         val statements = listOf(statement)
         val categorizedStatements = StatementType.categorize(statements)
-        println(categorizedStatements)
+        assertEquals("Declaration", categorizedStatements[0].statementType)
     }
+
+    @Test
+    fun unknownStatement(){
+        val testString = "let a: Number = 4;"
+        val tokens = Lexer.lex(testString, listOf())
+
+        val statement = Statement(tokens, "Unknown")
+
+        val statements = listOf(statement)
+        val categorizedStatements = StatementType.categorize(statements)
+        assertEquals("Declaration", categorizedStatements[0].statementType)
+    }
+
+
+
+
 
     @Test
     fun testAssignation(){
@@ -32,6 +49,6 @@ class StatementCategoryTest {
 
         val statements = listOf(statement)
         val categorizedStatements = StatementType.categorize(statements)
-        println(categorizedStatements)
+        assertEquals("Assignation", categorizedStatements[0].statementType)
     }
 }

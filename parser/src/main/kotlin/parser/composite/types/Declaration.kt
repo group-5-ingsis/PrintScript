@@ -12,6 +12,7 @@ class Declaration(private val left: Node, private val right: Node) : Node {
     if (identifier.type != ResultType.IDENTIFIER) {
       throw Exception("Expected an identifier, got ${identifier.type}")
     }
+
     if (type.type != ResultType.DATA_TYPE) {
       throw Exception("Expected a type, got ${type.type}")
     }
