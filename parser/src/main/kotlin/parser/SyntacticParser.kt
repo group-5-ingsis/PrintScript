@@ -3,12 +3,15 @@ package parser
 import parser.builders.ASTBuilder
 import parser.builders.AssignDeclareASTBuilder
 import parser.builders.AssignationASTBuilder
-import parser.builders.DeclarationASTBuilder
 import composite.Node
+import composite.types.ResultType
+import parser.builders.DeclarationASTBuilder
 import parser.statement.Statement
 import parser.statement.StatementCategorizer
 import parser.statement.UnknownStatement
 import token.Token
+import visitor.NodeResult
+import visitor.NodeVisitor
 
 class SyntacticParser {
   private val categorizer: StatementCategorizer = StatementCategorizer()
@@ -17,7 +20,6 @@ class SyntacticParser {
     "Declaration" to DeclarationASTBuilder(),
     "Assignation" to AssignationASTBuilder(),
     "AssignDeclare" to AssignDeclareASTBuilder(),
-
   )
 
   /* Client method for calls to the syntactic parser. */
@@ -35,9 +37,11 @@ class SyntacticParser {
   private fun buildAST(categorizedStatements: List<Statement>): RootNode {
     val root = RootNode.create()
     for (statement in categorizedStatements) {
-      val builder = builders[statement.statementType.toString()]
+      val statementType = statement.statementType.toString()
+      val builder = builders[statementType]
       if (builder != null) {
-        root.addChild(builder.build(statement))
+        val child = builder.build(statement)
+        root.addChild(child)
       } else {
         throw UnsupportedOperationException("Unexpected statement")
       }
@@ -70,7 +74,7 @@ class SyntacticParser {
   }
 
   /* Represents the root of an AST. */
-  class RootNode private constructor() {
+  class RootNode private constructor(): Node {
     private val children = mutableListOf<Node>() // Each Node is a reference to a subtree. Each subtree is a Statement.
 
     fun addChild(child: Node) {
@@ -90,5 +94,20 @@ class SyntacticParser {
         return RootNode()
       }
     }
+
+    override fun solve(): NodeResult {
+      for (child in children) {
+        return child.solve()
+      }
+
+      return NodeResult(ResultType.DATA_TYPE, "", "")
+    }
+
+    override fun accept(visitor: NodeVisitor) {
+      for (child in children) {
+        child.accept(visitor)
+      }
+    }
+
   }
 }

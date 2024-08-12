@@ -10,7 +10,7 @@ class VariableType(val value: String) : Node {
     return NodeResult(ResultType.DATA_TYPE, value, null)
   }
 
-  override fun accept(visitor: NodeVisitor): NodeResult {
+  override fun accept(visitor: NodeVisitor) {
     TODO("Not yet implemented")
   }
 }

@@ -17,8 +17,8 @@ class Assignation(private val left: Identifier, private val right: Node) : Node 
     return NodeResult(ResultType.ASSIGNATION, identifier.primaryValue, value.primaryValue)
   }
 
-  override fun accept(visitor: NodeVisitor): NodeResult {
-    return visitor.visitAssignation(this)
+  override fun accept(visitor: NodeVisitor) {
+    visitor.visitAssignation(this)
   }
 
 }

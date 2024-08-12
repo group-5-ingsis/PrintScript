@@ -1,6 +1,5 @@
 package parser.builders
 
-import parser.SyntacticParser
 import composite.Node
 import composite.types.Declaration
 import composite.types.Identifier

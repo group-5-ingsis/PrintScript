@@ -10,7 +10,7 @@ class NumericLiteral(private val value: Number) : Node {
     return NodeResult(ResultType.LITERAL, value, null)
   }
 
-  override fun accept(visitor: NodeVisitor): NodeResult {
+  override fun accept(visitor: NodeVisitor) {
     TODO("Not yet implemented")
   }
 

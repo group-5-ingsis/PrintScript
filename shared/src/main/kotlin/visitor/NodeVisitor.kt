@@ -1,14 +1,18 @@
 package visitor
 
 import composite.types.Assignation
-import composite.types.ResultType
+import composite.types.Declaration
 
 
 class NodeVisitor(private val variableTable: VariableTable): Visitor {
 
-    override fun visitAssignation(assignation: Assignation): NodeResult {
+    override fun visitAssignation(assignation: Assignation){
         val value = assignation.solve()
         variableTable.setVariable("variableName", value)
-        return NodeResult(ResultType.ASSIGNATION, value, variableTable)
+    }
+
+    override fun visitDeclaration(declaration: Declaration){
+        val value = declaration.solve()
+        variableTable.setVariable("variableName", value)
     }
 }

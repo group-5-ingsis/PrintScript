@@ -1,6 +1,5 @@
 package interpreter
 
-import composite.Node
 import parser.SyntacticParser
 import visitor.NodeVisitor
 import visitor.VariableTable

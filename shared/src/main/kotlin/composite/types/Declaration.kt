@@ -20,7 +20,7 @@ class Declaration(private val left: Node, private val right: Node) : Node {
     return NodeResult(ResultType.DECLARATION, identifier.primaryValue, type.primaryValue)
   }
 
-  override fun accept(visitor: NodeVisitor): NodeResult {
-    TODO("Not yet implemented")
+  override fun accept(visitor: NodeVisitor){
+    visitor.visitDeclaration(this)
   }
 }
