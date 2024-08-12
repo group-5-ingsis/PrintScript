@@ -25,12 +25,32 @@ class InterpreterTest {
     }
 
     @Test
-    fun testAssignation(){
+    fun testNumberAssignation(){
         val tokens: List<Token> = Lexer.lex("a = 6;", listOf())
         val ast: SyntacticParser.RootNode = syntaxParser.run(tokens)
         interpreter.interpret(ast)
         val variableTable = Interpreter.getVariableTable()
         assertEquals(6, variableTable.getVariable("a"))
+    }
+
+
+    @Test
+    fun testStringAssignation(){
+        val tokens: List<Token> = Lexer.lex("a = \"Hello World\";" , listOf())
+        val ast: SyntacticParser.RootNode = syntaxParser.run(tokens)
+        interpreter.interpret(ast)
+        val variableTable = Interpreter.getVariableTable()
+        assertEquals("\"Hello World\"", variableTable.getVariable("a"))
+    }
+
+
+    @Test
+    fun testLiteralAssignation(){
+        val tokens: List<Token> = Lexer.lex("a = b;" , listOf())
+        val ast: SyntacticParser.RootNode = syntaxParser.run(tokens)
+        interpreter.interpret(ast)
+        val variableTable = Interpreter.getVariableTable()
+        assertEquals("b", variableTable.getVariable("a"))
     }
 
 }
