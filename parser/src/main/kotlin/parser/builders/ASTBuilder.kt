@@ -5,5 +5,5 @@ import parser.composite.Node
 import parser.statement.Statement
 
 interface ASTBuilder {
-  fun build(statement: Statement, root: SyntacticParser.RootNode) : Node
+  fun build(statement: Statement) : Node
 }
