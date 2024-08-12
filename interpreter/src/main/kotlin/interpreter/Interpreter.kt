@@ -1,6 +1,7 @@
 package interpreter
 
 import parser.composite.Node
+import visitor.NodeVisitor
 
 class Interpreter {
 
