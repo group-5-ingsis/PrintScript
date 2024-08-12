@@ -1,6 +1,6 @@
 package visitor
 
-class VariableTable {
+object VariableTable {
     private val variables = mutableMapOf<String, Any?>()
 
     fun setVariable(name: String, value: Any?) {

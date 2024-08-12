@@ -8,6 +8,7 @@ import kotlin.test.assertEquals
 class InterpreterTest {
 
     private val syntaxParser = SyntacticParser()
+    private val interpreter = Interpreter
 
     @Test
     fun testDeclarationInterpreter() {
@@ -16,7 +17,7 @@ class InterpreterTest {
 
         val ast: SyntacticParser.RootNode = syntaxParser.run(tokens)
 
-        Interpreter.interpret(ast)
+        interpreter.interpret(ast)
 
         val variableTable = Interpreter.getVariableTable()
 
@@ -27,9 +28,9 @@ class InterpreterTest {
     fun testAssignation(){
         val tokens: List<Token> = Lexer.lex("a = 6;", listOf())
         val ast: SyntacticParser.RootNode = syntaxParser.run(tokens)
-        Interpreter.interpret(ast)
+        interpreter.interpret(ast)
         val variableTable = Interpreter.getVariableTable()
         assertEquals(6, variableTable.getVariable("a"))
     }
-    
+
 }
