@@ -57,6 +57,7 @@ class SyntacticParser {
     return statementList
   }
 
+  /* IDEA: Take additional parameters to indicate according to which symbol to split. */
   private fun getTokenSublists(tokens: List<Token>): List<List<Token>> {
     val tokenSublists = mutableListOf<List<Token>>()
     var j = 0
