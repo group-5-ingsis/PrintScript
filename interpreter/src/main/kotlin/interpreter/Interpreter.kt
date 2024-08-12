@@ -12,4 +12,8 @@ object Interpreter {
     fun interpret(rootAstNode: SyntacticParser.RootNode){
         rootAstNode.accept(nodeVisitor)
     }
+
+    fun getVariableTable(): VariableTable {
+        return variableTable
+    }
 }

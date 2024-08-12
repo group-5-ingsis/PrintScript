@@ -7,12 +7,20 @@ import composite.types.Declaration
 class NodeVisitor(private val variableTable: VariableTable): Visitor {
 
     override fun visitAssignation(assignation: Assignation){
-        val value = assignation.solve()
-        variableTable.setVariable("variableName", value)
+        val assignationInfo = assignation.solve()
+
+        val identifier = assignationInfo.primaryValue
+        val value = assignationInfo.secondaryValue
+
+        variableTable.setVariable(identifier.toString(), value)
     }
 
     override fun visitDeclaration(declaration: Declaration){
-        val value = declaration.solve()
-        variableTable.setVariable("variableName", value)
+
+        val declarationInfo = declaration.solve()
+        val identifier = declarationInfo.primaryValue
+        val type = declarationInfo.secondaryValue
+
+        variableTable.setVariable(identifier.toString(), type)
     }
 }

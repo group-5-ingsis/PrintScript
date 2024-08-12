@@ -7,14 +7,14 @@ import visitor.NodeVisitor
 class Assignation(private val left: Identifier, private val right: Node) : Node {
 
   override fun solve() : NodeResult {
-    val identifier = left.solve()
-    val value = right.solve()
 
-    if (value.type == ResultType.LITERAL) {
-      return right.solve()
-    }
+    val identifierInfo = left.solve()
+    val literalInfo = right.solve()
 
-    return NodeResult(ResultType.ASSIGNATION, identifier.primaryValue, value.primaryValue)
+    val identifier = identifierInfo.primaryValue
+    val value = literalInfo.primaryValue
+
+    return NodeResult(ResultType.ASSIGNATION, identifier, value)
   }
 
   override fun accept(visitor: NodeVisitor) {
