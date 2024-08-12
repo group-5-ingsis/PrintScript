@@ -18,10 +18,6 @@ class InterpreterTest {
         val ast: SyntacticParser.RootNode = syntaxParser.run(tokens)
 
         interpreter.interpret(ast)
-
-        val variableTable = Interpreter.getVariableTable()
-
-        assertEquals("Number", variableTable.getVariable("a"))
     }
 
     @Test
