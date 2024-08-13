@@ -4,11 +4,10 @@ import parser.builders.ASTBuilder
 import parser.builders.AssignDeclareASTBuilder
 import parser.builders.AssignationASTBuilder
 import composite.Node
-import composite.types.ResultType
+import composite.ResultType
 import parser.builders.DeclarationASTBuilder
 import parser.statement.Statement
 import parser.statement.StatementCategorizer
-import parser.statement.UnknownStatement
 import token.Token
 import visitor.NodeResult
 import visitor.NodeVisitor
@@ -29,8 +28,7 @@ class SyntacticParser {
 
   private fun parse(tokens: List<Token>): RootNode {
     val tokenSublist : List<List<Token>> = getTokenSublists(tokens)
-    val statementList: List<Statement> = buildStatementList(tokenSublist)
-    val categorizedStatements = categorizer.categorize(statementList)
+    val categorizedStatements = categorizer.categorize(tokenSublist)
     return buildAST(categorizedStatements)
   }
 
@@ -47,18 +45,6 @@ class SyntacticParser {
       }
     }
     return root
-  }
-
-  private fun buildStatementList(tokenSublists: List<List<Token>>): List<Statement> {
-
-    val statementList = mutableListOf<Statement>()
-    for (tokenSublist in tokenSublists) {
-
-      val statement = Statement(tokenSublist, UnknownStatement())
-      statementList.add(statement)
-
-    }
-    return statementList
   }
 
   private fun getTokenSublists(tokens: List<Token>): List<List<Token>> {

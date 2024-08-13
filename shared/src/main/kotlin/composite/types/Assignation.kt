@@ -1,10 +1,11 @@
 package composite.types
 
 import composite.Node
+import composite.ResultType
 import visitor.NodeResult
 import visitor.NodeVisitor
 
-class Assignation(private val left: Identifier, private val right: Node) : Node {
+class Assignation(private val left: Node, private val right: Node) : Node {
 
   override fun solve() : NodeResult {
 

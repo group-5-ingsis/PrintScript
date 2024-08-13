@@ -6,7 +6,7 @@ import token.Token
 
 class ParserTester {
 
-  private fun getTokenSublists(tokens: List<Token>): List<List<Token>> {
+  private fun getTokenSublist(tokens: List<Token>): List<List<Token>> {
     val tokenSublists = mutableListOf<List<Token>>()
     var j = 0
     for ((index, token) in tokens.withIndex()) {
@@ -22,7 +22,7 @@ class ParserTester {
   fun testTokenSplittingBySemicolon() {
     val lexer = Lexer
     val tokens: List<Token> = lexer.lex("const a: number = 21; let b: string;", listOf())
-    println(getTokenSublists(tokens))
+    println(getTokenSublist(tokens))
   }
 
   @Test

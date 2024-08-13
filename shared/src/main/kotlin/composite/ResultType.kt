@@ -1,4 +1,4 @@
-package composite.types
+package composite
 
 enum class ResultType {
   ASSIGNATION,

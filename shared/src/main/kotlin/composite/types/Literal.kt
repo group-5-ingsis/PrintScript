@@ -1,18 +1,15 @@
 package composite.types
 
 import composite.Node
-import composite.ResultType
 import visitor.NodeResult
 import visitor.NodeVisitor
 
-class NumericLiteral(private val value: Number) : Node {
-
+class Literal : Node {
   override fun solve(): NodeResult {
-    return NodeResult(ResultType.LITERAL, value, null)
+    TODO("Not yet implemented")
   }
 
   override fun accept(visitor: NodeVisitor) {
     TODO("Not yet implemented")
   }
-
 }

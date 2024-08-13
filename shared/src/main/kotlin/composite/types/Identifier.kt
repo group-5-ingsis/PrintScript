@@ -1,9 +1,9 @@
 package composite.types
 
 import composite.Node
+import composite.ResultType
 import visitor.NodeResult
 import visitor.NodeVisitor
-
 
 class Identifier(private val value: String) : Node {
 
