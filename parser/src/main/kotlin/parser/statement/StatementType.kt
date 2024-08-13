@@ -77,7 +77,7 @@ class StatementType(private val elements: List<TokensNamesForStatements>, val  n
                         TokensNamesForStatements.SingleName("ASSIGNMENT"),
                         TokensNamesForStatements.MultipleNames(listOf("NUMBER", "STRING", "IDENTIFIER")),
                         TokensNamesForStatements.SingleName("PUNCTUATION"),
-                        ), "AssignationDeclaration"
+                        ), "AssignDeclare"
                 )
             )
         }
