@@ -3,13 +3,13 @@ package parser
 import lexer.Lexer
 import org.junit.jupiter.api.Test
 import parser.statement.Statement
-import parser.statement.StatementType
+import parser.statement.StatementCategorizer
 import kotlin.test.assertEquals
 
 
 class StatementCategoryTest {
 
-
+    private val categorizer = StatementCategorizer()
 
     @Test
     fun testAssignationDeclaration(){
@@ -19,7 +19,7 @@ class StatementCategoryTest {
         val statement = Statement(tokens, "Unknown")
 
         val statements = listOf(statement)
-        val categorizedStatements = StatementType.categorize(statements)
+        val categorizedStatements = categorizer.categorize(statements)
         assertEquals("Declaration", categorizedStatements[0].statementType)
     }
 
@@ -31,12 +31,9 @@ class StatementCategoryTest {
         val statement = Statement(tokens, "Unknown")
 
         val statements = listOf(statement)
-        val categorizedStatements = StatementType.categorize(statements)
+        val categorizedStatements = categorizer.categorize(statements)
         assertEquals("Declaration", categorizedStatements[0].statementType)
     }
-
-
-
 
 
     @Test
@@ -48,7 +45,7 @@ class StatementCategoryTest {
 
 
         val statements = listOf(statement)
-        val categorizedStatements = StatementType.categorize(statements)
+        val categorizedStatements = categorizer.categorize(statements)
         assertEquals("Assignation", categorizedStatements[0].statementType)
     }
 }

@@ -27,8 +27,8 @@ class SyntacticParser {
   }
 
   private fun parse(tokens: List<Token>): RootNode {
-    val tokenSublist : List<List<Token>> = getTokenSublists(tokens)
-    val categorizedStatements = categorizer.categorize(tokenSublist)
+    val statements : List<Statement> = getStatements(tokens)
+    val categorizedStatements = categorizer.categorize(statements)
     return buildAST(categorizedStatements)
   }
 
@@ -47,17 +47,22 @@ class SyntacticParser {
     return root
   }
 
-  private fun getTokenSublists(tokens: List<Token>): List<List<Token>> {
-    val tokenSublists = mutableListOf<List<Token>>()
+  private fun getStatements(tokens: List<Token>): List<Statement> {
+    val statements = mutableListOf<Statement>()
     var j = 0
+
     for ((index, token) in tokens.withIndex()) {
       if (token.type == "PUNCTUATION" && token.value == ";") {
-        tokenSublists.add(tokens.subList(j, index))
-        j += index + 1
+        val sublist = tokens.subList(j, index + 1)
+        val statementType = "UNKNOWN"
+        statements.add(Statement(sublist, statementType))
+        j = index + 1
       }
     }
-    return tokenSublists
+
+    return statements
   }
+
 
   /* Represents the root of an AST. */
   class RootNode private constructor(): Node {

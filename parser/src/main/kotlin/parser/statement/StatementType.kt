@@ -43,17 +43,8 @@ class StatementType(private val elements: List<TokensNamesForStatements>, val  n
         val allExistingStatements: MutableSet<StatementType> = mutableSetOf()
 
         init {
-            allExistingStatements.add(StatementType(listOf(), "Unknown"))
-            allExistingStatements.add(StatementType(
-                listOf(
-                    TokensNamesForStatements.SingleName("KEYWORD"),
-                    TokensNamesForStatements.SingleName("VARIABLE_NAME"),
-                    TokensNamesForStatements.SingleName("PUNCTUATION"),
-                    TokensNamesForStatements.SingleName("VARIABLE_TYPE"),
-                    TokensNamesForStatements.SingleName("ASSIGNMENT"),
-                    TokensNamesForStatements.MultipleNames(listOf("NUMBER", "STRING", "IDENTIFIER"))
-                ), "AssignationDeclaration")
-            )
+
+            addAssignDeclare()
             allExistingStatements.add(StatementType(
                 listOf(
                     TokensNamesForStatements.SingleName("DECLARATION_KEYWORD"),
@@ -71,7 +62,24 @@ class StatementType(private val elements: List<TokensNamesForStatements>, val  n
                 ),
                 "Assignation"
             ))
+            allExistingStatements.add(StatementType(listOf(), "Unknown"))
 
+        }
+
+        private fun addAssignDeclare() {
+            allExistingStatements.add(
+                StatementType(
+                    listOf(
+                        TokensNamesForStatements.SingleName("DECLARATION_KEYWORD"),
+                        TokensNamesForStatements.SingleName("IDENTIFIER"),
+                        TokensNamesForStatements.SingleName("PUNCTUATION"),
+                        TokensNamesForStatements.SingleName("VARIABLE_TYPE"),
+                        TokensNamesForStatements.SingleName("ASSIGNMENT"),
+                        TokensNamesForStatements.MultipleNames(listOf("NUMBER", "STRING", "IDENTIFIER")),
+                        TokensNamesForStatements.SingleName("PUNCTUATION"),
+                        ), "AssignationDeclaration"
+                )
+            )
         }
 
 
@@ -93,21 +101,7 @@ class StatementType(private val elements: List<TokensNamesForStatements>, val  n
             return allExistingStatements
         }
 
-        fun categorize(statements: List<Statement>) : List<Statement> {
-            val categorizedStatements = mutableListOf<Statement>()
-            val newList = allExistingStatements.toList()
 
-            for (statement in statements) {
-                for (allowedStatement in newList) {
-                    val isType = allowedStatement.isType(statement)
-                    if (isType) {
-                        statement.statementType = allowedStatement.name
-                        categorizedStatements.add(statement)
-                    }
-                }
-            }
-            return categorizedStatements
-        }
 
 
 
