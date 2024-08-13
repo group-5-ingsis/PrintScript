@@ -1,7 +1,5 @@
 package parser.statement
 
-import token.Token
-
 class StatementType(private val elements: List<TokensNamesForStatements>, val  name: String) {
 
     init {
@@ -40,30 +38,45 @@ class StatementType(private val elements: List<TokensNamesForStatements>, val  n
 
     }
     companion object {
+
         val allExistingStatements: MutableSet<StatementType> = mutableSetOf()
 
         init {
-
             addAssignDeclare()
-            allExistingStatements.add(StatementType(
-                listOf(
-                    TokensNamesForStatements.SingleName("DECLARATION_KEYWORD"),
-                    TokensNamesForStatements.SingleName("IDENTIFIER"),
-                    TokensNamesForStatements.SingleName("PUNCTUATION"),
-                    TokensNamesForStatements.SingleName("VARIABLE_TYPE")
-                ),
-                "Declaration"
-            ))
-            allExistingStatements.add( StatementType(
-                listOf(
-                    TokensNamesForStatements.SingleName("IDENTIFIER"),
-                    TokensNamesForStatements.SingleName("ASSIGNMENT"),
-                    TokensNamesForStatements.MultipleNames(listOf("NUMBER", "STRING", "IDENTIFIER"))
-                ),
-                "Assignation"
-            ))
-            allExistingStatements.add(StatementType(listOf(), "Unknown"))
+            addDeclaration()
+            addAssignation()
+            addUnknown()
+        }
 
+        private fun addUnknown() {
+            allExistingStatements.add(StatementType(listOf(), "Unknown"))
+        }
+
+        private fun addAssignation() {
+            allExistingStatements.add(
+                StatementType(
+                    listOf(
+                        TokensNamesForStatements.SingleName("IDENTIFIER"),
+                        TokensNamesForStatements.SingleName("ASSIGNMENT"),
+                        TokensNamesForStatements.MultipleNames(listOf("NUMBER", "STRING", "IDENTIFIER"))
+                    ),
+                    "Assignation"
+                )
+            )
+        }
+
+        private fun addDeclaration() {
+            allExistingStatements.add(
+                StatementType(
+                    listOf(
+                        TokensNamesForStatements.SingleName("DECLARATION_KEYWORD"),
+                        TokensNamesForStatements.SingleName("IDENTIFIER"),
+                        TokensNamesForStatements.SingleName("PUNCTUATION"),
+                        TokensNamesForStatements.SingleName("VARIABLE_TYPE")
+                    ),
+                    "Declaration"
+                )
+            )
         }
 
         private fun addAssignDeclare() {
@@ -87,23 +100,6 @@ class StatementType(private val elements: List<TokensNamesForStatements>, val  n
             data class SingleName(val value: String) : TokensNamesForStatements()
             data class MultipleNames(val values: List<String>) : TokensNamesForStatements()
         }
-
-        fun getStatementNameCorrespondingToTokens(tokens : List<Token>): String {
-            for (aStatement in allExistingStatements){
-                if (aStatement.isType(Statement(tokens, ""))){
-                    return aStatement.name
-                }
-            }
-            return "Unknown"
-        }
-
-        fun getAllowedStatements() : Set<StatementType>{
-            return allExistingStatements
-        }
-
-
-
-
 
     }
     }
