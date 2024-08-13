@@ -20,10 +20,10 @@ class InterpreterTest {
 
     @Test
     fun testNumberAssignation(){
-        val tokens: List<Token> = Lexer.lex("a = 6;", listOf())
+        val tokens: List<Token> = Lexer.lex("a = 6; a = 7;", listOf())
         val ast: SyntacticParser.RootNode = syntaxParser.run(tokens)
         interpreter.interpret(ast)
-        assertEquals(6, VariableTable.getVariable("a"))
+        assertEquals(7, VariableTable.getVariable("a"))
     }
 
 
