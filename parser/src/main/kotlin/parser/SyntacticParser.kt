@@ -21,9 +21,9 @@ class SyntacticParser {
   }
 
   private fun parse(tokens: List<Token>): RootNode {
-    val statements : List<Statement> = getStatements(tokens)
-    val categorizedStatements = categorize(statements)
-    return buildAST(categorizedStatements)
+    var statements : List<Statement> = getStatements(tokens)
+    statements = categorize(statements)
+    return buildAST(statements)
   }
 
   private fun buildAST(categorizedStatements: List<Statement>): RootNode {
