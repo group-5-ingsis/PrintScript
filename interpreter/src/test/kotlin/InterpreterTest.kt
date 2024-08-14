@@ -53,11 +53,19 @@ class InterpreterTest {
         assertEquals("\"Hello\"", VariableTable.getVariable("b"))
     }
 
-  @Test
-  fun testMethodCall() {
-    val tokens: List<Token> = Lexer.lex("let a : Number = 2; println(a);", listOf())
-    val ast: SyntacticParser.RootNode = syntaxParser.run(tokens)
-    interpreter.interpret(ast)
-  }
+    @Test
+    fun testMethodCallString() {
+        val tokens: List<Token> = Lexer.lex("let a : String; a = \"Hello\"; println(a);", listOf())
+        val ast: SyntacticParser.RootNode = syntaxParser.run(tokens)
+        interpreter.interpret(ast)
+    }
+
+
+    @Test
+    fun testMethodCallNumber() {
+        val tokens: List<Token> = Lexer.lex("let a : Number; a = 2; println(a);", listOf())
+        val ast: SyntacticParser.RootNode = syntaxParser.run(tokens)
+        interpreter.interpret(ast)
+    }
 
 }
