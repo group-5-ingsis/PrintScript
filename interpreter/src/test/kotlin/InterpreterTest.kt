@@ -12,15 +12,16 @@ class InterpreterTest {
     private val interpreter = Interpreter
 
     @Test
-    fun testDeclarationInterpreter() {
+    fun testDeclarationWithNumber() {
         val tokens: List<Token> = Lexer.lex("let a: Number;", listOf())
         val ast: SyntacticParser.RootNode = syntaxParser.run(tokens)
         interpreter.interpret(ast)
+        assertEquals("undefined", VariableTable.getVariable("a"))
     }
 
     @Test
-    fun testNumberAssignation(){
-        val tokens: List<Token> = Lexer.lex("let a: Number;", listOf())
+    fun testDeclarationWithString(){
+        val tokens: List<Token> = Lexer.lex("let a: String;", listOf())
         val ast: SyntacticParser.RootNode = syntaxParser.run(tokens)
         interpreter.interpret(ast)
         assertEquals("undefined", VariableTable.getVariable("a"))
@@ -28,7 +29,7 @@ class InterpreterTest {
 
 
     @Test
-    fun testStringAssignation(){
+    fun testAssignationWithString(){
         val tokens: List<Token> = Lexer.lex("a = \"Hello World\";" , listOf())
         val ast: SyntacticParser.RootNode = syntaxParser.run(tokens)
         interpreter.interpret(ast)
@@ -37,7 +38,16 @@ class InterpreterTest {
 
 
     @Test
-    fun testLiteralAssignation(){
+    fun testAssignationWithNumber(){
+        val tokens: List<Token> = Lexer.lex("a = 2;" , listOf())
+        val ast: SyntacticParser.RootNode = syntaxParser.run(tokens)
+        interpreter.interpret(ast)
+        assertEquals(2, VariableTable.getVariable("a"))
+    }
+
+
+    @Test
+    fun testAssignationWithLiteral(){
         val tokens: List<Token> = Lexer.lex("a = b;" , listOf())
         val ast: SyntacticParser.RootNode = syntaxParser.run(tokens)
         interpreter.interpret(ast)
@@ -45,25 +55,32 @@ class InterpreterTest {
     }
 
     @Test
-    fun testAssignationDeclaration(){
-        val tokens: List<Token> = Lexer.lex("let a: Number = 2; a = 3; let b: String; b = \"Hello\";", listOf())
+    fun testAssignationDeclarationWithNumber(){
+        val tokens: List<Token> = Lexer.lex("let a: Number = 2; a = 3;", listOf())
         val ast: SyntacticParser.RootNode = syntaxParser.run(tokens)
         interpreter.interpret(ast)
         assertEquals(3, VariableTable.getVariable("a"))
+    }
+
+    @Test
+    fun testAssignationDeclarationWithString(){
+        val tokens: List<Token> = Lexer.lex("let b: String; b = \"Hello\";", listOf())
+        val ast: SyntacticParser.RootNode = syntaxParser.run(tokens)
+        interpreter.interpret(ast)
         assertEquals("\"Hello\"", VariableTable.getVariable("b"))
     }
 
     @Test
-    fun testMethodCallString() {
-        val tokens: List<Token> = Lexer.lex("let a : String; a = \"Hello\"; println(a);", listOf())
+    fun testMethodCallWithString() {
+        val tokens: List<Token> = Lexer.lex("let a: String; a = \"Hello\"; println(a);", listOf())
         val ast: SyntacticParser.RootNode = syntaxParser.run(tokens)
         interpreter.interpret(ast)
     }
 
 
     @Test
-    fun testMethodCallNumber() {
-        val tokens: List<Token> = Lexer.lex("let a : Number; a = 2; println(a);", listOf())
+    fun testMethodCallWithNumber() {
+        val tokens: List<Token> = Lexer.lex("let a: Number; a = 2; println(a);", listOf())
         val ast: SyntacticParser.RootNode = syntaxParser.run(tokens)
         interpreter.interpret(ast)
     }
