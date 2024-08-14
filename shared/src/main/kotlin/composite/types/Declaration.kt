@@ -21,6 +21,6 @@ class Declaration(private val left: Node, private val right: Node) : Node {
   }
 
   override fun accept(visitor: NodeVisitor){
-    return
+    return visitor.visitDeclaration(this)
   }
 }
