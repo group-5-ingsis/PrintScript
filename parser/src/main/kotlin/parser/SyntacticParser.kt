@@ -7,13 +7,12 @@ import composite.Node
 import composite.ResultType
 import parser.builders.DeclarationASTBuilder
 import parser.statement.Statement
-import parser.statement.StatementCategorizer
+import parser.statement.StatementType.Companion.categorize
 import token.Token
 import visitor.NodeResult
 import visitor.NodeVisitor
 
 class SyntacticParser {
-  private val categorizer: StatementCategorizer = StatementCategorizer()
   /* Command pattern */
   private val builders: Map<String, ASTBuilder> = mapOf(
     "Declaration" to DeclarationASTBuilder(),
@@ -28,14 +27,14 @@ class SyntacticParser {
 
   private fun parse(tokens: List<Token>): RootNode {
     val statements : List<Statement> = getStatements(tokens)
-    val categorizedStatements = categorizer.categorize(statements)
+    val categorizedStatements = categorize(statements)
     return buildAST(categorizedStatements)
   }
 
   private fun buildAST(categorizedStatements: List<Statement>): RootNode {
     val root = RootNode.create()
     for (statement in categorizedStatements) {
-      val statementType = statement.statementType.toString()
+      val statementType = statement.statementType
       val builder = builders[statementType]
       if (builder != null) {
         val child = builder.build(statement)
