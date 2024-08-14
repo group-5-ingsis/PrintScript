@@ -8,21 +8,26 @@ import token.Token
 
 class AssignDeclareASTBuilder : ASTBuilder {
 
-  /* ASSIGNDECLARE STRUCTURE: let a: Number = 22; // "Test"; // b; */
   override fun build(statement: Statement): Node {
+
     val tokens: List<Token> = statement.content
-    val leafNode: Node = getLeafNodeType(tokens)
-    val assignation: Node = Assignation(
-      Declaration(
-        Identifier(tokens[1].value),
-        VariableType(tokens[3].type),
-      ),
-      leafNode
+
+
+    val identifier = Identifier(tokens[1].value)
+    val variableType = VariableType(tokens[3].type)
+    val literal = getLeafNodeType(statement)
+
+    val assignationDeclaration: Node = AssignationDeclaration(
+      Declaration(identifier, variableType),
+      Assignation(identifier, literal)
     )
-    return assignation
+
+    return assignationDeclaration
+
   }
 
-  private fun getLeafNodeType(tokens: List<Token>): Node {
+  private fun getLeafNodeType(statement: Statement): Node {
+    val tokens = statement.content
     val token: Token = tokens[5]
     return when (token.type) {
       "NUMBER" -> NumericLiteral(token.value.toDouble())
