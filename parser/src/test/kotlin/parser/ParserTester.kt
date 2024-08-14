@@ -98,7 +98,8 @@ class ParserTester {
     val result: SyntacticParser.RootNode = syntaxParser.run(tokens)
     println(result.getChildren())
     for (node in result.getChildren()) {
-      println(node.solve())
+      val nodeResult = node.solve()
+      println(nodeResult)
     }
 
   }
