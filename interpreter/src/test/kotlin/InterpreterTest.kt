@@ -46,10 +46,11 @@ class InterpreterTest {
 
     @Test
     fun testAssignationDeclaration(){
-        val tokens: List<Token> = Lexer.lex("let a: Number = 2; a = 3;" , listOf())
+        val tokens: List<Token> = Lexer.lex("let a: Number = 2; a = 3; let b: String; b = \"Hello\";", listOf())
         val ast: SyntacticParser.RootNode = syntaxParser.run(tokens)
         interpreter.interpret(ast)
         assertEquals(3, VariableTable.getVariable("a"))
+        assertEquals("\"Hello\"", VariableTable.getVariable("b"))
     }
 
 }
