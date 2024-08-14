@@ -3,7 +3,8 @@ package parser
 import composite.Node
 import parser.builders.*
 import parser.statement.Statement
-import parser.statement.StatementType.Companion.categorize
+import parser.statement.StatementManager
+
 import token.Token
 import visitor.NodeVisitor
 
@@ -22,7 +23,7 @@ class SyntacticParser {
 
   private fun parse(tokens: List<Token>): RootNode {
     var statements : List<Statement> = getStatements(tokens)
-    statements = categorize(statements)
+    statements = StatementManager.categorize(statements)
     return buildAST(statements)
   }
 
