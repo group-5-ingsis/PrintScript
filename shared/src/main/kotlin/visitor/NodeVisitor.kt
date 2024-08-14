@@ -42,25 +42,40 @@ class NodeVisitor: Visitor {
         val method = methodInfo.primaryValue as NodeResult
         val methodName = method.primaryValue.toString()
 
-        var parameters : String = getStringParam(methodInfo)
+        val parameters : String = getParametersAsString(methodInfo)
 
         executeMethod(methodName, parameters)
     }
 
-    private fun getStringParam(methodInfo : NodeResult) : String {
-      if (methodInfo.type == ResultType.IDENTIFIER) {
-        return VariableTable.getVariable(methodInfo.primaryValue.toString()).toString();
-      }else if (methodInfo.type == ResultType.LITERAL) {
-        return methodInfo.primaryValue.toString();
-      }
-      else if (methodInfo.type == ResultType.ARGUMENTS) {
-        val nodeList : List<Node> = methodInfo.primaryValue as List<Node>
-        return getStringParam(nodeList[0].solve())
-      }
-      return getStringParam(methodInfo.secondaryValue as NodeResult)
+    private fun getParametersAsString(methodInfo: NodeResult): String {
+
+        val type = methodInfo.type
+
+        val isIdentifier = ResultType.IDENTIFIER
+        val isLiteral = ResultType.LITERAL
+        val isArgument = ResultType.ARGUMENTS
+
+        val methodName = methodInfo.primaryValue
+
+        return when (type) {
+            isIdentifier -> {
+                VariableTable.getVariable(methodName.toString()).toString()
+            }
+            isLiteral -> {
+                methodName.toString()
+            }
+            isArgument -> {
+                val argumentList = methodName as List<Node>
+                getParametersAsString(argumentList[0].solve())
+            }
+            else -> {
+                val arguments = methodInfo.secondaryValue
+                getParametersAsString(arguments as NodeResult)
+            }
+        }
     }
 
-    private fun executeMethod(methodName: String, parameters: Any?) {
+    private fun executeMethod(methodName: String, parameters: String) {
 
         val methodMap: Map<String, (Any?) -> Unit> = getRegisteredFunctionsMap()
 
