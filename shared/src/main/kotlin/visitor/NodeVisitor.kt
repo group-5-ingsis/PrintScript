@@ -1,5 +1,7 @@
 package visitor
 
+import composite.Node
+import composite.ResultType
 import composite.types.Assignation
 import composite.types.AssignationDeclaration
 import composite.types.Declaration
@@ -37,12 +39,25 @@ class NodeVisitor: Visitor {
     override fun visitMethodCall(methodCall: MethodCall) {
         val methodInfo = methodCall.solve()
 
-        val method = methodInfo.primaryValue
-        val methodName = method.toString()
+        val method = methodInfo.primaryValue as NodeResult
+        val methodName = method.primaryValue.toString()
 
-        val parameters = methodInfo.secondaryValue
+        var parameters : String = getStringParam(methodInfo)
 
         executeMethod(methodName, parameters)
+    }
+
+    private fun getStringParam(methodInfo : NodeResult) : String {
+      if (methodInfo.type == ResultType.IDENTIFIER) {
+        return VariableTable.getVariable(methodInfo.primaryValue.toString()).toString();
+      }else if (methodInfo.type == ResultType.LITERAL) {
+        return methodInfo.primaryValue.toString();
+      }
+      else if (methodInfo.type == ResultType.ARGUMENTS) {
+        val nodeList : List<Node> = methodInfo.primaryValue as List<Node>
+        return getStringParam(nodeList[0].solve())
+      }
+      return getStringParam(methodInfo.secondaryValue as NodeResult)
     }
 
     private fun executeMethod(methodName: String, parameters: Any?) {
@@ -60,7 +75,7 @@ class NodeVisitor: Visitor {
 
     private fun getRegisteredFunctionsMap(): Map<String, (Any?) -> Unit> {
         val methodMap: Map<String, (Any?) -> Unit> = mapOf(
-            "printLn" to { args ->
+            "println" to { args ->
                 println(args.toString())
             }
         )

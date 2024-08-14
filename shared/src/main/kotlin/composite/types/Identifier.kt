@@ -11,6 +11,10 @@ class Identifier(private val value: String) : Node {
     return NodeResult(ResultType.IDENTIFIER, value, null)
   }
 
+  fun getValue() : String {
+    return value
+  }
+
   override fun accept(visitor: NodeVisitor) {
     TODO("Not yet implemented")
   }

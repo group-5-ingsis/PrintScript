@@ -12,6 +12,7 @@ class MethodCall(private val identifier: Identifier, private val arguments: Argu
   /* Possibilities for arguments: Number, String, Identifier. */
   @Throws(InvalidMethodException::class)
   override fun solve(): NodeResult {
+    
     val method = identifier.solve()
     val args = arguments.solve()
 
@@ -19,6 +20,7 @@ class MethodCall(private val identifier: Identifier, private val arguments: Argu
 
     val isBuiltInMethod = isBuiltInMethod(methodName)
     if (!isBuiltInMethod) {
+
       throw InvalidMethodException("Unexpected method call: ${method.primaryValue}")
     }
 
@@ -26,7 +28,7 @@ class MethodCall(private val identifier: Identifier, private val arguments: Argu
   }
 
   override fun accept(visitor: NodeVisitor) {
-    TODO("Not yet implemented")
+    return visitor.visitMethodCall(this)
   }
 
   private fun isBuiltInMethod(name: String) : Boolean {
