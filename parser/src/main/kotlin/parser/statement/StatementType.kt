@@ -65,6 +65,7 @@ class StatementType(private val elements: List<TokensNamesForStatements>, val  n
             addAssignDeclare()
             addDeclaration()
             addAssignation()
+            addMethodCall()
             addUnknown()
         }
 
@@ -99,6 +100,20 @@ class StatementType(private val elements: List<TokensNamesForStatements>, val  n
             )
         }
 
+      private fun addMethodCall() {
+        allExistingStatements.add(
+          StatementType(
+            listOf(
+              TokensNamesForStatements.SingleName("PREDEF_METHOD"),
+              TokensNamesForStatements.SingleName("PUNCTUATION"),
+              TokensNamesForStatements.MultipleNames(listOf("NUMBER", "STRING", "IDENTIFIER")),
+              TokensNamesForStatements.SingleName("PUNCTUATION"),
+              TokensNamesForStatements.SingleName("PUNCTUATION"),
+            ), "AssignDeclare"
+          )
+        )
+      }
+
         private fun addAssignDeclare() {
             allExistingStatements.add(
                 StatementType(
@@ -114,6 +129,7 @@ class StatementType(private val elements: List<TokensNamesForStatements>, val  n
                 )
             )
         }
+
 
 
         sealed class TokensNamesForStatements {
