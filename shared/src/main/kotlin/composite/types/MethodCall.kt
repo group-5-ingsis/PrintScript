@@ -14,14 +14,14 @@ class MethodCall(private val identifier: Identifier, private val arguments: Argu
   override fun solve(): NodeResult {
     val method = identifier.solve()
     val args = arguments.solve()
-    if (isBuiltInMethod(method.primaryValue.toString())) {
+    if (!isBuiltInMethod(method.primaryValue.toString())) {
       throw InvalidMethodException("Unexpected method call: ${method.primaryValue}")
     }
     return NodeResult(ResultType.METHOD_CALL, method, args)
   }
 
   override fun accept(visitor: NodeVisitor) {
-    TODO("Not yet implemented")
+    return visitor.visitMethodCall(this)
   }
 
   private fun isBuiltInMethod(name: String) : Boolean {

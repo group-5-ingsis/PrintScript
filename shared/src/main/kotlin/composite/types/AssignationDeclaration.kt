@@ -11,7 +11,7 @@ class AssignationDeclaration(private val declaration: Declaration, private val a
         val declarationResult = declaration.solve()
         val assignationResult = assignation.solve()
 
-        val assignedValue = assignationResult.primaryValue
+        val assignedValue = assignationResult.secondaryValue
 
         return NodeResult(
             ResultType.ASSIGNATION_DECLARATION,
