@@ -21,7 +21,7 @@ class ParserTester {
   @Test
   fun testTokenSplittingBySemicolon() {
     val lexer = Lexer
-    val tokens: List<Token> = lexer.lex("const a: number = 21; let b: string;", listOf())
+    val tokens: List<Token> = lexer.lex("println(23);", listOf())
     println(getTokenSublist(tokens))
   }
 
@@ -88,5 +88,12 @@ class ParserTester {
     for (node in result.getChildren()) {
       println(node.solve())
     }
+  }
+
+  @Test
+  fun testBuildMethodCallAST() {
+    val lexer = Lexer
+    val syntaxParser = SyntacticParser()
+    val tokens: List<Token> = lexer.lex("println(3);", listOf())
   }
 }
