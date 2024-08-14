@@ -11,17 +11,21 @@ class MethodCallASTBuilder : ASTBuilder {
   /* IDENTIFIER, PUNCTUATION, ARG, ..., PUNCTUATION, PUNCTUATION */
   override fun build(statement: Statement): Node {
     val tokens: List<Token> = statement.content
-    val arguments: List<Token> = separateArguments(tokens)
-    val nodes: List<Node> = buildNodesForArguments(arguments)
-    return MethodCall(
-      Identifier(
-        tokens[0].value
-      ),
-      Arguments(
-        nodes
-      )
+    val argumentsList: List<Token> = separateArguments(tokens)
+    val nodes: List<Node> = buildNodesForArguments(argumentsList)
+
+    val identifier = Identifier(
+      tokens[0].value
     )
-    TODO("Not yet implemented")
+
+    val arguments = Arguments(
+      nodes
+    )
+
+    return MethodCall(
+      identifier,
+      arguments
+    )
   }
 
   private fun buildNodesForArguments(arguments: List<Token>): List<Node> {

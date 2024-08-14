@@ -95,5 +95,11 @@ class ParserTester {
     val lexer = Lexer
     val syntaxParser = SyntacticParser()
     val tokens: List<Token> = lexer.lex("println(3);", listOf())
+    val result: SyntacticParser.RootNode = syntaxParser.run(tokens)
+    println(result.getChildren())
+    for (node in result.getChildren()) {
+      println(node.solve())
+    }
+
   }
 }

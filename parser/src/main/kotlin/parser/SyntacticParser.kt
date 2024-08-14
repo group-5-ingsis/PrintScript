@@ -1,10 +1,7 @@
 package parser
 
-import parser.builders.ASTBuilder
-import parser.builders.AssignDeclareASTBuilder
-import parser.builders.AssignationASTBuilder
 import composite.Node
-import parser.builders.DeclarationASTBuilder
+import parser.builders.*
 import parser.statement.Statement
 import parser.statement.StatementType.Companion.categorize
 import token.Token
@@ -16,6 +13,7 @@ class SyntacticParser {
     "Declaration" to DeclarationASTBuilder(),
     "Assignation" to AssignationASTBuilder(),
     "AssignDeclare" to AssignDeclareASTBuilder(),
+    "MethodCall" to MethodCallASTBuilder(),
   )
 
   fun run(tokens: List<Token>): RootNode {

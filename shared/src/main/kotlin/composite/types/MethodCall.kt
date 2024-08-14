@@ -6,7 +6,7 @@ import exceptions.InvalidMethodException
 import visitor.NodeResult
 import visitor.NodeVisitor
 
-class MethodCall(private val identifier: Node, private val arguments: Arguments) : Node {
+class MethodCall(private val identifier: Identifier, private val arguments: Arguments) : Node {
   private val builtInMethods: List<String> = listOf("println")
 
   /* Possibilities for arguments: Number, String, Identifier. */

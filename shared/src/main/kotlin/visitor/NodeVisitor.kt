@@ -3,6 +3,7 @@ package visitor
 import composite.types.Assignation
 import composite.types.AssignationDeclaration
 import composite.types.Declaration
+import composite.types.MethodCall
 
 
 class NodeVisitor: Visitor {
@@ -32,5 +33,39 @@ class NodeVisitor: Visitor {
 
         VariableTable.setVariable(identifier.toString(), value)
     }
+
+    override fun visitMethodCall(methodCall: MethodCall) {
+        val methodInfo = methodCall.solve()
+
+        val method = methodInfo.primaryValue
+        val methodName = method.toString()
+
+        val parameters = methodInfo.secondaryValue
+
+        executeMethod(methodName, parameters)
+    }
+
+    private fun executeMethod(methodName: String, parameters: Any?) {
+
+        val methodMap: Map<String, (Any?) -> Unit> = getRegisteredFunctionsMap()
+
+        val method = methodMap[methodName]
+
+        if (method != null) {
+            method(parameters)
+        } else {
+            throw IllegalArgumentException("Method $methodName is not recognized.")
+        }
+    }
+
+    private fun getRegisteredFunctionsMap(): Map<String, (Any?) -> Unit> {
+        val methodMap: Map<String, (Any?) -> Unit> = mapOf(
+            "printLn" to { args ->
+                println(args.toString())
+            }
+        )
+        return methodMap
+    }
+
 
 }
