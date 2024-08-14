@@ -4,23 +4,20 @@ import parser.builders.ASTBuilder
 import parser.builders.AssignDeclareASTBuilder
 import parser.builders.AssignationASTBuilder
 import composite.Node
-import composite.ResultType
 import parser.builders.DeclarationASTBuilder
 import parser.statement.Statement
 import parser.statement.StatementType.Companion.categorize
 import token.Token
-import visitor.NodeResult
 import visitor.NodeVisitor
 
 class SyntacticParser {
-  /* Command pattern */
+  
   private val builders: Map<String, ASTBuilder> = mapOf(
     "Declaration" to DeclarationASTBuilder(),
     "Assignation" to AssignationASTBuilder(),
     "AssignDeclare" to AssignDeclareASTBuilder(),
   )
 
-  /* Client method for calls to the syntactic parser. */
   fun run(tokens: List<Token>): RootNode {
     return parse(tokens)
   }
@@ -63,16 +60,11 @@ class SyntacticParser {
   }
 
 
-  /* Represents the root of an AST. */
-  class RootNode private constructor(): Node {
-    private val children = mutableListOf<Node>() // Each Node is a reference to a subtree. Each subtree is a Statement.
+  class RootNode private constructor(){
+    private val children = mutableListOf<Node>()
 
     fun addChild(child: Node) {
       children.add(child)
-    }
-
-    fun removeChild(child: Node) {
-      children.remove(child)
     }
 
     fun getChildren(): List<Node> {
@@ -85,15 +77,7 @@ class SyntacticParser {
       }
     }
 
-    override fun solve(): NodeResult {
-      for (child in children) {
-        return child.solve()
-      }
-
-      return NodeResult(ResultType.DATA_TYPE, "", "")
-    }
-
-    override fun accept(visitor: NodeVisitor) {
+    fun accept(visitor: NodeVisitor) {
       for (child in children) {
         child.accept(visitor)
       }
