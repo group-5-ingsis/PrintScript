@@ -1,6 +1,7 @@
 package visitor
 
 import composite.types.Assignation
+import composite.types.AssignationDeclaration
 import composite.types.Declaration
 
 
@@ -21,6 +22,15 @@ class NodeVisitor: Visitor {
         val identifier = declarationInfo.primaryValue
 
         VariableTable.setVariable(identifier.toString(), "undefined")
+    }
+
+    override fun visitAssignDeclare(assignationDeclaration: AssignationDeclaration) {
+        val assignDeclarationInfo = assignationDeclaration.solve()
+
+        val identifier = assignDeclarationInfo.primaryValue
+        val value = assignDeclarationInfo.secondaryValue
+
+        VariableTable.setVariable(identifier.toString(), value)
     }
 
 }
