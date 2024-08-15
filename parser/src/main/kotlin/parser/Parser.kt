@@ -11,7 +11,7 @@ class Parser {
 
   /* Performs a call to both parsers. */
   @Throws(SemanticErrorException::class)
-  fun run(tokens: List<Token>, parameters: List<String>): SyntacticParser.RootNode {
+  fun run(tokens: List<Token>): SyntacticParser.RootNode {
     val ast: SyntacticParser.RootNode = syntacticParser.run(tokens)
     return semanticParser.run(ast)
   }

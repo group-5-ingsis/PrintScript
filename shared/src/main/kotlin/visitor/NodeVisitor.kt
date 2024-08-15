@@ -6,6 +6,7 @@ import composite.types.Assignation
 import composite.types.AssignationDeclaration
 import composite.types.Declaration
 import composite.types.MethodCall
+import java.sql.Statement
 
 
 class NodeVisitor: Visitor {
@@ -18,6 +19,9 @@ class NodeVisitor: Visitor {
 
         VariableTable.setVariable(identifier.toString(), value)
     }
+
+
+
 
     override fun visitDeclaration(declaration: Declaration){
         val declarationInfo = declaration.solve()
