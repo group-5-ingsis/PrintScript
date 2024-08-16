@@ -1,6 +1,6 @@
 package parser
 
-import composite.Node
+import Node2
 import parser.builders.*
 import parser.statement.Statement
 import parser.statement.StatementManager
@@ -60,13 +60,13 @@ class SyntacticParser {
 
 
   class RootNode private constructor(){
-    private val children = mutableListOf<Node>()
+    private val children = mutableListOf<Node2>()
 
-    fun addChild(child: Node) {
+    fun addChild(child: Node2) {
       children.add(child)
     }
 
-    fun getChildren(): List<Node> {
+    fun getChildren(): List<Node2> {
       return children
     }
 
@@ -78,7 +78,7 @@ class SyntacticParser {
 
     fun accept(visitor: NodeVisitor) {
       for (child in children) {
-        child.accept(visitor)
+        child.acceptVisitor(visitor)
       }
     }
 

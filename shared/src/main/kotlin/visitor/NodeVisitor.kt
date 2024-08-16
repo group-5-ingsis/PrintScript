@@ -1,17 +1,14 @@
 package visitor
 
+import Node2
 import composite.Node
-import composite.ResultType
-import composite.types.Assignation
-import composite.types.AssignationDeclaration
-import composite.types.Declaration
-import composite.types.MethodCall
-import java.sql.Statement
+import composite.NodeType
+
 
 
 class NodeVisitor: Visitor {
 
-    override fun visitAssignation(assignation: Assignation){
+    override fun visitAssignation(assignation: Node2.Assignation){
         val assignationInfo = assignation.solve()
 
         val identifier = assignationInfo.primaryValue
@@ -51,13 +48,26 @@ class NodeVisitor: Visitor {
         executeMethod(methodName, parameters)
     }
 
+    override fun getVisitorFunction(nodeType: NodeType) : (Node2) -> Unit {
+        return when (nodeType){
+            NodeType.ASSIGNATION -> TODO()
+            NodeType.DECLARATION -> TODO()
+            NodeType.LITERAL -> TODO()
+            NodeType.IDENTIFIER -> TODO()
+            NodeType.DATA_TYPE -> TODO()
+            NodeType.ASSIGNATION_DECLARATION -> TODO()
+            NodeType.METHOD_CALL -> TODO()
+            NodeType.ARGUMENTS -> TODO()
+        }
+    }
+
     private fun getParametersAsString(methodInfo: NodeResult): String {
 
         val type = methodInfo.type
 
-        val isIdentifier = ResultType.IDENTIFIER
-        val isLiteral = ResultType.LITERAL
-        val isArgument = ResultType.ARGUMENTS
+        val isIdentifier = NodeType.IDENTIFIER
+        val isLiteral = NodeType.LITERAL
+        val isArgument = NodeType.ARGUMENTS
 
         val methodName = methodInfo.primaryValue
 

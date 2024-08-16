@@ -1,5 +1,5 @@
 package visitor
 
-import composite.ResultType
+import composite.NodeType
 
-data class NodeResult(val type: ResultType, val primaryValue: Any, val secondaryValue: Any?)
+data class NodeResult(val type: NodeType, val primaryValue: Any, val secondaryValue: Any?)
