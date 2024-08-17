@@ -31,7 +31,7 @@ class MethodCallASTBuilder : ASTBuilder {
 
         return Node.Method(
             identifier = identifier,
-            arguments = listOf(arguments)
+            arguments = arguments
         )
     }
 

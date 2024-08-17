@@ -153,9 +153,8 @@ class NodeVisitor: Visitor {
     }
 
 
-    private fun getParametersAsString(methodInfoList: List<Node.Arguments>): String {
-
-        val parameters = methodInfoList.flatMap { it.argumentsOfAnyTypes }
+    private fun getParametersAsString(method: Node.Arguments): String {
+        val parameters = method.argumentsOfAnyTypes
 
         return parameters.joinToString(", ") { argument ->
             when (argument) {
@@ -171,13 +170,14 @@ class NodeVisitor: Visitor {
 
                 is Node.Arguments -> {
                     // Si es un nodo de argumentos, procesa los argumentos recursivamente
-                    getParametersAsString(listOf(argument))
+                    getParametersAsString(Node.Arguments(argument.argumentsOfAnyTypes))
                 }
 
                 else -> throw IllegalArgumentException("Tipo de argumento no soportado: ${argument.nodeType}")
             }
         }
     }
+
 
     private fun executeMethod(methodName: String, parameters: String) {
 

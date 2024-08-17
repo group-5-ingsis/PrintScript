@@ -1,0 +1,5 @@
+rules:
+    printlnArgumentCheck: true
+    typeMatchingCheck: true
+    identifierNamingCheck: true
+

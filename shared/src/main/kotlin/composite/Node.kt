@@ -48,7 +48,7 @@ sealed class Node {
      * @param identifier The method's identifier.
      */
     data class Method(
-        val arguments: List<Arguments>,
+        val arguments: Arguments,
         val identifier: Identifier
     ) : Node() {
         override val nodeType: NodeType = NodeType.METHOD_CALL
