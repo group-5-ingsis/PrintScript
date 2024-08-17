@@ -36,9 +36,8 @@ class ParserTester {
     val children = ast.getChildren()
     println(children)
     for (node in children) {
-      
-      val nodeResult = node.solve()
-      println(nodeResult)
+
+      println(node)
     }
   }
 
@@ -50,7 +49,7 @@ class ParserTester {
     val result: SyntacticParser.RootNode = syntaxParser.run(tokens)
     println(result.getChildren())
     for (node in result.getChildren()) {
-      println(node.solve())
+      println(node)
     }
   }
 
@@ -62,7 +61,7 @@ class ParserTester {
     val result: SyntacticParser.RootNode = syntaxParser.run(tokens)
     println(result.getChildren())
     for (node in result.getChildren()) {
-      println(node.solve())
+      println(node)
     }
   }
 
@@ -74,7 +73,7 @@ class ParserTester {
     val result: SyntacticParser.RootNode = syntaxParser.run(tokens)
     println(result.getChildren())
     for (node in result.getChildren()) {
-      println(node.solve())
+      println(node)
     }
   }
 
@@ -86,7 +85,7 @@ class ParserTester {
     val result: SyntacticParser.RootNode = syntaxParser.run(tokens)
     println(result.getChildren())
     for (node in result.getChildren()) {
-      println(node.solve())
+      println(node)
     }
   }
 
@@ -98,8 +97,8 @@ class ParserTester {
     val result: SyntacticParser.RootNode = syntaxParser.run(tokens)
     println(result.getChildren())
     for (node in result.getChildren()) {
-      val nodeResult = node.solve()
-      println(nodeResult)
+
+      println(node)
     }
 
   }

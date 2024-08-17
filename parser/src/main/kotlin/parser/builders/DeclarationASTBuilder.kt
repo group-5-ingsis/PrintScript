@@ -3,6 +3,7 @@ package parser.builders
 import Node2
 import parser.statement.Statement
 import token.Token
+import java.util.*
 
 /**
  * Builder class to create a Declaration node from a given statement.
@@ -21,7 +22,7 @@ class DeclarationASTBuilder : ASTBuilder {
 
         // Extract the identifier and variable type from the tokens
         val identifier = Node2.Identifier(tokens[1].value)
-        val dataType = Node2.DataType(tokens[3].value)
+        val dataType = Node2.DataType(tokens[3].value.uppercase(Locale.getDefault()))
 
         // Construct and return a Declaration node
         return Node2.Declaration(

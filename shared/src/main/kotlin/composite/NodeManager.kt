@@ -1,17 +1,17 @@
 package composite
 
+import exceptions.UsuportedDataTypeExeption
+
 object NodeManager {
-    val allExistsDataTypes: MutableSet<String> = mutableSetOf()
-    val allExistsMethodCalls : MutableSet<String> = mutableSetOf()
+    val allExistsDataTypes: MutableSet<String> = mutableSetOf(
+        "NUMBER",
+        "STRING",
+        "INT",
 
-    init {
-        addDataType("NUMBER")
-        addDataType("STRING")
-        addDataType("INT")
-
-        allExistsMethodCalls.add("println")
-
-    }
+    )
+    val allExistsMethodCalls : MutableSet<String> = mutableSetOf(
+        "println"
+    )
 
 
 
@@ -19,6 +19,6 @@ object NodeManager {
         if (allExistsDataTypes.contains(dataType)){
             return;
         }
-        allExistsDataTypes.add(dataType)
+        throw UsuportedDataTypeExeption(dataType)
     }
 }

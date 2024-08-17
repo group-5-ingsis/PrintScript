@@ -41,8 +41,8 @@ class AssignationASTBuilder : ASTBuilder {
      */
     private fun getLeafType(token: Token): Node2.AssignationValue {
         return when (token.type) {
-            "NUMBER" -> Node2.GenericLiteral(token.value, Node2.DataType("Number"))
-            "STRING" -> Node2.GenericLiteral(token.value, Node2.DataType("String"))
+            "NUMBER" -> Node2.GenericLiteral(token.value, Node2.DataType("NUMBER"))
+            "STRING" -> Node2.GenericLiteral(token.value, Node2.DataType("STRING"))
             "IDENTIFIER" -> Node2.Identifier(token.value)
             else -> throw UnsupportedLeafTypeException("Unknown assignment token type ${token.type}")
         }

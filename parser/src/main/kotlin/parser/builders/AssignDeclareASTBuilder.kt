@@ -4,6 +4,7 @@ import Node2
 import parser.exceptions.UnsupportedLeafTypeException
 import parser.statement.Statement
 import token.Token
+import java.util.*
 
 class AssignDeclareASTBuilder : ASTBuilder {
 
@@ -17,7 +18,7 @@ class AssignDeclareASTBuilder : ASTBuilder {
 
       // Create the identifier and variable type nodes
       val identifier = Node2.Identifier(tokens[1].value)
-      val variableType = Node2.DataType(tokens[3].type)
+      val variableType = Node2.DataType(tokens[3].value.uppercase(Locale.getDefault()))
 
       // Determine the value being assigned (literal or identifier)
       val literal = getLeafNodeType(statement)
