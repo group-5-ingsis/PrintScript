@@ -1,6 +1,6 @@
 package visitor
 
-import Node2
+import Node
 import composite.NodeType
 
 
@@ -21,12 +21,12 @@ class NodeVisitor: Visitor {
     }
 
 
-    override fun visitAssignation(assignation: Node2.Assignation) {
+    override fun visitAssignation(assignation: Node.Assignation) {
         // Extrae el identificador y el valor del nodo de asignación
 
         val identifier = assignation.identifier.value
         val value = when (val valueNode = assignation.value) {
-            is Node2.GenericLiteral -> {
+            is Node.GenericLiteral -> {
 
                     when (valueNode.dataType.type) {
                         "NUMBER" -> {
@@ -58,7 +58,7 @@ class NodeVisitor: Visitor {
 
 
             }
-            is Node2.Identifier -> {
+            is Node.Identifier -> {
 
 
                 VariableTable.getVariable(valueNode.value)
@@ -73,7 +73,7 @@ class NodeVisitor: Visitor {
     }
 
 
-    override fun visitDeclaration(declaration: Node2.Declaration) {
+    override fun visitDeclaration(declaration: Node.Declaration) {
         // Extrae el identificador de la declaración
 
         val identifier = declaration.identifier
@@ -81,13 +81,13 @@ class NodeVisitor: Visitor {
 
     }
 
-    override fun visitAssignDeclare(assignationDeclaration: Node2.AssignationDeclaration) {
+    override fun visitAssignDeclare(assignationDeclaration: Node.AssignationDeclaration) {
         // Extrae la información de la asignación y declaración
         val identifier = assignationDeclaration.identifier
-        val value : Node2.AssignationValue = assignationDeclaration.value
+        val value : Node.AssignationValue = assignationDeclaration.value
         val identifierValue = when(value){
 
-            is Node2.GenericLiteral -> {
+            is Node.GenericLiteral -> {
                 if (value.dataType.type != "STRING"){
                     StringToNumber(value.value)
                 }else{
@@ -95,7 +95,7 @@ class NodeVisitor: Visitor {
                 }
 
             }
-            is Node2.Identifier -> {
+            is Node.Identifier -> {
                 VariableTable.getVariable(value.value)
             }
 
@@ -107,7 +107,7 @@ class NodeVisitor: Visitor {
         VariableTable.setVariable(identifier, identifierValue)
     }
 
-    override fun visitMethodCall(methodCall: Node2.Method) {
+    override fun visitMethodCall(methodCall: Node.Method) {
         val methodName = methodCall.identifier.value
 
         // Convierte los argumentos en una cadena de texto
@@ -117,22 +117,22 @@ class NodeVisitor: Visitor {
         executeMethod(methodName, parameters)
     }
 
-    override fun getVisitorFunction(nodeType: NodeType): (Node2) -> Unit {
+    override fun getVisitorFunction(nodeType: NodeType): (Node) -> Unit {
         return when (nodeType) {
             NodeType.ASSIGNATION -> { node ->
-                visitAssignation(node as Node2.Assignation)
+                visitAssignation(node as Node.Assignation)
             }
 
             NodeType.DECLARATION -> { node ->
-                visitDeclaration(node as Node2.Declaration)
+                visitDeclaration(node as Node.Declaration)
             }
 
             NodeType.ASSIGNATION_DECLARATION -> { node ->
-                visitAssignDeclare(node as Node2.AssignationDeclaration)
+                visitAssignDeclare(node as Node.AssignationDeclaration)
             }
 
             NodeType.METHOD_CALL -> { node ->
-                visitMethodCall(node as Node2.Method)
+                visitMethodCall(node as Node.Method)
             }
 
             NodeType.LITERAL -> { TODO("Not implemented yet")
@@ -153,23 +153,23 @@ class NodeVisitor: Visitor {
     }
 
 
-    private fun getParametersAsString(methodInfoList: List<Node2.Arguments>): String {
+    private fun getParametersAsString(methodInfoList: List<Node.Arguments>): String {
 
         val parameters = methodInfoList.flatMap { it.argumentsOfAnyTypes }
 
         return parameters.joinToString(", ") { argument ->
             when (argument) {
-                is Node2.Identifier -> {
+                is Node.Identifier -> {
                     // Recupera el valor de la tabla de variables usando el identificador
                     VariableTable.getVariable(argument.value).toString()
                 }
 
-                is Node2.GenericLiteral -> {
+                is Node.GenericLiteral -> {
                     // Devuelve directamente el valor del literal
                     argument.value
                 }
 
-                is Node2.Arguments -> {
+                is Node.Arguments -> {
                     // Si es un nodo de argumentos, procesa los argumentos recursivamente
                     getParametersAsString(listOf(argument))
                 }

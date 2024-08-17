@@ -1,13 +1,13 @@
 package visitor
 
-import Node2
+import Node
 import composite.NodeType
 
 
 interface Visitor {
-    fun visitAssignation(assignation: Node2.Assignation)
-    fun visitDeclaration(declaration: Node2.Declaration)
-    fun visitAssignDeclare(assignationDeclaration: Node2.AssignationDeclaration)
-    fun visitMethodCall(methodCall: Node2.Method)
-    fun getVisitorFunction(nodeType: NodeType): (Node2) -> Unit
+    fun visitAssignation(assignation: Node.Assignation)
+    fun visitDeclaration(declaration: Node.Declaration)
+    fun visitAssignDeclare(assignationDeclaration: Node.AssignationDeclaration)
+    fun visitMethodCall(methodCall: Node.Method)
+    fun getVisitorFunction(nodeType: NodeType): (Node) -> Unit
 }

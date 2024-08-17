@@ -1,6 +1,6 @@
 package parser.builders
 
-import Node2
+import Node
 import parser.statement.Statement
 import token.Token
 import java.util.*
@@ -15,17 +15,17 @@ class DeclarationASTBuilder : ASTBuilder {
      * Builds a Declaration node based on the content of the provided statement.
      *
      * @param statement The statement that contains tokens for a variable declaration.
-     * @return A [Node2.Declaration] that represents the variable declaration.
+     * @return A [Node.Declaration] that represents the variable declaration.
      */
-    override fun build(statement: Statement): Node2.Declaration {
+    override fun build(statement: Statement): Node.Declaration {
         val tokens: List<Token> = statement.content
 
         // Extract the identifier and variable type from the tokens
-        val identifier = Node2.Identifier(tokens[1].value)
-        val dataType = Node2.DataType(tokens[3].value.uppercase(Locale.getDefault()))
+        val identifier = Node.Identifier(tokens[1].value)
+        val dataType = Node.DataType(tokens[3].value.uppercase(Locale.getDefault()))
 
         // Construct and return a Declaration node
-        return Node2.Declaration(
+        return Node.Declaration(
             dataType = dataType,
             kindVariableDeclaration = tokens[0].value,  // Extract declaration kind, e.g., "let"
             identifier = identifier.value

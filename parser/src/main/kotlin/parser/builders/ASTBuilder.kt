@@ -1,9 +1,9 @@
 package parser.builders
 
 
-import Node2
+import Node
 import parser.statement.Statement
 
 interface ASTBuilder {
-  fun build(statement: Statement) : Node2
+  fun build(statement: Statement) : Node
 }

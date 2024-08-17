@@ -1,6 +1,6 @@
 package parser
 
-import Node2
+import Node
 import parser.builders.*
 import parser.statement.Statement
 import parser.statement.StatementManager
@@ -60,13 +60,13 @@ class SyntacticParser {
 
 
   class RootNode private constructor(){
-    private val children = mutableListOf<Node2>()
+    private val children = mutableListOf<Node>()
 
-    fun addChild(child: Node2) {
+    fun addChild(child: Node) {
       children.add(child)
     }
 
-    fun getChildren(): List<Node2> {
+    fun getChildren(): List<Node> {
       return children
     }
 

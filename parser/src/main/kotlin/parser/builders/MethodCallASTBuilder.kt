@@ -16,20 +16,20 @@ class MethodCallASTBuilder : ASTBuilder {
      * @param statement The statement containing tokens for a method call.
      * @return A [Method] that represents the method call.
      */
-    override fun build(statement: Statement): Node2.Method {
+    override fun build(statement: Statement): Node.Method {
         val tokens: List<Token> = statement.content
         val argumentsList: List<Token> = separateArguments(tokens)
-        val nodes: List<Node2.AssignationValue> = buildNodesForArguments(argumentsList)
+        val nodes: List<Node.AssignationValue> = buildNodesForArguments(argumentsList)
 
-        val identifier = Node2.Identifier(
+        val identifier = Node.Identifier(
             tokens[0].value
         )
 
-        val arguments = Node2.Arguments(
+        val arguments = Node.Arguments(
             nodes
         )
 
-        return Node2.Method(
+        return Node.Method(
             identifier = identifier,
             arguments = listOf(arguments)
         )
@@ -41,13 +41,13 @@ class MethodCallASTBuilder : ASTBuilder {
      * @param arguments The tokens representing the method arguments.
      * @return A list of [AssignationValue], which can be [GenericLiteral] or [Identifier].
      */
-    private fun buildNodesForArguments(arguments: List<Token>): List<Node2.AssignationValue> {
-        val nodes = mutableListOf<Node2.AssignationValue>()
+    private fun buildNodesForArguments(arguments: List<Token>): List<Node.AssignationValue> {
+        val nodes = mutableListOf<Node.AssignationValue>()
         for (token in arguments) {
             when (token.type) {
-                "NUMBER" -> nodes.add(Node2.GenericLiteral(token.value, Node2.DataType("NUMBER")))
-                "STRING" -> nodes.add(Node2.GenericLiteral(token.value, Node2.DataType("STRING")))
-                "IDENTIFIER" -> nodes.add(Node2.Identifier(token.value))
+                "NUMBER" -> nodes.add(Node.GenericLiteral(token.value, Node.DataType("NUMBER")))
+                "STRING" -> nodes.add(Node.GenericLiteral(token.value, Node.DataType("STRING")))
+                "IDENTIFIER" -> nodes.add(Node.Identifier(token.value))
             }
         }
         return nodes

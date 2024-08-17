@@ -1,6 +1,5 @@
 package parser
 
-import composite.Node
 import parser.exceptions.SemanticErrorException
 import token.Token
 
