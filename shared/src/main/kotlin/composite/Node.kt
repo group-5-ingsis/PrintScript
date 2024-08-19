@@ -1,4 +1,4 @@
-import composite.NodeManager.addDataType
+import composite.NodeManager.checkDataTypeIsValid
 import composite.NodeType
 import visitor.NodeVisitor
 
@@ -8,6 +8,9 @@ sealed class Node {
     fun acceptVisitor(visitor: NodeVisitor) {
         val func = visitor.getVisitorFunction(nodeType)
         func(this)
+    }
+    data class BinaryOperation(val symbol: String, val firstType: NodeType, val secondType: NodeType) : Node() {
+        override val nodeType: NodeType = NodeType.OPERATION
     }
 
 
@@ -134,7 +137,7 @@ sealed class Node {
         override val nodeType: NodeType = NodeType.DATA_TYPE
 
         init {
-            addDataType(type)
+            checkDataTypeIsValid(type)
         }
     }
 }

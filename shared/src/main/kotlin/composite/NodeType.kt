@@ -1,6 +1,7 @@
 package composite
 
 enum class NodeType {
+  OPERATION,
   LITERAL,
   IDENTIFIER,
   DATA_TYPE,

@@ -15,7 +15,7 @@ object NodeManager {
 
 
 
-    fun addDataType(dataType: String){
+    fun checkDataTypeIsValid(dataType: String){
         if (allExistsDataTypes.contains(dataType)){
             return;
         }
