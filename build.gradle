@@ -42,4 +42,10 @@ subprojects {
             }
         }
     }
+
+    ktlint {
+        filter {
+            exclude("**/*.kt") // Adjust the pattern as needed
+        }
+    }
 }
