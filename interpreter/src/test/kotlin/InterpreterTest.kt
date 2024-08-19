@@ -48,10 +48,10 @@ class InterpreterTest {
 
     @Test
     fun testAssignationWithLiteral(){
-        val tokens: List<Token> = Lexer.lex("a = b;" , listOf())
+        val tokens: List<Token> = Lexer.lex("let b: Number = 3; let a: Number; a = b;" , listOf())
         val ast: SyntacticParser.RootNode = syntaxParser.run(tokens)
         interpreter.interpret(ast)
-        assertEquals("b", VariableTable.getVariable("a"))
+        assertEquals(3, VariableTable.getVariable("a"))
     }
 
     @Test
@@ -75,6 +75,7 @@ class InterpreterTest {
         val tokens: List<Token> = Lexer.lex("let a: String; a = \"Hello\"; println(a);", listOf())
         val ast: SyntacticParser.RootNode = syntaxParser.run(tokens)
         interpreter.interpret(ast)
+
     }
 
 

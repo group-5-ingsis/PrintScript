@@ -1,7 +1,7 @@
 package parser.builders
 
-import parser.SyntacticParser
-import composite.Node
+
+import Node
 import parser.statement.Statement
 
 interface ASTBuilder {

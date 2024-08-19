@@ -1,6 +1,6 @@
 package parser
 
-import composite.Node
+import Node
 import parser.builders.*
 import parser.statement.Statement
 import parser.statement.StatementManager
@@ -78,7 +78,7 @@ class SyntacticParser {
 
     fun accept(visitor: NodeVisitor) {
       for (child in children) {
-        child.accept(visitor)
+        child.acceptVisitor(visitor)
       }
     }
 

@@ -7,6 +7,11 @@ object StatementManager {
         addStatements()
     }
 
+    fun tellIfIsUnknown(statement: Statement) : Boolean {
+        //TODO(Dont know how to do it)
+        return false
+    }
+
 
     private fun addStatements() {
         allExistingStatements.add(
