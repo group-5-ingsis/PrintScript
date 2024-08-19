@@ -77,13 +77,14 @@ class MethodCallASTBuilder : ASTBuilder {
      */
     private fun isArgument(token: Token): Boolean {
         val isLiteral = (
-                token.type == "NUMBER"
-                        || token.type == "STRING"
-                        || token.type == "IDENTIFIER")
+            token.type == "NUMBER" ||
+                token.type == "STRING" ||
+                token.type == "IDENTIFIER"
+            )
         val isComma = (
-                token.type == "PUNCTUATION"
-                        && token.value == ","
-                )
+            token.type == "PUNCTUATION" &&
+                token.value == ","
+            )
         return !isComma && isLiteral
     }
 }

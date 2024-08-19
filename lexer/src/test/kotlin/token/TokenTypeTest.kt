@@ -77,4 +77,3 @@ object TokenTypeTest {
         assertEquals(expected, actual)
     }
 }
-

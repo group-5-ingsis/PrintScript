@@ -10,7 +10,7 @@ import kotlin.reflect.KClass
 class ExecuteSca(private val scaList: Map<KClass<out Node>, StaticCodeAnalyzer>) : StaticCodeAnalyzer {
     override fun analyzeNode(
         astNode: Node,
-        rules: StaticCodeAnalyzerRules,
+        rules: StaticCodeAnalyzerRules
     ): List<StaticCodeIssue> {
         val issues = mutableListOf<StaticCodeIssue>()
         val analyzer = scaList[astNode::class]
@@ -35,7 +35,7 @@ class ExecuteSca(private val scaList: Map<KClass<out Node>, StaticCodeAnalyzer>)
                     Node.Declaration::class to AssignationAnalyzer(),
                     Node.Assignation::class to AssignationAnalyzer(),
                     Node.Method::class to MethodAnalyzer()
-                ),
+                )
             )
         }
     }

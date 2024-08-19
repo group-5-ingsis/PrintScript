@@ -3,7 +3,6 @@ package visitor
 import Node
 import composite.NodeType
 
-
 interface Visitor {
     fun visitAssignation(assignation: Node.Assignation)
     fun visitDeclaration(declaration: Node.Declaration)

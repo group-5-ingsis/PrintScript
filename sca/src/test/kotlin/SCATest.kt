@@ -18,7 +18,7 @@ class SCATest {
                     dataType = Node.DataType("NUMBER"),
                     kindVariableDeclaration = "let",
                     identifier = "a",
-                    value = Node.GenericLiteral("2",Node.DataType("NUMBER"))
+                    value = Node.GenericLiteral("2", Node.DataType("NUMBER"))
                 )
             )
         for (node in ast) {
@@ -38,7 +38,7 @@ class SCATest {
                     dataType = Node.DataType("NUMBER"),
                     kindVariableDeclaration = "let",
                     identifier = "a",
-                    value = Node.GenericLiteral("Hello",Node.DataType("STRING"))
+                    value = Node.GenericLiteral("Hello", Node.DataType("STRING"))
                 )
             )
         for (node in ast) {
@@ -56,9 +56,9 @@ class SCATest {
         val ast =
             listOf(
                 Node.Method(
-                    Node.Arguments(listOf(Node.GenericLiteral("2",Node.DataType("STRING")))),
+                    Node.Arguments(listOf(Node.GenericLiteral("2", Node.DataType("STRING")))),
                     Node.Identifier("println")
-                ),
+                )
             )
         for (node in ast) {
             issues.addAll(executeSca.analyzeNode(node, scaRules))
@@ -98,7 +98,7 @@ class SCATest {
                     dataType = Node.DataType("STRING"),
                     kindVariableDeclaration = "let",
                     identifier = "my_greetings",
-                    value = Node.GenericLiteral("Hello",Node.DataType("STRING"))
+                    value = Node.GenericLiteral("Hello", Node.DataType("STRING"))
                 )
             )
         for (node in ast) {
@@ -119,7 +119,7 @@ class SCATest {
                     dataType = Node.DataType("STRING"),
                     kindVariableDeclaration = "let",
                     identifier = "myGreetings",
-                    value = Node.GenericLiteral("Hello",Node.DataType("STRING"))
+                    value = Node.GenericLiteral("Hello", Node.DataType("STRING"))
                 )
             )
         for (node in ast) {
@@ -139,7 +139,7 @@ class SCATest {
                     dataType = Node.DataType("NUMBER"),
                     kindVariableDeclaration = "let",
                     identifier = "a",
-                    value = Node.GenericLiteral("Hello",Node.DataType("STRING"))
+                    value = Node.GenericLiteral("Hello", Node.DataType("STRING"))
                 )
             )
         for (node in ast) {
@@ -159,7 +159,7 @@ class SCATest {
                     dataType = Node.DataType("STRING"),
                     kindVariableDeclaration = "let",
                     identifier = "my_greetings",
-                    value = Node.GenericLiteral("Hello",Node.DataType("STRING"))
+                    value = Node.GenericLiteral("Hello", Node.DataType("STRING"))
                 )
             )
         for (node in ast) {
@@ -219,5 +219,4 @@ class SCATest {
     }
 
  */
-
 }

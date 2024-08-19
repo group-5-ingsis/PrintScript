@@ -1,11 +1,11 @@
 package composite
 
 enum class NodeType {
-  LITERAL,
-  IDENTIFIER,
-  DATA_TYPE,
-  METHOD_CALL,
-  ARGUMENTS,
+    LITERAL,
+    IDENTIFIER,
+    DATA_TYPE,
+    METHOD_CALL,
+    ARGUMENTS,
     METHOD_NAME,
     DECLARATION,
     ASSIGNATION,

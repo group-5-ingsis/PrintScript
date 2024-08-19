@@ -8,30 +8,28 @@ import java.util.*
 
 class AssignDeclareASTBuilder : ASTBuilder {
 
-  override fun build(statement: Statement): Node {
+    override fun build(statement: Statement): Node {
+        val tokens: List<Token> = statement.content
 
+        // Extract the declaration keyword (e.g., let, var) from the tokens
+        val kindVariableDeclaration = tokens[0].value
 
-      val tokens: List<Token> = statement.content
+        // Create the identifier and variable type nodes
+        val identifier = Node.Identifier(tokens[1].value)
+        val variableType = Node.DataType(tokens[3].value.uppercase(Locale.getDefault()))
 
-      // Extract the declaration keyword (e.g., let, var) from the tokens
-      val kindVariableDeclaration = tokens[0].value
+        // Determine the value being assigned (literal or identifier)
+        val literal = getLeafNodeType(statement)
 
-      // Create the identifier and variable type nodes
-      val identifier = Node.Identifier(tokens[1].value)
-      val variableType = Node.DataType(tokens[3].value.uppercase(Locale.getDefault()))
+        // Construct and return an AssignationDeclaration node
+        return Node.AssignationDeclaration(
+            dataType = variableType,
+            kindVariableDeclaration = kindVariableDeclaration, // Using the extracted kind
+            identifier = identifier.value,
+            value = literal
+        )
+    }
 
-      // Determine the value being assigned (literal or identifier)
-      val literal = getLeafNodeType(statement)
-
-      // Construct and return an AssignationDeclaration node
-      return Node.AssignationDeclaration(
-          dataType = variableType,
-          kindVariableDeclaration = kindVariableDeclaration, // Using the extracted kind
-          identifier = identifier.value,
-          value = literal
-      )
-
-  }
     /**
      * Returns the node type for the value being assigned in the statement.
      * The value can be a literal (e.g., number, string) or an identifier.

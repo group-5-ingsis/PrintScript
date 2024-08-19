@@ -1,3 +1,3 @@
 package parser.exceptions
 
-class SemanticErrorException(message: String): Exception(message)
+class SemanticErrorException(message: String) : Exception(message)

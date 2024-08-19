@@ -1,22 +1,45 @@
 plugins {
-    id 'org.jetbrains.kotlin.jvm' version '1.9.23'
+    id 'org.jetbrains.kotlin.jvm' version '1.9.23' apply false
+    id 'org.jlleitschuh.gradle.ktlint' version '11.3.2' apply false
+    id 'org.jetbrains.kotlinx.kover' version '0.7.3' apply false
 }
 
-group = 'org.example'
-version = '1.0-SNAPSHOT'
+subprojects {
+    apply plugin: 'org.jetbrains.kotlin.jvm'
+    apply plugin: 'org.jlleitschuh.gradle.ktlint'
+    apply plugin: 'org.jetbrains.kotlinx.kover'
 
-repositories {
-    mavenCentral()
-}
+    repositories {
+        mavenCentral()
+    }
 
-dependencies {
-    testImplementation 'org.jetbrains.kotlin:kotlin-test'
-    implementation("io.arrow-kt:arrow-core:1.2.0")
-}
+    dependencies {
+        testImplementation 'org.jetbrains.kotlin:kotlin-test'
+        implementation("io.arrow-kt:arrow-core:1.2.4")
+    }
 
-test {
-    useJUnitPlatform()
-}
-kotlin {
-    jvmToolchain(21)
+    kotlin {
+        jvmToolchain(21)
+    }
+
+    kover {
+        useJacoco()
+    }
+
+    koverReport {
+        verify {
+            rule {
+                name = 'Minimal line coverage rate'
+                bound {
+                    minValue = 80
+                }
+            }
+        }
+
+        defaults {
+            html {
+                onCheck = true
+            }
+        }
+    }
 }

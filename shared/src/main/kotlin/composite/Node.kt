@@ -10,7 +10,6 @@ sealed class Node {
         func(this)
     }
 
-
     /**
      * Abstract base class for values that can be assigned to a variable.
      *

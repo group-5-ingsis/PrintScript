@@ -1,8 +1,8 @@
 package lexer
 
 import SymbolProvider.getKeywordMatrix
-import token.TokenGenerator.generateToken
 import token.Token
+import token.TokenGenerator.generateToken
 
 object Lexer {
 
@@ -11,19 +11,16 @@ object Lexer {
     }
 
     private fun getTokenList(keywords: String): List<Token> {
-
-        val keywordMatrix : List<List<String>> = getKeywordMatrix(keywords)
+        val keywordMatrix: List<List<String>> = getKeywordMatrix(keywords)
 
         val tokens: MutableList<Token> = mutableListOf()
 
         val lines = keywordMatrix.indices
 
         for (line in lines) {
-
             val words = keywordMatrix[line].indices
 
             for (wordPosition in words) {
-
                 val keyword = keywordMatrix[line][wordPosition]
 
                 val token = generateToken(keyword, line, wordPosition)

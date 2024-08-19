@@ -1,21 +1,19 @@
 package parser.statement
 
-class StatementType(private val elements: List<StatementManager.TokensNamesForStatements>, val  name: String) {
+class StatementType(private val elements: List<StatementManager.TokensNamesForStatements>, val name: String) {
 
     init {
         addThisStatementToAllExistingStatementList()
     }
 
-    private fun addThisStatementToAllExistingStatementList(){
+    private fun addThisStatementToAllExistingStatementList() {
         if (StatementManager.allExistingStatements.any { it.name == name }) {
             return
         }
         StatementManager.allExistingStatements.add(this)
     }
 
-
-    fun isType(statement: Statement): Boolean{
-
+    fun isType(statement: Statement): Boolean {
         if (statement.content.size < elements.size) return false
 
         val content = statement.content
@@ -31,14 +29,8 @@ class StatementType(private val elements: List<StatementManager.TokensNamesForSt
                     // Check if the single name matches the content at index i
                     if (element.value != content[i].type) return false
                 }
-
             }
         }
         return true
-
     }
-
 }
-
-
-

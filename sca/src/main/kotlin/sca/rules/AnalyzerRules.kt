@@ -9,7 +9,7 @@ interface AnalyzerRules {
     fun getConfigFileValue(
         configFilePath: String,
         ruleName: String,
-        convert: (String) -> Boolean,
+        convert: (String) -> Boolean
     ): Boolean {
         val input = FileInputStream(configFilePath)
         val yaml = Yaml()

@@ -5,7 +5,7 @@ import visitor.NodeVisitor
 
 object Interpreter {
 
-    fun interpret(rootAstNode: SyntacticParser.RootNode){
+    fun interpret(rootAstNode: SyntacticParser.RootNode) {
         rootAstNode.accept(NodeVisitor())
     }
 }

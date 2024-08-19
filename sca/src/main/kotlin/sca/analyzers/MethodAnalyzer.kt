@@ -1,14 +1,14 @@
 package sca.analyzers
 
 import Node
-import sca.StaticCodeAnalyzerRules
 import Position
+import sca.StaticCodeAnalyzerRules
 import sca.StaticCodeIssue
 
 class MethodAnalyzer : StaticCodeAnalyzer {
     override fun analyzeNode(
         astNode: Node,
-        rules: StaticCodeAnalyzerRules,
+        rules: StaticCodeAnalyzerRules
     ): List<StaticCodeIssue> {
         val methodNode = astNode as Node.Method
         val issues = mutableListOf<StaticCodeIssue>()
@@ -27,7 +27,7 @@ class MethodAnalyzer : StaticCodeAnalyzer {
 
     private fun extractArgument(value: Node.Arguments): String {
         var result = ""
-        for(arguments in value.argumentsOfAnyTypes){
+        for (arguments in value.argumentsOfAnyTypes) {
             when (arguments) {
                 is Node.GenericLiteral -> result += arguments.value
                 is Node.Identifier -> result += arguments.value
@@ -39,7 +39,7 @@ class MethodAnalyzer : StaticCodeAnalyzer {
 
     private fun checkMethodArgument(
         argument: String,
-        rule: Boolean,
+        rule: Boolean
     ): Boolean {
         // Verificar si el argumento es un identificador o un literal (número o string)
         if (!rule) return true // Si las reglas están desactivadas, siempre retorna true

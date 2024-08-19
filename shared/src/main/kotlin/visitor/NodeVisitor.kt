@@ -3,9 +3,7 @@ package visitor
 import Node
 import composite.NodeType
 
-
-
-class NodeVisitor: Visitor {
+class NodeVisitor : Visitor {
 
     private fun StringToNumber(value: String): Number {
         return when {
@@ -20,50 +18,42 @@ class NodeVisitor: Visitor {
         }
     }
 
-
     override fun visitAssignation(assignation: Node.Assignation) {
         // Extrae el identificador y el valor del nodo de asignación
 
         val identifier = assignation.identifier.value
         val value = when (val valueNode = assignation.value) {
             is Node.GenericLiteral -> {
-
-                    when (valueNode.dataType.type) {
-                        "NUMBER" -> {
-                            // Convierte el valor a Double, manejando varios tipos numéricos
-                            StringToNumber(valueNode.value)
-                        }
-                        "INT" -> {
-                            // Convierte a Int si es un entero
-                            valueNode.value.toIntOrNull() ?: throw IllegalArgumentException("El valor no es un entero válido")
-                        }
-                        "FLOAT" -> {
-                            // Convierte a Float si es un número con decimales más pequeño
-                            valueNode.value.toFloatOrNull() ?: throw IllegalArgumentException("El valor no es un flotante válido")
-                        }
-                        "LONG" -> {
-                            // Convierte a Long si es un número entero long
-                            valueNode.value.toLongOrNull() ?: throw IllegalArgumentException("El valor no es un entero largo válido")
-                        }
-                        "SHORT" -> {
-                            // Convierte a Short si es un número entero corto
-                            valueNode.value.toShortOrNull() ?: throw IllegalArgumentException("El valor no es un entero corto válido")
-                        }
-                        "STRING" -> {
-
-                            valueNode.value
-                        }
-                        else -> throw IllegalArgumentException("Tipo de dato no soportado: ${valueNode.dataType.type}")
+                when (valueNode.dataType.type) {
+                    "NUMBER" -> {
+                        // Convierte el valor a Double, manejando varios tipos numéricos
+                        StringToNumber(valueNode.value)
                     }
-
-
+                    "INT" -> {
+                        // Convierte a Int si es un entero
+                        valueNode.value.toIntOrNull() ?: throw IllegalArgumentException("El valor no es un entero válido")
+                    }
+                    "FLOAT" -> {
+                        // Convierte a Float si es un número con decimales más pequeño
+                        valueNode.value.toFloatOrNull() ?: throw IllegalArgumentException("El valor no es un flotante válido")
+                    }
+                    "LONG" -> {
+                        // Convierte a Long si es un número entero long
+                        valueNode.value.toLongOrNull() ?: throw IllegalArgumentException("El valor no es un entero largo válido")
+                    }
+                    "SHORT" -> {
+                        // Convierte a Short si es un número entero corto
+                        valueNode.value.toShortOrNull() ?: throw IllegalArgumentException("El valor no es un entero corto válido")
+                    }
+                    "STRING" -> {
+                        valueNode.value
+                    }
+                    else -> throw IllegalArgumentException("Tipo de dato no soportado: ${valueNode.dataType.type}")
+                }
             }
             is Node.Identifier -> {
-
-
                 VariableTable.getVariable(valueNode.value)
                     ?: throw RuntimeException("Variable ${valueNode.value} is not defined")
-
             }
 
             else -> throw IllegalArgumentException("Unsupported AssignationValue type: ${valueNode.nodeType}")
@@ -72,35 +62,30 @@ class NodeVisitor: Visitor {
         VariableTable.setVariable(identifier, value)
     }
 
-
     override fun visitDeclaration(declaration: Node.Declaration) {
         // Extrae el identificador de la declaración
 
         val identifier = declaration.identifier
         VariableTable.setVariable(identifier, "undefined")
-
     }
 
     override fun visitAssignDeclare(assignationDeclaration: Node.AssignationDeclaration) {
         // Extrae la información de la asignación y declaración
         val identifier = assignationDeclaration.identifier
-        val value : Node.AssignationValue = assignationDeclaration.value
-        val identifierValue = when(value){
-
+        val value: Node.AssignationValue = assignationDeclaration.value
+        val identifierValue = when (value) {
             is Node.GenericLiteral -> {
-                if (value.dataType.type != "STRING"){
+                if (value.dataType.type != "STRING") {
                     StringToNumber(value.value)
-                }else{
+                } else {
                     value.value
                 }
-
             }
             is Node.Identifier -> {
                 VariableTable.getVariable(value.value)
             }
 
-
-            else -> {throw Exception("implement other cases of AssignationValue Types")}
+            else -> { throw Exception("implement other cases of AssignationValue Types") }
         }
 
         // Establece la variable en la tabla de variables con el valor proporcionado
@@ -135,23 +120,27 @@ class NodeVisitor: Visitor {
                 visitMethodCall(node as Node.Method)
             }
 
-            NodeType.LITERAL -> { TODO("Not implemented yet")
+            NodeType.LITERAL -> {
+                TODO("Not implemented yet")
             }
 
-            NodeType.IDENTIFIER -> {  TODO("Not implemented yet")
+            NodeType.IDENTIFIER -> {
+                TODO("Not implemented yet")
             }
 
-            NodeType.DATA_TYPE -> {TODO("Not implemented yet")
+            NodeType.DATA_TYPE -> {
+                TODO("Not implemented yet")
             }
 
-            NodeType.ARGUMENTS -> { TODO("Not implemented yet")
+            NodeType.ARGUMENTS -> {
+                TODO("Not implemented yet")
             }
 
-            NodeType.METHOD_NAME -> {  TODO("Not implemented yet")
+            NodeType.METHOD_NAME -> {
+                TODO("Not implemented yet")
             }
         }
     }
-
 
     private fun getParametersAsString(method: Node.Arguments): String {
         val parameters = method.argumentsOfAnyTypes
@@ -178,9 +167,7 @@ class NodeVisitor: Visitor {
         }
     }
 
-
     private fun executeMethod(methodName: String, parameters: String) {
-
         val methodMap: Map<String, (Any?) -> Unit> = getRegisteredFunctionsMap()
 
         val method = methodMap[methodName]
@@ -200,6 +187,4 @@ class NodeVisitor: Visitor {
         )
         return methodMap
     }
-
-
 }

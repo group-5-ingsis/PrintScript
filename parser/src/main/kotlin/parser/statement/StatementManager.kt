@@ -7,11 +7,10 @@ object StatementManager {
         addStatements()
     }
 
-    fun tellIfIsUnknown(statement: Statement) : Boolean {
-        //TODO(Dont know how to do it)
+    fun tellIfIsUnknown(statement: Statement): Boolean {
+        // TODO(Dont know how to do it)
         return false
     }
-
 
     private fun addStatements() {
         allExistingStatements.add(
@@ -23,8 +22,9 @@ object StatementManager {
                     TokensNamesForStatements.SingleName("VARIABLE_TYPE"),
                     TokensNamesForStatements.SingleName("ASSIGNMENT"),
                     TokensNamesForStatements.MultipleNames(listOf("NUMBER", "STRING", "IDENTIFIER")),
-                    TokensNamesForStatements.SingleName("PUNCTUATION"),
-                ), "AssignDeclare"
+                    TokensNamesForStatements.SingleName("PUNCTUATION")
+                ),
+                "AssignDeclare"
             )
         )
 
@@ -57,15 +57,16 @@ object StatementManager {
                     TokensNamesForStatements.SingleName("PUNCTUATION"),
                     TokensNamesForStatements.MultipleNames(listOf("NUMBER", "STRING", "IDENTIFIER")),
                     TokensNamesForStatements.SingleName("PUNCTUATION"),
-                    TokensNamesForStatements.SingleName("PUNCTUATION"),
-                ), "MethodCall"
+                    TokensNamesForStatements.SingleName("PUNCTUATION")
+                ),
+                "MethodCall"
             )
         )
 
         allExistingStatements.add(StatementType(listOf(), "Unknown"))
     }
 
-    fun categorize(statements: List<Statement>) : List<Statement> {
+    fun categorize(statements: List<Statement>): List<Statement> {
         val categorizedStatements = mutableListOf<Statement>()
         val newList = StatementManager.allExistingStatements.toList()
 
@@ -82,11 +83,8 @@ object StatementManager {
         return categorizedStatements
     }
 
-
     sealed class TokensNamesForStatements {
         data class SingleName(val value: String) : TokensNamesForStatements()
         data class MultipleNames(val values: List<String>) : TokensNamesForStatements()
     }
-
-
 }

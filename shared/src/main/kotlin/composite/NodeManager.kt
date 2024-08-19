@@ -6,18 +6,16 @@ object NodeManager {
     val allExistsDataTypes: MutableSet<String> = mutableSetOf(
         "NUMBER",
         "STRING",
-        "INT",
+        "INT"
 
     )
-    val allExistsMethodCalls : MutableSet<String> = mutableSetOf(
+    val allExistsMethodCalls: MutableSet<String> = mutableSetOf(
         "println"
     )
 
-
-
-    fun addDataType(dataType: String){
-        if (allExistsDataTypes.contains(dataType)){
-            return;
+    fun addDataType(dataType: String) {
+        if (allExistsDataTypes.contains(dataType)) {
+            return
         }
         throw UsuportedDataTypeExeption(dataType)
     }

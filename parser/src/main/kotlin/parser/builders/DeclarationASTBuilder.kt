@@ -27,7 +27,7 @@ class DeclarationASTBuilder : ASTBuilder {
         // Construct and return a Declaration node
         return Node.Declaration(
             dataType = dataType,
-            kindVariableDeclaration = tokens[0].value,  // Extract declaration kind, e.g., "let"
+            kindVariableDeclaration = tokens[0].value, // Extract declaration kind, e.g., "let"
             identifier = identifier.value
         )
     }

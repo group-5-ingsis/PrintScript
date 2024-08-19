@@ -1,11 +1,11 @@
 package sca.analyzers
 
 import Node
-import sca.StaticCodeIssue
 import Position
 import sca.StaticCodeAnalyzerRules
+import sca.StaticCodeIssue
 
-class DeclarationAssignationAnalyzer: StaticCodeAnalyzer {
+class DeclarationAssignationAnalyzer : StaticCodeAnalyzer {
     override fun analyzeNode(astNode: Node, rules: StaticCodeAnalyzerRules): List<StaticCodeIssue> {
         val declarationAssignation = astNode as Node.AssignationDeclaration
         val issues = mutableListOf<StaticCodeIssue>()
@@ -24,7 +24,7 @@ class DeclarationAssignationAnalyzer: StaticCodeAnalyzer {
 
     private fun checkTypeMatching(
         node: Node,
-        rule: Boolean,
+        rule: Boolean
     ): Boolean {
         if (!rule) return true
         return when (node) {
@@ -41,7 +41,7 @@ class DeclarationAssignationAnalyzer: StaticCodeAnalyzer {
 
     private fun checkIdentifierFormat(
         identifier: String,
-        rule: Boolean,
+        rule: Boolean
     ): Boolean {
         if (!rule) return true
         return identifier.matches("""^[a-z]+(?:[A-Z][a-z\d]*)*$""".toRegex())
