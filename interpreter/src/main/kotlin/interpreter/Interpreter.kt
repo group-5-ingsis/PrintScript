@@ -7,21 +7,4 @@ object Interpreter {
     fun interpret(rootAstNode: SyntacticParser.RootNode) {
         rootAstNode.accept(NodeVisitor())
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
-
 }
-
