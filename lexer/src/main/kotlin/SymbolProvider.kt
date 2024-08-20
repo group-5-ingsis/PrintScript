@@ -16,13 +16,17 @@ object SymbolProvider {
 
         val adjustedInput: List<String> = input.split("\n")
 
-        val regex = Regex("'[^']*\"'|\"[^\"]*\"|\\d+(\\.\\d+)?|\\w+|[;\\-+*/=:(){},]")
+        val regex = Regex("'[^']*\"'|\"[^\"]*\"|\\d+(\\.\\d+)?|\\w+|[;@\\-+*/=:(){},!#$%^&_|~`\\[\\]<>?]")
 
         val matches: MutableList<List<String>> = mutableListOf()
 
         for (i in adjustedInput) {
-            matches.add(regex.findAll(i).map { it.value }.toList())
+            val matchesInString = regex.findAll(i).map { it.value }.toList()
+
+            matches.add(matchesInString)
         }
+
+
 
         return matches
     }
