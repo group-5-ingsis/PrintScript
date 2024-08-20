@@ -21,11 +21,13 @@ object StatementManager {
                     TokensNamesForStatements.SingleName("PUNCTUATION"),
                     TokensNamesForStatements.SingleName("VARIABLE_TYPE"),
                     TokensNamesForStatements.SingleName("ASSIGNMENT"),
-                    TokensNamesForStatements.MultipleNames(listOf("NUMBER", "STRING", "IDENTIFIER")),
-                    TokensNamesForStatements.SingleName("PUNCTUATION")
+                    TokensNamesForStatements.MultipleNames(
+                        listOf("NUMBER", "STRING", "IDENTIFIER"),
+                    ),
+                    TokensNamesForStatements.SingleName("PUNCTUATION"),
                 ),
-                "AssignDeclare"
-            )
+                "AssignDeclare",
+            ),
         )
 
         allExistingStatements.add(
@@ -34,10 +36,10 @@ object StatementManager {
                     TokensNamesForStatements.SingleName("DECLARATION_KEYWORD"),
                     TokensNamesForStatements.SingleName("IDENTIFIER"),
                     TokensNamesForStatements.SingleName("PUNCTUATION"),
-                    TokensNamesForStatements.SingleName("VARIABLE_TYPE")
+                    TokensNamesForStatements.SingleName("VARIABLE_TYPE"),
                 ),
-                "Declaration"
-            )
+                "Declaration",
+            ),
         )
 
         allExistingStatements.add(
@@ -45,22 +47,26 @@ object StatementManager {
                 listOf(
                     TokensNamesForStatements.SingleName("IDENTIFIER"),
                     TokensNamesForStatements.SingleName("ASSIGNMENT"),
-                    TokensNamesForStatements.MultipleNames(listOf("NUMBER", "STRING", "IDENTIFIER"))
+                    TokensNamesForStatements.MultipleNames(
+                        listOf("NUMBER", "STRING", "IDENTIFIER"),
+                    ),
                 ),
-                "Assignation"
-            )
+                "Assignation",
+            ),
         )
         allExistingStatements.add(
             StatementType(
                 listOf(
                     TokensNamesForStatements.SingleName("PREDEF_METHOD"),
                     TokensNamesForStatements.SingleName("PUNCTUATION"),
-                    TokensNamesForStatements.MultipleNames(listOf("NUMBER", "STRING", "IDENTIFIER")),
+                    TokensNamesForStatements.MultipleNames(
+                        listOf("NUMBER", "STRING", "IDENTIFIER"),
+                    ),
                     TokensNamesForStatements.SingleName("PUNCTUATION"),
-                    TokensNamesForStatements.SingleName("PUNCTUATION")
+                    TokensNamesForStatements.SingleName("PUNCTUATION"),
                 ),
-                "MethodCall"
-            )
+                "MethodCall",
+            ),
         )
 
         allExistingStatements.add(StatementType(listOf(), "Unknown"))
@@ -85,6 +91,7 @@ object StatementManager {
 
     sealed class TokensNamesForStatements {
         data class SingleName(val value: String) : TokensNamesForStatements()
+
         data class MultipleNames(val values: List<String>) : TokensNamesForStatements()
     }
 }

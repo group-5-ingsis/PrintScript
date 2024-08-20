@@ -1,6 +1,7 @@
 #!/bin/sh
 
-# Run tests
+# Run tests & linter (~Checkstyle)
+./gradlew ktlintCheck
 ./gradlew test
 
 # Check if tests passed

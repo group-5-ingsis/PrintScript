@@ -7,7 +7,6 @@ import parser.statement.StatementManager
 import kotlin.test.assertEquals
 
 class StatementCategoryTest {
-
     @Test
     fun testAssignationDeclaration() {
         val testString = "let a: Number = 4;"

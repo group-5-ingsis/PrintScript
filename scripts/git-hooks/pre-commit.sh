@@ -1,7 +1,7 @@
 #!/bin/sh
 
-# Run Spotless to format code
-./gradlew spotlessApply
+# Run Ktlint to format code
+./gradlew ktlintFormat
 
 # Add any changes made by Spotless
 git add .

@@ -10,7 +10,6 @@ import java.util.*
  * This represents a variable declaration without an assignment, like `let a: Number;`.
  */
 class DeclarationASTBuilder : ASTBuilder {
-
     /**
      * Builds a Declaration node based on the content of the provided statement.
      *
@@ -27,8 +26,8 @@ class DeclarationASTBuilder : ASTBuilder {
         // Construct and return a Declaration node
         return Node.Declaration(
             dataType = dataType,
-            kindVariableDeclaration = tokens[0].value, // Extract declaration kind, e.g., "let"
-            identifier = identifier.value
+            kindVariableDeclaration = tokens[0].value,
+            identifier = identifier.value,
         )
     }
 }

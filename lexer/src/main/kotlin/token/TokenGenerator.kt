@@ -3,8 +3,11 @@ package token
 import Position
 
 object TokenGenerator {
-
-    fun generateToken(value: String, row: Int, symbolIndex: Int): Token {
+    fun generateToken(
+        value: String,
+        row: Int,
+        symbolIndex: Int,
+    ): Token {
         val type = getTypeFromValue(value)
         val position = Position(row + 1, symbolIndex + 1)
 

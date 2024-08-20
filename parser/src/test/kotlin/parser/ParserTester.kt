@@ -5,7 +5,6 @@ import org.junit.jupiter.api.Test
 import token.Token
 
 class ParserTester {
-
     private fun getTokenSublist(tokens: List<Token>): List<List<Token>> {
         val tokenSublists = mutableListOf<List<Token>>()
         var j = 0

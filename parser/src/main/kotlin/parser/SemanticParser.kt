@@ -5,7 +5,6 @@ import parser.validators.ValidationResult
 import kotlin.jvm.Throws
 
 class SemanticParser {
-
     @Throws(SemanticErrorException::class)
     fun run(ast: SyntacticParser.RootNode): SyntacticParser.RootNode {
         val result: ValidationResult = validateAST(ast)
@@ -16,10 +15,10 @@ class SemanticParser {
         }
     }
 
-    /* TODO replace List<Node> for SemanticParsingResult object.  */
+    // TODO replace List<Node> for SemanticParsingResult object.
     @Throws(SemanticErrorException::class)
     private fun validateAST(ast: SyntacticParser.RootNode): ValidationResult {
-        /* Logic for validating semantically */
+        // Logic for validating semantically
         return ValidationResult(false, null, "")
     }
 }

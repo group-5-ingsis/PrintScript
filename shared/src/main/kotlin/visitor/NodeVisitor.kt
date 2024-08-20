@@ -4,8 +4,7 @@ import Node
 import composite.NodeType
 
 class NodeVisitor : Visitor {
-
-    private fun StringToNumber(value: String): Number {
+    private fun stringToNumber(value: String): Number {
         return when {
             value.contains('.') -> {
                 // Si el valor contiene un punto decimal, tratamos de convertirlo a Double
@@ -22,42 +21,47 @@ class NodeVisitor : Visitor {
         // Extrae el identificador y el valor del nodo de asignación
 
         val identifier = assignation.identifier.value
-        val value = when (val valueNode = assignation.value) {
-            is Node.GenericLiteral -> {
-                when (valueNode.dataType.type) {
-                    "NUMBER" -> {
-                        // Convierte el valor a Double, manejando varios tipos numéricos
-                        StringToNumber(valueNode.value)
+        val value =
+            when (val valueNode = assignation.value) {
+                is Node.GenericLiteral -> {
+                    when (valueNode.dataType.type) {
+                        "NUMBER" -> {
+                            // Convierte el valor a Double, manejando varios tipos numéricos
+                            stringToNumber(valueNode.value)
+                        }
+                        "INT" -> {
+                            // Convierte a Int si es un entero
+                            valueNode.value.toIntOrNull() ?: throw IllegalArgumentException("El valor no es un entero válido")
+                        }
+                        "FLOAT" -> {
+                            // Convierte a Float si es un número con decimales más pequeño
+                            valueNode.value.toFloatOrNull() ?: throw IllegalArgumentException("El valor no es un flotante válido")
+                        }
+                        "LONG" -> {
+                            // Convierte a Long si es un número entero long
+                            valueNode.value.toLongOrNull() ?: throw IllegalArgumentException("El valor no es un entero largo válido")
+                        }
+                        "SHORT" -> {
+                            // Convierte a Short si es un número entero corto
+                            valueNode.value.toShortOrNull() ?: throw IllegalArgumentException("El valor no es un entero corto válido")
+                        }
+                        "STRING" -> {
+                            valueNode.value
+                        }
+                        else -> throw IllegalArgumentException(
+                            "Tipo de dato no soportado: ${valueNode.dataType.type}",
+                        )
                     }
-                    "INT" -> {
-                        // Convierte a Int si es un entero
-                        valueNode.value.toIntOrNull() ?: throw IllegalArgumentException("El valor no es un entero válido")
-                    }
-                    "FLOAT" -> {
-                        // Convierte a Float si es un número con decimales más pequeño
-                        valueNode.value.toFloatOrNull() ?: throw IllegalArgumentException("El valor no es un flotante válido")
-                    }
-                    "LONG" -> {
-                        // Convierte a Long si es un número entero long
-                        valueNode.value.toLongOrNull() ?: throw IllegalArgumentException("El valor no es un entero largo válido")
-                    }
-                    "SHORT" -> {
-                        // Convierte a Short si es un número entero corto
-                        valueNode.value.toShortOrNull() ?: throw IllegalArgumentException("El valor no es un entero corto válido")
-                    }
-                    "STRING" -> {
-                        valueNode.value
-                    }
-                    else -> throw IllegalArgumentException("Tipo de dato no soportado: ${valueNode.dataType.type}")
                 }
-            }
-            is Node.Identifier -> {
-                VariableTable.getVariable(valueNode.value)
-                    ?: throw RuntimeException("Variable ${valueNode.value} is not defined")
-            }
+                is Node.Identifier -> {
+                    VariableTable.getVariable(valueNode.value)
+                        ?: throw RuntimeException("Variable ${valueNode.value} is not defined")
+                }
 
-            else -> throw IllegalArgumentException("Unsupported AssignationValue type: ${valueNode.nodeType}")
-        }
+                else -> throw IllegalArgumentException(
+                    "Unsupported AssignationValue type: ${valueNode.nodeType}",
+                )
+            }
         // Guardarlo
         VariableTable.setVariable(identifier, value)
     }
@@ -73,20 +77,23 @@ class NodeVisitor : Visitor {
         // Extrae la información de la asignación y declaración
         val identifier = assignationDeclaration.identifier
         val value: Node.AssignationValue = assignationDeclaration.value
-        val identifierValue = when (value) {
-            is Node.GenericLiteral -> {
-                if (value.dataType.type != "STRING") {
-                    StringToNumber(value.value)
-                } else {
-                    value.value
+        val identifierValue =
+            when (value) {
+                is Node.GenericLiteral -> {
+                    if (value.dataType.type != "STRING") {
+                        stringToNumber(value.value)
+                    } else {
+                        value.value
+                    }
+                }
+                is Node.Identifier -> {
+                    VariableTable.getVariable(value.value)
+                }
+
+                else -> {
+                    throw Exception("implement other cases of AssignationValue Types")
                 }
             }
-            is Node.Identifier -> {
-                VariableTable.getVariable(value.value)
-            }
-
-            else -> { throw Exception("implement other cases of AssignationValue Types") }
-        }
 
         // Establece la variable en la tabla de variables con el valor proporcionado
         VariableTable.setVariable(identifier, identifierValue)
@@ -162,12 +169,17 @@ class NodeVisitor : Visitor {
                     getParametersAsString(Node.Arguments(argument.argumentsOfAnyTypes))
                 }
 
-                else -> throw IllegalArgumentException("Tipo de argumento no soportado: ${argument.nodeType}")
+                else -> throw IllegalArgumentException(
+                    "Tipo de argumento no soportado: ${argument.nodeType}",
+                )
             }
         }
     }
 
-    private fun executeMethod(methodName: String, parameters: String) {
+    private fun executeMethod(
+        methodName: String,
+        parameters: String,
+    ) {
         val methodMap: Map<String, (Any?) -> Unit> = getRegisteredFunctionsMap()
 
         val method = methodMap[methodName]
@@ -180,11 +192,12 @@ class NodeVisitor : Visitor {
     }
 
     private fun getRegisteredFunctionsMap(): Map<String, (Any?) -> Unit> {
-        val methodMap: Map<String, (Any?) -> Unit> = mapOf(
-            "println" to { args ->
-                println(args.toString())
-            }
-        )
+        val methodMap: Map<String, (Any?) -> Unit> =
+            mapOf(
+                "println" to { args ->
+                    println(args.toString())
+                },
+            )
         return methodMap
     }
 }

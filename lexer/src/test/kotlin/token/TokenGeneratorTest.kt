@@ -4,7 +4,6 @@ import token.Token
 import token.TokenGenerator
 
 class TokenGeneratorTest {
-
     @Test
     fun testGenerateTokenSimpleString() {
         val input = "let"

@@ -1,7 +1,6 @@
 package parser.statement
 
 class StatementType(private val elements: List<StatementManager.TokensNamesForStatements>, val name: String) {
-
     init {
         addThisStatementToAllExistingStatementList()
     }

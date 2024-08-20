@@ -9,7 +9,6 @@ import token.Token
  * This represents a method call with arguments, such as `myMethod(1, "test", varName);`.
  */
 class MethodCallASTBuilder : ASTBuilder {
-
     /**
      * Builds a MethodCall node based on the content of the provided statement.
      *
@@ -21,17 +20,19 @@ class MethodCallASTBuilder : ASTBuilder {
         val argumentsList: List<Token> = separateArguments(tokens)
         val nodes: List<Node.AssignationValue> = buildNodesForArguments(argumentsList)
 
-        val identifier = Node.Identifier(
-            tokens[0].value
-        )
+        val identifier =
+            Node.Identifier(
+                tokens[0].value,
+            )
 
-        val arguments = Node.Arguments(
-            nodes
-        )
+        val arguments =
+            Node.Arguments(
+                nodes,
+            )
 
         return Node.Method(
             identifier = identifier,
-            arguments = arguments
+            arguments = arguments,
         )
     }
 
@@ -80,11 +81,11 @@ class MethodCallASTBuilder : ASTBuilder {
             token.type == "NUMBER" ||
                 token.type == "STRING" ||
                 token.type == "IDENTIFIER"
-            )
+        )
         val isComma = (
             token.type == "PUNCTUATION" &&
                 token.value == ","
-            )
+        )
         return !isComma && isLiteral
     }
 }

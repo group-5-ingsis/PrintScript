@@ -5,8 +5,10 @@ import token.Token
 import token.TokenGenerator.generateToken
 
 object Lexer {
-
-    fun lex(input: String, paramsList: List<String>): List<Token> {
+    fun lex(
+        input: String,
+        paramsList: List<String>,
+    ): List<Token> {
         return getTokenList(input)
     }
 

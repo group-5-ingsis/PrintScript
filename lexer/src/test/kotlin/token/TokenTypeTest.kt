@@ -4,7 +4,6 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
 object TokenTypeTest {
-
     @Test
     fun testTokenTypeLet() {
         val string = "let"

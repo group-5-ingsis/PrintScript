@@ -6,20 +6,25 @@ import sca.StaticCodeAnalyzerRules
 import sca.StaticCodeIssue
 
 class SCATest {
-
     @Test
     fun `test 001 - should analyze that the type matched`() {
         val executeSca = ExecuteSca.getDefaultSCA()
         val issues: MutableList<StaticCodeIssue> = mutableListOf()
-        val scaRules = StaticCodeAnalyzerRules("", functionArgumentCheck = true, typeMatchingCheck = true, identifierNamingCheck = true)
+        val scaRules =
+            StaticCodeAnalyzerRules(
+                "",
+                functionArgumentCheck = true,
+                typeMatchingCheck = true,
+                identifierNamingCheck = true,
+            )
         val ast =
             listOf(
                 Node.AssignationDeclaration(
                     dataType = Node.DataType("NUMBER"),
                     kindVariableDeclaration = "let",
                     identifier = "a",
-                    value = Node.GenericLiteral("2", Node.DataType("NUMBER"))
-                )
+                    value = Node.GenericLiteral("2", Node.DataType("NUMBER")),
+                ),
             )
         for (node in ast) {
             issues.addAll(executeSca.analyzeNode(node, scaRules))
@@ -38,14 +43,17 @@ class SCATest {
                     dataType = Node.DataType("NUMBER"),
                     kindVariableDeclaration = "let",
                     identifier = "a",
-                    value = Node.GenericLiteral("Hello", Node.DataType("STRING"))
-                )
+                    value = Node.GenericLiteral("Hello", Node.DataType("STRING")),
+                ),
             )
         for (node in ast) {
             issues.addAll(executeSca.analyzeNode(node, scaRules))
         }
         assertEquals(1, issues.size)
-        assertEquals("Variable declaration does not match the type of the assigned value", issues[0].message)
+        assertEquals(
+            "Variable declaration does not match the type of the assigned value",
+            issues[0].message,
+        )
     }
 
     @Test
@@ -57,8 +65,8 @@ class SCATest {
             listOf(
                 Node.Method(
                     Node.Arguments(listOf(Node.GenericLiteral("2", Node.DataType("STRING")))),
-                    Node.Identifier("println")
-                )
+                    Node.Identifier("println"),
+                ),
             )
         for (node in ast) {
             issues.addAll(executeSca.analyzeNode(node, scaRules))
@@ -98,14 +106,17 @@ class SCATest {
                     dataType = Node.DataType("STRING"),
                     kindVariableDeclaration = "let",
                     identifier = "my_greetings",
-                    value = Node.GenericLiteral("Hello", Node.DataType("STRING"))
-                )
+                    value = Node.GenericLiteral("Hello", Node.DataType("STRING")),
+                ),
             )
         for (node in ast) {
             issues.addAll(executeSca.analyzeNode(node, scaRules))
         }
         assertEquals(1, issues.size)
-        assertEquals("The identifier 'my_greetings' must be in lower camel case.", issues[0].message)
+        assertEquals(
+            "The identifier 'my_greetings' must be in lower camel case.",
+            issues[0].message,
+        )
     }
 
     @Test
@@ -119,8 +130,8 @@ class SCATest {
                     dataType = Node.DataType("STRING"),
                     kindVariableDeclaration = "let",
                     identifier = "myGreetings",
-                    value = Node.GenericLiteral("Hello", Node.DataType("STRING"))
-                )
+                    value = Node.GenericLiteral("Hello", Node.DataType("STRING")),
+                ),
             )
         for (node in ast) {
             issues.addAll(executeSca.analyzeNode(node, scaRules))
@@ -139,8 +150,8 @@ class SCATest {
                     dataType = Node.DataType("NUMBER"),
                     kindVariableDeclaration = "let",
                     identifier = "a",
-                    value = Node.GenericLiteral("Hello", Node.DataType("STRING"))
-                )
+                    value = Node.GenericLiteral("Hello", Node.DataType("STRING")),
+                ),
             )
         for (node in ast) {
             issues.addAll(executeSca.analyzeNode(node, scaRules))
@@ -159,8 +170,8 @@ class SCATest {
                     dataType = Node.DataType("STRING"),
                     kindVariableDeclaration = "let",
                     identifier = "my_greetings",
-                    value = Node.GenericLiteral("Hello", Node.DataType("STRING"))
-                )
+                    value = Node.GenericLiteral("Hello", Node.DataType("STRING")),
+                ),
             )
         for (node in ast) {
             issues.addAll(executeSca.analyzeNode(node, scaRules))

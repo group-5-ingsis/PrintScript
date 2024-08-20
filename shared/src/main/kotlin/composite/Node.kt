@@ -24,7 +24,7 @@ sealed class Node {
      * @param argumentsOfAnyTypes List of arguments.
      */
     data class Arguments(
-        val argumentsOfAnyTypes: List<Node>
+        val argumentsOfAnyTypes: List<Node>,
     ) : Node() {
         override val nodeType: NodeType = NodeType.ARGUMENTS
     }
@@ -35,7 +35,7 @@ sealed class Node {
      * @param value The name of the identifier.
      */
     data class Identifier(
-        val value: String
+        val value: String,
     ) : AssignationValue() {
         override val nodeType: NodeType = NodeType.IDENTIFIER
     }
@@ -48,7 +48,7 @@ sealed class Node {
      */
     data class Method(
         val arguments: Arguments,
-        val identifier: Identifier
+        val identifier: Identifier,
     ) : Node() {
         override val nodeType: NodeType = NodeType.METHOD_CALL
     }
@@ -59,7 +59,7 @@ sealed class Node {
      * @param name The name of the method.
      */
     data class MethodName(
-        val name: String
+        val name: String,
     ) : Node() {
         override val nodeType: NodeType = NodeType.METHOD_NAME
     }
@@ -74,7 +74,7 @@ sealed class Node {
     data class Declaration(
         val dataType: DataType,
         val kindVariableDeclaration: String,
-        val identifier: String
+        val identifier: String,
     ) : Node() {
         override val nodeType: NodeType = NodeType.DECLARATION
     }
@@ -87,7 +87,7 @@ sealed class Node {
      */
     data class Assignation(
         val identifier: Identifier,
-        val value: AssignationValue
+        val value: AssignationValue,
     ) : Node() {
         override val nodeType: NodeType = NodeType.ASSIGNATION
     }
@@ -104,7 +104,7 @@ sealed class Node {
         val dataType: DataType,
         val kindVariableDeclaration: String,
         val identifier: String,
-        val value: AssignationValue
+        val value: AssignationValue,
     ) : Node() {
         override val nodeType: NodeType = NodeType.ASSIGNATION_DECLARATION
     }
@@ -117,7 +117,7 @@ sealed class Node {
      */
     data class GenericLiteral(
         val value: String,
-        val dataType: DataType
+        val dataType: DataType,
     ) : AssignationValue() {
         override val nodeType: NodeType = NodeType.LITERAL
     }
@@ -128,7 +128,7 @@ sealed class Node {
      * @param type The name of the data type.
      */
     data class DataType(
-        val type: String
+        val type: String,
     ) : Node() {
         override val nodeType: NodeType = NodeType.DATA_TYPE
 

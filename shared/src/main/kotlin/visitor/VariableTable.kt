@@ -3,7 +3,10 @@ package visitor
 object VariableTable {
     private val variables = mutableMapOf<String, Any?>()
 
-    fun setVariable(name: String, value: Any?) {
+    fun setVariable(
+        name: String,
+        value: Any?,
+    ) {
         variables[name] = value
     }
 

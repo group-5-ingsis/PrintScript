@@ -7,7 +7,6 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 
 class InterpreterTest {
-
     private val syntaxParser = SyntacticParser()
     private val interpreter = Interpreter
 

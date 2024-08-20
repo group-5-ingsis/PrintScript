@@ -4,7 +4,6 @@ import java.io.BufferedReader
 import java.io.InputStreamReader
 
 object TypesMapGenerator {
-
     fun getTypesMap(): Map<String, String> {
         val defaultPatternsMap = getDefaultPatternsMap()
         val variablePattensMap = getVariablePatternsMap()
@@ -17,7 +16,7 @@ object TypesMapGenerator {
             "=" to "ASSIGNMENT",
             """^-?\d+(\.\d+)?$""" to "NUMBER",
             """^".*"$""" to "STRING",
-            """^[,;.(){}:]$""" to "PUNCTUATION"
+            """^[,;.(){}:]$""" to "PUNCTUATION",
         )
     }
 
@@ -26,8 +25,9 @@ object TypesMapGenerator {
         val map = mutableMapOf<String, String>()
 
         // Access the file as a resource from the classpath
-        val inputStream = this::class.java.classLoader.getResourceAsStream(fileName)
-            ?: throw IllegalArgumentException("Resource not found: $fileName")
+        val inputStream =
+            this::class.java.classLoader.getResourceAsStream(fileName)
+                ?: throw IllegalArgumentException("Resource not found: $fileName")
 
         BufferedReader(InputStreamReader(inputStream)).use { reader ->
             reader.forEachLine { line ->

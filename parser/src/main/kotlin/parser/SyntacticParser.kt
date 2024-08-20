@@ -8,13 +8,13 @@ import token.Token
 import visitor.NodeVisitor
 
 class SyntacticParser {
-
-    private val builders: Map<String, ASTBuilder> = mapOf(
-        "Declaration" to DeclarationASTBuilder(),
-        "Assignation" to AssignationASTBuilder(),
-        "AssignDeclare" to AssignDeclareASTBuilder(),
-        "MethodCall" to MethodCallASTBuilder()
-    )
+    private val builders: Map<String, ASTBuilder> =
+        mapOf(
+            "Declaration" to DeclarationASTBuilder(),
+            "Assignation" to AssignationASTBuilder(),
+            "AssignDeclare" to AssignDeclareASTBuilder(),
+            "MethodCall" to MethodCallASTBuilder(),
+        )
 
     fun run(tokens: List<Token>): RootNode {
         return parse(tokens)

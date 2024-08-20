@@ -8,7 +8,7 @@ import sca.StaticCodeIssue
 class MethodAnalyzer : StaticCodeAnalyzer {
     override fun analyzeNode(
         astNode: Node,
-        rules: StaticCodeAnalyzerRules
+        rules: StaticCodeAnalyzerRules,
     ): List<StaticCodeIssue> {
         val methodNode = astNode as Node.Method
         val issues = mutableListOf<StaticCodeIssue>()
@@ -19,7 +19,12 @@ class MethodAnalyzer : StaticCodeAnalyzer {
             val argument = extractArgument(methodNode.arguments)
             if (!checkMethodArgument(argument, rules.functionArgumentCheck)) {
                 columnIndex++
-                issues.add(StaticCodeIssue("The println function should be called only with an identifier or a literal, the expression: $argument is invalid.", Position(lineIndex, columnIndex)))
+                issues.add(
+                    StaticCodeIssue(
+                        "The println function should be called only with an identifier or a literal, the expression: $argument is invalid.",
+                        Position(lineIndex, columnIndex),
+                    ),
+                )
             }
         }
         return issues
@@ -39,7 +44,7 @@ class MethodAnalyzer : StaticCodeAnalyzer {
 
     private fun checkMethodArgument(
         argument: String,
-        rule: Boolean
+        rule: Boolean,
     ): Boolean {
         // Verificar si el argumento es un identificador o un literal (número o string)
         if (!rule) return true // Si las reglas están desactivadas, siempre retorna true

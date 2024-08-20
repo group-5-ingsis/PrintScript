@@ -7,6 +7,6 @@ import sca.StaticCodeIssue
 interface StaticCodeAnalyzer {
     fun analyzeNode(
         astNode: Node,
-        rules: StaticCodeAnalyzerRules
+        rules: StaticCodeAnalyzerRules,
     ): List<StaticCodeIssue>
 }

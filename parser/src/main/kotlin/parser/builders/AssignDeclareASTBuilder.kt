@@ -7,7 +7,6 @@ import token.Token
 import java.util.*
 
 class AssignDeclareASTBuilder : ASTBuilder {
-
     override fun build(statement: Statement): Node {
         val tokens: List<Token> = statement.content
 
@@ -24,9 +23,9 @@ class AssignDeclareASTBuilder : ASTBuilder {
         // Construct and return an AssignationDeclaration node
         return Node.AssignationDeclaration(
             dataType = variableType,
-            kindVariableDeclaration = kindVariableDeclaration, // Using the extracted kind
+            kindVariableDeclaration = kindVariableDeclaration,
             identifier = identifier.value,
-            value = literal
+            value = literal,
         )
     }
 

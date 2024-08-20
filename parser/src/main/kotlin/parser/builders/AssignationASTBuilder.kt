@@ -9,7 +9,6 @@ import token.Token
  * This represents a variable assignment, like `a = 4;`, `b = "test";`, or `c = b;`.
  */
 class AssignationASTBuilder : ASTBuilder {
-
     /**
      * Builds an Assignation node based on the content of the provided statement.
      *
@@ -26,7 +25,7 @@ class AssignationASTBuilder : ASTBuilder {
         // Construct and return an Assignation node
         return Node.Assignation(
             identifier = identifier,
-            value = assignValue
+            value = assignValue,
         )
     }
 
@@ -43,7 +42,9 @@ class AssignationASTBuilder : ASTBuilder {
             "NUMBER" -> Node.GenericLiteral(token.value, Node.DataType("NUMBER"))
             "STRING" -> Node.GenericLiteral(token.value, Node.DataType("STRING"))
             "IDENTIFIER" -> Node.Identifier(token.value)
-            else -> throw UnsupportedLeafTypeException("Unknown assignment token type ${token.type}")
+            else -> throw UnsupportedLeafTypeException(
+                "Unknown assignment token type ${token.type}",
+            )
         }
     }
 }
