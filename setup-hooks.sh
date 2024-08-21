@@ -1,6 +1,6 @@
 #!/bin/bash
 
-HOOKS_DIR="scripts/git-hooks"
+HOOKS_DIR="scripts/git-hooks/sh"
 GIT_HOOKS_DIR=".git/hooks"
 
 # Copy hooks to .git/hooks
