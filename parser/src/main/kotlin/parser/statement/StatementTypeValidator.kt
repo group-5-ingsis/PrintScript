@@ -1,5 +1,5 @@
 package parser.statement
 
-interface StatementType {
+interface StatementTypeValidator {
     fun isValid(statement : Statement) : StatementValResult
 }

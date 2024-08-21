@@ -1,8 +1,8 @@
+import junit.framework.TestCase.assertEquals
 import lexer.Lexer
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertThrows
+import org.junit.Assert.assertThrows
 import token.Token
+import kotlin.test.Test
 
 class LexerTest {
     @Test
@@ -69,7 +69,7 @@ class LexerTest {
     @Test
     fun testLexerUnknownCharacters() {
         val input = "let a @ ball"
-        assertThrows<IllegalArgumentException> {
+        assertThrows(IllegalArgumentException::class.java) {
             Lexer.lex(input, listOf())
         }
     }
