@@ -106,7 +106,7 @@ class ParserTester {
     val syntaxParser = SyntacticParser()
     val tokens: List<Token> = lexer.lex("let a Number;", listOf())
 
-    assertFailsWith(UnsupportedOperationException::class) {
+    assertFailsWith(IllegalArgumentException::class) {
       val result: SyntacticParser.RootNode = syntaxParser.run(tokens)
       println(result.getChildren())
       for (node in result.getChildren()) {
