@@ -4,43 +4,8 @@ plugins {
     id 'org.jetbrains.kotlinx.kover' version '0.7.3' apply false
 }
 
-subprojects {
-    apply plugin: 'org.jetbrains.kotlin.jvm'
-    apply plugin: 'org.jlleitschuh.gradle.ktlint'
-    apply plugin: 'org.jetbrains.kotlinx.kover'
-
+allprojects {
     repositories {
         mavenCentral()
     }
-
-    dependencies {
-        testImplementation 'org.jetbrains.kotlin:kotlin-test'
-        implementation("io.arrow-kt:arrow-core:1.2.4")
-    }
-
-    kotlin {
-        jvmToolchain(21)
-    }
-
-    kover {
-        useJacoco()
-    }
-
-    koverReport {
-        verify {
-            rule {
-                name = 'Minimal line coverage rate'
-                bound {
-                    minValue = 80
-                }
-            }
-        }
-
-        defaults {
-            html {
-                onCheck = true
-            }
-        }
-    }
-
 }
