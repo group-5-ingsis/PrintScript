@@ -1,97 +1,61 @@
 package parser.statement
 
 object StatementManager {
-  val allExistingStatements: MutableSet<StatementType> = mutableSetOf()
-
-  init {
-    addStatements()
-  }
-
-  fun tellIfIsUnknown(statement: Statement): Boolean {
-    // TODO(Dont know how to do it)
-    return false
-  }
-
-  private fun addStatements() {
-    allExistingStatements.add(
-      StatementType(
-        listOf(
-          TokensNamesForStatements.SingleName("DECLARATION_KEYWORD"),
-          TokensNamesForStatements.SingleName("IDENTIFIER"),
-          TokensNamesForStatements.SingleName("PUNCTUATION"),
-          TokensNamesForStatements.SingleName("VARIABLE_TYPE"),
-          TokensNamesForStatements.SingleName("ASSIGNMENT"),
-          TokensNamesForStatements.MultipleNames(
-            listOf("NUMBER", "STRING", "IDENTIFIER"),
-          ),
-          TokensNamesForStatements.SingleName("PUNCTUATION"),
-        ),
-        "AssignDeclare",
-      ),
-    )
-
-    allExistingStatements.add(
-      StatementType(
-        listOf(
-          TokensNamesForStatements.SingleName("DECLARATION_KEYWORD"),
-          TokensNamesForStatements.SingleName("IDENTIFIER"),
-          TokensNamesForStatements.SingleName("PUNCTUATION"),
-          TokensNamesForStatements.SingleName("VARIABLE_TYPE"),
-        ),
-        "Declaration",
-      ),
-    )
-
-    allExistingStatements.add(
-      StatementType(
-        listOf(
-          TokensNamesForStatements.SingleName("IDENTIFIER"),
-          TokensNamesForStatements.SingleName("ASSIGNMENT"),
-          TokensNamesForStatements.MultipleNames(
-            listOf("NUMBER", "STRING", "IDENTIFIER"),
-          ),
-        ),
-        "Assignation",
-      ),
-    )
-    allExistingStatements.add(
-      StatementType(
-        listOf(
-          TokensNamesForStatements.SingleName("PREDEF_METHOD"),
-          TokensNamesForStatements.SingleName("PUNCTUATION"),
-          TokensNamesForStatements.MultipleNames(
-            listOf("NUMBER", "STRING", "IDENTIFIER"),
-          ),
-          TokensNamesForStatements.SingleName("PUNCTUATION"),
-          TokensNamesForStatements.SingleName("PUNCTUATION"),
-        ),
-        "MethodCall",
-      ),
-    )
-
-    allExistingStatements.add(StatementType(listOf(), "Unknown"))
-  }
-
-  fun categorize(statements: List<Statement>): List<Statement> {
-    val categorizedStatements = mutableListOf<Statement>()
-    val newList = StatementManager.allExistingStatements.toList()
-
-    for (statement in statements) {
-      for (allowedStatement in newList) {
-        val isType = allowedStatement.isType(statement)
-        if (isType) {
-          statement.statementType = allowedStatement.name
-          categorizedStatements.add(statement)
-          break
+    fun categorize(statements : List<Statement>) : List<Statement> {
+        val statementList = mutableListOf<Statement>()
+        for (statement in statements) {
+            statementList.add(categorizeStatement(statement))
         }
-      }
+        return statementList
     }
-    return categorizedStatements
-  }
 
-  sealed class TokensNamesForStatements {
-    data class SingleName(val value: String) : TokensNamesForStatements()
+    private fun categorizeStatement(statement: Statement): Statement {
+        when (statement.content[0].type) {
+            "DECLARATION_KEYWORD" -> {
+              val validationResult = DeclarationStatementValidator().isValid(statement)
+              if (validationResult.isValid) {
+                statement.statementType = getDeclarationType(statement)
+                return statement
+              } else {
+                SyntacticErrorHandler.handle(validationResult)
+              }
+            }
+            "IDENTIFIER" -> {
+              val validationResult = AssignmentStatementValidator().isValid(statement)
+              if (validationResult.isValid) {
+                statement.statementType = "Assignation"
+                return statement
+              } else {
+                SyntacticErrorHandler.handle(validationResult)
+              }
+            }
+            "PREDEF_METHOD" -> {
+              val validationResult = MethodCallStatementValidator().isValid(statement)
+              if (validationResult.isValid) {
+                statement.statementType = "MethodCall"
+                return statement
+              } else {
+                SyntacticErrorHandler.handle(validationResult)
+              }
+            }
+            else -> throw UnsupportedOperationException("Unexpected statement")
+        }
+      throw UnsupportedOperationException("Unexpected statement")
+    }
 
-    data class MultipleNames(val values: List<String>) : TokensNamesForStatements()
+  private fun getDeclarationType(statement: Statement): String {
+    if (statement.content[4].type == "ASSIGNATION" || statement.content[4].value == "=") {
+      val subStatement = Statement(listOf(statement.content[1]) + (statement.content.subList(4, statement.content.size)), "Unknown")
+      val validationResult = AssignmentStatementValidator().isValid(subStatement)
+      if (validationResult.isValid) {
+        statement.statementType = "Assignation"
+        return "AssignDeclare"
+      } else {
+        SyntacticErrorHandler.handle(validationResult)
+        return "Declaration"
+      }
+    } else {
+      return "Declaration"
+    }
   }
 }
