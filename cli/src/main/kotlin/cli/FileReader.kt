@@ -6,7 +6,8 @@ object FileReader {
   fun getFileContents(fileLocation: String): String {
     return try {
       val file = File(fileLocation)
-      if (file.exists()) {
+      val fileExists = file.exists()
+      if (fileExists) {
         file.readText()
       } else {
         "File not found."
