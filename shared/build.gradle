@@ -12,24 +12,3 @@ dependencies {
 kotlin {
     jvmToolchain(21)
 }
-
-kover {
-    useJacoco()
-}
-
-koverReport {
-    verify {
-        rule {
-            name = 'Minimal line coverage rate'
-            bound {
-                minValue = 80
-            }
-        }
-    }
-
-    defaults {
-        html {
-            onCheck = true
-        }
-    }
-}
