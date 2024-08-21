@@ -1,7 +1,6 @@
 package visitor
 
 import Node
-import composite.NodeType
 
 interface Visitor {
     fun visitAssignation(assignation: Node.Assignation)
@@ -12,5 +11,5 @@ interface Visitor {
 
     fun visitMethodCall(methodCall: Node.Method)
 
-    fun getVisitorFunction(nodeType: NodeType): (Node) -> Unit
+    fun getVisitorFunction(nodeType: String): (Node) -> Unit
 }

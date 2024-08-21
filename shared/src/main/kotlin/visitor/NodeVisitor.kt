@@ -1,7 +1,6 @@
 package visitor
 
 import Node
-import composite.NodeType
 
 class NodeVisitor : Visitor {
     private fun stringToNumber(value: String): Number {
@@ -109,41 +108,45 @@ class NodeVisitor : Visitor {
         executeMethod(methodName, parameters)
     }
 
-    override fun getVisitorFunction(nodeType: NodeType): (Node) -> Unit {
+    override fun getVisitorFunction(nodeType: String): (Node) -> Unit {
         return when (nodeType) {
-            NodeType.ASSIGNATION -> { node ->
+            "ASSIGNATION" -> { node ->
                 visitAssignation(node as Node.Assignation)
             }
 
-            NodeType.DECLARATION -> { node ->
+            "DECLARATION" -> { node ->
                 visitDeclaration(node as Node.Declaration)
             }
 
-            NodeType.ASSIGNATION_DECLARATION -> { node ->
+            "ASSIGNATION_DECLARATION" -> { node ->
                 visitAssignDeclare(node as Node.AssignationDeclaration)
             }
 
-            NodeType.METHOD_CALL -> { node ->
+            "METHOD_CALL" -> { node ->
                 visitMethodCall(node as Node.Method)
             }
 
-            NodeType.LITERAL -> {
+            "LITERAL" -> {
                 TODO("Not implemented yet")
             }
 
-            NodeType.IDENTIFIER -> {
+            "IDENTIFIER" -> {
                 TODO("Not implemented yet")
             }
 
-            NodeType.DATA_TYPE -> {
+            "DATA_TYPE" -> {
                 TODO("Not implemented yet")
             }
 
-            NodeType.ARGUMENTS -> {
+            "ARGUMENTS" -> {
                 TODO("Not implemented yet")
             }
 
-            NodeType.METHOD_NAME -> {
+            "METHOD_NAME" -> {
+                TODO("Not implemented yet")
+            }
+
+            else -> {
                 TODO("Not implemented yet")
             }
         }

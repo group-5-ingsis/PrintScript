@@ -1,9 +1,8 @@
 import composite.NodeManager.addDataType
-import composite.NodeType
 import visitor.NodeVisitor
 
 sealed class Node {
-    abstract val nodeType: NodeType
+    abstract val nodeType: String
 
     fun acceptVisitor(visitor: NodeVisitor) {
         val func = visitor.getVisitorFunction(nodeType)
@@ -26,7 +25,7 @@ sealed class Node {
     data class Arguments(
         val argumentsOfAnyTypes: List<Node>,
     ) : Node() {
-        override val nodeType: NodeType = NodeType.ARGUMENTS
+        override val nodeType: String = "ARGUMENTS"
     }
 
     /**
@@ -37,7 +36,7 @@ sealed class Node {
     data class Identifier(
         val value: String,
     ) : AssignationValue() {
-        override val nodeType: NodeType = NodeType.IDENTIFIER
+        override val nodeType: String = "IDENTIFIER"
     }
 
     /**
@@ -50,7 +49,7 @@ sealed class Node {
         val arguments: Arguments,
         val identifier: Identifier,
     ) : Node() {
-        override val nodeType: NodeType = NodeType.METHOD_CALL
+        override val nodeType: String = "METHOD_CALL"
     }
 
     /**
@@ -61,7 +60,7 @@ sealed class Node {
     data class MethodName(
         val name: String,
     ) : Node() {
-        override val nodeType: NodeType = NodeType.METHOD_NAME
+        override val nodeType: String = "METHOD_NAME"
     }
 
     /**
@@ -76,7 +75,7 @@ sealed class Node {
         val kindVariableDeclaration: String,
         val identifier: String,
     ) : Node() {
-        override val nodeType: NodeType = NodeType.DECLARATION
+        override val nodeType: String = "DECLARATION"
     }
 
     /**
@@ -89,7 +88,7 @@ sealed class Node {
         val identifier: Identifier,
         val value: AssignationValue,
     ) : Node() {
-        override val nodeType: NodeType = NodeType.ASSIGNATION
+        override val nodeType: String = "ASSIGNATION"
     }
 
     /**
@@ -106,7 +105,7 @@ sealed class Node {
         val identifier: String,
         val value: AssignationValue,
     ) : Node() {
-        override val nodeType: NodeType = NodeType.ASSIGNATION_DECLARATION
+        override val nodeType: String = "ASSIGNATION_DECLARATION"
     }
 
     /**
@@ -119,7 +118,7 @@ sealed class Node {
         val value: String,
         val dataType: DataType,
     ) : AssignationValue() {
-        override val nodeType: NodeType = NodeType.LITERAL
+        override val nodeType: String = "LITERAL"
     }
 
     /**
@@ -130,7 +129,7 @@ sealed class Node {
     data class DataType(
         val type: String,
     ) : Node() {
-        override val nodeType: NodeType = NodeType.DATA_TYPE
+        override val nodeType: String = "DATA_TYPE"
 
         init {
             addDataType(type)
