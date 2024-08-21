@@ -1,16 +1,16 @@
 package visitor
 
 object VariableTable {
-    private val variables = mutableMapOf<String, Any?>()
+  private val variables = mutableMapOf<String, Any?>()
 
-    fun setVariable(
-        name: String,
-        value: Any?,
-    ) {
-        variables[name] = value
-    }
+  fun setVariable(
+    name: String,
+    value: Any?,
+  ) {
+    variables[name] = value
+  }
 
-    fun getVariable(name: String): Any? {
-        return variables[name]
-    }
+  fun getVariable(name: String): Any? {
+    return variables[name]
+  }
 }

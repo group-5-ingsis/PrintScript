@@ -3,13 +3,13 @@ package visitor
 import Node
 
 interface Visitor {
-    fun visitAssignation(assignation: Node.Assignation)
+  fun visitAssignation(assignation: Node.Assignation)
 
-    fun visitDeclaration(declaration: Node.Declaration)
+  fun visitDeclaration(declaration: Node.Declaration)
 
-    fun visitAssignDeclare(assignationDeclaration: Node.AssignationDeclaration)
+  fun visitAssignDeclare(assignationDeclaration: Node.AssignationDeclaration)
 
-    fun visitMethodCall(methodCall: Node.Method)
+  fun visitMethodCall(methodCall: Node.Method)
 
-    fun getVisitorFunction(nodeType: String): (Node) -> Unit
+  fun getVisitorFunction(nodeType: String): (Node) -> Unit
 }
