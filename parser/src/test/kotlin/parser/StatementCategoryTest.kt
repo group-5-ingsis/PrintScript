@@ -2,6 +2,7 @@ package parser
 
 import lexer.Lexer
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import parser.statement.Statement
 import parser.statement.StatementManager
 import kotlin.test.assertEquals
@@ -41,5 +42,19 @@ class StatementCategoryTest {
         val statements = listOf(statement)
         val categorizedStatements = StatementManager.categorize(statements)
         assertEquals("Assignation", categorizedStatements[0].statementType)
+    }
+
+    @Test
+    fun testErrorStatement(){
+        val testString = "let a { String"
+        val tokens = Lexer.lex(testString, listOf())
+
+        val statement = Statement(tokens, "Unknown")
+
+        val statements = listOf(statement)
+        assertThrows<IllegalArgumentException> {
+            StatementManager.categorize(statements)
+        }
+
     }
 }
