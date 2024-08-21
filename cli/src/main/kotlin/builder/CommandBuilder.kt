@@ -3,5 +3,8 @@ package builder
 import command.Command
 
 interface CommandBuilder {
-  fun build(arguments: String): Command
+  fun build(
+    file: String,
+    arguments: List<String>,
+  ): Command
 }

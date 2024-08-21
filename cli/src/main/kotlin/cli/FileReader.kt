@@ -3,7 +3,6 @@ package cli
 import java.io.File
 
 object FileReader {
-
   fun getFileContents(fileLocation: String): String {
     return try {
       val file = File(fileLocation)
@@ -16,5 +15,4 @@ object FileReader {
       "Error reading file: ${e.message}"
     }
   }
-
 }
