@@ -3,22 +3,21 @@ package composite
 import exceptions.UsuportedDataTypeExeption
 
 object NodeManager {
-    val allExistsDataTypes: MutableSet<String> = mutableSetOf(
-        "NUMBER",
-        "STRING",
-        "INT",
-
+  val allExistsDataTypes: MutableSet<String> =
+    mutableSetOf(
+      "NUMBER",
+      "STRING",
+      "INT",
     )
-    val allExistsMethodCalls : MutableSet<String> = mutableSetOf(
-        "println"
+  val allExistsMethodCalls: MutableSet<String> =
+    mutableSetOf(
+      "println",
     )
 
-
-
-    fun checkDataTypeIsValid(dataType: String){
-        if (allExistsDataTypes.contains(dataType)){
-            return;
-        }
-        throw UsuportedDataTypeExeption(dataType)
+  fun checkIfExist(dataType: String) {
+    if (allExistsDataTypes.contains(dataType)) {
+      return
     }
+    throw UsuportedDataTypeExeption(dataType)
+  }
 }

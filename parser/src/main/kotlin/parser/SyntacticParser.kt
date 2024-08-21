@@ -4,25 +4,24 @@ import Node
 import parser.builders.*
 import parser.statement.Statement
 import parser.statement.StatementManager
-
 import token.Token
 import visitor.NodeVisitor
 
 class SyntacticParser {
-  
-  private val builders: Map<String, ASTBuilder> = mapOf(
-    "Declaration" to DeclarationASTBuilder(),
-    "Assignation" to AssignationASTBuilder(),
-    "AssignDeclare" to AssignDeclareASTBuilder(),
-    "MethodCall" to MethodCallASTBuilder(),
-  )
+  private val builders: Map<String, ASTBuilder> =
+    mapOf(
+      "Declaration" to DeclarationASTBuilder(),
+      "Assignation" to AssignationASTBuilder(),
+      "AssignDeclare" to AssignDeclareASTBuilder(),
+      "MethodCall" to MethodCallASTBuilder(),
+    )
 
   fun run(tokens: List<Token>): RootNode {
     return parse(tokens)
   }
 
   private fun parse(tokens: List<Token>): RootNode {
-    var statements : List<Statement> = getStatements(tokens)
+    var statements: List<Statement> = getStatements(tokens)
     statements = StatementManager.categorize(statements)
     return buildAST(statements)
   }
@@ -58,8 +57,7 @@ class SyntacticParser {
     return statements
   }
 
-
-  class RootNode private constructor(){
+  class RootNode private constructor() {
     private val children = mutableListOf<Node>()
 
     fun addChild(child: Node) {
@@ -82,5 +80,8 @@ class SyntacticParser {
       }
     }
 
+    operator fun iterator(): Iterator<Node> {
+      return children.iterator()
+    }
   }
 }

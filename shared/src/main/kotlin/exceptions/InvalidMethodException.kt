@@ -1,4 +1,3 @@
 package exceptions
 
-class InvalidMethodException(message: String) : Exception(message) {
-}
+class InvalidMethodException(message: String) : Exception(message)

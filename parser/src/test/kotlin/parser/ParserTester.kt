@@ -1,11 +1,11 @@
 package parser
 
 import lexer.Lexer
-import org.junit.jupiter.api.Test
 import token.Token
+import kotlin.test.Test
+import kotlin.test.assertFailsWith
 
 class ParserTester {
-
   private fun getTokenSublist(tokens: List<Token>): List<List<Token>> {
     val tokenSublists = mutableListOf<List<Token>>()
     var j = 0
@@ -36,7 +36,6 @@ class ParserTester {
     val children = ast.getChildren()
     println(children)
     for (node in children) {
-
       println(node)
     }
   }
@@ -97,9 +96,35 @@ class ParserTester {
     val result: SyntacticParser.RootNode = syntaxParser.run(tokens)
     println(result.getChildren())
     for (node in result.getChildren()) {
-
       println(node)
     }
+  }
 
+  @Test
+  fun testDeclarationWithoutColonShouldFail() {
+    val lexer = Lexer
+    val syntaxParser = SyntacticParser()
+    val tokens: List<Token> = lexer.lex("let a Number;", listOf())
+
+    assertFailsWith(UnsupportedOperationException::class) {
+      val result: SyntacticParser.RootNode = syntaxParser.run(tokens)
+      println(result.getChildren())
+      for (node in result.getChildren()) {
+        println(node)
+      }
+    }
+  }
+
+  @Test
+  fun testAssignDeclareWithDifferentTypesShouldPassSyntacticParser() {
+    val lexer = Lexer
+    val syntaxParser = SyntacticParser()
+    val tokens: List<Token> = lexer.lex("let a: Number = \"testing\";", listOf())
+
+    val result: SyntacticParser.RootNode = syntaxParser.run(tokens)
+    println(result.getChildren())
+    for (node in result.getChildren()) {
+      println(node)
+    }
   }
 }
