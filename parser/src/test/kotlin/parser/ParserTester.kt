@@ -1,8 +1,8 @@
 package parser
 
 import lexer.Lexer
-import org.junit.jupiter.api.Test
 import token.Token
+import kotlin.test.Test
 import kotlin.test.assertFailsWith
 
 class ParserTester {

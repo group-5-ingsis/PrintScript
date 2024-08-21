@@ -1,9 +1,9 @@
 package parser
 
 import lexer.Lexer
-import org.junit.jupiter.api.Test
 import parser.statement.Statement
 import parser.statement.StatementManager
+import kotlin.test.Test
 import kotlin.test.assertEquals
 
 class StatementCategoryTest {
