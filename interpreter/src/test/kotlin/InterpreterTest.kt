@@ -90,9 +90,9 @@ class InterpreterTest {
 
   @Test
   fun testBinaryOperationString() {
-    val tokens: List<Token> = Lexer.lex("let a: String; a = \"Hello\" + \"World\";", listOf())
+    val tokens: List<Token> = Lexer.lex("let a: String = \"Hello\" + \"World\";", listOf())
     val ast: SyntacticParser.RootNode = syntaxParser.run(tokens)
     interpreter.interpret(ast)
-    assertEquals("Hello World", VariableTable.getVariable("a"))
+    assertEquals("\"HelloWorld\"", VariableTable.getVariable("a"))
   }
 }
