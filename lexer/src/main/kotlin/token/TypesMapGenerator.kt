@@ -15,7 +15,7 @@ object TypesMapGenerator {
     return mapOf(
       "=" to "ASSIGNMENT",
       """^-?\d+(\.\d+)?$""" to "NUMBER",
-      """^".*"$""" to "STRING",
+      """^(['"]).*\1$""" to "STRING",
       """^[,;.(){}:]$""" to "PUNCTUATION",
     )
   }
