@@ -101,7 +101,12 @@ class NodeVisitor : Visitor {
   private fun evaluateBinaryOperation(binaryOp: Node.BinaryOperations): Any {
     val leftValue =
       when (val left = binaryOp.left) {
-        is Node.GenericLiteral -> left.value
+        is Node.GenericLiteral ->
+          if (left.dataType.type != "STRING") {
+            stringToNumber(left.value)
+          } else {
+            left.value
+          }
         is Node.Identifier -> VariableTable.getVariable(left.value)
         is Node.BinaryOperations -> evaluateBinaryOperation(left)
         else -> throw Exception("Unsupported type in binary operation left side")
@@ -109,24 +114,51 @@ class NodeVisitor : Visitor {
 
     val rightValue =
       when (val right = binaryOp.right) {
-        is Node.GenericLiteral -> right.value
+        is Node.GenericLiteral ->
+          if (right.dataType.type != "STRING") {
+            stringToNumber(right.value)
+          } else {
+            right.value
+          }
+
         is Node.Identifier -> VariableTable.getVariable(right.value)
         is Node.BinaryOperations -> evaluateBinaryOperation(right)
         else -> throw Exception("Unsupported type in binary operation right side")
       }
 
+    val leftIsNumber = leftValue is Number
+    val rightIsNumber = rightValue is Number
+
     return when (binaryOp.symbol) {
       "+" -> {
         when {
           leftValue is String && rightValue is String -> leftValue + rightValue
-          leftValue is Number && rightValue is Number -> (leftValue.toDouble() + rightValue.toDouble()).toString()
+          leftIsNumber && rightIsNumber -> (leftValue as Number).toDouble() + (rightValue as Number).toDouble()
           leftValue is String || rightValue is String -> leftValue.toString() + rightValue.toString()
-          else -> throw Exception("Unsupported operation")
+          else -> throw Exception("Unsupported operands for addition")
         }
       }
-      "-" -> (leftValue as Number).toDouble() - (rightValue as Number).toDouble()
-      "*" -> (leftValue as Number).toDouble() * (rightValue as Number).toDouble()
-      "/" -> (leftValue as Number).toDouble() / (rightValue as Number).toDouble()
+      "-" -> {
+        if (leftIsNumber && rightIsNumber) {
+          (leftValue as Number).toDouble() - (rightValue as Number).toDouble()
+        } else {
+          throw Exception("Subtraction requires both operands to be numbers")
+        }
+      }
+      "*" -> {
+        if (leftIsNumber && rightIsNumber) {
+          (leftValue as Number).toDouble() * (rightValue as Number).toDouble()
+        } else {
+          throw Exception("Multiplication requires both operands to be numbers")
+        }
+      }
+      "/" -> {
+        if (leftIsNumber && rightIsNumber) {
+          (leftValue as Number).toDouble() / (rightValue as Number).toDouble()
+        } else {
+          throw Exception("Division requires both operands to be numbers")
+        }
+      }
       else -> throw Exception("Unsupported binary operator")
     }
   }
