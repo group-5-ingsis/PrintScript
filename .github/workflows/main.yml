@@ -34,12 +34,3 @@ jobs:
 
     - name: Build with Gradle
       run: ./gradlew build --no-daemon
-
-    - name: Run tests
-      run: ./gradlew test --no-daemon
-
-    - name: Run Ktlint for code formatting
-      run: ./gradlew ktlintFormat --no-daemon
-
-    - name: Check Ktlint
-      run: ./gradlew ktlintCheck --no-daemon
