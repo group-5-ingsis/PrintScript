@@ -11,6 +11,10 @@ object TokenGenerator {
     val type = getTypeFromValue(value)
     val position = Position(row + 1, symbolIndex + 1)
 
+    if (type == "UNKNOWN") {
+      throw IllegalArgumentException("Unknown symbol $value in line ${position.line} index ${position.symbolIndex}")
+    }
+
     return Token(value, type, position)
   }
 

@@ -75,7 +75,7 @@ class InterpreterTest {
 
   @Test
   fun testMethodCallWithNumber() {
-    val tokens: List<Token> = Lexer.lex("let a: Number; a = 2; println(a);", listOf())
+    val tokens: List<Token> = Lexer.lex("let a: Number; a = 4; println(a);", listOf())
     val ast: SyntacticParser.RootNode = syntaxParser.run(tokens)
     interpreter.interpret(ast)
   }
