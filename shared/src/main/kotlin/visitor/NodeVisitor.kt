@@ -3,22 +3,7 @@ package visitor
 import Node
 
 class NodeVisitor : Visitor {
-  private fun stringToNumber(value: String): Number {
-    return when {
-      value.contains('.') -> {
-        // Si el valor contiene un punto decimal, tratamos de convertirlo a Double
-        value.toDoubleOrNull() ?: throw IllegalArgumentException("El valor no es un número válido")
-      }
-      else -> {
-        // Si el valor no contiene un punto decimal, tratamos de convertirlo a Int
-        value.toIntOrNull() ?: throw IllegalArgumentException("El valor no es un número válido")
-      }
-    }
-  }
-
   override fun visitAssignation(assignation: Node.Assignation) {
-    // Extrae el identificador y el valor del nodo de asignación
-
     val identifier = assignation.identifier.value
     val value =
       when (val valueNode = assignation.value) {
@@ -65,6 +50,19 @@ class NodeVisitor : Visitor {
     VariableTable.setVariable(identifier, value)
   }
 
+  private fun stringToNumber(value: String): Number {
+    return when {
+      value.contains('.') -> {
+        // Si el valor contiene un punto decimal, tratamos de convertirlo a Double
+        value.toDoubleOrNull() ?: throw IllegalArgumentException("El valor no es un número válido")
+      }
+      else -> {
+        // Si el valor no contiene un punto decimal, tratamos de convertirlo a Int
+        value.toIntOrNull() ?: throw IllegalArgumentException("El valor no es un número válido")
+      }
+    }
+  }
+
   override fun visitDeclaration(declaration: Node.Declaration) {
     // Extrae el identificador de la declaración
 
@@ -73,11 +71,10 @@ class NodeVisitor : Visitor {
   }
 
   override fun visitAssignDeclare(assignationDeclaration: Node.AssignationDeclaration) {
-    // Extrae la información de la asignación y declaración
     val identifier = assignationDeclaration.identifier
-    val value: Node.AssignationValue = assignationDeclaration.value
     val identifierValue =
-      when (value) {
+
+      when (val value: Node.AssignationValue = assignationDeclaration.value) {
         is Node.GenericLiteral -> {
           if (value.dataType.type != "STRING") {
             stringToNumber(value.value)
@@ -87,6 +84,9 @@ class NodeVisitor : Visitor {
         }
         is Node.Identifier -> {
           VariableTable.getVariable(value.value)
+        }
+
+        is Node.BinaryOperations -> {
         }
 
         else -> {

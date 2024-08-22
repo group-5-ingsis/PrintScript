@@ -10,17 +10,13 @@ class AssignDeclareASTBuilder : ASTBuilder {
   override fun build(statement: Statement): Node {
     val tokens: List<Token> = statement.content
 
-    // Extract the declaration keyword (e.g., let, var) from the tokens
     val kindVariableDeclaration = tokens[0].value
 
-    // Create the identifier and variable type nodes
     val identifier = Node.Identifier(tokens[1].value)
     val variableType = Node.DataType(tokens[3].value.uppercase(Locale.getDefault()))
 
-    // Determine the value being assigned (literal or identifier)
     val literal = getLeafNodeType(statement)
 
-    // Construct and return an AssignationDeclaration node
     return Node.AssignationDeclaration(
       dataType = variableType,
       kindVariableDeclaration = kindVariableDeclaration,
@@ -29,22 +25,14 @@ class AssignDeclareASTBuilder : ASTBuilder {
     )
   }
 
-  /**
-   * Returns the node type for the value being assigned in the statement.
-   * The value can be a literal (e.g., number, string) or an identifier.
-   *
-   * @param statement The statement containing tokens for the value being assigned.
-   * @return A node representing the value, which can be a [GenericLiteral] or [Identifier].
-   * @throws UnsupportedLeafTypeException If the token type is not supported.
-   */
   private fun getLeafNodeType(statement: Statement): Node.AssignationValue {
     val tokens = statement.content
     val token: Token = tokens[5]
-    if (tokens[6].type == "OPERATOR") {
+    val isOperation = tokens[6].type == "OPERATOR"
+    if (isOperation) {
       return makeBinaryOperator(tokens)
     }
     return getTokenNode(token)
-
   }
 
   private fun getTokenNode(token: Token): Node.AssignationValue {
@@ -56,15 +44,11 @@ class AssignDeclareASTBuilder : ASTBuilder {
     }
   }
 
-
   private fun makeBinaryOperator(tokens: List<Token>): Node.AssignationValue {
     return Node.BinaryOperations(
       symbol = tokens[6].value,
       left = getTokenNode(tokens[5]),
-      right = getTokenNode(tokens[7])
+      right = getTokenNode(tokens[7]),
     )
   }
-
-
-
 }

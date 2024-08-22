@@ -79,4 +79,12 @@ class InterpreterTest {
     val ast: SyntacticParser.RootNode = syntaxParser.run(tokens)
     interpreter.interpret(ast)
   }
+
+  @Test
+  fun testBinaryOperationNumber()  {
+    val tokens: List<Token> = Lexer.lex("let a: Number = 2 + 2;", listOf())
+    val ast: SyntacticParser.RootNode = syntaxParser.run(tokens)
+    interpreter.interpret(ast)
+    assertEquals(4, VariableTable.getVariable("a"))
+  }
 }
