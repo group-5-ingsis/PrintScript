@@ -19,7 +19,7 @@ class ParserTester {
   }
 
   @Test
-  fun testOperation()  {
+  fun testOperation() {
     val syntaxParser = SyntacticParser()
 
     val tokens: List<Token> = Lexer.lex("let a: Number = 44534 + 3454;", listOf())
@@ -34,7 +34,7 @@ class ParserTester {
   }
 
   @Test
-  fun testStringOperation()  {
+  fun testStringOperation() {
     val syntaxParser = SyntacticParser()
 
     val tokens: List<Token> = Lexer.lex("let a: String = 'Hello' + 'World';", listOf())

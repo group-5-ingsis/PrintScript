@@ -87,6 +87,7 @@ class NodeVisitor : Visitor {
         }
 
         is Node.BinaryOperations -> {
+          evaluateBinaryOperation(value)
         }
 
         else -> {
@@ -94,8 +95,49 @@ class NodeVisitor : Visitor {
         }
       }
 
-    // Establece la variable en la tabla de variables con el valor proporcionado
     VariableTable.setVariable(identifier, identifierValue)
+  }
+
+  private fun evaluateBinaryOperation(binaryOp: Node.BinaryOperations): Any {
+    val leftValue =
+      when (val left = binaryOp.left) {
+        is Node.GenericLiteral ->
+          if (left.dataType.type != "STRING") {
+            stringToNumber(left.value)
+          } else {
+            left.value
+          }
+        is Node.Identifier -> VariableTable.getVariable(left.value)
+        is Node.BinaryOperations -> evaluateBinaryOperation(left)
+        else -> throw Exception("Unsupported type in binary operation left side")
+      }
+
+    val rightValue =
+      when (val right = binaryOp.right) {
+        is Node.GenericLiteral ->
+          if (right.dataType.type != "STRING") {
+            stringToNumber(right.value)
+          } else {
+            right.value
+          }
+        is Node.Identifier -> VariableTable.getVariable(right.value)
+        is Node.BinaryOperations -> evaluateBinaryOperation(right)
+        else -> throw Exception("Unsupported type in binary operation right side")
+      }
+
+    return when (binaryOp.symbol) {
+      "+" -> {
+        if (leftValue is String || rightValue is String) {
+          leftValue.toString() + rightValue.toString()
+        } else {
+          (leftValue as Number).toDouble() + (rightValue as Number).toDouble()
+        }
+      }
+      "-" -> (leftValue as Number).toDouble() - (rightValue as Number).toDouble()
+      "*" -> (leftValue as Number).toDouble() * (rightValue as Number).toDouble()
+      "/" -> (leftValue as Number).toDouble() / (rightValue as Number).toDouble()
+      else -> throw Exception("Unsupported binary operator")
+    }
   }
 
   override fun visitMethodCall(methodCall: Node.Method) {
