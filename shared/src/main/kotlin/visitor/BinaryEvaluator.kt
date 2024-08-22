@@ -3,11 +3,11 @@ package visitor
 import Node
 
 object BinaryEvaluator {
-  fun evaluate(binaryOp: Node.BinaryOperations): Any {
-    val leftValue = resolveOperandValue(binaryOp.left)
-    val rightValue = resolveOperandValue(binaryOp.right)
+  fun evaluate(operation: Node.BinaryOperations): Any {
+    val leftValue = resolveOperandValue(operation.left)
+    val rightValue = resolveOperandValue(operation.right)
 
-    val operationSymbol = binaryOp.symbol
+    val operationSymbol = operation.symbol
     return performOperation(leftValue, rightValue, operationSymbol)
   }
 
