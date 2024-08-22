@@ -3,11 +3,10 @@ package parser
 import parser.exceptions.SemanticErrorException
 import parser.validators.SemanticValidator
 import parser.validators.ValidationResult
-import parser.validators.Validator
 import kotlin.jvm.Throws
 
 class SemanticParser {
-  private val validator: Validator = SemanticValidator()
+  private val validator = SemanticValidator()
 
   @Throws(SemanticErrorException::class)
   fun run(ast: SyntacticParser.RootNode): SyntacticParser.RootNode {
@@ -19,7 +18,6 @@ class SemanticParser {
     }
   }
 
-  @Throws(SemanticErrorException::class)
   private fun validateAST(ast: SyntacticParser.RootNode): ValidationResult {
     return validator.validateSemantics(ast)
   }

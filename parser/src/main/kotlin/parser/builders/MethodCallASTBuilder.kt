@@ -17,7 +17,7 @@ class MethodCallASTBuilder : ASTBuilder {
   override fun build(statement: Statement): Node.Method {
     val tokens: List<Token> = statement.content
     val argumentsList: List<Token> = separateArguments(tokens)
-    val nodes: List<Node.AssignationValue> = buildNodesForArguments(argumentsList)
+    val nodes: List<Node.AssignableValue> = buildNodesForArguments(argumentsList)
 
     val identifier =
       Node.Identifier(
@@ -41,8 +41,8 @@ class MethodCallASTBuilder : ASTBuilder {
    * @param arguments The tokens representing the method arguments.
    * @return A list of [AssignationValue], which can be [GenericLiteral] or [Identifier].
    */
-  private fun buildNodesForArguments(arguments: List<Token>): List<Node.AssignationValue> {
-    val nodes = mutableListOf<Node.AssignationValue>()
+  private fun buildNodesForArguments(arguments: List<Token>): List<Node.AssignableValue> {
+    val nodes = mutableListOf<Node.AssignableValue>()
     for (token in arguments) {
       when (token.type) {
         "NUMBER" -> nodes.add(Node.GenericLiteral(token.value, Node.DataType("NUMBER")))

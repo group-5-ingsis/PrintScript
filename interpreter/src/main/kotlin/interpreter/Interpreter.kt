@@ -5,6 +5,7 @@ import visitor.NodeVisitor
 
 object Interpreter {
   fun interpret(rootAstNode: SyntacticParser.RootNode) {
-    rootAstNode.accept(NodeVisitor())
+    val nodeVisitor = NodeVisitor()
+    rootAstNode.accept(nodeVisitor)
   }
 }
