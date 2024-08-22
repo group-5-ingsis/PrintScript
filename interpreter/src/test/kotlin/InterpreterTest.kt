@@ -75,7 +75,7 @@ class InterpreterTest {
 
   @Test
   fun testMethodCallWithNumber() {
-    val tokens: List<Token> = Lexer.lex("let a: Number = 4; println('pepito');", listOf())
+    val tokens: List<Token> = Lexer.lex("let a: Number = 4; println('Hello');", listOf())
     val ast: SyntacticParser.RootNode = syntaxParser.run(tokens)
     interpreter.interpret(ast)
   }
@@ -94,6 +94,14 @@ class InterpreterTest {
     val ast: SyntacticParser.RootNode = syntaxParser.run(tokens)
     interpreter.interpret(ast)
     assertEquals(3.0, VariableTable.getVariable("a"))
+  }
+
+  @Test
+  fun testSumWithIdentifier() {
+    val tokens: List<Token> = Lexer.lex("let a: Number = 6; let b: Number = a + 2;", listOf())
+    val ast: SyntacticParser.RootNode = syntaxParser.run(tokens)
+    interpreter.interpret(ast)
+    assertEquals(8.0, VariableTable.getVariable("b"))
   }
 
 //  @Test

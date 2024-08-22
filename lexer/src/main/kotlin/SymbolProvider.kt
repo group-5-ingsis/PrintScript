@@ -16,7 +16,7 @@ object SymbolProvider {
 
     val adjustedInput: List<String> = input.split("\n")
 
-    val regex = Regex("'[^']*\"'|\"[^\"]*\"|\\d+(\\.\\d+)?|\\w+|[;@\\-+*/=:(){},!#$%^&_|~`\\[\\]<>?]")
+    val regex = Regex("'[^']*'|\"[^\"]*\"|\\d+(\\.\\d+)?|\\w+|[;@\\-+*/=:(){},!#$%^&_|~`\\[\\]<>?]")
 
     val matches: MutableList<List<String>> = mutableListOf()
 

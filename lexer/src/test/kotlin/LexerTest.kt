@@ -21,13 +21,13 @@ class LexerTest {
 
   @Test
   fun testLexStringWithQuotes() {
-    val input = "let str = \"hello\""
+    val input = "let str = \"Hello\""
     val expected =
       listOf(
         Token("let", "DECLARATION_KEYWORD", Position(1, 1)),
         Token("str", "IDENTIFIER", Position(1, 2)),
         Token("=", "ASSIGNMENT", Position(1, 3)),
-        Token("\"hello\"", "STRING", Position(1, 4)),
+        Token("\"Hello\"", "STRING", Position(1, 4)),
       )
     val actual = Lexer.lex(input, listOf())
     assertEquals(expected, actual)
@@ -72,5 +72,19 @@ class LexerTest {
     assertThrows(IllegalArgumentException::class.java) {
       Lexer.lex(input, listOf())
     }
+  }
+
+  @Test
+  fun testSimpleQuotes() {
+    val input = "let x = 'hello'"
+    val expected =
+      listOf(
+        Token("let", "DECLARATION_KEYWORD", Position(1, 1)),
+        Token("x", "IDENTIFIER", Position(1, 2)),
+        Token("=", "ASSIGNMENT", Position(1, 3)),
+        Token("'hello'", "STRING", Position(1, 4)),
+      )
+    val actual = Lexer.lex(input, listOf())
+    assertEquals(expected, actual)
   }
 }
