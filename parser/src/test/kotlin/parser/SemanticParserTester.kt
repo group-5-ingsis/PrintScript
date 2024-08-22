@@ -28,4 +28,27 @@ class SemanticParserTester {
       semanticParser.run(ast)
     }
   }
+
+  // PROBLEMA: HACE FALTA QUE SE EJECUTE LA DECLARACION PARA VALIDAR OTRAS DECLARACIONES.
+//  @Test
+//  fun testDeclarationStatementShouldFail() {
+//    val lexer = Lexer
+//    val syntaxParser = SyntacticParser()
+//    val semanticParser = SemanticParser()
+//    val tokens: List<Token> = lexer.lex("let a: String; let a: Number;", listOf())
+//    val ast: SyntacticParser.RootNode = syntaxParser.run(tokens)
+//    assertFailsWith(SemanticErrorException::class) {
+//      semanticParser.run(ast)
+//    }
+//  }
+
+  @Test
+  fun testDeclarationStatementShouldPass() {
+    val lexer = Lexer
+    val syntaxParser = SyntacticParser()
+    val semanticParser = SemanticParser()
+    val tokens: List<Token> = lexer.lex("let a: String;", listOf())
+    val ast: SyntacticParser.RootNode = syntaxParser.run(tokens)
+    semanticParser.run(ast)
+  }
 }
