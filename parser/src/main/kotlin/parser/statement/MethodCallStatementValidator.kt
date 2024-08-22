@@ -11,7 +11,11 @@ class MethodCallStatementValidator : StatementTypeValidator {
       )
     }
     if (statement.content[statement.content.size - 2].type != "PUNCTUATION" || statement.content[statement.content.size - 2].value != ")") {
-      return StatementValResult(false, statement.content[statement.content.size - 2], "Did not close parenthesis with ')'")
+      return StatementValResult(
+        false,
+        statement.content[statement.content.size - 2],
+        "Did not close parenthesis with ')' or lacks ';' at the end of the statement",
+      )
     }
     if (statement.content[statement.content.size - 1].value != ";") {
       return StatementValResult(
