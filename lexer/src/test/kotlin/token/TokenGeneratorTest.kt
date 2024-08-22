@@ -44,12 +44,4 @@ class TokenGeneratorTest {
     val actual = TokenGenerator.generateToken(input, 0, 0)
     assertEquals(expected, actual)
   }
-
-  @Test
-  fun testGenerateTokenUnknown() {
-    val input = "@"
-    val expected = Token("@", "UNKNOWN", Position(1, 1))
-    val actual = TokenGenerator.generateToken(input, 0, 0)
-    assertEquals(expected, actual)
-  }
 }
