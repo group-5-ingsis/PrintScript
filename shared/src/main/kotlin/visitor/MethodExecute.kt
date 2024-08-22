@@ -32,17 +32,14 @@ object MethodExecute {
     return parameters.joinToString(", ") { argument ->
       when (argument) {
         is Node.Identifier -> {
-          // Recupera el valor de la tabla de variables usando el identificador
           VariableTable.getVariable(argument.value).toString()
         }
 
         is Node.GenericLiteral -> {
-          // Devuelve directamente el valor del literal
           argument.value
         }
 
         is Node.Arguments -> {
-          // Si es un nodo de argumentos, procesa los argumentos recursivamente
           getParametersAsString(Node.Arguments(argument.argumentsOfAnyTypes))
         }
 

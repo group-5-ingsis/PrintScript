@@ -3,17 +3,7 @@ package parser.builders
 import parser.statement.Statement
 import token.Token
 
-/**
- * Builder class to create a MethodCall node from a given statement.
- * This represents a method call with arguments, such as `myMethod(1, "test", varName);`.
- */
 class MethodCallASTBuilder : ASTBuilder {
-  /**
-   * Builds a MethodCall node based on the content of the provided statement.
-   *
-   * @param statement The statement containing tokens for a method call.
-   * @return A [Method] that represents the method call.
-   */
   override fun build(statement: Statement): Node.Method {
     val tokens: List<Token> = statement.content
     val argumentsList: List<Token> = separateArguments(tokens)
@@ -35,12 +25,6 @@ class MethodCallASTBuilder : ASTBuilder {
     )
   }
 
-  /**
-   * Builds nodes for each argument in the method call.
-   *
-   * @param arguments The tokens representing the method arguments.
-   * @return A list of [AssignationValue], which can be [GenericLiteral] or [Identifier].
-   */
   private fun buildNodesForArguments(arguments: List<Token>): List<Node.AssignableValue> {
     val nodes = mutableListOf<Node.AssignableValue>()
     for (token in arguments) {
@@ -53,12 +37,6 @@ class MethodCallASTBuilder : ASTBuilder {
     return nodes
   }
 
-  /**
-   * Separates tokens representing method arguments from the entire list of tokens.
-   *
-   * @param tokens The tokens from the method call statement.
-   * @return A list of tokens that represent method arguments.
-   */
   private fun separateArguments(tokens: List<Token>): List<Token> {
     val arguments: MutableList<Token> = mutableListOf()
     for (token in tokens) {
@@ -69,12 +47,6 @@ class MethodCallASTBuilder : ASTBuilder {
     return arguments
   }
 
-  /**
-   * Checks if a token is an argument (either a literal or an identifier).
-   *
-   * @param token The token to check.
-   * @return `true` if the token is a method argument, otherwise `false`.
-   */
   private fun isArgument(token: Token): Boolean {
     val isLiteral = (
       token.type == "NUMBER" ||

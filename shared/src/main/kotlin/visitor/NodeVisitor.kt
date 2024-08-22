@@ -51,7 +51,7 @@ class NodeVisitor : Visitor {
     }
   }
 
-  private fun resolveIdentifierValue(identifier: Node.Identifier): Any? {
+  private fun resolveIdentifierValue(identifier: Node.Identifier): Any {
     return VariableTable.getVariable(identifier.value)
       ?: throw RuntimeException("Variable ${identifier.value} is not defined")
   }
@@ -79,26 +79,6 @@ class NodeVisitor : Visitor {
 
       "METHOD_CALL" -> { node ->
         visitMethodCall(node as Node.Method)
-      }
-
-      "LITERAL" -> {
-        TODO("Not implemented yet")
-      }
-
-      "IDENTIFIER" -> {
-        TODO("Not implemented yet")
-      }
-
-      "DATA_TYPE" -> {
-        TODO("Not implemented yet")
-      }
-
-      "ARGUMENTS" -> {
-        TODO("Not implemented yet")
-      }
-
-      "METHOD_NAME" -> {
-        TODO("Not implemented yet")
       }
 
       else -> {
