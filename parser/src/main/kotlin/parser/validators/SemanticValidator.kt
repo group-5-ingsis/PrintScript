@@ -3,15 +3,21 @@ package parser.validators
 import Node
 import parser.SyntacticParser
 
-class SemanticValidator : Validator {
-  val validatorsForTypes =
+class SemanticValidator {
+  private val validatorsForTypes: Map<String, Validator<Node>> =
     mutableMapOf(
-      "ASSIGNATION_DECLARATION" to AssignDeclareValidator(),
+      "ASSIGNATION_DECLARATION" to AssignDeclareValidator() as Validator<Node>,
     )
 
-  override fun validateSemantics(ast: SyntacticParser.RootNode): ValidationResult {
+  fun validateSemantics(ast: SyntacticParser.RootNode): ValidationResult {
     for (node: Node in ast) {
       val validator = validatorsForTypes[node.nodeType]
+      validator?.let {
+        val result = it.validate(node)
+        if (result.isInvalid) {
+          return result
+        }
+      }
     }
     return ValidationResult(false, null, null)
   }

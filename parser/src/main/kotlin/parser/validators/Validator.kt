@@ -1,7 +1,7 @@
 package parser.validators
 
-import parser.SyntacticParser
+import Node
 
-interface Validator {
-  fun validateSemantics(node: SyntacticParser.RootNode): ValidationResult
+interface Validator<T : Node> {
+  fun validate(node: T): ValidationResult
 }

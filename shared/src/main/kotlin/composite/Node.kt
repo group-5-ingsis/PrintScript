@@ -15,10 +15,16 @@ sealed class Node {
    * Represents any value assignable in an assignment statement,
    * such as literals or identifiers.
    */
-  abstract class AssignationValue : Node()
+  abstract class AssignableValue : Node() {
+    abstract fun getType(): DataType
+  }
 
-  data class BinaryOperations(val symbol: String, val left: AssignationValue, val right: AssignationValue) : AssignationValue() {
+  data class BinaryOperations(val symbol: String, val left: AssignableValue, val right: AssignableValue) : AssignableValue() {
     override val nodeType: String = "BINARY_OPERATION"
+
+    override fun getType(): DataType {
+      return DataType(nodeType)
+    }
   }
 
   /**
@@ -39,8 +45,12 @@ sealed class Node {
    */
   data class Identifier(
     val value: String,
-  ) : AssignationValue() {
+  ) : AssignableValue() {
     override val nodeType: String = "IDENTIFIER"
+
+    override fun getType(): DataType {
+      return DataType(nodeType)
+    }
   }
 
   /**
@@ -79,7 +89,7 @@ sealed class Node {
    */
   data class Assignation(
     val identifier: Identifier,
-    val value: AssignationValue,
+    val value: AssignableValue,
   ) : Node() {
     override val nodeType: String = "ASSIGNATION"
   }
@@ -96,7 +106,7 @@ sealed class Node {
     val dataType: DataType,
     val kindVariableDeclaration: String,
     val identifier: String,
-    val value: AssignationValue,
+    val value: AssignableValue,
   ) : Node() {
     override val nodeType: String = "ASSIGNATION_DECLARATION"
   }
@@ -110,8 +120,12 @@ sealed class Node {
   data class GenericLiteral(
     val value: String,
     val dataType: DataType,
-  ) : AssignationValue() {
+  ) : AssignableValue() {
     override val nodeType: String = "LITERAL"
+
+    override fun getType(): DataType {
+      return dataType
+    }
   }
 
   /**

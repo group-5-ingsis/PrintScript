@@ -6,6 +6,7 @@ import parser.statement.Statement
 import parser.statement.StatementManager
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFailsWith
 
 class StatementCategoryTest {
   @Test
@@ -21,6 +22,32 @@ class StatementCategoryTest {
   }
 
   @Test
+  fun testDeclarationStatementShouldFailForType() {
+    val testString = "let a: ;"
+    val tokens = Lexer.lex(testString, listOf())
+
+    val statement = Statement(tokens, "Unknown")
+
+    val statements = listOf(statement)
+    assertFailsWith(IllegalArgumentException::class) {
+      StatementManager.categorize(statements)
+    }
+  }
+
+  @Test
+  fun testDeclarationStatementShouldFailForIdentifier() {
+    val testString = "let const: Number"
+    val tokens = Lexer.lex(testString, listOf())
+
+    val statement = Statement(tokens, "Unknown")
+
+    val statements = listOf(statement)
+    assertFailsWith(IllegalArgumentException::class) {
+      StatementManager.categorize(statements)
+    }
+  }
+
+  @Test
   fun testAssignation() {
     val testString = "a = 3"
     val tokens = Lexer.lex(testString, listOf())
@@ -30,6 +57,18 @@ class StatementCategoryTest {
     val statements = listOf(statement)
     val categorizedStatements = StatementManager.categorize(statements)
     assertEquals("Assignation", categorizedStatements[0].statementType)
+  }
+
+  @Test
+  fun testDeclaration() {
+    val testString = "let a : String;"
+    val tokens = Lexer.lex(testString, listOf())
+
+    val statement = Statement(tokens, "Unknown")
+
+    val statements = listOf(statement)
+    val categorizedStatements = StatementManager.categorize(statements)
+    assertEquals("Declaration", categorizedStatements[0].statementType)
   }
 
   @Test
