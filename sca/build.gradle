@@ -1,0 +1,38 @@
+
+plugins {
+    id 'org.jetbrains.kotlin.jvm'
+    id 'org.jlleitschuh.gradle.ktlint'
+    id 'org.jetbrains.kotlinx.kover'
+}
+
+dependencies {
+    implementation project(':lexer')
+    implementation project(':shared')
+    testImplementation 'org.jetbrains.kotlin:kotlin-test'
+    implementation("io.arrow-kt:arrow-core:1.2.4")
+}
+
+kotlin {
+    jvmToolchain(21)
+}
+
+kover {
+    useJacoco()
+}
+
+koverReport {
+    verify {
+        rule {
+            name = 'Minimal line coverage rate'
+            bound {
+                minValue = 80
+            }
+        }
+    }
+
+    defaults {
+        html {
+            onCheck = true
+        }
+    }
+}

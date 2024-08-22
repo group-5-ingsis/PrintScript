@@ -1,0 +1,34 @@
+@startuml
+
+class Interpreter{
+    + Visitor nodeVisitor
+    void interpret(Node ast)
+}
+
+
+Interpreter -> Visitor
+Interpreter -> Node
+
+
+interface Visitor{
+    visitAssignationDeclarationNode(AssignationDeclarationNode node)
+}
+
+
+
+interface Node{
+    accept(Visitor visitor)
+}
+Node -> Visitor
+
+class AssignationDeclarationNode implements Node{
+    accept(Visitor visitor)
+}
+
+class NodeVisitor implements Visitor{
+    visitAssignationDeclarationNode(AssignationDeclarationNode node)
+}
+
+
+
+@enduml
