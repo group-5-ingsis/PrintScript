@@ -44,7 +44,6 @@ class ParserTester {
     assertEquals(expectedKindVariableDeclaration, actualNode.kindVariableDeclaration)
     assertEquals(expectedIdentifier, actualNode.identifier)
     assertEquals(expectedValueNodeType, actualNode.value.nodeType)
-
   }
 
   @Test
@@ -55,7 +54,6 @@ class ParserTester {
 
     val ast: SyntacticParser.RootNode = syntaxParser.run(tokens)
 
-
     // Preparación de los datos esperados
     val expectedNodeType = "ASSIGNATION_DECLARATION"
     val expectedDataType = Node.DataType(type = "STRING") // Asegúrate de que este valor coincida con tu implementación
@@ -63,8 +61,7 @@ class ParserTester {
     val expectedIdentifier = "a"
     val expectedValue = "BINARY_OPERATION"
 
-
-    val actualNode = ast.getChildren()[0] as Node.AssignationDeclaration// Reemplaza esto con la lógica real para obtener el primer hijo
+    val actualNode = ast.getChildren()[0] as Node.AssignationDeclaration // Reemplaza esto con la lógica real para obtener el primer hijo
 
     assertEquals(expectedNodeType, actualNode.nodeType)
     assertEquals(expectedDataType.type, actualNode.dataType.type)
@@ -110,17 +107,14 @@ class ParserTester {
     val tokens: List<Token> = lexer.lex("x = 4;", listOf())
     val result: SyntacticParser.RootNode = syntaxParser.run(tokens)
 
-
     val expectedNodeType = "ASSIGNATION"
     val expectedIdentifier = "x"
     val expectedValueNodeType = "LITERAL"
     val expectedValueType = "4"
 
-
     val actualNode = result.getChildren()[0] as Node.Assignation
 
     val asignationValue = actualNode.value as Node.GenericLiteral
-
 
     assertEquals(expectedNodeType, actualNode.nodeType)
     assertEquals(expectedIdentifier, actualNode.identifier.value)
@@ -162,7 +156,6 @@ class ParserTester {
     assertEquals(expectedValueNodeType, actualNode.value.nodeType)
     assertEquals(expectedValueIdentifier, (actualNode.value as Node.Identifier).value)
     // TODO(Modificar la estructura de los nodos para que tengan un value y se pueda sacar algo de todos, asi no hay que castearlos)
-
   }
 
   @Test
@@ -184,18 +177,20 @@ class ParserTester {
     val tokens: List<Token> = lexer.lex("println(3);", listOf())
     val result: SyntacticParser.RootNode = syntaxParser.run(tokens)
 
-    val expected = Node.Method(
-      arguments = Node.Arguments(
-        argumentsOfAnyTypes = listOf(
-          Node.GenericLiteral(value = "3", dataType = Node.DataType(type = "NUMBER"))
-        )
-      ),
-      identifier = Node.Identifier(value = "println")
-    )
+    val expected =
+      Node.Method(
+        arguments =
+          Node.Arguments(
+            argumentsOfAnyTypes =
+              listOf(
+                Node.GenericLiteral(value = "3", dataType = Node.DataType(type = "NUMBER")),
+              ),
+          ),
+        identifier = Node.Identifier(value = "println"),
+      )
 
     assertEquals(expected, result.getChildren().firstOrNull())
   }
-
 
   @Test
   fun testDeclarationWithoutColonShouldFail() {
@@ -203,10 +198,10 @@ class ParserTester {
     val syntaxParser = SyntacticParser()
     val tokens: List<Token> = lexer.lex("let a Number;", listOf())
 
-
-    val exception = assertFailsWith<IllegalArgumentException> {
-      val result: SyntacticParser.RootNode = syntaxParser.run(tokens)
-    }
+    val exception =
+      assertFailsWith<IllegalArgumentException> {
+        val result: SyntacticParser.RootNode = syntaxParser.run(tokens)
+      }
 
     // Verificar el mensaje de la excepción
     assertEquals("Error at line 1, column 3: Expected a ':' after 'let a', but got 'Number' instead", exception.message)
@@ -227,18 +222,17 @@ class ParserTester {
     }
 
     // Representación esperada del nodo de declaración y asignación
-    val expected = Node.AssignationDeclaration(
-      dataType = Node.DataType(type = "NUMBER"),
-      kindVariableDeclaration = "let",
-      identifier = "a",
-      value = Node.GenericLiteral(value = "\"testing\"", dataType = Node.DataType(type = "STRING"))
-    )
+    val expected =
+      Node.AssignationDeclaration(
+        dataType = Node.DataType(type = "NUMBER"),
+        kindVariableDeclaration = "let",
+        identifier = "a",
+        value = Node.GenericLiteral(value = "\"testing\"", dataType = Node.DataType(type = "STRING")),
+      )
 
     // Verificar que el AST generado contenga la estructura esperada
     val generatedNode = result.getChildren().firstOrNull()
     assertNotNull(generatedNode, "El AST no debe estar vacío.")
     assertEquals(expected, generatedNode)
   }
-
-
 }
