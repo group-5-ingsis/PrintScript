@@ -17,6 +17,14 @@ sealed class Node {
    */
   abstract class AssignationValue : Node()
 
+
+
+
+
+  data class BinaryOperations(val symbol: String, val left: AssignationValue, val right: AssignationValue) : AssignationValue() {
+    override val nodeType: String = "BINARY_OPERATION"
+  }
+
   /**
    * Represents a list of arguments in a method call.
    *

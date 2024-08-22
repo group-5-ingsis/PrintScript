@@ -40,6 +40,14 @@ class AssignDeclareASTBuilder : ASTBuilder {
   private fun getLeafNodeType(statement: Statement): Node.AssignationValue {
     val tokens = statement.content
     val token: Token = tokens[5]
+    if (tokens[6].type == "OPERATOR") {
+      return makeBinaryOperator(tokens)
+    }
+    return getTokenNode(token)
+
+  }
+
+  private fun getTokenNode(token: Token): Node.AssignationValue {
     return when (token.type) {
       "NUMBER" -> Node.GenericLiteral(token.value, Node.DataType("NUMBER"))
       "STRING" -> Node.GenericLiteral(token.value, Node.DataType("STRING"))
@@ -47,4 +55,16 @@ class AssignDeclareASTBuilder : ASTBuilder {
       else -> throw UnsupportedLeafTypeException("Unexpected leaf type: ${token.type}")
     }
   }
+
+
+  private fun makeBinaryOperator(tokens: List<Token>): Node.AssignationValue {
+    return Node.BinaryOperations(
+      symbol = tokens[6].value,
+      left = getTokenNode(tokens[5]),
+      right = getTokenNode(tokens[7])
+    )
+  }
+
+
+
 }

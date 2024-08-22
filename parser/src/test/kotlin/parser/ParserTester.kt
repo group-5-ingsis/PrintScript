@@ -6,6 +6,11 @@ import kotlin.test.Test
 import kotlin.test.assertFailsWith
 
 class ParserTester {
+
+
+
+
+
   private fun getTokenSublist(tokens: List<Token>): List<List<Token>> {
     val tokenSublists = mutableListOf<List<Token>>()
     var j = 0
@@ -17,6 +22,29 @@ class ParserTester {
     }
     return tokenSublists
   }
+
+
+  @Test
+  fun testOperation (){
+    val syntaxParser = SyntacticParser()
+
+    val tokens: List<Token> = Lexer.lex("let a: Number = 44534 + 3454;", listOf())
+
+    val ast: SyntacticParser.RootNode = syntaxParser.run(tokens)
+
+    val children = ast.getChildren()
+    println(children)
+    for (node in children) {
+      println(node)
+    }
+  }
+
+
+
+
+
+
+
 
   @Test
   fun testTokenSplittingBySemicolon() {
