@@ -96,6 +96,14 @@ class InterpreterTest {
     assertEquals(3.0, VariableTable.getVariable("a"))
   }
 
+  @Test
+  fun testSumWithIdentifier() {
+    val tokens: List<Token> = Lexer.lex("let a: Number = 6; let b: Number = a + 2;", listOf())
+    val ast: SyntacticParser.RootNode = syntaxParser.run(tokens)
+    interpreter.interpret(ast)
+    assertEquals(8.0, VariableTable.getVariable("b"))
+  }
+
 //  @Test
 //  fun testBinaryOperationString() {
 //    val tokens: List<Token> = Lexer.lex("let a: String = \"Hello\" + \"World\";", listOf())
