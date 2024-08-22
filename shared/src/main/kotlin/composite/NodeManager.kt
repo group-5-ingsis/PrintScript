@@ -14,7 +14,7 @@ object NodeManager {
       "println",
     )
 
-  fun addDataType(dataType: String) {
+  fun checkIfExist(dataType: String) {
     if (allExistsDataTypes.contains(dataType)) {
       return
     }

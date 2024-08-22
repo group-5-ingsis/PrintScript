@@ -3,22 +3,7 @@ package visitor
 import Node
 
 class NodeVisitor : Visitor {
-  private fun stringToNumber(value: String): Number {
-    return when {
-      value.contains('.') -> {
-        // Si el valor contiene un punto decimal, tratamos de convertirlo a Double
-        value.toDoubleOrNull() ?: throw IllegalArgumentException("El valor no es un número válido")
-      }
-      else -> {
-        // Si el valor no contiene un punto decimal, tratamos de convertirlo a Int
-        value.toIntOrNull() ?: throw IllegalArgumentException("El valor no es un número válido")
-      }
-    }
-  }
-
   override fun visitAssignation(assignation: Node.Assignation) {
-    // Extrae el identificador y el valor del nodo de asignación
-
     val identifier = assignation.identifier.value
     val value =
       when (val valueNode = assignation.value) {
@@ -65,6 +50,19 @@ class NodeVisitor : Visitor {
     VariableTable.setVariable(identifier, value)
   }
 
+  private fun stringToNumber(value: String): Number {
+    return when {
+      value.contains('.') -> {
+        // Si el valor contiene un punto decimal, tratamos de convertirlo a Double
+        value.toDoubleOrNull() ?: throw IllegalArgumentException("El valor no es un número válido")
+      }
+      else -> {
+        // Si el valor no contiene un punto decimal, tratamos de convertirlo a Int
+        value.toIntOrNull() ?: throw IllegalArgumentException("El valor no es un número válido")
+      }
+    }
+  }
+
   override fun visitDeclaration(declaration: Node.Declaration) {
     // Extrae el identificador de la declaración
 
@@ -73,11 +71,10 @@ class NodeVisitor : Visitor {
   }
 
   override fun visitAssignDeclare(assignationDeclaration: Node.AssignationDeclaration) {
-    // Extrae la información de la asignación y declaración
     val identifier = assignationDeclaration.identifier
-    val value: Node.AssignationValue = assignationDeclaration.value
     val identifierValue =
-      when (value) {
+
+      when (val value: Node.AssignationValue = assignationDeclaration.value) {
         is Node.GenericLiteral -> {
           if (value.dataType.type != "STRING") {
             stringToNumber(value.value)
@@ -89,13 +86,81 @@ class NodeVisitor : Visitor {
           VariableTable.getVariable(value.value)
         }
 
+        is Node.BinaryOperations -> {
+          evaluateBinaryOperation(value)
+        }
+
         else -> {
           throw Exception("implement other cases of AssignationValue Types")
         }
       }
 
-    // Establece la variable en la tabla de variables con el valor proporcionado
     VariableTable.setVariable(identifier, identifierValue)
+  }
+
+  private fun evaluateBinaryOperation(binaryOp: Node.BinaryOperations): Any {
+    val leftValue =
+      when (val left = binaryOp.left) {
+        is Node.GenericLiteral ->
+          if (left.dataType.type != "STRING") {
+            stringToNumber(left.value)
+          } else {
+            left.value
+          }
+        is Node.Identifier -> VariableTable.getVariable(left.value)
+        is Node.BinaryOperations -> evaluateBinaryOperation(left)
+        else -> throw Exception("Unsupported type in binary operation left side")
+      }
+
+    val rightValue =
+      when (val right = binaryOp.right) {
+        is Node.GenericLiteral ->
+          if (right.dataType.type != "STRING") {
+            stringToNumber(right.value)
+          } else {
+            right.value
+          }
+
+        is Node.Identifier -> VariableTable.getVariable(right.value)
+        is Node.BinaryOperations -> evaluateBinaryOperation(right)
+        else -> throw Exception("Unsupported type in binary operation right side")
+      }
+
+    val leftIsNumber = leftValue is Number
+    val rightIsNumber = rightValue is Number
+
+    return when (binaryOp.symbol) {
+      "+" -> {
+        when {
+          leftValue is String && rightValue is String -> leftValue + rightValue
+          leftIsNumber && rightIsNumber -> (leftValue as Number).toDouble() + (rightValue as Number).toDouble()
+          leftValue is String || rightValue is String -> leftValue.toString() + rightValue.toString()
+          else -> throw Exception("Unsupported operands for addition")
+        }
+      }
+      "-" -> {
+        if (leftIsNumber && rightIsNumber) {
+          (leftValue as Number).toDouble() - (rightValue as Number).toDouble()
+        } else {
+          throw Exception("Subtraction requires both operands to be numbers")
+        }
+      }
+      "*" -> {
+        if (leftIsNumber && rightIsNumber) {
+          (leftValue as Number).toDouble() * (rightValue as Number).toDouble()
+        } else {
+          throw Exception("Multiplication requires both operands to be numbers")
+        }
+      }
+      "/" -> {
+        if (leftIsNumber && rightIsNumber) {
+          (leftValue as Number).toDouble() / (rightValue as Number).toDouble()
+        } else {
+          throw Exception("Division requires both operands to be numbers")
+        }
+      }
+      else -> throw Exception("Unsupported binary operator")
+    }
   }
 
   override fun visitMethodCall(methodCall: Node.Method) {

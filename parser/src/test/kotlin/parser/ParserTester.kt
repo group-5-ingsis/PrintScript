@@ -19,6 +19,36 @@ class ParserTester {
   }
 
   @Test
+  fun testOperation() {
+    val syntaxParser = SyntacticParser()
+
+    val tokens: List<Token> = Lexer.lex("let a: Number = 44534 + 3454;", listOf())
+
+    val ast: SyntacticParser.RootNode = syntaxParser.run(tokens)
+
+    val children = ast.getChildren()
+    println(children)
+    for (node in children) {
+      println(node)
+    }
+  }
+
+  @Test
+  fun testStringOperation() {
+    val syntaxParser = SyntacticParser()
+
+    val tokens: List<Token> = Lexer.lex("let a: String = 'Hello' + 'World';", listOf())
+
+    val ast: SyntacticParser.RootNode = syntaxParser.run(tokens)
+
+    val children = ast.getChildren()
+    println(children)
+    for (node in children) {
+      println(node)
+    }
+  }
+
+  @Test
   fun testTokenSplittingBySemicolon() {
     val lexer = Lexer
     val tokens: List<Token> = lexer.lex("println(23);", listOf())

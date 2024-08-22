@@ -1,4 +1,4 @@
-import composite.NodeManager.addDataType
+import composite.NodeManager.checkIfExist
 import visitor.NodeVisitor
 
 sealed class Node {
@@ -16,6 +16,10 @@ sealed class Node {
    * such as literals or identifiers.
    */
   abstract class AssignationValue : Node()
+
+  data class BinaryOperations(val symbol: String, val left: AssignationValue, val right: AssignationValue) : AssignationValue() {
+    override val nodeType: String = "BINARY_OPERATION"
+  }
 
   /**
    * Represents a list of arguments in a method call.
@@ -121,7 +125,7 @@ sealed class Node {
     override val nodeType: String = "DATA_TYPE"
 
     init {
-      addDataType(type)
+      checkIfExist(type)
     }
   }
 }
