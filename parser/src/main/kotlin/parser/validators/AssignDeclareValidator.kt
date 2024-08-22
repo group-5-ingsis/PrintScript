@@ -7,7 +7,7 @@ class AssignDeclareValidator : Validator<Node.AssignationDeclaration> {
   // Validation: Type in Declaration MUST match type on assignation.
   override fun validate(node: Node.AssignationDeclaration): ValidationResult {
     val declaredType = node.dataType.type
-    val actualType = node.value.nodeType
+    val actualType = node.value.getType().type
     return if (declaredType == actualType) {
       ValidationResult(false, null, null)
     } else {

@@ -20,7 +20,7 @@ class AssignationASTBuilder : ASTBuilder {
 
     // Extract the identifier and the value being assigned
     val identifier = Node.Identifier(tokens[0].value)
-    val assignValue: Node.AssignationValue = getLeafType(tokens[2])
+    val assignValue: Node.AssignableValue = getLeafType(tokens[2])
 
     // Construct and return an Assignation node
     return Node.Assignation(
@@ -34,10 +34,10 @@ class AssignationASTBuilder : ASTBuilder {
    * The value can be a numeric literal, string literal, or identifier.
    *
    * @param token The token that represents the value being assigned.
-   * @return A [Node.AssignationValue], which can be [GenericLiteral] or [Identifier] or other defined in future
+   * @return A [Node.AssignableValue], which can be [GenericLiteral] or [Identifier] or other defined in future
    * @throws UnsupportedLeafTypeException If the token type is not supported.
    */
-  private fun getLeafType(token: Token): Node.AssignationValue {
+  private fun getLeafType(token: Token): Node.AssignableValue {
     return when (token.type) {
       "NUMBER" -> Node.GenericLiteral(token.value, Node.DataType("NUMBER"))
       "STRING" -> Node.GenericLiteral(token.value, Node.DataType("STRING"))

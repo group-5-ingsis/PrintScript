@@ -14,8 +14,7 @@ class SemanticParserTester {
     val semanticParser = SemanticParser()
     val tokens: List<Token> = lexer.lex("let a: Number = 23;", listOf())
     val ast: SyntacticParser.RootNode = syntaxParser.run(tokens)
-    // TODO fix AssignationValue.
-    // semanticParser.run(ast)
+    semanticParser.run(ast)
   }
 
   @Test

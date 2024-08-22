@@ -74,7 +74,7 @@ class NodeVisitor : Visitor {
     val identifier = assignationDeclaration.identifier
     val identifierValue =
 
-      when (val value: Node.AssignationValue = assignationDeclaration.value) {
+      when (val value: Node.AssignableValue = assignationDeclaration.value) {
         is Node.GenericLiteral -> {
           if (value.dataType.type != "STRING") {
             stringToNumber(value.value)
