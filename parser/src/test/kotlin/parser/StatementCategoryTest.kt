@@ -72,8 +72,98 @@ class StatementCategoryTest {
   }
 
   @Test
+  fun methodCall() {
+    val testString = "println(a);"
+    val tokens = Lexer.lex(testString, listOf())
+
+    val statement = Statement(tokens, "Unknown")
+
+    val statements = listOf(statement)
+    val categorizedStatements = StatementManager.categorize(statements)
+    assertEquals("MethodCall", categorizedStatements[0].statementType)
+  }
+
+  @Test
   fun testErrorDeclaration() {
     val testString = "let a { String"
+    val tokens = Lexer.lex(testString, listOf())
+
+    val statement = Statement(tokens, "Unknown")
+
+    val statements = listOf(statement)
+    assertThrows(IllegalArgumentException::class.java) {
+      StatementManager.categorize(statements)
+    }
+  }
+
+  @Test
+  fun testErrorDeclaration2() {
+    val testString = "let String"
+    val tokens = Lexer.lex(testString, listOf())
+
+    val statement = Statement(tokens, "Unknown")
+
+    val statements = listOf(statement)
+    assertThrows(IllegalArgumentException::class.java) {
+      StatementManager.categorize(statements)
+    }
+  }
+
+  @Test
+  fun testErrorDeclaration3() {
+    val testString = "let aa : pan"
+    val tokens = Lexer.lex(testString, listOf())
+
+    val statement = Statement(tokens, "Unknown")
+
+    val statements = listOf(statement)
+    assertThrows(IllegalArgumentException::class.java) {
+      StatementManager.categorize(statements)
+    }
+  }
+
+  @Test
+  fun testErrorAssignation() {
+    val testString = "a : 4"
+    val tokens = Lexer.lex(testString, listOf())
+
+    val statement = Statement(tokens, "Unknown")
+
+    val statements = listOf(statement)
+    assertThrows(IllegalArgumentException::class.java) {
+      StatementManager.categorize(statements)
+    }
+  }
+
+  @Test
+  fun testErrorMethodCall() {
+    val testString = "println{as}"
+    val tokens = Lexer.lex(testString, listOf())
+
+    val statement = Statement(tokens, "Unknown")
+
+    val statements = listOf(statement)
+    assertThrows(IllegalArgumentException::class.java) {
+      StatementManager.categorize(statements)
+    }
+  }
+
+  @Test
+  fun testErrorMethodCall2() {
+    val testString = "println(sda"
+    val tokens = Lexer.lex(testString, listOf())
+
+    val statement = Statement(tokens, "Unknown")
+
+    val statements = listOf(statement)
+    assertThrows(IllegalArgumentException::class.java) {
+      StatementManager.categorize(statements)
+    }
+  }
+
+  @Test
+  fun testErrorMethodCall3() {
+    val testString = "println(sda)"
     val tokens = Lexer.lex(testString, listOf())
 
     val statement = Statement(tokens, "Unknown")
