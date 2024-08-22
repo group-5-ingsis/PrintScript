@@ -33,6 +33,18 @@ class StatementCategoryTest {
   }
 
   @Test
+  fun testDeclaration() {
+    val testString = "let a : String;"
+    val tokens = Lexer.lex(testString, listOf())
+
+    val statement = Statement(tokens, "Unknown")
+
+    val statements = listOf(statement)
+    val categorizedStatements = StatementManager.categorize(statements)
+    assertEquals("Declaration", categorizedStatements[0].statementType)
+  }
+
+  @Test
   fun testErrorDeclaration() {
     val testString = "let a { String"
     val tokens = Lexer.lex(testString, listOf())
