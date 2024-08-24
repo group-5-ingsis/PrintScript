@@ -20,7 +20,7 @@ class ExecuteCommand(private val file: String, private val version: String) : Co
 
       Interpreter.interpret(ast)
 
-      " >>> Executed PrintScript File"
+      " Finished executing $file"
     } catch (e: Exception) {
       "Validation error: ${e.message}"
     }
