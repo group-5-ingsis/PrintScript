@@ -1,6 +1,7 @@
 package cli
 
 import builder.CommandBuilder
+import builder.ExecuteCommandBuilder
 import builder.ValidationCommandBuilder
 
 object CommandLineInterface {
@@ -9,6 +10,7 @@ object CommandLineInterface {
   private fun initializeCommandBuilders(): Map<String, CommandBuilder> {
     return mapOf(
       "validate" to ValidationCommandBuilder(),
+      "execute" to ExecuteCommandBuilder(),
     )
   }
 

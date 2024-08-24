@@ -1,32 +1,30 @@
 package visitor
 
 object MethodExecute {
-  private fun getRegisteredFunctionsMap(): Map<String, (Any?) -> Unit> {
-    val methodMap: Map<String, (Any?) -> Unit> =
+  fun executeMethod(
+    methodName: String,
+    parameters: Node.Arguments,
+  ): String {
+    val methodMap = getRegisteredFunctionsMap()
+
+    val method = methodMap[methodName] ?: throw IllegalArgumentException("Method $methodName is not recognized.")
+
+    val parametersAsString = getParametersAsString(parameters)
+
+    return method(parametersAsString)
+  }
+
+  private fun getRegisteredFunctionsMap(): Map<String, (Any?) -> String> {
+    val methodMap: Map<String, (Any?) -> String> =
       mapOf(
         "println" to { args ->
-          println(args.toString())
+          args.toString()
         },
       )
     return methodMap
   }
 
-  fun executeMethod(
-    methodName: String,
-    parameters: String,
-  ) {
-    val methodMap: Map<String, (Any?) -> Unit> = getRegisteredFunctionsMap()
-
-    val method = methodMap[methodName]
-
-    if (method != null) {
-      method(parameters)
-    } else {
-      throw IllegalArgumentException("Method $methodName is not recognized.")
-    }
-  }
-
-  fun getParametersAsString(method: Node.Arguments): String {
+  private fun getParametersAsString(method: Node.Arguments): String {
     val parameters = method.argumentsOfAnyTypes
 
     return parameters.joinToString(", ") { argument ->
@@ -34,17 +32,14 @@ object MethodExecute {
         is Node.Identifier -> {
           VariableTable.getVariable(argument.value).toString()
         }
-
         is Node.GenericLiteral -> {
           argument.value
         }
-
         is Node.Arguments -> {
           getParametersAsString(Node.Arguments(argument.argumentsOfAnyTypes))
         }
-
         else -> throw IllegalArgumentException(
-          "Tipo de argumento no soportado: ${argument.nodeType}",
+          "Unsupported argument type: ${argument.nodeType}",
         )
       }
     }

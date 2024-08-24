@@ -1,8 +1,11 @@
+package application
+
 import cli.CommandLineInterface
 import cli.FileReader
 import javafx.application.Application
 import javafx.scene.Scene
 import javafx.scene.control.*
+import javafx.scene.layout.BorderPane
 import javafx.scene.layout.VBox
 import javafx.stage.Stage
 import java.io.File
@@ -25,6 +28,7 @@ class CLIApplication : Application() {
 
     val outputArea = TextArea()
     outputArea.isEditable = false
+    outputArea.prefHeight = 300.0 // Increased height for the output area
 
     val executeButton = Button("Execute")
 
@@ -46,6 +50,7 @@ class CLIApplication : Application() {
     // ListViews
     val availableFilesListView = ListView<String>()
     val recentCommandsListView = ListView<String>()
+    recentCommandsListView.prefHeight = 100.0 // Reduced height for the recent commands list
 
     // Initial setup
     val initialVersion = versions.first()
@@ -58,6 +63,7 @@ class CLIApplication : Application() {
       val commandText = inputField.text
       val result = CommandLineInterface.execute(commandText)
       outputArea.appendText("Command: $commandText\nResult: $result\n\n")
+      outputArea.requestLayout() // Ensures the layout updates
       inputField.clear()
       updateRecentCommands(commandText)
       recentCommandsListView.items.clear()
@@ -102,19 +108,19 @@ class CLIApplication : Application() {
       }
     }
 
-    // Layout
-    val layout =
-      VBox(
-        10.0,
-        commandLabel, commandComboBox,
-        versionLabel, versionComboBox,
-        fileLabel, availableFilesListView,
-        inputField, executeButton, outputArea,
-        recentCommandsLabel, recentCommandsListView,
-      )
-    val scene = Scene(layout, 600.0, 500.0) // Increased height to accommodate all elements
+    // Layout using BorderPane
+    val leftSide = VBox(10.0, commandLabel, commandComboBox, versionLabel, versionComboBox, fileLabel, availableFilesListView)
+    val rightSide = VBox(10.0, recentCommandsLabel, recentCommandsListView)
+    val bottomSide = VBox(10.0, inputField, executeButton, outputArea)
 
-    primaryStage.title = "CLI Interface"
+    val layout = BorderPane()
+    layout.left = leftSide
+    layout.right = rightSide
+    layout.bottom = bottomSide
+
+    val scene = Scene(layout, 800.0, 600.0) // Increased size for better layout management
+
+    primaryStage.title = "Command Line Interface"
     primaryStage.scene = scene
     primaryStage.show()
   }
