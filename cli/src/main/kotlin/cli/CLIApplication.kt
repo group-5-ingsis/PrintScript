@@ -1,5 +1,5 @@
-package cli
-
+import cli.CommandLineInterface
+import cli.FileReader
 import javafx.application.Application
 import javafx.scene.Scene
 import javafx.scene.control.*
@@ -15,10 +15,11 @@ object Main {
 }
 
 class CLIApplication : Application() {
-  private val versions = listOf("1.0", "2.0") // Example versions; adjust as needed
+  private val versions = listOf("1.0", "1.1")
   private val recentCommands = mutableListOf<String>()
 
   override fun start(primaryStage: Stage) {
+    // Define UI elements
     val inputField = TextField()
     inputField.promptText = "Enter command"
 
@@ -27,32 +28,40 @@ class CLIApplication : Application() {
 
     val executeButton = Button("Execute")
 
+    // Labels
     val commandLabel = Label("Select Operation:")
     val versionLabel = Label("Select Version:")
     val fileLabel = Label("Available Files:")
+    val recentCommandsLabel = Label("Recent Commands:")
 
+    // ComboBoxes
     val commandComboBox = ComboBox<String>()
-    commandComboBox.items.addAll(listOf("validate", "format"))
+    commandComboBox.items.addAll(listOf("validate", "execute", "format", "analyze"))
     commandComboBox.promptText = "Select operation"
 
     val versionComboBox = ComboBox<String>()
     versionComboBox.items.addAll(versions)
     versionComboBox.promptText = "Select version"
 
+    // ListViews
     val availableFilesListView = ListView<String>()
     val recentCommandsListView = ListView<String>()
 
+    // Initial setup
     val initialVersion = versions.first()
     val availableFiles = getAvailableFiles(initialVersion)
     availableFilesListView.items.addAll(availableFiles)
     recentCommandsListView.items.addAll(recentCommands)
 
+    // Actions
     executeButton.setOnAction {
       val commandText = inputField.text
       val result = CommandLineInterface.execute(commandText)
       outputArea.appendText("Command: $commandText\nResult: $result\n\n")
       inputField.clear()
       updateRecentCommands(commandText)
+      recentCommandsListView.items.clear()
+      recentCommandsListView.items.addAll(recentCommands)
     }
 
     commandComboBox.setOnAction {
@@ -76,9 +85,10 @@ class CLIApplication : Application() {
     availableFilesListView.setOnMouseClicked { event ->
       if (event.clickCount == 2) {
         val selectedFile = availableFilesListView.selectionModel.selectedItem
-        if (selectedFile != null) {
-          val selectedVersion = versionComboBox.value
-          inputField.text = "validate $selectedFile ${selectedVersion ?: ""}"
+        val selectedCommand = commandComboBox.value
+        val selectedVersion = versionComboBox.value
+        if (selectedFile != null && selectedCommand != null && selectedVersion != null) {
+          inputField.text = "$selectedCommand $selectedFile $selectedVersion"
         }
       }
     }
@@ -92,6 +102,7 @@ class CLIApplication : Application() {
       }
     }
 
+    // Layout
     val layout =
       VBox(
         10.0,
@@ -99,9 +110,9 @@ class CLIApplication : Application() {
         versionLabel, versionComboBox,
         fileLabel, availableFilesListView,
         inputField, executeButton, outputArea,
-        recentCommandsListView,
+        recentCommandsLabel, recentCommandsListView,
       )
-    val scene = Scene(layout, 600.0, 400.0)
+    val scene = Scene(layout, 600.0, 500.0) // Increased height to accommodate all elements
 
     primaryStage.title = "CLI Interface"
     primaryStage.scene = scene
@@ -130,6 +141,7 @@ class CLIApplication : Application() {
           fileNames.addAll(directory.listFiles()?.map { it.name } ?: emptyList())
         }
       } else {
+        // Handle case for resources inside JAR (if needed)
         throw UnsupportedOperationException("Listing files inside JARs is not supported in this example.")
       }
     }
