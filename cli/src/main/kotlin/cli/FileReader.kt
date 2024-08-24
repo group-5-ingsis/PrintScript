@@ -20,7 +20,6 @@ object FileReader {
     file: String,
     version: String,
   ): String {
-    // Path relative to the resources directory
     return "ps/$version/$file"
   }
 }
