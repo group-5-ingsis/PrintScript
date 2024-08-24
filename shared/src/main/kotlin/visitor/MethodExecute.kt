@@ -1,13 +1,14 @@
 package visitor
 
 object MethodExecute {
-  private val output = StringBuilder()
+  private val methodOutput = StringBuilder()
 
   private fun getRegisteredFunctionsMap(): Map<String, (Any?) -> Unit> {
     val methodMap: Map<String, (Any?) -> Unit> =
       mapOf(
         "println" to { args ->
-          output.append(args.toString())
+          val argsToString = args.toString()
+          methodOutput.append(argsToString)
         },
       )
     return methodMap
@@ -27,7 +28,8 @@ object MethodExecute {
       throw IllegalArgumentException("Method $methodName is not recognized.")
     }
 
-    return output.toString()
+    val methodOutput = methodOutput.toString()
+    return methodOutput
   }
 
   fun getParametersAsString(method: Node.Arguments): String {

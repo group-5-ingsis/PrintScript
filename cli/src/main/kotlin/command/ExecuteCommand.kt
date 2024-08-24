@@ -18,9 +18,9 @@ class ExecuteCommand(private val file: String, private val version: String) : Co
 
       val ast = Parser().run(tokens)
 
-      Interpreter.interpret(ast)
+      val output = Interpreter.interpret(ast)
 
-      " Finished executing $file"
+      "$output\nFinished executing $file"
     } catch (e: Exception) {
       "Validation error: ${e.message}"
     }
