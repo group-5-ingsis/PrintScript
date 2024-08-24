@@ -18,6 +18,8 @@ object MethodExecute {
     methodName: String,
     parameters: String,
   ): String {
+    methodOutput.clear()
+
     val methodMap: Map<String, (Any?) -> Unit> = getRegisteredFunctionsMap()
 
     val method = methodMap[methodName]
