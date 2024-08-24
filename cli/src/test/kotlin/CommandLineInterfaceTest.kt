@@ -13,10 +13,8 @@ class CommandLineInterfaceTest {
     val commandBuilders = mutableMapOf<String, CommandBuilder>()
     commandBuilders["validate"] = validationCommandBuilder
 
-    val cli = CommandLineInterface(commandBuilders)
-
     val command = "validate helloWorld.ps 1.0"
-    val result = cli.execute(command)
+    val result = CommandLineInterface.execute(command)
 
     assertNotNull(commandBuilders["validate"], "ValidationCommandBuilder should be present")
     assertTrue(result.isNotEmpty(), "Command should return a non-empty result")

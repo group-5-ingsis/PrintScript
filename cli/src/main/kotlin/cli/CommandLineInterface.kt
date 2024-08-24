@@ -11,12 +11,11 @@ import javafx.scene.layout.VBox
 import javafx.stage.Stage
 
 object CommandLineInterface {
-
   private val commandBuilders: Map<String, CommandBuilder> = initializeCommandBuilders()
 
   private fun initializeCommandBuilders(): Map<String, CommandBuilder> {
     return mapOf(
-      "validate" to ValidationCommandBuilder()
+      "validate" to ValidationCommandBuilder(),
     )
   }
 
@@ -24,7 +23,6 @@ object CommandLineInterface {
   // validate helloWorld.ps 1.0
   // formatting helloWorld.ps 1.0 formatRules.yml
   fun execute(command: String): String {
-
     val file = CommandParser.getFile(command)
     val operation = CommandParser.getOperation(command)
     val version = CommandParser.getVersion(command)
@@ -37,7 +35,7 @@ object CommandLineInterface {
     return cmd.execute()
   }
 
-  object {
+  object Main {
     @JvmStatic
     fun main(args: Array<String>) {
       Application.launch(CLIApplication::class.java, *args)
@@ -47,7 +45,6 @@ object CommandLineInterface {
 
 class CLIApplication : Application() {
   override fun start(primaryStage: Stage) {
-
     val inputField = TextField()
     val outputArea = TextArea()
     outputArea.isEditable = false
