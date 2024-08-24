@@ -10,16 +10,20 @@ import javafx.scene.control.TextField
 import javafx.scene.layout.VBox
 import javafx.stage.Stage
 
-class CommandLineInterface(private val commandBuilders: MutableMap<String, CommandBuilder>) {
-  private fun initializeCommandBuilders() {
-    commandBuilders["validate"] = ValidationCommandBuilder()
+object CommandLineInterface {
+
+  private val commandBuilders: Map<String, CommandBuilder> = initializeCommandBuilders()
+
+  private fun initializeCommandBuilders(): Map<String, CommandBuilder> {
+    return mapOf(
+      "validate" to ValidationCommandBuilder()
+    )
   }
 
   // Formato de los commands:
   // validate helloWorld.ps 1.0
   // formatting helloWorld.ps 1.0 formatRules.yml
   fun execute(command: String): String {
-    initializeCommandBuilders()
 
     val file = CommandParser.getFile(command)
     val operation = CommandParser.getOperation(command)
@@ -33,7 +37,7 @@ class CommandLineInterface(private val commandBuilders: MutableMap<String, Comma
     return cmd.execute()
   }
 
-  companion object {
+  object {
     @JvmStatic
     fun main(args: Array<String>) {
       Application.launch(CLIApplication::class.java, *args)
@@ -43,7 +47,6 @@ class CommandLineInterface(private val commandBuilders: MutableMap<String, Comma
 
 class CLIApplication : Application() {
   override fun start(primaryStage: Stage) {
-    val commandLineInterface = CommandLineInterface(mutableMapOf())
 
     val inputField = TextField()
     val outputArea = TextArea()
@@ -52,7 +55,7 @@ class CLIApplication : Application() {
     val executeButton = Button("Execute")
     executeButton.setOnAction {
       val command = inputField.text
-      val result = commandLineInterface.execute(command)
+      val result = CommandLineInterface.execute(command)
       outputArea.appendText("Command: $command\nResult: $result\n\n")
       inputField.clear()
     }
