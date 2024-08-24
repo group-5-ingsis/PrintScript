@@ -1,6 +1,6 @@
 package cli
 
-import java.io.File
+import java.io.InputStream
 
 object FileReader {
   fun getFileContents(
@@ -9,12 +9,8 @@ object FileReader {
   ): String {
     val fileLocation = getFileLocation(file, version)
     return try {
-      val fileName = File(fileLocation)
-      if (fileName.exists()) {
-        fileName.readText()
-      } else {
-        "File not found."
-      }
+      val inputStream: InputStream? = FileReader::class.java.classLoader.getResourceAsStream(fileLocation)
+      inputStream?.bufferedReader()?.use { it.readText() } ?: "File not found."
     } catch (e: Exception) {
       "Error reading file: ${e.message}"
     }
@@ -24,7 +20,7 @@ object FileReader {
     file: String,
     version: String,
   ): String {
-    val fileLocation = "${System.getProperty("user.dir")}/ps/$version/$file"
-    return fileLocation
+    // Path relative to the resources directory
+    return "ps/$version/$file"
   }
 }
