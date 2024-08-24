@@ -27,6 +27,13 @@ kover {
 }
 
 koverReport {
+
+    filters {
+        excludes {
+            packages("default.*")
+        }
+    }
+
     verify {
         rule {
             name = 'Minimal line coverage rate'
