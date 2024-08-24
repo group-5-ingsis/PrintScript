@@ -4,7 +4,7 @@ import cli.FileReader
 import lexer.Lexer
 import parser.Parser
 
-class ValidationCommand(private val fileLocation: String) : Command {
+class ValidationCommand(private val fileLocation: String, private val version: String) : Command {
   override fun execute(): String {
     val fileContent = FileReader.getFileContents(fileLocation)
     try {

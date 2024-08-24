@@ -9,7 +9,11 @@ object CommandParser {
     return command.split(" ")[1]
   }
 
+  fun getVersion(command: String): String {
+    return command.split(" ")[2]
+  }
+
   fun getArguments(command: String): List<String> {
-    return command.split(" ").drop(2)
+    return command.split(" ").drop(3)
   }
 }

@@ -7,7 +7,8 @@ class ValidationCommandBuilder : CommandBuilder {
   override fun build(
     file: String,
     arguments: List<String>,
+    version: String,
   ): Command {
-    return ValidationCommand(file)
+    return ValidationCommand(file, version)
   }
 }

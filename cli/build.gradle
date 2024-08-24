@@ -2,11 +2,16 @@ plugins {
     id 'org.jetbrains.kotlin.jvm'
     id 'org.jlleitschuh.gradle.ktlint'
     id 'org.jetbrains.kotlinx.kover'
+    id 'application'
+    id 'org.openjfx.javafxplugin' version '0.0.14'
+
 }
 
 dependencies {
     testImplementation 'org.jetbrains.kotlin:kotlin-test'
-    implementation("io.arrow-kt:arrow-core:1.2.4")
+    implementation "io.arrow-kt:arrow-core:1.2.4"
+    implementation 'org.openjfx:javafx-controls:22'
+    implementation 'org.openjfx:javafx-fxml:22'
     implementation project(':lexer')
     implementation project(':shared')
     implementation project(':parser')
@@ -36,4 +41,14 @@ koverReport {
             onCheck = true
         }
     }
+}
+
+javafx {
+    version = "22"
+    modules = [ 'javafx.controls', 'javafx.fxml' ]
+}
+
+
+application {
+    mainClass = "cli.CommandLineInterfaceKt"
 }
