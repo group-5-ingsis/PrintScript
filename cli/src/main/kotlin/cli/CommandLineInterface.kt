@@ -19,9 +19,6 @@ object CommandLineInterface {
     )
   }
 
-  // Formato de los commands:
-  // validate helloWorld.ps 1.0
-  // formatting helloWorld.ps 1.0 formatRules.yml
   fun execute(command: String): String {
     val file = CommandParser.getFile(command)
     val operation = CommandParser.getOperation(command)

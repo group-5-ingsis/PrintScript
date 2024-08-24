@@ -1,18 +1,28 @@
 package command
 
 import cli.FileReader
+import interpreter.Interpreter
 import lexer.Lexer
 import parser.Parser
 
 class ValidationCommand(private val file: String, private val version: String) : Command {
   override fun execute(): String {
     val fileContent = FileReader.getFileContents(file, version)
-    try {
+
+    if (fileContent.startsWith("Error") || fileContent.startsWith("File not found")) {
+      return fileContent
+    }
+
+    return try {
       val tokens = Lexer.lex(fileContent, listOf())
-      Parser().run(tokens)
-      return "File Validated"
+
+      val ast = Parser().run(tokens)
+
+      Interpreter.interpret(ast)
+
+      "File Validated"
     } catch (e: Exception) {
-      return e.toString()
+      "Validation error: ${e.message}"
     }
   }
 }

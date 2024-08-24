@@ -24,7 +24,7 @@ object FileReader {
     file: String,
     version: String,
   ): String {
-    val fileLocation = "${System.getProperty("user.dir")}/../ps/$version/$file"
+    val fileLocation = "${System.getProperty("user.dir")}/ps/$version/$file"
     return fileLocation
   }
 }
