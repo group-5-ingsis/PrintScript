@@ -5,8 +5,10 @@ import kotlin.test.assertEquals
 
 class CommandLineInterfaceTest {
   @Test
-  fun `dummyMethod should return formatted string`() {
-    val result = CommandLineInterface.dummyMethod("test")
-    assertEquals("Received: test", result)
+  fun `test correct File Validation`() {
+    val command = "validate HelloWorld.ps 1.0"
+    val result = CommandLineInterface.execute(command)
+
+    assertEquals("File Validated", result)
   }
 }
