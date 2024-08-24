@@ -6,8 +6,7 @@ import parser.Parser
 
 class ValidationCommand(private val file: String, private val version: String) : Command {
   override fun execute(): String {
-    val fileLocation = "${System.getProperty("user.dir")}/../ps/$version/$file"
-    val fileContent = FileReader.getFileContents(fileLocation)
+    val fileContent = FileReader.getFileContents(file, version)
     try {
       val tokens = Lexer.lex(fileContent, listOf())
       Parser().run(tokens)
