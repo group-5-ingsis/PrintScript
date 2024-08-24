@@ -1,40 +1,30 @@
 package visitor
 
 object MethodExecute {
-  private val methodOutput = StringBuilder()
+  fun executeMethod(
+    methodName: String,
+    parameters: Node.Arguments,
+  ): String {
+    val methodMap = getRegisteredFunctionsMap()
 
-  private fun getRegisteredFunctionsMap(): Map<String, (Any?) -> Unit> {
-    val methodMap: Map<String, (Any?) -> Unit> =
+    val method = methodMap[methodName] ?: throw IllegalArgumentException("Method $methodName is not recognized.")
+
+    val parametersAsString = getParametersAsString(parameters)
+
+    return method(parametersAsString)
+  }
+
+  private fun getRegisteredFunctionsMap(): Map<String, (Any?) -> String> {
+    val methodMap: Map<String, (Any?) -> String> =
       mapOf(
         "println" to { args ->
-          val argsToString = args.toString()
-          methodOutput.append(argsToString)
+          args.toString()
         },
       )
     return methodMap
   }
 
-  fun executeMethod(
-    methodName: String,
-    parameters: String,
-  ): String {
-    methodOutput.clear()
-
-    val methodMap: Map<String, (Any?) -> Unit> = getRegisteredFunctionsMap()
-
-    val method = methodMap[methodName]
-
-    if (method != null) {
-      method(parameters)
-    } else {
-      throw IllegalArgumentException("Method $methodName is not recognized.")
-    }
-
-    val methodOutput = methodOutput.toString()
-    return methodOutput
-  }
-
-  fun getParametersAsString(method: Node.Arguments): String {
+  private fun getParametersAsString(method: Node.Arguments): String {
     val parameters = method.argumentsOfAnyTypes
 
     return parameters.joinToString(", ") { argument ->

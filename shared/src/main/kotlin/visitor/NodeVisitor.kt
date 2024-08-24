@@ -63,9 +63,7 @@ class NodeVisitor : Visitor {
   override fun visitMethodCall(methodCall: Node.Method) {
     val methodName = methodCall.identifier.value
     val params = methodCall.arguments
-    val parametersAsString = MethodExecute.getParametersAsString(params)
-
-    val result = MethodExecute.executeMethod(methodName, parametersAsString)
+    val result = MethodExecute.executeMethod(methodName, params)
     output.append(result)
   }
 
