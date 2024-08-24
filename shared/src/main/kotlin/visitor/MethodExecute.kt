@@ -1,11 +1,13 @@
 package visitor
 
 object MethodExecute {
+  private val output = StringBuilder()
+
   private fun getRegisteredFunctionsMap(): Map<String, (Any?) -> Unit> {
     val methodMap: Map<String, (Any?) -> Unit> =
       mapOf(
         "println" to { args ->
-          println(args.toString())
+          output.append(args.toString())
         },
       )
     return methodMap
@@ -14,7 +16,7 @@ object MethodExecute {
   fun executeMethod(
     methodName: String,
     parameters: String,
-  ) {
+  ): String {
     val methodMap: Map<String, (Any?) -> Unit> = getRegisteredFunctionsMap()
 
     val method = methodMap[methodName]
@@ -24,6 +26,8 @@ object MethodExecute {
     } else {
       throw IllegalArgumentException("Method $methodName is not recognized.")
     }
+
+    return output.toString()
   }
 
   fun getParametersAsString(method: Node.Arguments): String {
@@ -34,17 +38,14 @@ object MethodExecute {
         is Node.Identifier -> {
           VariableTable.getVariable(argument.value).toString()
         }
-
         is Node.GenericLiteral -> {
           argument.value
         }
-
         is Node.Arguments -> {
           getParametersAsString(Node.Arguments(argument.argumentsOfAnyTypes))
         }
-
         else -> throw IllegalArgumentException(
-          "Tipo de argumento no soportado: ${argument.nodeType}",
+          "Unsupported argument type: ${argument.nodeType}",
         )
       }
     }

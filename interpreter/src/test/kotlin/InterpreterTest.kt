@@ -70,7 +70,8 @@ class InterpreterTest {
   fun testMethodCallWithString() {
     val tokens: List<Token> = Lexer.lex("let a: String; a = \"Hello\"; println(a);", listOf())
     val ast: SyntacticParser.RootNode = syntaxParser.run(tokens)
-    interpreter.interpret(ast)
+    val output = interpreter.interpret(ast)
+    assertEquals("\"Hello\"", output)
   }
 
   @Test

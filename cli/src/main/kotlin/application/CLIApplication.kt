@@ -1,3 +1,5 @@
+package application
+
 import cli.CommandLineInterface
 import cli.FileReader
 import javafx.application.Application
@@ -114,7 +116,7 @@ class CLIApplication : Application() {
       )
     val scene = Scene(layout, 600.0, 500.0) // Increased height to accommodate all elements
 
-    primaryStage.title = "CLI Interface"
+    primaryStage.title = "Command Line Interface"
     primaryStage.scene = scene
     primaryStage.show()
   }

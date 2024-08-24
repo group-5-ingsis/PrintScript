@@ -3,6 +3,10 @@ package visitor
 import Node
 
 class NodeVisitor : Visitor {
+  private val output = StringBuilder()
+
+  fun getOutput(): String = output.toString()
+
   override fun visitAssignation(assignation: Node.Assignation) {
     val identifier = assignation.identifier.value
     val value = resolveValue(assignation.value)
@@ -60,7 +64,8 @@ class NodeVisitor : Visitor {
     val methodName = methodCall.identifier.value
     val parameters = MethodExecute.getParametersAsString(methodCall.arguments)
 
-    MethodExecute.executeMethod(methodName, parameters)
+    val result = MethodExecute.executeMethod(methodName, parameters)
+    output.append(result)
   }
 
   override fun getVisitorFunction(nodeType: String): (Node) -> Unit {
