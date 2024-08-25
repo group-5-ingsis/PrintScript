@@ -56,7 +56,7 @@ object BinaryEvaluator {
     rightIsNumber: Boolean,
   ): Any {
     return when {
-      leftValue is String && rightValue is String -> leftValue + rightValue
+      leftValue is String && rightValue is String -> leftValue.dropLast(1) + rightValue.drop(1)
       leftIsNumber && rightIsNumber -> (leftValue as Number).toDouble() + (rightValue as Number).toDouble()
       leftValue is String || rightValue is String -> leftValue.toString() + rightValue.toString()
       else -> throw Exception("Unsupported operands for addition")
