@@ -1,5 +1,27 @@
 plugins {
     id 'groovy-gradle-plugin'
+    id("maven-publish")
+}
+
+publishing {
+    repositories {
+        maven {
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/mPiccinini/PrintScript")
+            credentials {
+                username = 'github'
+                password = System.getenv("GITHUB_TOKEN")
+            }
+        }
+    }
+    publications {
+        gpr(MavenPublication) {
+            from(components.kotlin)
+            groupId = project.property('groupId')
+            artifactId = project.property('artifactId')
+            version = project.property('version')
+        }
+    }
 }
 
 repositories {
