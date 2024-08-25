@@ -1,61 +1,10 @@
 plugins {
-    id 'org.jetbrains.kotlin.jvm'
-    id 'org.jlleitschuh.gradle.ktlint'
-    id 'org.jetbrains.kotlinx.kover'
-    id 'application'
-    id 'org.openjfx.javafxplugin' version '0.0.14'
-
+    id 'printScript.applications'
 }
 
 dependencies {
-    testImplementation 'org.jetbrains.kotlin:kotlin-test'
-    implementation "io.arrow-kt:arrow-core:1.2.4"
-    implementation 'org.openjfx:javafx-controls:22'
-    implementation 'org.openjfx:javafx-fxml:22'
     implementation project(':lexer')
     implementation project(':shared')
     implementation project(':parser')
     implementation project(':interpreter')
-}
-
-kotlin {
-    jvmToolchain(21)
-}
-
-kover {
-    useJacoco()
-}
-
-koverReport {
-
-    filters {
-        excludes {
-            packages("default.*")
-        }
-    }
-
-    verify {
-        rule {
-            name = 'Minimal line coverage rate'
-            bound {
-                minValue = 80
-            }
-        }
-    }
-
-    defaults {
-        html {
-            onCheck = true
-        }
-    }
-}
-
-javafx {
-    version = "22"
-    modules = [ 'javafx.controls', 'javafx.fxml' ]
-}
-
-
-application {
-    mainClass = "cli.CommandLineInterfaceKt"
 }
