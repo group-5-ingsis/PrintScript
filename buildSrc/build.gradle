@@ -16,10 +16,7 @@ publishing {
     }
     publications {
         gpr(MavenPublication) {
-            from(components.kotlin)
-            groupId = project.property('groupId')
-            artifactId = project.property('artifactId')
-            version = project.property('version')
+            from(components.java)
         }
     }
 }
