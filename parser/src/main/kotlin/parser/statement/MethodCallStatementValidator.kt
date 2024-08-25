@@ -14,7 +14,7 @@ class MethodCallStatementValidator : StatementTypeValidator {
       return StatementValResult(
         false,
         statement.content[statement.content.size - 2],
-        "Did not close parenthesis with ')' or lacks ';' at the end of the statement",
+        "Did not close parenthesis with ')'",
       )
     }
     if (statement.content[statement.content.size - 1].value != ";") {

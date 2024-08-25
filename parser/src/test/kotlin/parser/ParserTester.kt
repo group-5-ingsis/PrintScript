@@ -1,6 +1,7 @@
 package parser
 
 import lexer.Lexer
+import org.junit.Assert.assertThrows
 import token.Token
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -234,5 +235,13 @@ class ParserTester {
     val generatedNode = result.getChildren().firstOrNull()
     assertNotNull(generatedNode, "El AST no debe estar vacío.")
     assertEquals(expected, generatedNode)
+  }
+
+  @Test
+  fun testStatementEndError() {
+    val tokens: List<Token> = Lexer.lex("let a: Number = 7; println(a)", listOf())
+    assertThrows(IllegalArgumentException::class.java) {
+      SyntacticParser().run(tokens)
+    }
   }
 }

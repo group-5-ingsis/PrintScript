@@ -45,6 +45,10 @@ class SyntacticParser {
     val statements = mutableListOf<Statement>()
     var j = 0
 
+    if (tokens.last().value != ";") {
+      throw IllegalArgumentException("Missing semicolon at the end of the statement")
+    }
+
     for ((index, token) in tokens.withIndex()) {
       if (token.type == "PUNCTUATION" && token.value == ";") {
         val sublist = tokens.subList(j, index + 1)
