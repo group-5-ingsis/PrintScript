@@ -45,8 +45,9 @@ class SyntacticParser {
         val statements = mutableListOf<Statement>()
         var j = 0
 
-        if (tokens.last().value != ";") {
-            throw IllegalArgumentException("Missing semicolon at the end of the statement")
+        val lastToken = tokens.last()
+        if (lastToken.value != ";") {
+            throw IllegalArgumentException("Missing semicolon at the end of the statement at line: ${lastToken.position.line}, column ${lastToken.position.symbolIndex}")
         }
 
         for ((index, token) in tokens.withIndex()) {
