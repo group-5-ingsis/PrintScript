@@ -5,4 +5,5 @@ include 'shared'
 include 'interpreter'
 include 'cli'
 include 'sca'
+include 'formatter'
 
