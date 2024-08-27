@@ -40,7 +40,7 @@ class Linter {
         }
     }
 
-    fun getLinterRules(): Map<String, Any> {
+    private fun getLinterRules(): Map<String, Any> {
         val jsonString = loadJsonFromResources("linter-rules.json")
         return jsonToMap(jsonString)
     }

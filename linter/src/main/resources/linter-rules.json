@@ -1,0 +1,4 @@
+{
+  "identifier_naming_convention":"camel-case",
+  "println-expression-allowed":false
+}

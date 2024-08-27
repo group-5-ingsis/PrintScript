@@ -1,8 +1,8 @@
 package linter
 
-data class LinterResult(private val isValid: Boolean, private val message: String) {
+data class LinterResult(private val isSuccessful: Boolean, private val message: String) {
     fun isValid(): Boolean {
-        return isValid
+        return isSuccessful
     }
 
     fun getMessage(): String {

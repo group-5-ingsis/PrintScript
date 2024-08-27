@@ -1,6 +1,7 @@
 import junit.framework.TestCase.assertEquals
 import lexer.Lexer
 import org.junit.Assert.assertThrows
+import position.Position
 import token.Token
 import kotlin.test.Test
 

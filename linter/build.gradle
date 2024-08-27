@@ -6,4 +6,6 @@ plugins {
 dependencies {
     implementation project(':shared')
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.1")
+    implementation project(":parser")
+    implementation project(":lexer")
 }
