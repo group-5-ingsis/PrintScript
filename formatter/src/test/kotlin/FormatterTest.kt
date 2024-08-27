@@ -1,5 +1,4 @@
 import com.fasterxml.jackson.dataformat.yaml.YAMLMapper
-import composite.Node
 import formatter.Formatter
 import lexer.Lexer
 import parser.SyntacticParser
@@ -10,7 +9,6 @@ import kotlin.test.assertEquals
 
 class FormatterTest {
 
-    private lateinit var exampleNode: Node
     private lateinit var exampleRules: FormattingRules
     private val parser = SyntacticParser()
 
@@ -27,7 +25,7 @@ class FormatterTest {
     }
 
     @Test
-    fun `test format node`() {
+    fun `test format`() {
         val badFileContents = javaClass.getResource("/badFormatting.ps")?.readText()
             ?: throw IllegalArgumentException("File not found")
 
