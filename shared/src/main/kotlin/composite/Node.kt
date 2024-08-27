@@ -51,7 +51,7 @@ sealed class Node {
     ) : Node() {
         override val nodeType: String = "METHOD_CALL"
         override fun accept(visitor: Visitor) {
-            TODO("Not yet implemented")
+            return visitor.visitMethodCall(this)
         }
     }
 
