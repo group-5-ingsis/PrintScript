@@ -10,6 +10,4 @@ interface Visitor {
     fun visitAssignDeclare(assignationDeclaration: Node.AssignationDeclaration)
 
     fun visitMethodCall(methodCall: Node.Method)
-
-    fun getVisitorFunction(nodeType: String): (Node) -> Unit
 }
