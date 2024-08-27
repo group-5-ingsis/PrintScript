@@ -6,12 +6,9 @@ import token.Token
 // Singleton object since it can be reused with different arguments.
 class Parser {
     private val syntacticParser = SyntacticParser()
-    private val semanticParser = SemanticParser()
 
-    // Performs a call to both parsers.
     @Throws(SemanticErrorException::class)
     fun run(tokens: List<Token>): SyntacticParser.RootNode {
-        val ast: SyntacticParser.RootNode = syntacticParser.run(tokens)
-        return semanticParser.run(ast)
+        return syntacticParser.run(tokens)
     }
 }
