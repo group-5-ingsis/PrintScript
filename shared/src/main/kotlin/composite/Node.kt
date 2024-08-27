@@ -1,3 +1,5 @@
+package composite
+
 import composite.NodeManager.checkIfExist
 import visitor.NodeVisitor
 

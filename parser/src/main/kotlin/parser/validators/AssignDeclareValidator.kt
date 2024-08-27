@@ -1,9 +1,9 @@
 package parser.validators
 
-import Node
+import composite.Node
 
 class AssignDeclareValidator : Validator<Node.AssignationDeclaration> {
-    // Node structure: AssignationDeclaration(type, kind, identifier, value(value, type))
+    // composite.Node structure: AssignationDeclaration(type, kind, identifier, value(value, type))
     // Validation: Type in Declaration MUST match type on assignation.
     override fun validate(node: Node.AssignationDeclaration): ValidationResult {
         val declaredType = node.dataType.type
