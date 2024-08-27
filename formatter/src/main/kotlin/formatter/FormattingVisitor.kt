@@ -14,7 +14,8 @@ class FormattingVisitor(private val rules: FormattingRules) : Visitor {
         val identifier = assignation.identifier.value
         val value = ValueResolver.resolveValue(assignation.value)
 
-        output.append("${applySpacesAroundAssignment()}$identifier = $value;")
+        val newLine = "$identifier${applySpacesAroundAssignment()}$value;"
+        output.append(newLine)
         appendNewlineAfterSemicolon()
     }
 
