@@ -1,5 +1,6 @@
 package parser.validators
 
+import composite.Node
 import visitor.VariableTable
 
 class DeclarationValidator : Validator<Node.Declaration> {

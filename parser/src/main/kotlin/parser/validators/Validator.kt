@@ -1,6 +1,6 @@
 package parser.validators
 
-import Node
+import composite.Node
 
 interface Validator<T : Node> {
     fun validate(node: T): ValidationResult

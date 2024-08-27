@@ -1,6 +1,6 @@
 package visitor
 
-import Node
+import composite.Node
 
 object BinaryEvaluator {
     fun evaluate(operation: Node.BinaryOperations): Any {

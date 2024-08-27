@@ -1,6 +1,6 @@
 package parser
 
-import Node
+import composite.Node
 import parser.builders.*
 import parser.statement.Statement
 import parser.statement.StatementManager

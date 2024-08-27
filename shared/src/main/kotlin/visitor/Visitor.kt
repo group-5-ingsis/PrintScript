@@ -1,6 +1,6 @@
 package visitor
 
-import Node
+import composite.Node
 
 interface Visitor {
     fun visitAssignation(assignation: Node.Assignation)

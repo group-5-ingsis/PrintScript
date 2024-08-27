@@ -1,3 +1,9 @@
 plugins {
     id 'printScript.common'
 }
+
+dependencies {
+    implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.15.0")
+    implementation project(':shared')
+    implementation project(':parser')
+}

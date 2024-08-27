@@ -1,6 +1,6 @@
 package parser.validators
 
-import Node
+import composite.Node
 import parser.SyntacticParser
 
 class SemanticValidator {

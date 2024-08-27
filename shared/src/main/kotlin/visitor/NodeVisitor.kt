@@ -1,6 +1,6 @@
 package visitor
 
-import Node
+import composite.Node
 
 class NodeVisitor : Visitor {
     private val output = StringBuilder()

@@ -1,5 +1,7 @@
 package visitor
 
+import composite.Node
+
 object MethodExecute {
     fun executeMethod(
         methodName: String,
