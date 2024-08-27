@@ -19,7 +19,7 @@ object Formatter {
 
     private fun formatNode(node: Node, rules: FormattingRules): String {
         val visitor = FormattingVisitor(rules)
-        node.acceptVisitor(visitor)
+        node.accept(visitor)
         return visitor.getFormattedOutput()
     }
 }

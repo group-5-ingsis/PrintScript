@@ -38,11 +38,11 @@ class FormattingVisitor(private val rules: FormattingRules) : Visitor {
         val methodName = methodCall.identifier.value
         val arguments = methodCall.arguments.argumentsOfAnyTypes.joinToString(", ") { arg -> resolveValue(arg) }
 
-        output.append("${" ".repeat(rules.newline_before_println)}$methodName($arguments)")
+        output.append("${" ".repeat(rules.newlineBeforePrintln)}$methodName($arguments)")
     }
 
     private fun applySpacesAroundAssignment(): String {
-        return if (rules.space_around_assignment) " = " else "="
+        return if (rules.spaceAroundAssignment) " = " else "="
     }
 
     private fun appendNewlineAfterSemicolon() {
@@ -63,30 +63,6 @@ class FormattingVisitor(private val rules: FormattingRules) : Visitor {
             is Node.Identifier -> value.value
             is Node.BinaryOperations -> "${resolveValue(value.left)} ${value.symbol} ${resolveValue(value.right)}"
             else -> throw Exception("Implement other cases of AssignableValue types")
-        }
-    }
-
-    override fun getVisitorFunction(nodeType: String): (Node) -> Unit {
-        return when (nodeType) {
-            "ASSIGNATION" -> { node ->
-                visitAssignation(node as Node.Assignation)
-            }
-
-            "DECLARATION" -> { node ->
-                visitDeclaration(node as Node.Declaration)
-            }
-
-            "ASSIGNATION_DECLARATION" -> { node ->
-                visitAssignDeclare(node as Node.AssignationDeclaration)
-            }
-
-            "METHOD_CALL" -> { node ->
-                visitMethodCall(node as Node.Method)
-            }
-
-            else -> {
-                TODO("Not implemented yet")
-            }
         }
     }
 }
