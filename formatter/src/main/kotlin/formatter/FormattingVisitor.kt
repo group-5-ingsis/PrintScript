@@ -27,12 +27,22 @@ class FormattingVisitor(private val rules: FormattingRules) : Visitor {
     }
 
     override fun visitAssignDeclare(assignationDeclaration: Node.AssignationDeclaration) {
-        val dataType = assignationDeclaration.dataType.type
+        val dataType = setDataType(assignationDeclaration.dataType)
+        val assignationType = assignationDeclaration.kindVariableDeclaration
         val identifier = assignationDeclaration.identifier
         val value = ValueResolver.resolveValue(assignationDeclaration.value)
 
-        output.append("${applySpacesAroundAssignment()}$dataType $identifier = $value;")
+        val spacesAroundAssignment = applySpacesAroundAssignment()
+        val newLine = "$assignationType $identifier${applySpaceForColon()}$dataType$spacesAroundAssignment$value;"
+        output.append(newLine)
         appendNewlineAfterSemicolon()
+    }
+
+    private fun setDataType(dataType: Node.DataType): String {
+        if (dataType.type == "NUMBER") {
+            return "Number"
+        }
+        return "String"
     }
 
     override fun visitMethodCall(methodCall: Node.Method) {
@@ -46,7 +56,20 @@ class FormattingVisitor(private val rules: FormattingRules) : Visitor {
     }
 
     private fun applySpacesAroundAssignment(): String {
-        return if (rules.spaceAroundAssignment) " = " else "="
+        val spaceAroundAssignment = rules.spaceAroundAssignment
+        return if (spaceAroundAssignment) " = " else "="
+    }
+
+    private fun applySpaceForColon(): String {
+        val spaceBeforeColon = rules.spaceBeforeColon
+        val spaceAfterColon = rules.spaceAfterColon
+
+        return when {
+            spaceBeforeColon && spaceAfterColon -> " : "
+            spaceBeforeColon && !spaceAfterColon -> " :"
+            !spaceBeforeColon && spaceAfterColon -> ": "
+            else -> ":"
+        }
     }
 
     private fun appendNewlineAfterSemicolon() {

@@ -18,7 +18,7 @@ class FormatterTest {
     fun setUp() {
         exampleRules = FormattingRules(
             spaceBeforeColon = true,
-            spaceAfterColon = true,
+            spaceAfterColon = false,
             spaceAroundAssignment = true,
             newlineBeforePrintln = 1
         )
