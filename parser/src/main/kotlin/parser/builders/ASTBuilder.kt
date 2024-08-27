@@ -1,8 +1,8 @@
 package parser.builders
 
-import Node
+import composite.Node
 import parser.statement.Statement
 
 interface ASTBuilder {
-  fun build(statement: Statement): Node
+    fun build(statement: Statement): Node
 }

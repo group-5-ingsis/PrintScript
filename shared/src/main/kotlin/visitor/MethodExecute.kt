@@ -1,52 +1,49 @@
 package visitor
 
+import composite.Node
+
 object MethodExecute {
-  private fun getRegisteredFunctionsMap(): Map<String, (Any?) -> Unit> {
-    val methodMap: Map<String, (Any?) -> Unit> =
-      mapOf(
-        "println" to { args ->
-          println(args.toString())
-        },
-      )
-    return methodMap
-  }
+    fun executeMethod(
+        methodName: String,
+        parameters: Node.Arguments
+    ): String {
+        val methodMap = getRegisteredFunctionsMap()
 
-  fun executeMethod(
-    methodName: String,
-    parameters: String,
-  ) {
-    val methodMap: Map<String, (Any?) -> Unit> = getRegisteredFunctionsMap()
+        val method = methodMap[methodName] ?: throw IllegalArgumentException("Method $methodName is not recognized.")
 
-    val method = methodMap[methodName]
+        val parametersAsString = getParametersAsString(parameters)
 
-    if (method != null) {
-      method(parameters)
-    } else {
-      throw IllegalArgumentException("Method $methodName is not recognized.")
+        return method(parametersAsString)
     }
-  }
 
-  fun getParametersAsString(method: Node.Arguments): String {
-    val parameters = method.argumentsOfAnyTypes
-
-    return parameters.joinToString(", ") { argument ->
-      when (argument) {
-        is Node.Identifier -> {
-          VariableTable.getVariable(argument.value).toString()
-        }
-
-        is Node.GenericLiteral -> {
-          argument.value
-        }
-
-        is Node.Arguments -> {
-          getParametersAsString(Node.Arguments(argument.argumentsOfAnyTypes))
-        }
-
-        else -> throw IllegalArgumentException(
-          "Tipo de argumento no soportado: ${argument.nodeType}",
-        )
-      }
+    private fun getRegisteredFunctionsMap(): Map<String, (Any?) -> String> {
+        val methodMap: Map<String, (Any?) -> String> =
+            mapOf(
+                "println" to { args ->
+                    args.toString()
+                }
+            )
+        return methodMap
     }
-  }
+
+    private fun getParametersAsString(method: Node.Arguments): String {
+        val parameters = method.argumentsOfAnyTypes
+
+        return parameters.joinToString(", ") { argument ->
+            when (argument) {
+                is Node.Identifier -> {
+                    VariableTable.getVariable(argument.value).toString()
+                }
+                is Node.GenericLiteral -> {
+                    argument.value
+                }
+                is Node.Arguments -> {
+                    getParametersAsString(Node.Arguments(argument.argumentsOfAnyTypes))
+                }
+                else -> throw IllegalArgumentException(
+                    "Unsupported argument type: ${argument.nodeType}"
+                )
+            }
+        }
+    }
 }

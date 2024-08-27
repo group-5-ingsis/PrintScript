@@ -1,33 +1,29 @@
 package cli
 
-object CommandLineInterface {
-//  private val lexer: Lexer = Lexer
-//
-//  fun run(argument: String) {
-//    val slicedParams: List<String> = argument.split(" ")
-//    try {
-//      validateArguments(slicedParams)
-//      // file: PSFile = ... (Logic for opening ps file and sending the string to the Lexer)
-//      // lexer.lex(file, slicedParams)
-//    } catch (e: IllegalArgumentException) {
-//      println("Caught exception ${e.message}")
-//    }
-//  }
-//
-//  @Throws(IllegalArgumentException::class)
-//  private fun validateArguments(slicedParams: List<String>) {
-//    if (slicedParams.size < 3) {
-//      throw IllegalArgumentException(
-//        "Invalid amount of arguments. Expected at least 3 arguments but got ${slicedParams.size}",
-//      )
-//    } else {
-// //            for ((index, arg) in slicedParams.withIndex()) {
-// //                // Validate parameter inputs.
-// //            }
-//    }
-//  }
+import builder.CommandBuilder
+import builder.ExecuteCommandBuilder
+import builder.ValidationCommandBuilder
 
-  fun dummyMethod(value: String): String {
-    return "Received: $value"
-  }
+object CommandLineInterface {
+    private val commandBuilders: Map<String, CommandBuilder> = initializeCommandBuilders()
+
+    private fun initializeCommandBuilders(): Map<String, CommandBuilder> {
+        return mapOf(
+            "validate" to ValidationCommandBuilder(),
+            "execute" to ExecuteCommandBuilder()
+        )
+    }
+
+    fun execute(command: String): String {
+        val file = CommandParser.getFile(command)
+        val operation = CommandParser.getOperation(command)
+        val version = CommandParser.getVersion(command)
+        val arguments = CommandParser.getArguments(command)
+
+        val builder = commandBuilders[operation] ?: return "Unknown command: $command"
+
+        val cmd = builder.build(file, arguments, version)
+
+        return cmd.execute()
+    }
 }

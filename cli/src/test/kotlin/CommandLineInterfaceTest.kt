@@ -1,12 +1,18 @@
 package cli
 
-import kotlin.test.Test
-import kotlin.test.assertEquals
+import kotlin.test.*
 
 class CommandLineInterfaceTest {
-  @Test
-  fun `dummyMethod should return formatted string`() {
-    val result = CommandLineInterface.dummyMethod("test")
-    assertEquals("Received: test", result)
-  }
+
+    @Test
+    fun `test correct File Validation`() {
+        val command = "validate HelloWorld.ps 1.0"
+        val result = CommandLineInterface.execute(command)
+    }
+
+    @Test
+    fun `test correct File Execution`() {
+        val command = "execute HelloWorld.ps 1.0"
+        val result = CommandLineInterface.execute(command)
+    }
 }

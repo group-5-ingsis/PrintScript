@@ -1,0 +1,28 @@
+plugins {
+    id 'org.jetbrains.kotlin.jvm'
+    id 'org.jlleitschuh.gradle.ktlint'
+    id 'org.jetbrains.kotlinx.kover'
+    id 'java'
+}
+
+group = 'com.example'
+version = '1.0'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation 'org.jetbrains.kotlin:kotlin-test'
+    implementation "io.arrow-kt:arrow-core:1.2.4"
+}
+
+kotlin {
+    jvmToolchain {
+        languageVersion.set(JavaLanguageVersion.of(17))
+    }
+}
+
+ktlint {
+    disabledRules = ['no-wildcard-imports', 'max-line-length']
+}

@@ -1,14 +1,3 @@
 plugins {
-    id 'org.jetbrains.kotlin.jvm'
-    id 'org.jlleitschuh.gradle.ktlint'
-    id 'org.jetbrains.kotlinx.kover'
-}
-
-dependencies {
-    testImplementation 'org.jetbrains.kotlin:kotlin-test'
-    implementation("io.arrow-kt:arrow-core:1.2.4")
-}
-
-kotlin {
-    jvmToolchain(21)
+    id 'printScript.no-coverage'
 }
