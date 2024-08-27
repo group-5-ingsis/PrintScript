@@ -1,4 +1,4 @@
-package validation
+package parser.validation
 
 import parser.statement.Statement
 

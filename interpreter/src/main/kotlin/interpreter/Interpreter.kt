@@ -2,8 +2,8 @@ package interpreter
 
 import parser.SyntacticParser
 import parser.exceptions.SemanticErrorException
-import validation.SemanticValidator
-import validation.ValidationResult
+import parser.validation.SemanticValidator
+import parser.validation.ValidationResult
 import visitor.NodeVisitor
 import kotlin.jvm.Throws
 
