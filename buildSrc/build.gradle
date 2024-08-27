@@ -1,27 +1,5 @@
 plugins {
     id 'groovy-gradle-plugin'
-    id("maven-publish")
-}
-
-group = 'com.ingsis.printScript'
-version = '1.0.0-SNAPSHOT'
-
-publishing {
-    repositories {
-        maven {
-            name = "GitHubPackages"
-            url = uri("https://maven.pkg.github.com/mPiccinini/PrintScript")
-            credentials {
-                username = System.getenv("GITHUB_ACTOR")
-                password = System.getenv("GITHUB_TOKEN")
-            }
-        }
-    }
-    publications {
-        gpr(MavenPublication) {
-            from(components.java)
-        }
-    }
 }
 
 repositories {
