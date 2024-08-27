@@ -1,5 +1,6 @@
 package parser.builders
 
+import composite.Node
 import parser.exceptions.UnsupportedLeafTypeException
 import parser.statement.Statement
 import token.Token
