@@ -1,6 +1,7 @@
 import com.fasterxml.jackson.dataformat.yaml.YAMLMapper
 import composite.Node
 import formatter.Formatter
+import java.io.File
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -21,7 +22,9 @@ class FormatterTest {
 
     @Test
     fun `test format node`() {
-        val formattedCode = Formatter.format(exampleNode, "resources/rules/testRules.yaml")
+        val rulesFile = File("src/main/resources/rules/testRules.yaml")
+
+        val formattedCode = Formatter.format(exampleNode, rulesFile)
 
         val expectedOutput = "myVar = 42;\n"
 
