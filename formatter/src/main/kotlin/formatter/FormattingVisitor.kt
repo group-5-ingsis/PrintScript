@@ -2,6 +2,7 @@ package formatter
 
 import composite.Node
 import rules.FormattingRules
+import visitor.ValueResolver
 import visitor.Visitor
 
 class FormattingVisitor(private val rules: FormattingRules) : Visitor {
@@ -11,7 +12,7 @@ class FormattingVisitor(private val rules: FormattingRules) : Visitor {
 
     override fun visitAssignation(assignation: Node.Assignation) {
         val identifier = assignation.identifier.value
-        val value = resolveValue(assignation.value)
+        val value = ValueResolver.resolveValue(assignation.value)
 
         output.append("${applySpacesAroundAssignment()}$identifier = $value;")
         appendNewlineAfterSemicolon()
@@ -28,7 +29,7 @@ class FormattingVisitor(private val rules: FormattingRules) : Visitor {
     override fun visitAssignDeclare(assignationDeclaration: Node.AssignationDeclaration) {
         val dataType = assignationDeclaration.dataType.type
         val identifier = assignationDeclaration.identifier
-        val value = resolveAssignableValue(assignationDeclaration.value)
+        val value = ValueResolver.resolveValue(assignationDeclaration.value)
 
         output.append("${applySpacesAroundAssignment()}$dataType $identifier = $value;")
         appendNewlineAfterSemicolon()
@@ -36,7 +37,10 @@ class FormattingVisitor(private val rules: FormattingRules) : Visitor {
 
     override fun visitMethodCall(methodCall: Node.Method) {
         val methodName = methodCall.identifier.value
-        val arguments = methodCall.arguments.argumentsOfAnyTypes.joinToString(", ") { arg -> resolveValue(arg) }
+        val arguments = methodCall.arguments.argumentsOfAnyTypes.joinToString(", ") { arg ->
+            ValueResolver.resolveValue(arg)
+                .toString()
+        }
 
         output.append("${" ".repeat(rules.newlineBeforePrintln)}$methodName($arguments)")
     }
@@ -47,22 +51,5 @@ class FormattingVisitor(private val rules: FormattingRules) : Visitor {
 
     private fun appendNewlineAfterSemicolon() {
         output.append("\n")
-    }
-
-    private fun resolveValue(node: Node): String {
-        return when (node) {
-            is Node.GenericLiteral -> node.value
-            is Node.Identifier -> node.value
-            else -> throw IllegalArgumentException("Unsupported node type: ${node.nodeType}")
-        }
-    }
-
-    private fun resolveAssignableValue(value: Node.AssignableValue): String {
-        return when (value) {
-            is Node.GenericLiteral -> value.value
-            is Node.Identifier -> value.value
-            is Node.BinaryOperations -> "${resolveValue(value.left)} ${value.symbol} ${resolveValue(value.right)}"
-            else -> throw Exception("Implement other cases of AssignableValue types")
-        }
     }
 }

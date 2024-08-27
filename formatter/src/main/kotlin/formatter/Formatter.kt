@@ -13,8 +13,9 @@ object Formatter {
     }
 
     private fun loadRules(file: String): FormattingRules {
+        val rulesFile = File(file)
         val mapper = YAMLMapper()
-        return mapper.readValue(File(file), FormattingRules::class.java)
+        return mapper.readValue(rulesFile, FormattingRules::class.java)
     }
 
     private fun formatNode(node: Node, rules: FormattingRules): String {
