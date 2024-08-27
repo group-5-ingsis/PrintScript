@@ -81,7 +81,7 @@ class SyntacticParser {
 
         fun accept(visitor: NodeVisitor) {
             for (child in children) {
-                child.acceptVisitor(visitor)
+                child.accept(visitor)
             }
         }
 
