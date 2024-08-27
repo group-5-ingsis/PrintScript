@@ -1,20 +1,12 @@
 package formatter
 
-import com.fasterxml.jackson.dataformat.yaml.YAMLMapper
 import composite.Node
 import rules.FormattingRules
-import java.io.File
 
 object Formatter {
 
-    fun format(ast: Node, rulesFile: File): String {
-        val rules = loadRules(rulesFile)
+    fun format(ast: Node, rules: FormattingRules): String {
         return formatNode(ast, rules)
-    }
-
-    private fun loadRules(file: File): FormattingRules {
-        val mapper = YAMLMapper()
-        return mapper.readValue(file, FormattingRules::class.java)
     }
 
     private fun formatNode(node: Node, rules: FormattingRules): String {

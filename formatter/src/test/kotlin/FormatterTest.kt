@@ -1,7 +1,9 @@
 import com.fasterxml.jackson.dataformat.yaml.YAMLMapper
 import composite.Node
 import formatter.Formatter
-import java.io.File
+import lexer.Lexer
+import parser.SyntacticParser
+import rules.FormattingRules
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -9,12 +11,16 @@ import kotlin.test.assertEquals
 class FormatterTest {
 
     private lateinit var exampleNode: Node
+    private lateinit var exampleRules: FormattingRules
+    private val parser = SyntacticParser()
 
     @BeforeTest
     fun setUp() {
-        exampleNode = Node.Assignation(
-            identifier = Node.Identifier("myVar"),
-            value = Node.GenericLiteral("42", Node.DataType("NUMBER"))
+        exampleRules = FormattingRules(
+            spaceBeforeColon = true,
+            spaceAfterColon = true,
+            spaceAroundAssignment = true,
+            newlineBeforePrintln = 1
         )
 
         YAMLMapper::class.java
@@ -22,12 +28,19 @@ class FormatterTest {
 
     @Test
     fun `test format node`() {
-        val rulesFile = File("src/main/resources/rules/testRules.yaml")
+        val badFileContents = javaClass.getResource("/badFormatting.ps")?.readText()
+            ?: throw IllegalArgumentException("File not found")
 
-        val formattedCode = Formatter.format(exampleNode, rulesFile)
+        val goodFileContents = javaClass.getResource("/goodFormatting.ps")?.readText()
+            ?: throw IllegalArgumentException("File not found")
 
-        val expectedOutput = "myVar = 42;\n"
+        val tokens = Lexer.lex(badFileContents, listOf())
 
-        assertEquals(expectedOutput, formattedCode)
+        val ast = parser.run(tokens)
+        val child = ast.getChildren().first()
+
+        val formattedCode = Formatter.format(child, exampleRules)
+
+        assertEquals(goodFileContents, formattedCode)
     }
 }
