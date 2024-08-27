@@ -1,10 +1,10 @@
 import composite.NodeManager.checkIfExist
-import visitor.NodeVisitor
+import visitor.Visitor
 
 sealed class Node {
     abstract val nodeType: String
 
-    fun acceptVisitor(visitor: NodeVisitor) {
+    fun acceptVisitor(visitor: Visitor) {
         val func = visitor.getVisitorFunction(nodeType)
         func(this)
     }
