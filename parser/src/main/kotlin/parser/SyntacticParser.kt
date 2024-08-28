@@ -394,7 +394,8 @@ class SyntacticParser(private val tokens : List<Token>) {
       return tokens[current].position
   }
 
-  class RootNode private constructor() {
+
+    class RootNode private constructor() {
     private val children = mutableListOf<StatementType>()
 
     fun addChild(child: StatementType) {
