@@ -1,7 +1,6 @@
-package validation
+package parser.validation
 
 import composite.Node
-import parser.SyntacticParser
 
 class SemanticValidator {
     private val validatorsForTypes: Map<String, Validator<Node>> =
@@ -12,11 +11,11 @@ class SemanticValidator {
             "METHOD_CALL" to MethodCallValidator() as Validator<Node>
         )
 
-    fun validateSemantics(ast: SyntacticParser.RootNode): ValidationResult {
-        for (node: Node in ast) {
+    fun validateSemantics(nodes: List<Node>, varTable: List<Node.Declaration>): ValidationResult {
+        for (node in nodes) {
             val validator = validatorsForTypes[node.nodeType]
             validator?.let {
-                val result = it.validate(node)
+                val result = it.validate(node, varTable)
                 if (result.isInvalid) {
                     return result
                 }
