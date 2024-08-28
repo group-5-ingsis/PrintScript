@@ -14,10 +14,10 @@ class FormatterTest {
     @BeforeTest
     fun setUp() {
         exampleRules = FormattingRules(
-            spaceBeforeColon = true,
-            spaceAfterColon = false,
+            spaceBeforeColon = false,
+            spaceAfterColon = true,
             spaceAroundAssignment = true,
-            newlineBeforePrintln = 1
+            newlineBeforePrintln = 2
         )
     }
 
@@ -26,7 +26,7 @@ class FormatterTest {
         val badFileContents = javaClass.getResource("/assignation/badFormat.ps")?.readText()
             ?: throw IllegalArgumentException("File not found")
 
-        val goodFileContents = javaClass.getResource("/declaration/goodFormatting.ps")?.readText()
+        val goodFileContents = javaClass.getResource("/declaration/goodFormat.ps")?.readText()
             ?: throw IllegalArgumentException("File not found")
 
         val tokens = Lexer.lex(badFileContents, listOf())
