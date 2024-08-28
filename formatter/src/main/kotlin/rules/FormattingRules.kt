@@ -1,8 +1,11 @@
 package rules
 
-data class FormattingRules(
-    val spaceBeforeColon: Boolean,
-    val spaceAfterColon: Boolean,
-    val spaceAroundAssignment: Boolean,
-    val newlineBeforePrintln: Int
+import com.fasterxml.jackson.annotation.JsonCreator
+import com.fasterxml.jackson.annotation.JsonProperty
+
+data class FormattingRules @JsonCreator constructor(
+    @JsonProperty("spaceBeforeColon") val spaceBeforeColon: Boolean,
+    @JsonProperty("spaceAfterColon") val spaceAfterColon: Boolean,
+    @JsonProperty("spaceAroundAssignment") val spaceAroundAssignment: Boolean,
+    @JsonProperty("newlineBeforePrintln") val newlineBeforePrintln: Int
 )

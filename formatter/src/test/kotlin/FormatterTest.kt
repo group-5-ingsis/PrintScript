@@ -3,6 +3,7 @@ import formatter.Formatter
 import lexer.Lexer
 import parser.SyntacticParser
 import rules.FormattingRules
+import java.nio.file.Paths
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -14,14 +15,15 @@ class FormatterTest {
 
     @BeforeTest
     fun setUp() {
-        exampleRules = FormattingRules(
-            spaceBeforeColon = false,
-            spaceAfterColon = true,
-            spaceAroundAssignment = true,
-            newlineBeforePrintln = 2
-        )
+        val yamlMapper = YAMLMapper()
 
-        YAMLMapper::class.java
+        // Load the file from the classpath
+        val resource = this::class.java.getResource("/rules/testRules.yaml")
+            ?: throw IllegalArgumentException("File not found!")
+        val file = Paths.get(resource.toURI()).toFile()
+
+        // Map the YAML content to FormattingRules class
+        exampleRules = yamlMapper.readValue(file, FormattingRules::class.java)
     }
 
     @Test
