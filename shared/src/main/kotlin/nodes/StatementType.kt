@@ -3,13 +3,14 @@ package nodes
 
 import position.Position
 import visitor.NodeVisitor
+import visitor.Visitor
 
 sealed class StatementType {
 
 
   abstract val statementType: String
   abstract val position : Position
-  fun acceptVisitor(visitor: NodeVisitor) {
+  fun acceptVisitor(visitor: Visitor) {
     val func = visitor.getVisitorFunctionForStatement(statementType)
 
     func(this)
