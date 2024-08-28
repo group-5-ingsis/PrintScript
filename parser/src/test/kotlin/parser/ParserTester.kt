@@ -2,6 +2,7 @@ package parser
 
 import lexer.Lexer
 import org.junit.Assert.assertThrows
+import position.Position
 import token.Token
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -187,7 +188,8 @@ class ParserTester {
                         Node.GenericLiteral(value = "3", dataType = Node.DataType(type = "NUMBER"))
                     )
                 ),
-                identifier = Node.Identifier(value = "println")
+                identifier = Node.Identifier(value = "println"),
+                identifierPosition = Position(1, 1)
             )
 
         assertEquals(expected, result.getChildren().firstOrNull())
@@ -228,7 +230,8 @@ class ParserTester {
                 dataType = Node.DataType(type = "NUMBER"),
                 kindVariableDeclaration = "let",
                 identifier = "a",
-                value = Node.GenericLiteral(value = "\"testing\"", dataType = Node.DataType(type = "STRING"))
+                value = Node.GenericLiteral(value = "\"testing\"", dataType = Node.DataType(type = "STRING")),
+                identifierPosition = Position(1, 2)
             )
 
         // Verificar que el AST generado contenga la estructura esperada
