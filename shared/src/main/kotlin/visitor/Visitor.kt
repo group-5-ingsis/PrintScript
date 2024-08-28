@@ -1,13 +1,29 @@
 package visitor
 
-import composite.Node
+
+import nodes.Expression
+import nodes.StatementType
 
 interface Visitor {
-    fun visitAssignation(assignation: Node.Assignation)
+  fun visitLiteralExp(exp: Expression.Literal): Any?
 
-    fun visitDeclaration(declaration: Node.Declaration)
+  fun visitGroupExp(exp: Expression.Grouping): Any?
 
-    fun visitAssignDeclare(assignationDeclaration: Node.AssignationDeclaration)
+  fun visitUnaryExpr(exp: Expression.Unary): Any?
 
-    fun visitMethodCall(methodCall: Node.Method)
+  fun visitBinaryExpr(exp: Expression.Binary): Any?
+
+  fun getVisitorFunctionForExpression(expressionType: String): (Expression) -> Any?
+
+  fun getVisitorFunctionForStatement(statementType: String): (StatementType) -> Unit
+
+  fun visitPrintStm(statement: StatementType.Print)
+  fun visitExpressionStm(statement: StatementType.StatementExpression)
+  fun visitVariableStm(statement: StatementType.Variable)
+
+  fun visitIdentifier(exp: Expression.IdentifierExpression): Any?
+
+
+
+
 }
