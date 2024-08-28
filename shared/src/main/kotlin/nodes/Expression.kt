@@ -1,6 +1,6 @@
 package nodes
 
-import Position
+import position.Position
 import visitor.NodeVisitor
 
 sealed class Expression {

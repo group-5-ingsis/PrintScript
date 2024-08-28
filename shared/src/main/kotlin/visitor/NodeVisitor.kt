@@ -12,8 +12,6 @@ class  NodeVisitor(private val globalScope : Environment) : Visitor {
     fun getOutput(): String = output.toString()
 
 
-
-
     private fun evaluateExpression(expr: Expression): Any {
         return expr.acceptVisitor(this)
     }
@@ -216,6 +214,7 @@ class  NodeVisitor(private val globalScope : Environment) : Visitor {
 
   override fun visitPrintStm(statement: StatementType.Print) {
     val value: Any = evaluateExpression(statement.value)
+      output.append(value).append("\n")
     println(value)
   }
 

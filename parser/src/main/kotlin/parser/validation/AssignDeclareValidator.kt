@@ -1,6 +1,5 @@
 package parser.validation
 
-import composite.Node
 
 class AssignDeclareValidator : Validator<Node.AssignationDeclaration> {
     // composite.Node structure: AssignationDeclaration(type, kind, identifier, value(value, type))

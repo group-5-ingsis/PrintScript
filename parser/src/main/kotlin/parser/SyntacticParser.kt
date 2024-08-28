@@ -1,11 +1,12 @@
 package parser
 
-import Position
+
 import UnknownExpressionException
 import exceptions.BadSyntacticException
 import nodes.DataTypeManager
 import nodes.Expression
 import nodes.StatementType
+import position.Position
 import token.Token
 import visitor.NodeVisitor
 

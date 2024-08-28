@@ -1,7 +1,5 @@
 package parser.validation
 
-import composite.Node
-
 class DeclarationValidator : Validator<Node.Declaration> {
   /* Validate:
    * Don't allow declarations with the same name. */
