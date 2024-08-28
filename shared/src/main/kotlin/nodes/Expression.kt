@@ -7,9 +7,9 @@ sealed class Expression {
   abstract val expressionType: String
   abstract val position : Position
 
-  fun acceptVisitor(visitor: NodeVisitor) {
+  fun acceptVisitor(visitor: NodeVisitor) : Any? {
     val func = visitor.getVisitorFunctionForExpression(expressionType)
-    func(this)
+    return func(this)
   }
     // There are complex expression that are variables exp: Position(x, y).y = 5, refers to this
   data class Variable(val name: String, override val position: Position) : Expression() {

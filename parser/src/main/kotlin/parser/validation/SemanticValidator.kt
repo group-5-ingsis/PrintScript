@@ -1,19 +1,20 @@
 package parser.validation
 
-import composite.Node
+import Environment
+import nodes.StatementType
+import parser.SyntacticParser
 
 class SemanticValidator {
-    private val validatorsForTypes: Map<String, Validator<Node>> =
+    private val validatorsForTypes: Map<String, Validator<StatementType>> =
         mutableMapOf(
-            "ASSIGNATION_DECLARATION" to AssignDeclareValidator() as Validator<Node>,
-            "DECLARATION" to DeclarationValidator() as Validator<Node>,
-            "ASSIGNATION" to AssignationValidator() as Validator<Node>,
-            "METHOD_CALL" to MethodCallValidator() as Validator<Node>
+            "VARIABLE_EXPRESSION" to VariableStatementValidator() as Validator<StatementType>,
+            "PRINT" to PrintValidator() as Validator<StatementType>,
+            "STATEMENT_EXPRESSION" to StatementExpressionValidator() as Validator<StatementType>
         )
 
-    fun validateSemantics(nodes: List<Node>, varTable: List<Node.Declaration>): ValidationResult {
-        for (node in nodes) {
-            val validator = validatorsForTypes[node.nodeType]
+    fun validateSemantics(nodes: SyntacticParser.RootNode, varTable: Environment): ValidationResult {
+        for (node in nodes.getChildren()) {
+            val validator = validatorsForTypes[node.statementType]
             validator?.let {
                 val result = it.validate(node, varTable)
                 if (result.isInvalid) {

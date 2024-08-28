@@ -65,7 +65,6 @@ class SyntacticParser(private val tokens : List<Token>) {
             val position = getPosition()
             consumeTokenValue("=")
             if (exp is Expression.Variable){
-
                 // use case example ->  newPoint(x + 2, 0).y = 3;
                 // this should be a Variable:  newPoint(x + 2, 0).y
 
@@ -73,7 +72,7 @@ class SyntacticParser(private val tokens : List<Token>) {
 
                 return Expression.Assign(name, exp, position)
             }
-            throw BadSyntacticException("Invalid assignment target.")
+            throw BadSyntacticException("Invalid assignment target. at: " + position.line + " line, and: " + position.symbolIndex + "column")
 
         }
         return exp

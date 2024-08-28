@@ -36,9 +36,10 @@ object DataTypeManager {
 
      fun checkVariableName(name: String) {
         val variableNamePattern = Regex("^[a-zA-Z_][a-zA-Z0-9_]*$")
-        if (!variableNamePattern.matches(name)) {
-            throw IllegalArgumentException("$name is not allowed")
+        if (variableNamePattern.matches(name)) {
+            return
         }
+         throw IllegalArgumentException("$name is not allowed")
     }
 
 

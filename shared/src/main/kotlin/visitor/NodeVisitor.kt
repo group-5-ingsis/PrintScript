@@ -12,7 +12,7 @@ class  NodeVisitor(private val globalScope : Environment) : Visitor {
     fun getOutput(): String = output.toString()
 
 
-    private fun evaluateExpression(expr: Expression): Any {
+    private fun evaluateExpression(expr: Expression): Any? {
         return expr.acceptVisitor(this)
     }
 
@@ -68,11 +68,11 @@ class  NodeVisitor(private val globalScope : Environment) : Visitor {
 
 
 
-    fun checkTypesForOperation(left: Any, right: Any): Pair<Any, Any> {
+    fun checkTypesForOperation(left: Any?, right: Any?): Pair<Any, Any> {
       return when {
         left is Number && right is Number -> Pair(left, right)
         left is String && right is String -> Pair(left, right)
-        else -> throw IllegalArgumentException("Unsupported types for ${exp.operator} operation: ${left::class.simpleName} and ${right::class.simpleName}")
+        else -> throw IllegalArgumentException("Unsupported types for ${exp.operator} operation: $left and $right")
       }
     }
 
@@ -152,13 +152,13 @@ class  NodeVisitor(private val globalScope : Environment) : Visitor {
     }
 
     override fun visitAssignExpr(exp: Expression.Assign): Any? {
-        val value: Any = evaluateExpression(exp.value)
+        val value: Any? = evaluateExpression(exp.value)
         globalScope.assign(exp.name, value)
         return value
     }
 
 
-    override fun getVisitorFunctionForExpression(expressionType: String): (Expression) -> Unit {
+    override fun getVisitorFunctionForExpression(expressionType: String): (Expression) -> Any? {
     return when (expressionType) {
         "ASSIGNMENT_EXPRESSION"-> { node ->
             visitAssignExpr(node as Expression.Assign)
@@ -213,7 +213,7 @@ class  NodeVisitor(private val globalScope : Environment) : Visitor {
   }
 
   override fun visitPrintStm(statement: StatementType.Print) {
-    val value: Any = evaluateExpression(statement.value)
+    val value: Any? = evaluateExpression(statement.value)
       output.append(value).append("\n")
     println(value)
   }
@@ -239,14 +239,14 @@ class  NodeVisitor(private val globalScope : Environment) : Visitor {
 
 
   companion object {
-    fun convertToDouble(value: Any): Double {
+    fun convertToDouble(value: Any?): Double {
       return when (value) {
         is Double -> value
         is Float -> value.toDouble()
         is Int -> value.toDouble()
         is Long -> value.toDouble()
         is String -> value.toDoubleOrNull() ?: throw IllegalArgumentException("Cannot convert String to Double: $value")
-        else -> throw IllegalArgumentException("Unsupported type: ${value::class.simpleName}")
+        else -> throw IllegalArgumentException("Unsupported type: $value")
       }
     }
 
