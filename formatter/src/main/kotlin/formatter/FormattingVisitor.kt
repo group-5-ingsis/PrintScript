@@ -12,31 +12,36 @@ class FormattingVisitor(private val rules: FormattingRules) : Visitor {
 
     fun getFormattedOutput(): String = output.toString()
 
+    override fun visitAssignDeclare(assignationDeclaration: Node.AssignationDeclaration) {
+        val assignationType = assignationDeclaration.kindVariableDeclaration
+        val identifier = assignationDeclaration.identifier
+        val dataType = setDataType(assignationDeclaration.dataType)
+        val value = resolveValueWithBinaryOperation(assignationDeclaration.value)
+
+        val spacesAroundAssignment = ruleApplier.applySpacesAroundAssignment()
+        val spaceForColon = ruleApplier.applySpaceForColon()
+        val newLine = "$assignationType $identifier$spaceForColon$dataType$spacesAroundAssignment$value;"
+        output.append(newLine)
+        output.append("\n")
+    }
+
     override fun visitAssignation(assignation: Node.Assignation) {
         val identifier = assignation.identifier.value
-        val value = ValueResolver.resolveValue(assignation.value)
+        val value = resolveValueWithBinaryOperation(assignation.value)
 
-        val newLine = "$identifier${ruleApplier.applySpacesAroundAssignment()}$value;"
+        val spacesAroundAssignment = ruleApplier.applySpacesAroundAssignment()
+        val newLine = "$identifier$spacesAroundAssignment$value;"
         output.append(newLine)
         output.append("\n")
     }
 
     override fun visitDeclaration(declaration: Node.Declaration) {
-        val dataType = declaration.dataType.type
+        val assignationType = declaration.kindVariableDeclaration
         val identifier = declaration.identifier
+        val dataType = setDataType(declaration.dataType)
 
-        output.append("${ruleApplier.applySpacesAroundAssignment()}$dataType $identifier;")
-        output.append("\n")
-    }
-
-    override fun visitAssignDeclare(assignationDeclaration: Node.AssignationDeclaration) {
-        val dataType = setDataType(assignationDeclaration.dataType)
-        val assignationType = assignationDeclaration.kindVariableDeclaration
-        val identifier = assignationDeclaration.identifier
-        val value = ValueResolver.resolveValue(assignationDeclaration.value)
-
-        val spacesAroundAssignment = ruleApplier.applySpacesAroundAssignment()
-        val newLine = "$assignationType $identifier${ruleApplier.applySpaceForColon()}$dataType$spacesAroundAssignment$value;"
+        val applySpaceForColon = ruleApplier.applySpaceForColon()
+        val newLine = "$assignationType $identifier$applySpaceForColon$dataType;"
         output.append(newLine)
         output.append("\n")
     }
@@ -44,17 +49,33 @@ class FormattingVisitor(private val rules: FormattingRules) : Visitor {
     override fun visitMethodCall(methodCall: Node.Method) {
         val methodName = methodCall.identifier.value
         val arguments = methodCall.arguments.argumentsOfAnyTypes.joinToString(", ") { arg ->
-            ValueResolver.resolveValue(arg)
-                .toString()
+            ValueResolver.resolveValue(arg).toString()
         }
 
-        output.append("${" ".repeat(rules.newlineBeforePrintln)}$methodName($arguments)")
+        // Add newline before `println` if needed
+        if (methodName == "println") {
+            output.append("\n".repeat(rules.newlineBeforePrintln))
+        }
+
+        output.append("$methodName($arguments);")
+        output.append("\n")
     }
 
     private fun setDataType(dataType: Node.DataType): String {
-        if (dataType.type == "NUMBER") {
-            return "Number"
+        return when (dataType.type) {
+            "NUMBER" -> "Number"
+            else -> "String"
         }
-        return "String"
+    }
+
+    private fun resolveValueWithBinaryOperation(value: Node.AssignableValue): String {
+        return if (value is Node.BinaryOperations) {
+            val leftValue = ValueResolver.resolveValue(value.left).toString()
+            val rightValue = ValueResolver.resolveValue(value.right).toString()
+            val symbol = value.symbol
+            "$leftValue $symbol $rightValue"
+        } else {
+            ValueResolver.resolveValue(value).toString()
+        }
     }
 }
