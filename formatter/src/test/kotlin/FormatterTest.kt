@@ -1,4 +1,3 @@
-import com.fasterxml.jackson.dataformat.yaml.YAMLMapper
 import formatter.Formatter
 import lexer.Lexer
 import parser.SyntacticParser
@@ -20,16 +19,14 @@ class FormatterTest {
             spaceAroundAssignment = true,
             newlineBeforePrintln = 1
         )
-
-        YAMLMapper::class.java
     }
 
     @Test
-    fun `test format`() {
-        val badFileContents = javaClass.getResource("/badFormatting.ps")?.readText()
+    fun `test assignation formatting`() {
+        val badFileContents = javaClass.getResource("/assignation/badFormat.ps")?.readText()
             ?: throw IllegalArgumentException("File not found")
 
-        val goodFileContents = javaClass.getResource("/goodFormatting.ps")?.readText()
+        val goodFileContents = javaClass.getResource("/declaration/goodFormatting.ps")?.readText()
             ?: throw IllegalArgumentException("File not found")
 
         val tokens = Lexer.lex(badFileContents, listOf())
@@ -38,7 +35,6 @@ class FormatterTest {
         val child = ast.getChildren().first()
 
         val formattedCode = Formatter.format(child, exampleRules)
-
         assertEquals(goodFileContents, formattedCode)
     }
 }
