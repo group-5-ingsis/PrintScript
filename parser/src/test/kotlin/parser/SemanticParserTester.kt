@@ -1,7 +1,6 @@
 package parser
 
 import lexer.Lexer
-import parser.exceptions.SemanticErrorException
 import token.Token
 import kotlin.test.Test
 import kotlin.test.assertFailsWith

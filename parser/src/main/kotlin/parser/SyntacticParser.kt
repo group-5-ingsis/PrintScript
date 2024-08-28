@@ -1,92 +1,422 @@
 package parser
 
-import composite.Node
-import parser.builders.*
-import parser.statement.Statement
-import parser.statement.StatementManager
+import Position
+import UnknownExpressionException
+import exceptions.BadSyntacticException
+import nodes.DataTypeManager
+import nodes.Expression
+import nodes.StatementType
 import token.Token
 import visitor.NodeVisitor
 
-class SyntacticParser {
-    private val builders: Map<String, ASTBuilder> =
-        mapOf(
-            "Declaration" to DeclarationASTBuilder(),
-            "Assignation" to AssignationASTBuilder(),
-            "AssignDeclare" to AssignDeclareASTBuilder(),
-            "MethodCall" to MethodCallASTBuilder()
-        )
 
-    fun run(tokens: List<Token>): RootNode {
-        return parse(tokens)
+class SyntacticParser(private val tokens : List<Token>) {
+  // use:
+  //
+  // val statement : List<StatementType> = SyntacticParser(tokens).parse();
+  // interpreter.interpret(statements)
+
+
+    private var current = 0 // The next token of the interpreter to see
+
+    // mainFunction (The program it-self):
+    fun parse() : RootNode {
+        val node = RootNode.create()
+
+        while (isNotAtEndOfTokens()){
+            node.addChild(declarationAssignation())
+
+        }
+        return node
+
     }
 
-    private fun parse(tokens: List<Token>): RootNode {
-        var statements: List<Statement> = getStatements(tokens)
-        statements = StatementManager.categorize(statements)
-        return buildAST(statements)
-    }
 
-    private fun buildAST(categorizedStatements: List<Statement>): RootNode {
-        val root = RootNode.create()
-        for (statement in categorizedStatements) {
-            val statementType = statement.statementType
-            val builder = builders[statementType]
-            if (builder != null) {
-                val child = builder.build(statement)
-                root.addChild(child)
-            } else {
-                throw UnsupportedOperationException("Unexpected statement")
+
+  /**
+   * DIFFERENT KIND OF EXPRESSIONS
+   *
+   *   expression     → assigment ;
+   *   assigment      → IDENTIFIER "=" assignment
+   *                | equality ;
+   *   equality       → comparison ( ( "!=" | "==" ) comparison )* ;
+   *   comparison     → term ( ( ">" | ">=" | "<" | "<=" ) term )* ;
+   *   term           → factor ( ( "-" | "+" ) factor )* ;
+   *   factor         → unary ( ( "/" | "*" ) unary )* ;
+   *   unary          → ( "!" | "-" ) unary
+   *   | primary ;
+   *   primary        → NUMBER | STRING | "true" | "false" | "nil"
+   *   | "(" expression ")" | IDENTIFIER ;
+   *
+   */
+
+
+
+  private fun expression(): Expression {
+    return assigment()
+  }
+
+    private fun assigment(): Expression{
+       val exp =  equality()
+
+        if (peek().value == "="){
+
+            val position = getPosition()
+            consumeTokenValue("=")
+            if (exp is Expression.Variable){
+
+                // use case example ->  newPoint(x + 2, 0).y = 3;
+                // this should be a Variable:  newPoint(x + 2, 0).y
+
+                val name = exp.name
+
+                return Expression.Assign(name, exp, position)
             }
+            throw BadSyntacticException("Invalid assignment target.")
+
         }
-        return root
+        return exp
+
     }
 
-    private fun getStatements(tokens: List<Token>): List<Statement> {
-        val statements = mutableListOf<Statement>()
-        var j = 0
 
-        val lastToken = tokens.last()
-        if (lastToken.value != ";") {
-            throw IllegalArgumentException("Missing semicolon at the end of the statement at line: ${lastToken.position.line}, column ${lastToken.position.symbolIndex}")
-        }
+  private fun equality() : Expression {
+      var expression: Expression = comparison() // Any valor comparable
 
-        for ((index, token) in tokens.withIndex()) {
-            if (token.type == "PUNCTUATION" && token.value == ";") {
-                val sublist = tokens.subList(j, index + 1)
-                val statementType = "UNKNOWN"
-                statements.add(Statement(sublist, statementType))
-                j = index + 1
-            }
-        }
+    while(isBangEqualOrEqualEqual()){
+      val position = getPosition()
+      val tokenOperator = peek().value
 
-        return statements
+      advance()
+
+      val rightExpression = comparison()
+      expression = Expression.Binary(expression, tokenOperator, rightExpression, position)
+    }
+    return expression
+
+
+  }
+
+
+  private fun comparison() : Expression {
+    var expression: Expression = term() // Any valor comparable
+
+    while(peek().type == "COMPARISON"){
+        val position = getPosition()
+      val tokenOperator = peek().value
+
+      advance()
+
+      val rightExpression = comparison()
+
+      expression = Expression.Binary(expression, tokenOperator, rightExpression, position)
+    }
+    return expression
+  }
+
+
+  private fun term(): Expression {
+    var expression = factor()
+
+    while(isMinusOrPlus()){
+      val tokenOperator = peek().value
+        val position = getPosition()
+      advance()
+
+      val rightExpression = factor()
+
+      expression = Expression.Binary(expression, tokenOperator, rightExpression, position)
+    }
+    return expression
+
+  }
+
+
+  private fun factor() : Expression {
+    var expression = unary()
+
+    while(isMultiplicationOrDivision()){
+      val tokenOperator = peek().value
+        val position = getPosition()
+      advance()
+
+      val rightExpression = unary()
+
+      expression = Expression.Binary(expression, tokenOperator, rightExpression, position)
+    }
+    return expression
+  }
+
+
+  private fun unary() : Expression {
+    if (peek().value == "!") {// TODO(replace for token type!!!!) TODO(Check if works with negative numbers, if not, use it too with "-")
+      val tokenOperator = peek().value
+        val position = getPosition()
+      advance()
+      val rightExpression = unary()
+      return Expression.Unary(tokenOperator, rightExpression, position)
+
+    }
+    if (peek().value == "-"){
+        val position = getPosition()
+      val tokenOperator = peek().value
+      advance()
+      val rightExpression = unary()
+      return Expression.Unary(tokenOperator, rightExpression, position)
     }
 
-    class RootNode private constructor() {
-        private val children = mutableListOf<Node>()
+    return primary()
 
-        fun addChild(child: Node) {
-            children.add(child)
-        }
 
-        fun getChildren(): List<Node> {
-            return children
-        }
 
-        companion object {
-            internal fun create(): RootNode {
-                return RootNode()
-            }
-        }
+  }
 
-        fun accept(visitor: NodeVisitor) {
-            for (child in children) {
-                child.accept(visitor)
-            }
-        }
+  private fun primary(): Expression {
+      val position = getPosition()
+      if (isType("BOOLEAN")) {
 
-        operator fun iterator(): Iterator<Node> {
-            return children.iterator()
-        }
+      advance()
+      return Expression.Literal(previous().value.toBoolean(), position)
+
+    }else if (isType("NULL")){
+      advance()
+      return Expression.Literal(null, position)
+    }else if (checkTokensAreFromSomeTypes(listOf("NUMBER", "STRING"))){
+      advance()
+      return Expression.Literal(getPreviousLiteral(), position)
+    }else if (peek().value == "("){
+      advance()
+      val expr = expression()
+      consumeTokenValue(")")
+      return Expression.Grouping(expr, position)
+    } else if (isType("IDENTIFIER")){
+          return Expression.Variable(advance().value, position)
     }
+
+    throw UnknownExpressionException(peek())
+
+  }
+
+  /**
+   * DIFFERENT KIND OF STATEMENTS:
+   *
+   * program        →  declaration* EOF ;
+   *
+   * declaration    → varDecl
+   *                | statement ; // later here: functions, and classes
+   *
+   * statement      → exprStmt
+   *                | printStmt ;
+   *
+   * exprStmt       → expression ";" ;
+   * printStmt      → "print" expression ";" ;
+   * varDecl        → "let" IDENTIFIER VARIABLE_TYPE ( "=" expression )? ";" ;
+   *
+   */
+
+
+
+
+  private fun statement(): StatementType {
+
+    if (isType("PRINT")) return printStatement()
+
+    return expressionStatement()
+  }
+
+
+  private fun printStatement() : StatementType {
+      val position = getPosition()
+    val value: Expression = expression()
+    consumeTokenValue(";")
+    return StatementType.Print(value, position)
+  }
+
+
+  private fun expressionStatement(): StatementType {
+      val position = getPosition()
+    val expr: Expression = expression()
+    consumeTokenValue(";")
+    return StatementType.StatementExpression(expr, position)
+  }
+
+
+  private fun declarationAssignation(): StatementType {
+    if (isType("DECLARATION_KEYWORD") ){
+      advance()
+      return letDeclaration()
+    }
+
+    if (isType("CONST")){
+      advance()
+      return constDeclaration()
+    }
+
+    return statement()
+
+  }
+
+
+
+  private fun constDeclaration(): StatementType {
+      val position = getPosition()
+    val identifier = consumeTokenName("IDENTIFIER")
+    consumeTokenValue(":")
+    val dataType = consumeTokenName("VARIABLE_TYPE").value
+    consumeTokenValue("=")
+    val initializer = expression()
+
+    return StatementType.Variable("const", identifier.value, initializer, dataType, position)
+  }
+
+  private fun letDeclaration(): StatementType {
+      val position = getPosition()
+    // a : Number =
+    var initializer : Expression? = null
+    val identifier = consumeTokenName("IDENTIFIER")
+    consumeTokenValue(":")
+    val dataType = consumeTokenName("VARIABLE_TYPE").value
+    if (peek().value == "=") {
+
+      consumeTokenValue("=")
+      initializer = expression()
+      DataTypeManager.checkDataTypeIsOkWithExpression(initializer, dataType)
+    }
+
+    consumeTokenValue(";")
+
+
+    return StatementType.Variable("let", identifier.value, initializer, dataType, position)
+
+  }
+
+
+  /**
+   * OPERATIVE FUNCTIONS
+   * Different types of functions that makes small operations and manipulate the index of the list of tokens
+   *
+   *  */
+
+  private fun consumeTokenValue(value: String): Token {
+    if (peek().value == value) return advance()
+
+    throw BadSyntacticException("Expect: $value after expression.")
+  }
+  private fun consumeTokenName(type: String): Token {
+    if (peek().type == type) return advance()
+
+    throw BadSyntacticException("Expect this type: $type")
+  }
+
+  private fun previous(): Token {
+    return tokens[current - 1]
+  }
+
+  private fun peek(): Token {
+    return tokens[current]
+  }
+  private fun isType(type: String): Boolean {
+      return (peek().type == type)
+  }
+
+  private fun checkTokensAreFromSomeTypes(types: List<String>): Boolean {
+    return if (isNotAtEndOfTokens()) {
+
+      types.any { type -> tokens[current].type == type }
+
+    } else {
+
+      false
+
+    }
+  }
+  private fun isNotAtEndOfTokens(): Boolean {
+    return current < tokens.size
+  }
+
+  private fun isNotAtEndOfPhrase(): Boolean {
+    if (isNotAtEndOfTokens()){
+      if (tokens[current].value == ";"){
+        return false
+      }
+
+    }
+
+    return true
+  }
+
+
+  private fun advance(): Token {
+    if (isNotAtEndOfTokens()) current++
+    return previous()
+  }
+
+  private fun getPreviousLiteral() : Any {
+    val previous = previous()
+    return if (previous.type == "STRING"){
+      previous.value
+    }else {
+      if (previous.type.contains('.')) {
+        previous.type.toDouble()
+      } else {
+        previous.type.toInt()
+      }
+    }
+
+  }
+
+
+  //All equals, then replace for token Types
+  // TODO(Replace for token types)
+  private fun isBangEqualOrEqualEqual(): Boolean{
+    return if (isNotAtEndOfTokens()){
+      (peek().value == "==" || peek().value == "!=")
+    }else false
+  }
+  //All equals, then replace for token Types
+  // TODO(Replace for token types)
+  private fun isMinusOrPlus(): Boolean{
+    return if (isNotAtEndOfTokens()){
+      (peek().value == "+" || peek().value == "-")
+    }else false
+  }
+  //All equals, then replace for token Types
+  // TODO(Replace for token types)
+  private fun isMultiplicationOrDivision(): Boolean{
+    return if (isNotAtEndOfTokens()){
+      (peek().value == "/" || peek().value == "*")
+
+    }else false
+
+  }
+  private fun getPosition(): Position {
+
+      return tokens[current].position
+  }
+
+  class RootNode private constructor() {
+    private val children = mutableListOf<StatementType>()
+
+    fun addChild(child: StatementType) {
+      children.add(child)
+    }
+
+    fun getChildren(): List<StatementType> {
+      return children
+    }
+
+    companion object {
+      internal fun create(): RootNode {
+        return RootNode()
+      }
+    }
+
+    fun accept(visitor: NodeVisitor) {
+      for (child in children) {
+        child.acceptVisitor(visitor)
+      }
+    }
+
+
+  }
 }

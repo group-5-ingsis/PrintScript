@@ -1,9 +1,18 @@
 package visitor
 
+import Environment
 import nodes.Expression
 import nodes.StatementType
 
-class  NodeVisitor(val globalScope : Environment) : Visitor {
+
+class  NodeVisitor(private val globalScope : Environment) : Visitor {
+
+    private val output = StringBuilder()
+
+    fun getOutput(): String = output.toString()
+
+
+
 
     private fun evaluateExpression(expr: Expression): Any {
         return expr.acceptVisitor(this)
@@ -140,9 +149,26 @@ class  NodeVisitor(val globalScope : Environment) : Visitor {
     }
   }
 
+    override fun visitVariableExp(exp: Expression.Variable): Any? {
+        return globalScope.get(exp.name)
+    }
 
-  override fun getVisitorFunctionForExpression(expressionType: String): (Expression) -> Unit {
+    override fun visitAssignExpr(exp: Expression.Assign): Any? {
+        val value: Any = evaluateExpression(exp.value)
+        globalScope.assign(exp.name, value)
+        return value
+    }
+
+
+    override fun getVisitorFunctionForExpression(expressionType: String): (Expression) -> Unit {
     return when (expressionType) {
+        "ASSIGNMENT_EXPRESSION"-> { node ->
+            visitAssignExpr(node as Expression.Assign)
+        }
+
+        "VARIABLE_EXPRESSION" -> { node ->
+            visitVariableExp(node as Expression.Variable)
+        }
       "BINARY_EXPRESSION" -> { node ->
         visitBinaryExpr(node as Expression.Binary)
       }
@@ -199,6 +225,11 @@ class  NodeVisitor(val globalScope : Environment) : Visitor {
 
   override fun visitVariableStm(statement: StatementType.Variable) {
     // remember that if the type is correct is check in other place.
+    var value : Any? = null
+      if (statement.initializer != null){
+          value = evaluateExpression(statement.initializer)
+      }
+      globalScope.define(statement.identifier, value, statement.designation)
 
   }
 

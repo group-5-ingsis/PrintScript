@@ -12,7 +12,8 @@ interface Visitor {
   fun visitUnaryExpr(exp: Expression.Unary): Any?
 
   fun visitBinaryExpr(exp: Expression.Binary): Any?
-
+  fun visitVariableExp(exp: Expression.Variable) : Any?
+  fun visitAssignExpr(exp: Expression.Assign): Any?
   fun getVisitorFunctionForExpression(expressionType: String): (Expression) -> Any?
 
   fun getVisitorFunctionForStatement(statementType: String): (StatementType) -> Unit

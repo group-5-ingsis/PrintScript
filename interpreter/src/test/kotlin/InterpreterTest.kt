@@ -1,6 +1,5 @@
 import interpreter.Interpreter
 import lexer.Lexer
-import parser.SyntacticParser
 import token.Token
 import visitor.VariableTable
 import kotlin.test.Test

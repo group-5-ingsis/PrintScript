@@ -1,6 +1,5 @@
 package parser
 
-import composite.Node
 import lexer.Lexer
 import org.junit.Assert.assertThrows
 import token.Token
