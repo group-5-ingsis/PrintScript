@@ -15,7 +15,8 @@ class DeclarationASTBuilder : ASTBuilder {
         return Node.Declaration(
             dataType = dataType,
             kindVariableDeclaration = tokens[0].value,
-            identifier = identifier.value
+            identifier = identifier.value,
+            identifierPosition = tokens[1].position
         )
     }
 }

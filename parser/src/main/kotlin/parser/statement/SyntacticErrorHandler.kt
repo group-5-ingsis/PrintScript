@@ -1,6 +1,6 @@
 package parser.statement
 
-import Position
+import position.Position
 import token.Token
 
 object SyntacticErrorHandler {
