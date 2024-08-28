@@ -18,7 +18,7 @@ class FormatterTest {
             spaceBeforeColon = false,
             spaceAfterColon = true,
             spaceAroundAssignment = true,
-            newlineBeforePrintln = 1
+            newlineBeforePrintln = 2
         )
 
         YAMLMapper::class.java

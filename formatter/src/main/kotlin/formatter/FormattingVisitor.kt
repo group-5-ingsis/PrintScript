@@ -3,6 +3,7 @@ package formatter
 import composite.Node
 import rules.FormattingRules
 import rules.RuleApplier
+import visitor.MethodExecute
 import visitor.ValueResolver
 import visitor.Visitor
 
@@ -48,16 +49,17 @@ class FormattingVisitor(private val rules: FormattingRules) : Visitor {
 
     override fun visitMethodCall(methodCall: Node.Method) {
         val methodName = methodCall.identifier.value
-        val arguments = methodCall.arguments.argumentsOfAnyTypes.joinToString(", ") { arg ->
-            ValueResolver.resolveValue(arg).toString()
-        }
+        val arguments = methodCall.arguments
+        val argumentsAsString = MethodExecute.getParametersAsString(arguments)
 
-        // Add newline before `println` if needed
         if (methodName == "println") {
-            output.append("\n".repeat(rules.newlineBeforePrintln))
+            val newlinesBeforePrintln = rules.newlineBeforePrintln
+            val spaceBeforePrintln = "\n".repeat(newlinesBeforePrintln)
+            output.append(spaceBeforePrintln)
         }
 
-        output.append("$methodName($arguments);")
+        val methodCallLine = "$methodName($argumentsAsString);"
+        output.append(methodCallLine)
         output.append("\n")
     }
 
