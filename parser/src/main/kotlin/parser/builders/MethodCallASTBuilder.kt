@@ -22,7 +22,8 @@ class MethodCallASTBuilder : ASTBuilder {
 
         return Node.Method(
             identifier = identifier,
-            arguments = arguments
+            arguments = arguments,
+            identifierPosition = tokens[0].position
         )
     }
 

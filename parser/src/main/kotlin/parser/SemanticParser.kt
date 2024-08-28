@@ -33,7 +33,7 @@ class SemanticParser {
             }
             if (node is Node.AssignationDeclaration) {
                 tempVariableTable.add(
-                    Node.Declaration(node.dataType, node.kindVariableDeclaration, node.identifier)
+                    Node.Declaration(node.dataType, node.kindVariableDeclaration, node.identifier, node.identifierPosition)
                 )
             }
         }
