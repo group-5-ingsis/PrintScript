@@ -1,6 +1,8 @@
 package visitor
 
 import composite.Node
+import nodes.Expression
+import nodes.StatementType
 import position.Position
 
 class LinterVisitor(private val linterRulesMap: Map<String, Any>) : Visitor {
@@ -60,5 +62,57 @@ class LinterVisitor(private val linterRulesMap: Map<String, Any>) : Visitor {
                 else -> throw Exception("Unsupported println expression allowed value: ${linterRulesMap["println-expression-allowed"]}")
             }
         }
+    }
+
+    override fun visitLiteralExp(exp: Expression.Literal): Any? {
+        TODO("Not yet implemented")
+    }
+
+    override fun visitGroupExp(exp: Expression.Grouping): Any? {
+        TODO("Not yet implemented")
+    }
+
+    override fun visitUnaryExpr(exp: Expression.Unary): Any? {
+        TODO("Not yet implemented")
+    }
+
+    override fun visitBinaryExpr(exp: Expression.Binary): Any? {
+        TODO("Not yet implemented")
+    }
+
+    override fun visitVariableExp(exp: Expression.Variable): Any? {
+        TODO("Not yet implemented")
+    }
+
+    override fun visitAssignExpr(exp: Expression.Assign): Any? {
+        TODO("Not yet implemented")
+    }
+
+    override fun getVisitorFunctionForExpression(expressionType: String): (Expression) -> Any? {
+        TODO("Not yet implemented")
+    }
+
+    override fun getVisitorFunctionForStatement(statementType: String): (StatementType) -> Unit {
+        TODO("Not yet implemented")
+    }
+
+    override fun visitPrintStm(statement: StatementType.Print) {
+        TODO("Not yet implemented")
+    }
+
+    override fun visitExpressionStm(statement: StatementType.StatementExpression) {
+        TODO("Not yet implemented")
+    }
+
+    override fun visitVariableStm(statement: StatementType.Variable) {
+        if (isAssignDeclaration(statement))
+    }
+
+    private fun isAssignDeclaration(statement: StatementType.Variable): Boolean{
+
+    }
+
+    override fun visitIdentifier(exp: Expression.IdentifierExpression): Any? {
+        TODO("Not yet implemented")
     }
 }
