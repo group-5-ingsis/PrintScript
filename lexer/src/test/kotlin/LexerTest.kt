@@ -1,6 +1,7 @@
 import junit.framework.TestCase.assertEquals
 import lexer.Lexer
 import org.junit.Assert.assertThrows
+import position.Position
 import token.Token
 import kotlin.test.Test
 
@@ -15,7 +16,7 @@ class LexerTest {
                 Token("=", "ASSIGNMENT", Position(1, 3)),
                 Token("10", "NUMBER", Position(1, 4))
             )
-        val actual = Lexer.lex(input, listOf())
+        val actual = Lexer.lex(input)
         assertEquals(expected, actual)
     }
 
@@ -29,7 +30,7 @@ class LexerTest {
                 Token("=", "ASSIGNMENT", Position(1, 3)),
                 Token("\"Hello\"", "STRING", Position(1, 4))
             )
-        val actual = Lexer.lex(input, listOf())
+        val actual = Lexer.lex(input)
         assertEquals(expected, actual)
     }
 
@@ -44,7 +45,7 @@ class LexerTest {
                 Token("-", "OPERATOR", Position(1, 4)),
                 Token("z", "IDENTIFIER", Position(1, 5))
             )
-        val actual = Lexer.lex(input, listOf())
+        val actual = Lexer.lex(input)
         assertEquals(expected, actual)
     }
 
@@ -62,7 +63,7 @@ class LexerTest {
                 Token("=", "ASSIGNMENT", Position(2, 3)),
                 Token("20", "NUMBER", Position(2, 4))
             )
-        val actual = Lexer.lex(input, listOf())
+        val actual = Lexer.lex(input)
         assertEquals(expected, actual)
     }
 
@@ -70,7 +71,7 @@ class LexerTest {
     fun testLexerUnknownCharacters() {
         val input = "let a @ ball"
         assertThrows(IllegalArgumentException::class.java) {
-            Lexer.lex(input, listOf())
+            Lexer.lex(input)
         }
     }
 
@@ -84,7 +85,7 @@ class LexerTest {
                 Token("=", "ASSIGNMENT", Position(1, 3)),
                 Token("'hello'", "STRING", Position(1, 4))
             )
-        val actual = Lexer.lex(input, listOf())
+        val actual = Lexer.lex(input)
         assertEquals(expected, actual)
     }
 }

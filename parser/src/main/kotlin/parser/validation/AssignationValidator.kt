@@ -7,7 +7,7 @@ class AssignationValidator : Validator<Node.Assignation> {
   /* Validate:
    * Assignations on consts.
    * Match assignation type with declared type.
-   * Variable exists. */
+   * Variable exists (left and right if variable). */
     override fun validate(node: Node.Assignation, varTable: List<Node.Declaration>): ValidationResult {
         val identifier = node.identifier.value
         val assignedValue = node.value
@@ -20,13 +20,18 @@ class AssignationValidator : Validator<Node.Assignation> {
         varTable: List<Node.Declaration>
     ): ValidationResult {
         if (!exists(identifier, varTable)) {
-            return ValidationResult(true, null, "Variable with name $identifier was not found.")
+            return ValidationResult(true, null, "Variable with name '$identifier' was not declared.")
+        }
+        if (assignedValue is Node.Identifier) {
+            if (find(assignedValue.value, varTable) == null) {
+                return ValidationResult(true, null, "Variable with name '${assignedValue.value}' was not declared.")
+            }
         }
         if (isConst(identifier, varTable)) {
             return ValidationResult(
                 true,
                 null,
-                "Unable to perform assignation on variable $identifier of kind CONST. "
+                "Unable to perform assignation on variable '$identifier' of kind CONST. "
             )
         }
         if (!variableMatchesAssignedType(identifier, assignedValue, varTable)) {

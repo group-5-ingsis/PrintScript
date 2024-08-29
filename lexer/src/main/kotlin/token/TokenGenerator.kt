@@ -1,6 +1,6 @@
 package token
 
-import Position
+import position.Position
 
 object TokenGenerator {
     fun generateToken(

@@ -7,8 +7,7 @@ class SemanticValidator {
         mutableMapOf(
             "ASSIGNATION_DECLARATION" to AssignDeclareValidator() as Validator<Node>,
             "DECLARATION" to DeclarationValidator() as Validator<Node>,
-            "ASSIGNATION" to AssignationValidator() as Validator<Node>,
-            "METHOD_CALL" to MethodCallValidator() as Validator<Node>
+            "ASSIGNATION" to AssignationValidator() as Validator<Node>
         )
 
     fun validateSemantics(nodes: List<Node>, varTable: List<Node.Declaration>): ValidationResult {

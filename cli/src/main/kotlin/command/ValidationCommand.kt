@@ -14,11 +14,19 @@ class ValidationCommand(private val file: String, private val version: String) :
         }
 
         return try {
-            val tokens = Lexer.lex(fileContent, listOf())
+            val statements = fileContent.split("(?<=;)".toRegex()).filter { it.isNotBlank() }
 
-            val ast = Parser().run(tokens)
+            val parser = Parser()
 
-            Interpreter.interpret(ast)
+            for (statement in statements) {
+                val trimmedStatement = statement.trim()
+
+                val tokens = Lexer.lex(trimmedStatement)
+
+                val ast = parser.run(tokens)
+
+                Interpreter.interpret(ast)
+            }
 
             "File Validated"
         } catch (e: Exception) {

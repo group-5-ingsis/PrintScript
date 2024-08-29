@@ -5,7 +5,7 @@ import parser.builders.*
 import parser.statement.Statement
 import parser.statement.StatementManager
 import token.Token
-import visitor.NodeVisitor
+import visitor.Visitor
 
 class SyntacticParser {
     private val builders: Map<String, ASTBuilder> =
@@ -79,7 +79,7 @@ class SyntacticParser {
             }
         }
 
-        fun accept(visitor: NodeVisitor) {
+        fun accept(visitor: Visitor) {
             for (child in children) {
                 child.accept(visitor)
             }

@@ -21,7 +21,8 @@ class AssignDeclareASTBuilder : ASTBuilder {
             dataType = variableType,
             kindVariableDeclaration = kindVariableDeclaration,
             identifier = identifier.value,
-            value = literal
+            value = literal,
+            identifierPosition = tokens[1].position
         )
     }
 

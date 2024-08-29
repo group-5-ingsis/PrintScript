@@ -6,6 +6,7 @@ import javafx.application.Application
 import javafx.scene.Scene
 import javafx.scene.control.*
 import javafx.scene.layout.BorderPane
+import javafx.scene.layout.HBox
 import javafx.scene.layout.VBox
 import javafx.stage.Stage
 import java.io.File
@@ -37,6 +38,7 @@ class CLIApplication : Application() {
         val versionLabel = Label("Select Version:")
         val fileLabel = Label("Available Files:")
         val recentCommandsLabel = Label("Recent Commands:")
+        val yamlFilesLabel = Label("YAML Files:")
 
         // ComboBoxes
         val commandComboBox = ComboBox<String>()
@@ -50,13 +52,19 @@ class CLIApplication : Application() {
         // ListViews
         val availableFilesListView = ListView<String>()
         val recentCommandsListView = ListView<String>()
+        val yamlFilesListView = ListView<String>()
         recentCommandsListView.prefHeight = 100.0 // Reduced height for the recent commands list
+
+        // Increased height for available files and YAML files list views
+        availableFilesListView.prefHeight = 200.0
+        yamlFilesListView.prefHeight = 200.0
 
         // Initial setup
         val initialVersion = versions.first()
         val availableFiles = getAvailableFiles(initialVersion)
         availableFilesListView.items.addAll(availableFiles)
         recentCommandsListView.items.addAll(recentCommands)
+        yamlFilesListView.items.addAll(getYamlFiles(initialVersion))
 
         // Actions
         executeButton.setOnAction {
@@ -85,6 +93,10 @@ class CLIApplication : Application() {
                 val availableFiles = getAvailableFiles(selectedVersion)
                 availableFilesListView.items.clear()
                 availableFilesListView.items.addAll(availableFiles)
+
+                // Also update YAML files list
+                yamlFilesListView.items.clear()
+                yamlFilesListView.items.addAll(getYamlFiles(selectedVersion))
             }
         }
 
@@ -99,6 +111,15 @@ class CLIApplication : Application() {
             }
         }
 
+        yamlFilesListView.setOnMouseClicked { event ->
+            if (event.clickCount == 2) {
+                val selectedYamlFile = yamlFilesListView.selectionModel.selectedItem
+                if (selectedYamlFile != null) {
+                    inputField.text = "${inputField.text} $selectedYamlFile"
+                }
+            }
+        }
+
         recentCommandsListView.setOnMouseClicked { event ->
             if (event.clickCount == 2) {
                 val selectedCommand = recentCommandsListView.selectionModel.selectedItem
@@ -108,8 +129,9 @@ class CLIApplication : Application() {
             }
         }
 
-        // Layout using BorderPane
-        val leftSide = VBox(10.0, commandLabel, commandComboBox, versionLabel, versionComboBox, fileLabel, availableFilesListView)
+        // Layout using BorderPane and HBox for side-by-side ListViews
+        val filesHBox = HBox(10.0, availableFilesListView, yamlFilesListView)
+        val leftSide = VBox(10.0, commandLabel, commandComboBox, versionLabel, versionComboBox, fileLabel, filesHBox)
         val rightSide = VBox(10.0, recentCommandsLabel, recentCommandsListView)
         val bottomSide = VBox(10.0, inputField, executeButton, outputArea)
 
@@ -118,7 +140,7 @@ class CLIApplication : Application() {
         layout.right = rightSide
         layout.bottom = bottomSide
 
-        val scene = Scene(layout, 800.0, 600.0) // Increased size for better layout management
+        val scene = Scene(layout, 1000.0, 600.0) // Increased size for better layout management
 
         primaryStage.title = "Command Line Interface"
         primaryStage.scene = scene
@@ -144,7 +166,7 @@ class CLIApplication : Application() {
             if (resourceURI.scheme == "file") {
                 val directory = File(resourceURI)
                 if (directory.isDirectory) {
-                    fileNames.addAll(directory.listFiles()?.map { it.name } ?: emptyList())
+                    fileNames.addAll(directory.listFiles { _, name -> name.endsWith(".ps") }?.map { it.name } ?: emptyList())
                 }
             } else {
                 // Handle case for resources inside JAR (if needed)
@@ -153,5 +175,26 @@ class CLIApplication : Application() {
         }
 
         return fileNames
+    }
+
+    private fun getYamlFiles(version: String): List<String> {
+        val resourceDirectory = "ps/$version"
+        val yamlFiles = mutableListOf<String>()
+
+        val resource = FileReader::class.java.classLoader.getResource(resourceDirectory)
+        if (resource != null) {
+            val resourceURI = resource.toURI()
+            if (resourceURI.scheme == "file") {
+                val directory = File(resourceURI)
+                if (directory.isDirectory) {
+                    yamlFiles.addAll(directory.listFiles { _, name -> name.endsWith(".yaml") }?.map { it.name } ?: emptyList())
+                }
+            } else {
+                // Handle case for resources inside JAR (if needed)
+                throw UnsupportedOperationException("Listing files inside JARs is not supported in this example.")
+            }
+        }
+
+        return yamlFiles
     }
 }

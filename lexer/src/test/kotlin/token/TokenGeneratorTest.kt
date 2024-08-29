@@ -1,6 +1,6 @@
 package token
 
-import Position
+import position.Position
 import kotlin.test.Test
 import kotlin.test.assertEquals
 

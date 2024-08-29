@@ -26,7 +26,7 @@ object MethodExecute {
         return methodMap
     }
 
-    private fun getParametersAsString(method: Node.Arguments): String {
+    fun getParametersAsString(method: Node.Arguments): String {
         val parameters = method.argumentsOfAnyTypes
 
         return parameters.joinToString(", ") { argument ->

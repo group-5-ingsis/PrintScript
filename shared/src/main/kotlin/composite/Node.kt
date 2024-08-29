@@ -1,6 +1,7 @@
 package composite
 
 import composite.NodeManager.checkIfExist
+import position.Position
 import visitor.Visitor
 
 sealed class Node {
@@ -47,7 +48,8 @@ sealed class Node {
 
     data class Method(
         val arguments: Arguments,
-        val identifier: Identifier
+        val identifier: Identifier,
+        val identifierPosition: Position
     ) : Node() {
         override val nodeType: String = "METHOD_CALL"
         override fun accept(visitor: Visitor) {
@@ -58,7 +60,8 @@ sealed class Node {
     data class Declaration(
         val dataType: DataType,
         val kindVariableDeclaration: String,
-        val identifier: String
+        val identifier: String,
+        val identifierPosition: Position
     ) : Node() {
         override val nodeType: String = "DECLARATION"
         override fun accept(visitor: Visitor) {
@@ -80,7 +83,8 @@ sealed class Node {
         val dataType: DataType,
         val kindVariableDeclaration: String,
         val identifier: String,
-        val value: AssignableValue
+        val value: AssignableValue,
+        val identifierPosition: Position
     ) : Node() {
         override val nodeType: String = "ASSIGNATION_DECLARATION"
         override fun accept(visitor: Visitor) {

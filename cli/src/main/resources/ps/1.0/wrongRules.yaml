@@ -1,0 +1,4 @@
+spaceBeforeColon: 2
+spaceAfterColon: true
+spaceAroundAssignment: true
+newlineBeforePrintln: 2
