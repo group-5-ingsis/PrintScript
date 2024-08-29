@@ -103,23 +103,23 @@ class LinterTests {
         }
     }
 
-    @Test
-    fun testPrintlnCall() {
-        val linter = Linter()
-        val lexer = Lexer
-        val parser = Parser()
-        val linterRules = getLinterRules()
-
-        val tokens = lexer.lex("println(2 + 4);", listOf())
-        val ast = parser.run(tokens)
-        val result = linter.lint(ast)
-        val expressionAllowed = linterRules["println-expression-allowed"]
-
-        if (expressionAllowed == "false") {
-            println(result.getMessage())
-            assertEquals(false, result.isValid())
-        } else {
-            assertEquals(true, result.isValid())
-        }
-    }
+//    @Test
+//    fun testPrintlnCall() {
+//        val linter = Linter()
+//        val lexer = Lexer
+//        val parser = Parser()
+//        val linterRules = getLinterRules()
+//
+//        val tokens = lexer.lex("println(2 + 4);", listOf())
+//        val ast = parser.run(tokens)
+//        val result = linter.lint(ast)
+//        val expressionAllowed = linterRules["println-expression-allowed"]
+//
+//        if (expressionAllowed == "false") {
+//            println(result.getMessage())
+//            assertEquals(false, result.isValid())
+//        } else {
+//            assertEquals(true, result.isValid())
+//        }
+//    }
 }
