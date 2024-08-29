@@ -7,7 +7,6 @@ include 'parser'
 include 'shared'
 include 'interpreter'
 include 'cli'
-include 'sca'
 include 'formatter'
 include 'linter'
 

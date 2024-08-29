@@ -16,7 +16,8 @@ class ValidationCommand(private val file: String, private val version: String) :
         return try {
             val tokens = Lexer.lex(fileContent, listOf())
 
-            val ast = Parser().run(tokens)
+            val parser = Parser()
+            val ast = parser.run(tokens)
 
             Interpreter.interpret(ast)
 

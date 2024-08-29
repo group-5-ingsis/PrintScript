@@ -25,6 +25,13 @@ class CommandLineInterfaceTest {
         assertEquals(result, "File formatted successfully")
     }
 
+    @Test
+    fun `test failing File Validagion`() {
+        val command = "validate WrongFile.ps 1.0"
+        val result = CommandLineInterface.execute(command)
+        assertEquals("Validation error: Invalid procedure: Declared type NUMBER does not match assigned type STRING", result)
+    }
+
 //    @Test
 //    fun `test correct File Analisis`() {
 //        val command = "analyze HelloWorld.ps 1.0 rules.yaml"
