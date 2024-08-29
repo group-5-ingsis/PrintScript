@@ -14,7 +14,7 @@ class ExecuteCommand(private val file: String, private val version: String) : Co
         }
 
         return try {
-            val tokens = Lexer.lex(fileContent, listOf())
+            val tokens = Lexer.lex(fileContent)
 
             val ast = Parser().run(tokens)
 

@@ -13,7 +13,7 @@ class FormatCommand(private val file: String, private val version: String, priva
         val formattingRules = FileReader.getFormattingRules(rulesFile, version)
 
         return try {
-            val tokens = Lexer.lex(fileContent, listOf())
+            val tokens = Lexer.lex(fileContent)
 
             val ast = Parser().run(tokens)
 
