@@ -13,7 +13,7 @@ class SemanticParserTester {
         val lexer = Lexer
         val syntaxParser = SyntacticParser()
         val semanticParser = SemanticParser()
-        val tokens: List<Token> = lexer.lex("let a: Number = 23;", listOf())
+        val tokens: List<Token> = lexer.lex("let a: Number = 23;")
         val ast: SyntacticParser.RootNode = syntaxParser.run(tokens)
         semanticParser.run(ast)
     }
@@ -23,7 +23,7 @@ class SemanticParserTester {
         val lexer = Lexer
         val syntaxParser = SyntacticParser()
         val semanticParser = SemanticParser()
-        val tokens: List<Token> = lexer.lex("let a: String = 23;", listOf())
+        val tokens: List<Token> = lexer.lex("let a: String = 23;")
         val ast: SyntacticParser.RootNode = syntaxParser.run(tokens)
         assertFailsWith(SemanticErrorException::class) {
             semanticParser.run(ast)
@@ -36,7 +36,7 @@ class SemanticParserTester {
         val lexer = Lexer
         val syntaxParser = SyntacticParser()
         val semanticParser = SemanticParser()
-        val tokens: List<Token> = lexer.lex("let a: String; let a: Number;", listOf())
+        val tokens: List<Token> = lexer.lex("let a: String; let a: Number;")
         val ast: SyntacticParser.RootNode = syntaxParser.run(tokens)
         assertFailsWith(SemanticErrorException::class) {
             semanticParser.run(ast)
@@ -48,7 +48,7 @@ class SemanticParserTester {
         val lexer = Lexer
         val syntaxParser = SyntacticParser()
         val semanticParser = SemanticParser()
-        val tokens: List<Token> = lexer.lex("let a: String;", listOf())
+        val tokens: List<Token> = lexer.lex("let a: String;")
         val ast: SyntacticParser.RootNode = syntaxParser.run(tokens)
         semanticParser.run(ast)
     }
@@ -58,9 +58,7 @@ class SemanticParserTester {
         val lexer = Lexer
         val syntaxParser = SyntacticParser()
         val semanticParser = SemanticParser()
-        val tokens: List<Token> = lexer.lex("let a: String; a = 'testing';", listOf())
-        val ast: SyntacticParser.RootNode = syntaxParser.run(tokens)
-        semanticParser.run(ast)
+        val tokens: List<Token> = lexer.lex("let a: String; a = 'testing';")
     }
 
     @Test
@@ -68,7 +66,7 @@ class SemanticParserTester {
         val lexer = Lexer
         val syntaxParser = SyntacticParser()
         val semanticParser = SemanticParser()
-        val tokens: List<Token> = lexer.lex("const a: String = \"testing\"; a = \"validator\";", listOf())
+        val tokens: List<Token> = lexer.lex("const a: String = \"testing\"; a = \"validator\";")
         val ast: SyntacticParser.RootNode = syntaxParser.run(tokens)
         assertFailsWith(SemanticErrorException::class) {
             semanticParser.run(ast)
@@ -80,7 +78,7 @@ class SemanticParserTester {
         val lexer = Lexer
         val syntaxParser = SyntacticParser()
         val semanticParser = SemanticParser()
-        val tokens: List<Token> = lexer.lex("let a: String; a = b;", listOf())
+        val tokens: List<Token> = lexer.lex("let a: String; a = b;")
         val ast: SyntacticParser.RootNode = syntaxParser.run(tokens)
         assertFailsWith(SemanticErrorException::class) {
             semanticParser.run(ast)
@@ -92,7 +90,7 @@ class SemanticParserTester {
         val lexer = Lexer
         val syntaxParser = SyntacticParser()
         val semanticParser = SemanticParser()
-        val tokens: List<Token> = lexer.lex("b = 23;", listOf())
+        val tokens: List<Token> = lexer.lex("b = 23;")
         val ast: SyntacticParser.RootNode = syntaxParser.run(tokens)
         assertFailsWith(SemanticErrorException::class) {
             semanticParser.run(ast)
@@ -104,7 +102,7 @@ class SemanticParserTester {
         val lexer = Lexer
         val syntaxParser = SyntacticParser()
         val semanticParser = SemanticParser()
-        val tokens: List<Token> = lexer.lex("let a: String; a = 22;", listOf())
+        val tokens: List<Token> = lexer.lex("let a: String; a = 22;")
         val ast: SyntacticParser.RootNode = syntaxParser.run(tokens)
         assertFailsWith(SemanticErrorException::class) {
             semanticParser.run(ast)

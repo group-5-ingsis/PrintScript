@@ -1,4 +1,5 @@
 package linter
+
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.jsonObject
@@ -43,20 +44,18 @@ class LinterTests {
         val parser = Parser()
         val linterRules = getLinterRules()
 
-        val tokens = lexer.lex("let ball_ball : String;", listOf())
+        val tokens = lexer.lex("let ball_ball : String;")
         val ast = parser.run(tokens)
         val result = linter.lint(ast)
         val namingConvention = linterRules["identifier_naming_convention"]
 
-        if (namingConvention != "\"camel-case\"" || namingConvention != "\"snake-case\"" || namingConvention != "off") {
-            println(result.getMessage())
-            assertEquals(false, result.isValid())
-        }
-
         if (namingConvention == "\"camel-case\"") {
             println(result.getMessage())
             assertEquals(false, result.isValid())
+        } else if (namingConvention == "\"snake-case\"") {
+            assertEquals(true, result.isValid())
         } else {
+            // Assuming "off" or any other case, the linter should pass
             assertEquals(true, result.isValid())
         }
     }
@@ -68,20 +67,18 @@ class LinterTests {
         val parser = Parser()
         val linterRules = getLinterRules()
 
-        val tokens = lexer.lex("let myString : String;", listOf())
+        val tokens = lexer.lex("let myString : String;")
         val ast = parser.run(tokens)
         val result = linter.lint(ast)
         val namingConvention = linterRules["identifier_naming_convention"]
 
-        if (namingConvention != "\"camel-case\"" && namingConvention != "\"snake-case\"" && namingConvention != "off") {
-            println(result.getMessage())
-            assertEquals(false, result.isValid())
-        }
-
         if (namingConvention == "\"snake-case\"") {
             println(result.getMessage())
             assertEquals(false, result.isValid())
+        } else if (namingConvention == "\"camel-case\"") {
+            assertEquals(true, result.isValid())
         } else {
+            // Assuming "off" or any other case, the linter should pass
             assertEquals(true, result.isValid())
         }
     }
@@ -93,7 +90,7 @@ class LinterTests {
         val parser = Parser()
         val linterRules = getLinterRules()
 
-        val tokens = lexer.lex("let ball_ball : String;", listOf())
+        val tokens = lexer.lex("let ball_ball : String;")
         val ast = parser.run(tokens)
         val result = linter.lint(ast)
         val namingConvention = linterRules["identifier_naming_convention"]
@@ -110,7 +107,7 @@ class LinterTests {
         val parser = Parser()
         val linterRules = getLinterRules()
 
-        val tokens = lexer.lex("println(2 + 4);", listOf())
+        val tokens = lexer.lex("println(2 + 4);")
         val ast = parser.run(tokens)
         val result = linter.lint(ast)
         val expressionAllowed = linterRules["println-expression-allowed"]

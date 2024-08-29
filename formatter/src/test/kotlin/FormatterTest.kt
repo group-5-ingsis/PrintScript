@@ -34,7 +34,7 @@ class FormatterTest {
         val goodFileContents = javaClass.getResource("/assignation/goodFormat.ps")?.readText()
             ?: throw IllegalArgumentException("File not found")
 
-        val tokens = Lexer.lex(badFileContents, listOf())
+        val tokens = Lexer.lex(badFileContents)
 
         val ast = parser.run(tokens)
         val child = ast.getChildren().first()
@@ -52,7 +52,7 @@ class FormatterTest {
         val goodFileContents = javaClass.getResource("/assignationDeclaration/goodFormat.ps")?.readText()
             ?: throw IllegalArgumentException("File not found")
 
-        val tokens = Lexer.lex(badFileContents, listOf())
+        val tokens = Lexer.lex(badFileContents)
 
         val ast = parser.run(tokens)
         val child = ast.getChildren().first()
@@ -69,7 +69,7 @@ class FormatterTest {
         val goodFileContents = javaClass.getResource("/declaration/goodFormat.ps")?.readText()
             ?: throw IllegalArgumentException("File not found")
 
-        val tokens = Lexer.lex(badFileContents, listOf())
+        val tokens = Lexer.lex(badFileContents)
 
         val ast = parser.run(tokens)
         val child = ast.getChildren().first()
@@ -86,7 +86,7 @@ class FormatterTest {
         val goodFileContents = javaClass.getResource("/methodCall/goodFormat.ps")?.readText()
             ?: throw IllegalArgumentException("File not found")
 
-        val tokens = Lexer.lex(badFileContents, listOf())
+        val tokens = Lexer.lex(badFileContents)
 
         val ast = parser.run(tokens)
         val child = ast.getChildren().first()
@@ -103,7 +103,7 @@ class FormatterTest {
         val goodFileContents = javaClass.getResource("/binaryOperation/goodFormat.ps")?.readText()
             ?: throw IllegalArgumentException("File not found")
 
-        val tokens = Lexer.lex(badFileContents, listOf())
+        val tokens = Lexer.lex(badFileContents)
 
         val ast = parser.run(tokens)
         val child = ast.getChildren().first()

@@ -12,7 +12,7 @@ class InterpreterTest {
 
     @Test
     fun testDeclarationWithNumber() {
-        val tokens: List<Token> = Lexer.lex("let a: Number;", listOf())
+        val tokens: List<Token> = Lexer.lex("let a: Number;")
         val ast = parser.run(tokens)
         interpreter.interpret(ast)
         assertEquals("undefined", VariableTable.getVariable("a"))
@@ -20,7 +20,7 @@ class InterpreterTest {
 
     @Test
     fun testDeclarationWithString() {
-        val tokens: List<Token> = Lexer.lex("let a: String;", listOf())
+        val tokens: List<Token> = Lexer.lex("let a: String;")
         val ast = parser.run(tokens)
         interpreter.interpret(ast)
         assertEquals("undefined", VariableTable.getVariable("a"))
@@ -28,7 +28,7 @@ class InterpreterTest {
 
     @Test
     fun testAssignationWithString() {
-        val tokens: List<Token> = Lexer.lex("a = \"Hello World\";", listOf())
+        val tokens: List<Token> = Lexer.lex("a = \"Hello World\";")
         val ast = parser.run(tokens)
         interpreter.interpret(ast)
         assertEquals("\"Hello World\"", VariableTable.getVariable("a"))
@@ -36,7 +36,7 @@ class InterpreterTest {
 
     @Test
     fun testAssignationWithNumber() {
-        val tokens: List<Token> = Lexer.lex("a = 2;", listOf())
+        val tokens: List<Token> = Lexer.lex("a = 2;")
         val ast = parser.run(tokens)
         interpreter.interpret(ast)
         assertEquals(2, VariableTable.getVariable("a"))
@@ -44,7 +44,7 @@ class InterpreterTest {
 
     @Test
     fun testAssignationWithLiteral() {
-        val tokens: List<Token> = Lexer.lex("let b: Number = 3; let a: Number; a = b;", listOf())
+        val tokens: List<Token> = Lexer.lex("let b: Number = 3; let a: Number; a = b;")
         val ast = parser.run(tokens)
         interpreter.interpret(ast)
         assertEquals(3, VariableTable.getVariable("a"))
@@ -52,7 +52,7 @@ class InterpreterTest {
 
     @Test
     fun testAssignationDeclarationWithNumber() {
-        val tokens: List<Token> = Lexer.lex("let a: Number = 2; a = 3;", listOf())
+        val tokens: List<Token> = Lexer.lex("let a: Number = 2; a = 3;")
         val ast = parser.run(tokens)
         interpreter.interpret(ast)
         assertEquals(3, VariableTable.getVariable("a"))
@@ -60,7 +60,7 @@ class InterpreterTest {
 
     @Test
     fun testAssignationDeclarationWithString() {
-        val tokens: List<Token> = Lexer.lex("let b: String; b = \"Hello\";", listOf())
+        val tokens: List<Token> = Lexer.lex("let b: String; b = \"Hello\";")
         val ast = parser.run(tokens)
         interpreter.interpret(ast)
         assertEquals("\"Hello\"", VariableTable.getVariable("b"))
@@ -68,21 +68,21 @@ class InterpreterTest {
 
     @Test
     fun testMethodCallWithString() {
-        val tokens: List<Token> = Lexer.lex("let a: String; a = \"Hello\"; println(a);", listOf())
+        val tokens: List<Token> = Lexer.lex("let a: String; a = \"Hello\"; println(a);")
         val ast = parser.run(tokens)
         interpreter.interpret(ast)
     }
 
     @Test
     fun testMethodCallWithNumber() {
-        val tokens: List<Token> = Lexer.lex("let a: Number = 4; println('Hello');", listOf())
+        val tokens: List<Token> = Lexer.lex("let a: Number = 4; println('Hello');")
         val ast = parser.run(tokens)
         interpreter.interpret(ast)
     }
 
     @Test
     fun testSumNumber() {
-        val tokens: List<Token> = Lexer.lex("let a: Number = 6 + 2;", listOf())
+        val tokens: List<Token> = Lexer.lex("let a: Number = 6 + 2;")
         val ast = parser.run(tokens)
         interpreter.interpret(ast)
         assertEquals(8.0, VariableTable.getVariable("a"))
@@ -90,7 +90,7 @@ class InterpreterTest {
 
     @Test
     fun testDivisionNumber() {
-        val tokens: List<Token> = Lexer.lex("let a: Number = 6 / 2;", listOf())
+        val tokens: List<Token> = Lexer.lex("let a: Number = 6 / 2;")
         val ast = parser.run(tokens)
         interpreter.interpret(ast)
         assertEquals(3.0, VariableTable.getVariable("a"))
@@ -98,7 +98,7 @@ class InterpreterTest {
 
     @Test
     fun testSumWithIdentifier() {
-        val tokens: List<Token> = Lexer.lex("let a: Number = 6; let b: Number = a + 2;", listOf())
+        val tokens: List<Token> = Lexer.lex("let a: Number = 6; let b: Number = a + 2;")
         val ast = parser.run(tokens)
         interpreter.interpret(ast)
         assertEquals(8.0, VariableTable.getVariable("b"))
@@ -106,7 +106,7 @@ class InterpreterTest {
 
     @Test
     fun testBinaryOperationString() {
-        val tokens: List<Token> = Lexer.lex("let a: String = 'Hello' + 'World';", listOf())
+        val tokens: List<Token> = Lexer.lex("let a: String = 'Hello' + 'World';")
         val ast = parser.run(tokens)
         interpreter.interpret(ast)
         assertEquals("\'HelloWorld\'", VariableTable.getVariable("a"))
@@ -114,7 +114,7 @@ class InterpreterTest {
 
 //  @Test
 //  fun testAddingAssignations() {
-//    val tokens: List<Token> = Lexer.lex("let a: Number = 7; let b : Number = 8; let c : Number = a + 3 + b;", listOf())
+//    val tokens: List<Token> = Lexer.lex("let a: Number = 7; let b : Number = 8; let c : Number = a + 3 + b;")
 //    val ast = parser.run(tokens)
 //    interpreter.interpret(ast)
 //    assertEquals("18", VariableTable.getVariable("c"))
