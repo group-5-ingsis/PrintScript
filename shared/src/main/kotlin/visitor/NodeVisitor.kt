@@ -2,7 +2,7 @@ package visitor
 
 import composite.Node
 
-class NodeVisitor : Visitor {
+object NodeVisitor : Visitor {
     private val output = StringBuilder()
 
     fun getOutput(): String = output.toString()
