@@ -78,73 +78,89 @@ class  NodeVisitor(private val globalScope : Environment) : Visitor {
 
     val (leftValue, rightValue) = checkTypesForOperation(left, right)
 
-    return when (exp.operator) {
-
-      "-" -> {
-        checkNumberOperands(exp.operator, leftValue, rightValue)
-        (leftValue as Double) - (rightValue as Double)
+      return when (exp.operator) {
+          "-" -> {
+              checkNumberOperands(exp.operator, leftValue, rightValue)
+              if (leftValue is Int && rightValue is Int) {
+                  leftValue - rightValue
+              } else {
+                  (leftValue as Number).toDouble() - (rightValue as Number).toDouble()
+              }
+          }
+          "/" -> {
+              checkNumberOperands(exp.operator, leftValue, rightValue)
+              if (leftValue is Int && rightValue is Int) {
+                  leftValue / rightValue
+              } else {
+                  (leftValue as Number).toDouble() / (rightValue as Number).toDouble()
+              }
+          }
+          "*" -> {
+              checkNumberOperands(exp.operator, leftValue, rightValue)
+              if (leftValue is Int && rightValue is Int) {
+                  leftValue * rightValue
+              } else {
+                  (leftValue as Number).toDouble() * (rightValue as Number).toDouble()
+              }
+          }
+          "+" -> {
+              when {
+                  leftValue is Int && rightValue is Int -> leftValue + rightValue
+                  leftValue is Number && rightValue is Number -> (leftValue as Number).toDouble() + (rightValue as Number).toDouble()
+                  leftValue is String && rightValue is String -> leftValue + rightValue
+                  else -> throw IllegalArgumentException("Unsupported types for PLUS operation: ${leftValue::class.simpleName} and ${rightValue::class.simpleName}, must be numbers or strings")
+              }
+          }
+          ">" -> {
+              when {
+                  leftValue is Int && rightValue is Int -> leftValue > rightValue
+                  leftValue is Number && rightValue is Number -> (leftValue as Number).toDouble() > (rightValue as Number).toDouble()
+                  leftValue is String && rightValue is String -> leftValue > rightValue
+                  else -> throw IllegalArgumentException("Unsupported types for GREATER THAN operation: ${leftValue::class.simpleName} and ${rightValue::class.simpleName}")
+              }
+          }
+          ">=" -> {
+              when {
+                  leftValue is Int && rightValue is Int -> leftValue >= rightValue
+                  leftValue is Number && rightValue is Number -> (leftValue as Number).toDouble() >= (rightValue as Number).toDouble()
+                  leftValue is String && rightValue is String -> leftValue >= rightValue
+                  else -> throw IllegalArgumentException("Unsupported types for GREATER THAN OR EQUAL operation: ${leftValue::class.simpleName} and ${rightValue::class.simpleName}")
+              }
+          }
+          "<" -> {
+              when {
+                  leftValue is Int && rightValue is Int -> leftValue < rightValue
+                  leftValue is Number && rightValue is Number -> (leftValue as Number).toDouble() < (rightValue as Number).toDouble()
+                  leftValue is String && rightValue is String -> leftValue < rightValue
+                  else -> throw IllegalArgumentException("Unsupported types for LESS THAN operation: ${leftValue::class.simpleName} and ${rightValue::class.simpleName}")
+              }
+          }
+          "<=" -> {
+              when {
+                  leftValue is Int && rightValue is Int -> leftValue <= rightValue
+                  leftValue is Number && rightValue is Number -> (leftValue as Number).toDouble() <= (rightValue as Number).toDouble()
+                  leftValue is String && rightValue is String -> leftValue <= rightValue
+                  else -> throw IllegalArgumentException("Unsupported types for LESS THAN OR EQUAL operation: ${leftValue::class.simpleName} and ${rightValue::class.simpleName}")
+              }
+          }
+          "==" -> {
+              when {
+                  leftValue is Int && rightValue is Int -> leftValue == rightValue
+                  leftValue is Number && rightValue is Number -> (leftValue as Number).toDouble() == (rightValue as Number).toDouble()
+                  leftValue is String && rightValue is String -> leftValue == rightValue
+                  else -> throw IllegalArgumentException("Unsupported types for EQUAL operation: ${leftValue::class.simpleName} and ${rightValue::class.simpleName}")
+              }
+          }
+          "!=" -> {
+              when {
+                  leftValue is Int && rightValue is Int -> leftValue != rightValue
+                  leftValue is Number && rightValue is Number -> (leftValue as Number).toDouble() != (rightValue as Number).toDouble()
+                  leftValue is String && rightValue is String -> leftValue != rightValue
+                  else -> throw IllegalArgumentException("Unsupported types for NOT EQUAL operation: ${leftValue::class.simpleName} and ${rightValue::class.simpleName}")
+              }
+          }
+          else -> throw IllegalArgumentException("Unsupported operator: ${exp.operator}")
       }
-      "/" -> {
-        checkNumberOperands(exp.operator, leftValue, rightValue)
-        (leftValue as Double) / (rightValue as Double)
-      }
-      "*" -> {
-        checkNumberOperands(exp.operator, leftValue, rightValue)
-        (leftValue as Double) * (rightValue as Double)
-      }
-      "+" -> {
-        when {
-          leftValue is Double && rightValue is Double -> leftValue + rightValue
-          leftValue is String && rightValue is String -> leftValue + rightValue
-          else -> throw IllegalArgumentException("Unsupported types for PLUS operation: ${leftValue::class.simpleName} and ${rightValue::class.simpleName}, must be numbers or strings")
-        }
-      }
-
-      ">" -> {
-        when {
-          leftValue is Number && rightValue is Number -> (leftValue.toDouble() > rightValue.toDouble())
-          leftValue is String && rightValue is String -> leftValue > rightValue
-          else -> throw IllegalArgumentException("Unsupported types for GREATER THAN operation: ${leftValue::class.simpleName} and ${rightValue::class.simpleName}")
-        }
-      }
-      ">=" -> {
-        when {
-          leftValue is Number && rightValue is Number -> (leftValue.toDouble() >= rightValue.toDouble())
-          leftValue is String && rightValue is String -> leftValue >= rightValue
-          else -> throw IllegalArgumentException("Unsupported types for GREATER THAN OR EQUAL operation: ${leftValue::class.simpleName} and ${rightValue::class.simpleName}")
-        }
-      }
-      "<" -> {
-        when {
-          leftValue is Number && rightValue is Number -> (leftValue.toDouble() < rightValue.toDouble())
-          leftValue is String && rightValue is String -> leftValue < rightValue
-          else -> throw IllegalArgumentException("Unsupported types for LESS THAN operation: ${leftValue::class.simpleName} and ${rightValue::class.simpleName}")
-        }
-      }
-      "<=" -> {
-        when {
-          leftValue is Number && rightValue is Number -> (leftValue.toDouble() <= rightValue.toDouble())
-          leftValue is String && rightValue is String -> leftValue <= rightValue
-          else -> throw IllegalArgumentException("Unsupported types for LESS THAN OR EQUAL operation: ${leftValue::class.simpleName} and ${rightValue::class.simpleName}")
-        }
-      }
-      "==" -> {
-        when {
-          leftValue is Number && rightValue is Number -> leftValue.toDouble() == rightValue.toDouble()
-          leftValue is String && rightValue is String -> leftValue == rightValue
-          else -> throw IllegalArgumentException("Unsupported types for EQUAL operation: ${leftValue::class.simpleName} and ${rightValue::class.simpleName}")
-        }
-      }
-      "!=" -> {
-        when {
-          leftValue is Number && rightValue is Number -> leftValue.toDouble() != rightValue.toDouble()
-          leftValue is String && rightValue is String -> leftValue != rightValue
-          else -> throw IllegalArgumentException("Unsupported types for NOT EQUAL operation: ${leftValue::class.simpleName} and ${rightValue::class.simpleName}")
-        }
-      }
-
-      else -> throw IllegalArgumentException("Unsupported operator: ${exp.operator}")
-    }
   }
 
     override fun visitVariableExp(exp: Expression.Variable): Any? {
@@ -249,6 +265,11 @@ class  NodeVisitor(private val globalScope : Environment) : Visitor {
         else -> throw IllegalArgumentException("Unsupported type: $value")
       }
     }
+
+      fun areNumbers(left: Any?, right: Any?): Boolean {
+          return left is Number && right is Number
+      }
+
 
     private fun isTruthy(thing: Any?): Boolean {
       if (thing == null) return false
