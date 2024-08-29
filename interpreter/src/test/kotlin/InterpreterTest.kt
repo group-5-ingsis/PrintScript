@@ -1,20 +1,22 @@
 import interpreter.Interpreter
+import junit.framework.TestCase.assertEquals
 import lexer.Lexer
+import org.junit.Test
+import parser.Parser
 import token.Token
-import visitor.VariableTable
-import kotlin.test.Test
-import kotlin.test.assertEquals
+
 
 class InterpreterTest {
-    private val parser = SyntacticParser()
+
     private val interpreter = Interpreter
 
     @Test
     fun testDeclarationWithNumber() {
         val tokens: List<Token> = Lexer.lex("let a: Number;", listOf())
-        val ast = parser.run(tokens)
-        interpreter.interpret(ast)
-        assertEquals("undefined", VariableTable.getVariable("a"))
+        val ast = Parser().run(tokens)
+        val scope: Environment = Environment()
+        interpreter.interpret(ast, scope)
+        assertEquals(null, scope.get("a"))
     }
 
 //    @Test
@@ -110,7 +112,7 @@ class InterpreterTest {
 //        interpreter.interpret(ast)
 //        assertEquals("\'HelloWorld\'", VariableTable.getVariable("a"))
 //    }
-
+//
 //  @Test
 //  fun testAddingAssignations() {
 //    val tokens: List<Token> = Lexer.lex("let a: Number = 7; let b : Number = 8; let c : Number = a + 3 + b;", listOf())

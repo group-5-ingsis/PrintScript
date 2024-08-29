@@ -18,7 +18,7 @@ sealed class StatementType {
 
 
 
-  class Print(val value: Expression, override val position: Position) : StatementType() {
+  class Print(val value: Expression.Grouping, override val position: Position) : StatementType() {
     override val statementType: String = "PRINT"
   }
 

@@ -18,10 +18,7 @@ class Parser {
     fun run(tokens: List<Token>): SyntacticParser.RootNode {
 
         val ast = SyntacticParser(tokens).parse()
-        val environment = Environment()
-        ast.accept(NodeVisitor(environment))
-        val validation = syntacticParser.validateSemantics(ast, environment)
-        println("The validation was: " + validation.isInvalid)
+
         return ast
 
 

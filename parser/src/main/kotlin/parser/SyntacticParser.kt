@@ -68,9 +68,9 @@ class SyntacticParser(private val tokens : List<Token>) {
                 // use case example ->  newPoint(x + 2, 0).y = 3;
                 // this should be a Variable:  newPoint(x + 2, 0).y
 
-                val name = exp.name
+                val name = expression()
 
-                return Expression.Assign(name, exp, position)
+                return Expression.Assign(exp.name, name, position)
             }
             throw BadSyntacticException("Invalid assignment target. at: " + position.line + " line, and: " + position.symbolIndex + "column")
 
@@ -190,7 +190,8 @@ class SyntacticParser(private val tokens : List<Token>) {
       consumeTokenValue(")")
       return Expression.Grouping(expr, position)
     } else if (isType("IDENTIFIER")){
-          return Expression.Variable(advance().value, position)
+            val idem = advance().value
+          return Expression.Variable(idem, position)
     }
 
     throw UnknownExpressionException(peek())
@@ -227,9 +228,15 @@ class SyntacticParser(private val tokens : List<Token>) {
 
   private fun printStatement() : StatementType {
       val position = getPosition()
-    val value: Expression = expression()
+    advance()
+      val value: Expression = expression()
     consumeTokenValue(";")
-    return StatementType.Print(value, position)
+      return if (value is Expression.Grouping){
+          StatementType.Print(value, position)
+      }else {
+          throw Error("Expression shoud be groupping at line : " + position.line)
+      }
+
   }
 
 
@@ -331,7 +338,7 @@ class SyntacticParser(private val tokens : List<Token>) {
     }
   }
   private fun isNotAtEndOfTokens(): Boolean {
-    return current < tokens.size
+    return current < tokens.size -1
   }
 
   private fun isNotAtEndOfPhrase(): Boolean {
@@ -352,14 +359,15 @@ class SyntacticParser(private val tokens : List<Token>) {
   }
 
   private fun getPreviousLiteral() : Any {
+      // Only works for strings and numbers
     val previous = previous()
     return if (previous.type == "STRING"){
       previous.value
     }else {
-      if (previous.type.contains('.')) {
-        previous.type.toDouble()
+      if (previous.value.contains('.')) {
+        previous.value.toDouble()
       } else {
-        previous.type.toInt()
+        previous.value.toInt()
       }
     }
 

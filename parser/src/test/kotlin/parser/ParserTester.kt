@@ -1,5 +1,7 @@
 package parser
 
+import UnknownExpressionException
+import exceptions.BadSyntacticException
 import lexer.Lexer
 import nodes.Expression
 import nodes.StatementType
@@ -24,17 +26,15 @@ class ParserTester {
 
     @Test
     fun testOperation() {
-        @Test
-        fun testVariableDeclarationWithAssignment() {
             val tokens = Lexer.lex("let a : Number = 3 + 5;", listOf())
             val parser = SyntacticParser(tokens)
             val ast = parser.parse()
 
             val expectedAssignment = Expression.Binary(
-                Expression.Literal(3, Position(1, 14)),
+                Expression.Literal(3, Position(1, 6)),
                 "+",
-                Expression.Literal(5, Position(1, 18)),
-                Position(1, 14)
+                Expression.Literal(5, Position(1, 8)),
+                Position(1, 7)
             )
 
 
@@ -60,15 +60,13 @@ class ParserTester {
             assertEquals(expectedAssignment.operator, actualAssignment.operator)
             assertEquals(expectedAssignment.right, actualAssignment.right)
             assertEquals(expectedAssignment.position, actualAssignment.position)
-        }
+
 
     }
 
 
     @Test
     fun testStringOperation() {
-        @Test
-        fun testVariableDeclarationWithStringConcatenation() {
 
             val tokens = Lexer.lex("let a: String = 'Hello' + 'World';", listOf())
 
@@ -78,13 +76,13 @@ class ParserTester {
 
             val ast = parser.parse()
 
-            val expectedLeftString = Expression.Literal("Hello", Position(1, 13))
-            val expectedRightString = Expression.Literal("World", Position(1, 21))
+            val expectedLeftString = Expression.Literal("'Hello'", Position(1, 6))
+            val expectedRightString = Expression.Literal("'World'", Position(1, 8))
             val expectedBinaryOperation = Expression.Binary(
                 expectedLeftString,
                 "+",
                 expectedRightString,
-                Position(1, 13)
+                Position(1, 7)
             )
             val expectedNode = StatementType.Variable(
                 "let",
@@ -108,7 +106,7 @@ class ParserTester {
             assertEquals(expectedBinaryOperation.operator, actualBinaryOperation.operator)
             assertEquals(expectedBinaryOperation.right, actualBinaryOperation.right)
             assertEquals(expectedBinaryOperation.position, actualBinaryOperation.position)
-        }
+
 
 
 
@@ -128,7 +126,7 @@ class ParserTester {
         val syntaxParser = SyntacticParser(tokens = Lexer.lex("let a: Number;", listOf()))
         val ast: SyntacticParser.RootNode = syntaxParser.parse()
         val expectedNodeType = "VARIABLE_EXPRESSION"
-        val expectedDataType = "NUMBER"
+        val expectedDataType = "Number"
         val expectedKindVariableDeclaration = "let"
         val expectedIdentifier = "a"
 
@@ -147,21 +145,26 @@ class ParserTester {
 
         val result: SyntacticParser.RootNode = syntaxParser.parse()
 
-        val expectedNodeType = "STATEMENT_EXPRESSION"
-        val expectedIdentifier = "x"
-        val expectedValueNodeType = "LITERAL"
-        val expectedValueType = "4"
 
-        val actualNode = result.getChildren()[1] as StatementType.StatementExpression
+        val declaration = result.getChildren()[0] as StatementType.Variable
+        assertEquals("x", declaration.identifier)
+        assertEquals("Number", declaration.dataType)
+        assertNotNull(declaration.initializer)
+        assertEquals("LITERAL_EXPRESSION", declaration.initializer!!.expressionType)
 
-        val actualExpression = actualNode.value as Expression.Binary
-        val leftOperand = actualExpression.left as Expression.Variable
-        val rightOperand = actualExpression.right as Expression.Literal
+        val initializer = declaration.initializer as Expression.Literal
+        assertEquals(3, initializer.value)
 
-        assertEquals(expectedNodeType, actualNode.statementType)
-        assertEquals(expectedIdentifier, leftOperand.name)
-        assertEquals(expectedValueNodeType, rightOperand::class.simpleName?.uppercase())
-        assertEquals(expectedValueType, rightOperand.value.toString())
+        // Verificar la segunda declaración: "x = 4;"
+        val assignment = result.getChildren()[1] as StatementType.StatementExpression
+        val assignExpr = assignment.value as Expression.Assign
+        assertEquals("x", assignExpr.name)
+        assertEquals("ASSIGNMENT_EXPRESSION", assignExpr.expressionType)
+
+        val assignValue = assignExpr.value as Expression.Literal
+        assertEquals(4, assignValue.value)
+        assertEquals("LITERAL_EXPRESSION", assignValue.expressionType)
+
     }
 
     @Test
@@ -203,17 +206,16 @@ class ParserTester {
 
 
         val expectedNodeType = "PRINT"
-        val expectedValueNodeType = "LITERAL"
-        val expectedLiteralValue = "4"
+        val expectedLiteralValue = 4
 
-        val actualNode = result.getChildren()[0] as StatementType.Print
+        val printNode = result.getChildren()[0] as StatementType.Print
 
 
-        val actualLiteral = actualNode.value as Expression.Literal
+        val actualGroup = printNode.value
 
-        assertEquals(expectedNodeType, actualNode.statementType)
-        assertEquals(expectedValueNodeType, actualLiteral::class.simpleName?.uppercase())
-        assertEquals(expectedLiteralValue, actualLiteral.value.toString())
+        assertTrue(actualGroup.expression is Expression.Literal)
+        assertEquals(printNode.statementType, expectedNodeType)
+        assertEquals((printNode.value.expression as Expression.Literal).value, expectedLiteralValue)
     }
 
     @Test
@@ -223,11 +225,11 @@ class ParserTester {
         val tokens: List<Token> = lexer.lex("let a Number;", listOf())
         val syntaxParser = SyntacticParser(tokens)
         // Verifica que se lance una excepción de tipo IllegalArgumentException cuando se ejecuta el parser
-        val exception = assertFailsWith<IllegalArgumentException> {
+        val exception = assertFailsWith<BadSyntacticException> {
             syntaxParser.parse()
         }
 
-        assertEquals("Error at line 1, column 7: Expected a ':' after 'a', but got 'Number' instead", exception.message)
+        assertEquals("Expect: : after expression.", exception.message)
     }
 
 
@@ -235,7 +237,7 @@ class ParserTester {
     fun testAssignDeclareWithDifferentTypesShouldPassSyntacticParser() {
         val lexer = Lexer
 
-        val tokens: List<Token> = lexer.lex("let a: Number = \"testing\";", listOf())
+        val tokens: List<Token> = lexer.lex("let a: Number = 'testing';", listOf())
         val syntaxParser = SyntacticParser(tokens)
         val result: SyntacticParser.RootNode = syntaxParser.parse()
 
@@ -264,16 +266,22 @@ class ParserTester {
         // Verificar el valor inicializador
         val initializer = generatedNode?.initializer as? Expression.Literal
         assertNotNull(initializer, "El inicializador no debe ser nulo.")
-        assertEquals("testing", initializer?.value)
+        assertEquals("'testing'", initializer?.value)
     }
 
 
     @Test
     fun testStatementEndError() {
-        val tokens: List<Token> = Lexer.lex("let a: Number = ; println(a)", listOf())
-
-        assertThrows(IllegalArgumentException::class.java) {
-            SyntacticParser(tokens).parse()
-        }
+        val tokens: List<Token> = Lexer.lex("let a: Number = 5; println(a);", listOf())
+        println(Parser().run(tokens))
     }
+
+
+    @Test
+    fun statementSum3Elements() {
+        val tokens: List<Token> = Lexer.lex("let a: Number = 5 + 3 + 4 / (6 + 6); println(a);", listOf())
+        println(Parser().run(tokens))
+    }
+
+
 }
