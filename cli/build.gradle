@@ -3,10 +3,12 @@ plugins {
 }
 
 dependencies {
+    implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.15.0")
     implementation project(':lexer')
     implementation project(':shared')
     implementation project(':parser')
     implementation project(':interpreter')
+    implementation project(':formatter')
 }
 
 
