@@ -88,6 +88,18 @@ class SemanticParserTester {
     }
 
     @Test
+    fun testAssignationOfNonExistentVariableShouldFail() {
+        val lexer = Lexer
+        val syntaxParser = SyntacticParser()
+        val semanticParser = SemanticParser()
+        val tokens: List<Token> = lexer.lex("b = 23;", listOf())
+        val ast: SyntacticParser.RootNode = syntaxParser.run(tokens)
+        assertFailsWith(SemanticErrorException::class) {
+            semanticParser.run(ast)
+        }
+    }
+
+    @Test
     fun testAssignationToDifferentDeclaredTypeShouldFail() {
         val lexer = Lexer
         val syntaxParser = SyntacticParser()
