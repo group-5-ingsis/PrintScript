@@ -6,10 +6,10 @@ import java.io.InputStream
 
 object FileReader {
     fun getFileContents(
-        file: String,
+        fileName: String,
         version: String
     ): String {
-        val fileLocation = getFileLocation(file, version)
+        val fileLocation = getFileLocation(fileName, version)
         return try {
             val inputStream: InputStream? = FileReader::class.java.classLoader.getResourceAsStream(fileLocation)
             inputStream?.bufferedReader()?.use { it.readText() } ?: "File not found."
@@ -33,7 +33,7 @@ object FileReader {
         }
     }
 
-    private fun getFileLocation(
+    fun getFileLocation(
         file: String,
         version: String
     ): String {

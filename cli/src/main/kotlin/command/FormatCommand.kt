@@ -1,7 +1,7 @@
 package command
 
 import cli.FileReader
-import formatter.FileWriter
+import cli.FileWriter
 import formatter.Formatter
 import interpreter.Interpreter
 import lexer.Lexer
@@ -26,8 +26,8 @@ class FormatCommand(private val file: String, private val version: String, priva
                 formattedContent.append(formattedLine)
             }
 
-            val formattedFile = formattedContent.toString().trimEnd()
-            FileWriter.writeToFile(file, formattedFile)
+            val formattedFileContents = formattedContent.toString().trimEnd()
+            FileWriter.writeToFile(file, version, formattedFileContents)
 
             "File formatted successfully"
         } catch (e: Exception) {
