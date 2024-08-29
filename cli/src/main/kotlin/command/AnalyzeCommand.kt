@@ -11,7 +11,6 @@ class AnalyzeCommand(private val file: String, private val version: String, priv
     override fun execute(): String {
         val fileContent = FileReader.getFileContents(file, version)
 
-        // Cambiar a getLinterRules
         val linterRules = FileReader.getFormattingRules(rulesFile, version)
 
         return try {
@@ -24,7 +23,7 @@ class AnalyzeCommand(private val file: String, private val version: String, priv
             val linter = Linter()
             linter.lint(ast)
 
-            "File formatted successfully"
+            "File with no problems"
         } catch (e: Exception) {
             "Validation error: ${e.message}"
         }

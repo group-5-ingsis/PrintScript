@@ -1,9 +1,6 @@
 package cli
 
-import builder.CommandBuilder
-import builder.ExecuteCommandBuilder
-import builder.FormattingCommandBuilder
-import builder.ValidationCommandBuilder
+import builder.*
 
 object CommandLineInterface {
     private val commandBuilders: Map<String, CommandBuilder> = initializeCommandBuilders()
@@ -12,7 +9,8 @@ object CommandLineInterface {
         return mapOf(
             "validate" to ValidationCommandBuilder(),
             "execute" to ExecuteCommandBuilder(),
-            "format" to FormattingCommandBuilder()
+            "format" to FormattingCommandBuilder(),
+            "analyze" to AnalyzeCommandBuilder()
         )
     }
 
