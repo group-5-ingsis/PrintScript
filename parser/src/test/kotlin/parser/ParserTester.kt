@@ -1,14 +1,13 @@
 package parser
 
-import composite.Node
+import exceptions.BadSyntacticException
 import lexer.Lexer
-import org.junit.Assert.assertThrows
+import nodes.Expression
+import nodes.StatementType
+import org.junit.Assert.assertNull
 import position.Position
 import token.Token
-import kotlin.test.Test
-import kotlin.test.assertEquals
-import kotlin.test.assertFailsWith
-import kotlin.test.assertNotNull
+import kotlin.test.*
 
 class ParserTester {
     private fun getTokenSublist(tokens: List<Token>): List<List<Token>> {
@@ -25,227 +24,230 @@ class ParserTester {
 
     @Test
     fun testOperation() {
-        val syntaxParser = SyntacticParser()
+        val tokens = Lexer.lex("let a : Number = 3 + 5;", listOf())
+        val parser = SyntacticParser(tokens)
+        val ast = parser.parse()
 
-        val tokens: List<Token> = Lexer.lex("let a: Number = 44534 + 3454;")
+        val expectedAssignment = Expression.Binary(
+            Expression.Literal(3, Position(1, 6)),
+            "+",
+            Expression.Literal(5, Position(1, 8)),
+            Position(1, 7)
+        )
 
-        val ast: SyntacticParser.RootNode = syntaxParser.run(tokens)
+        val expectedNode = StatementType.Variable(
+            "let",
+            "a",
+            expectedAssignment,
+            "Number",
+            Position(1, 1)
+        )
 
-        // Preparación de los datos esperados
-        val expectedNodeType = "ASSIGNATION_DECLARATION"
-        val expectedDataType = Node.DataType(type = "NUMBER") // Asegúrate de que este valor coincida con tu implementación
-        val expectedKindVariableDeclaration = "let"
-        val expectedIdentifier = "a"
-        val expectedValueNodeType = "BINARY_OPERATION"
+        // Verificamos que el primer hijo del AST sea del tipo esperado
+        val actualNode = ast.getChildren()[0] as StatementType.Variable
 
-        // Obtención del primer hijo del AST, asumiendo que es el nodo de interés
-        val actualNode = ast.getChildren()[0] as Node.AssignationDeclaration
+        assertEquals(expectedNode.identifier, actualNode.identifier)
+        assertEquals(expectedNode.dataType, actualNode.dataType)
 
-        // Verificación de las propiedades del nodo
-        assertEquals(expectedNodeType, actualNode.nodeType)
-        assertEquals(expectedDataType.type, actualNode.dataType.type)
-        assertEquals(expectedKindVariableDeclaration, actualNode.kindVariableDeclaration)
-        assertEquals(expectedIdentifier, actualNode.identifier)
-        assertEquals(expectedValueNodeType, actualNode.value.nodeType)
+        val actualAssignment = actualNode.initializer as Expression.Binary
+        assertEquals(expectedAssignment.left, actualAssignment.left)
+        assertEquals(expectedAssignment.operator, actualAssignment.operator)
+        assertEquals(expectedAssignment.right, actualAssignment.right)
+        assertEquals(expectedAssignment.position, actualAssignment.position)
     }
 
     @Test
     fun testStringOperation() {
-        val syntaxParser = SyntacticParser()
+        val tokens = Lexer.lex("let a: String = 'Hello' + 'World';", listOf())
 
-        val tokens: List<Token> = Lexer.lex("let a: String = 'Hello' + 'World';")
+        val parser = SyntacticParser(tokens)
 
-        val ast: SyntacticParser.RootNode = syntaxParser.run(tokens)
+        val ast = parser.parse()
 
-        // Preparación de los datos esperados
-        val expectedNodeType = "ASSIGNATION_DECLARATION"
-        val expectedDataType = Node.DataType(type = "STRING") // Asegúrate de que este valor coincida con tu implementación
-        val expectedKindVariableDeclaration = "let"
-        val expectedIdentifier = "a"
-        val expectedValue = "BINARY_OPERATION"
+        val expectedLeftString = Expression.Literal("'Hello'", Position(1, 6))
+        val expectedRightString = Expression.Literal("'World'", Position(1, 8))
+        val expectedBinaryOperation = Expression.Binary(
+            expectedLeftString,
+            "+",
+            expectedRightString,
+            Position(1, 7)
+        )
+        val expectedNode = StatementType.Variable(
+            "let",
+            "a",
+            expectedBinaryOperation,
+            "String",
+            Position(1, 1)
+        )
 
-        val actualNode = ast.getChildren()[0] as Node.AssignationDeclaration // Reemplaza esto con la lógica real para obtener el primer hijo
+        // Verificamos que el primer hijo del AST sea del tipo esperado
+        val actualNode = ast.getChildren()[0] as StatementType.Variable
 
-        assertEquals(expectedNodeType, actualNode.nodeType)
-        assertEquals(expectedDataType.type, actualNode.dataType.type)
-        assertEquals(expectedKindVariableDeclaration, actualNode.kindVariableDeclaration)
-        assertEquals(expectedIdentifier, actualNode.identifier)
-        assertEquals(expectedValue, actualNode.value.nodeType)
+        // Comprobamos el tipo de declaración, el identificador y el tipo de datos
+        assertEquals(expectedNode.designation, actualNode.designation)
+        assertEquals(expectedNode.identifier, actualNode.identifier)
+        assertEquals(expectedNode.dataType, actualNode.dataType)
+
+        // Verificamos la expresión de inicialización
+        val actualBinaryOperation = actualNode.initializer as Expression.Binary
+        assertEquals(expectedBinaryOperation.left, actualBinaryOperation.left)
+        assertEquals(expectedBinaryOperation.operator, actualBinaryOperation.operator)
+        assertEquals(expectedBinaryOperation.right, actualBinaryOperation.right)
+        assertEquals(expectedBinaryOperation.position, actualBinaryOperation.position)
     }
 
     @Test
     fun testTokenSplittingBySemicolon() {
         val lexer = Lexer
-        val tokens: List<Token> = lexer.lex("println(23);")
+        val tokens: List<Token> = lexer.lex("println(23);", listOf())
         println(getTokenSublist(tokens))
     }
 
     @Test
     fun testBuildDeclarationAST() {
-        val syntaxParser = SyntacticParser()
-
-        val tokens: List<Token> = Lexer.lex("let a: Number;")
-
-        val ast: SyntacticParser.RootNode = syntaxParser.run(tokens)
-
-        // Preparación de los datos esperados para una declaración simple
-        val expectedNodeType = "DECLARATION"
-        val expectedDataType = Node.DataType(type = "NUMBER") // Asegúrate de que este valor coincida con tu implementación
+        val syntaxParser = SyntacticParser(tokens = Lexer.lex("let a: Number;", listOf()))
+        val ast: SyntacticParser.RootNode = syntaxParser.parse()
+        val expectedNodeType = "VARIABLE_EXPRESSION"
+        val expectedDataType = "Number"
         val expectedKindVariableDeclaration = "let"
         val expectedIdentifier = "a"
 
-        // Obtención del primer hijo del AST, asumiendo que es el nodo de interés
-        val actualNode = ast.getChildren()[0] as Node.Declaration
-
-        assertEquals(expectedNodeType, actualNode.nodeType)
-        assertEquals(expectedDataType.type, actualNode.dataType.type)
-        assertEquals(expectedKindVariableDeclaration, actualNode.kindVariableDeclaration)
+        val actualNode = ast.getChildren()[0] as StatementType.Variable
+        assertEquals(expectedNodeType, actualNode.statementType)
+        assertEquals(expectedDataType, actualNode.dataType)
+        assertEquals(expectedKindVariableDeclaration, actualNode.designation)
         assertEquals(expectedIdentifier, actualNode.identifier)
+        assertNull(actualNode.initializer)
     }
 
     @Test
-    fun testBuildAssignationASTWithNumber() {
+    fun testBuildAssignationAST() {
         val lexer = Lexer
-        val syntaxParser = SyntacticParser()
-        val tokens: List<Token> = lexer.lex("x = 4;")
-        val result: SyntacticParser.RootNode = syntaxParser.run(tokens)
+        val syntaxParser = SyntacticParser(tokens = Lexer.lex("let x : Number = 3; x = 4;", listOf()))
 
-        val expectedNodeType = "ASSIGNATION"
+        val result: SyntacticParser.RootNode = syntaxParser.parse()
+
+        val declaration = result.getChildren()[0] as StatementType.Variable
+        assertEquals("x", declaration.identifier)
+        assertEquals("Number", declaration.dataType)
+        assertNotNull(declaration.initializer)
+        assertEquals("LITERAL_EXPRESSION", declaration.initializer!!.expressionType)
+
+        val initializer = declaration.initializer as Expression.Literal
+        assertEquals(3, initializer.value)
+
+        // Verificar la segunda declaración: "x = 4;"
+        val assignment = result.getChildren()[1] as StatementType.StatementExpression
+        val assignExpr = assignment.value as Expression.Assign
+        assertEquals("x", assignExpr.name)
+        assertEquals("ASSIGNMENT_EXPRESSION", assignExpr.expressionType)
+
+        val assignValue = assignExpr.value as Expression.Literal
+        assertEquals(4, assignValue.value)
+        assertEquals("LITERAL_EXPRESSION", assignValue.expressionType)
+    }
+
+    @Test
+    fun testAssignationWithVariable() {
+        val lexer = Lexer
+        val tokens: List<Token> = lexer.lex("let x: Number = 4; let y : Number = 2; x = y;", listOf())
+        val result: SyntacticParser.RootNode = SyntacticParser(tokens).parse()
+
+        val expectedNodeType = "STATEMENT_EXPRESSION"
         val expectedIdentifier = "x"
-        val expectedValueNodeType = "LITERAL"
-        val expectedValueType = "4"
-
-        val actualNode = result.getChildren()[0] as Node.Assignation
-
-        val asignationValue = actualNode.value as Node.GenericLiteral
-
-        assertEquals(expectedNodeType, actualNode.nodeType)
-        assertEquals(expectedIdentifier, actualNode.identifier.value)
-        assertEquals(expectedValueNodeType, actualNode.value.nodeType)
-        assertEquals(expectedValueType, asignationValue.value)
-    }
-
-    @Test
-    fun testBuildAssignationASTWithString() {
-        val lexer = Lexer
-        val syntaxParser = SyntacticParser()
-        val tokens: List<Token> = lexer.lex("x = 'test';")
-        val result: SyntacticParser.RootNode = syntaxParser.run(tokens)
-        println(result.getChildren())
-        for (node in result.getChildren()) {
-            println(node)
-        }
-    }
-
-    @Test
-    fun testBuildAssignationASTWithVariable() {
-        val lexer = Lexer
-        val syntaxParser = SyntacticParser()
-        val tokens: List<Token> = lexer.lex("x = y;")
-        val result: SyntacticParser.RootNode = syntaxParser.run(tokens)
-
-        // Preparación de los datos esperados para una asignación con variable
-        val expectedNodeType = "ASSIGNATION"
-        val expectedIdentifier = "x"
-        val expectedValueNodeType = "IDENTIFIER"
+        val expectedValueNodeType = "VARIABLE"
         val expectedValueIdentifier = "y"
 
-        // Obtención del primer hijo del AST, asumiendo que es el nodo de interés
-        val actualNode = result.getChildren()[0] as Node.Assignation
+        assertTrue(result.getChildren()[2] is StatementType.StatementExpression)
+        val actualNode = result.getChildren()[2] as StatementType.StatementExpression
+
+        val actualExpression = actualNode.value as Expression.Binary
+        val leftOperand = actualExpression.left as Expression.Variable
+        val rightOperand = actualExpression.right as Expression.Variable
 
         // Verificación de las propiedades del nodo
-        assertEquals(expectedNodeType, actualNode.nodeType)
-        assertEquals(expectedIdentifier, actualNode.identifier.value)
-        assertEquals(expectedValueNodeType, actualNode.value.nodeType)
-        assertEquals(expectedValueIdentifier, (actualNode.value as Node.Identifier).value)
-        // TODO(Modificar la estructura de los nodos para que tengan un value y se pueda sacar algo de todos, asi no hay que castearlos)
-    }
-
-    @Test
-    fun testBuildAssignDeclareAST() {
-        val lexer = Lexer
-        val syntaxParser = SyntacticParser()
-        val tokens: List<Token> = lexer.lex("let a: Number = 7;")
-        val result: SyntacticParser.RootNode = syntaxParser.run(tokens)
-        println(result.getChildren())
-        for (node in result.getChildren()) {
-            println(node)
-        }
+        assertEquals(expectedNodeType, actualNode.statementType)
+        assertEquals(expectedIdentifier, leftOperand.name)
+        assertEquals(expectedValueNodeType, rightOperand::class.simpleName?.uppercase())
+        assertEquals(expectedValueIdentifier, rightOperand.name)
     }
 
     @Test
     fun testBuildMethodCallAST() {
         val lexer = Lexer
-        val syntaxParser = SyntacticParser()
-        val tokens: List<Token> = lexer.lex("println(3);")
-        val result: SyntacticParser.RootNode = syntaxParser.run(tokens)
 
-        val expected =
-            Node.Method(
-                arguments =
-                Node.Arguments(
-                    argumentsOfAnyTypes =
-                    listOf(
-                        Node.GenericLiteral(value = "3", dataType = Node.DataType(type = "NUMBER"))
-                    )
-                ),
-                identifier = Node.Identifier(value = "println"),
-                identifierPosition = Position(1, 1)
-            )
+        val tokens: List<Token> = lexer.lex("println(4);", listOf())
+        val syntaxParser = SyntacticParser(tokens)
+        val result: SyntacticParser.RootNode = syntaxParser.parse()
 
-        assertEquals(expected, result.getChildren().firstOrNull())
+        val expectedNodeType = "PRINT"
+        val expectedLiteralValue = 4
+
+        val printNode = result.getChildren()[0] as StatementType.Print
+
+        val actualGroup = printNode.value
+
+        assertTrue(actualGroup.expression is Expression.Literal)
+        assertEquals(printNode.statementType, expectedNodeType)
+        assertEquals((printNode.value.expression as Expression.Literal).value, expectedLiteralValue)
     }
 
     @Test
     fun testDeclarationWithoutColonShouldFail() {
         val lexer = Lexer
-        val syntaxParser = SyntacticParser()
-        val tokens: List<Token> = lexer.lex("let a Number;")
 
-        val exception =
-            assertFailsWith<IllegalArgumentException> {
-                val result: SyntacticParser.RootNode = syntaxParser.run(tokens)
-            }
+        val tokens: List<Token> = lexer.lex("let a Number;", listOf())
+        val syntaxParser = SyntacticParser(tokens)
+        // Verifica que se lance una excepción de tipo IllegalArgumentException cuando se ejecuta el parser
+        val exception = assertFailsWith<BadSyntacticException> {
+            syntaxParser.parse()
+        }
 
-        // Verificar el mensaje de la excepción
-        assertEquals("Error at line 1, column 3: Expected a ':' after 'let a', but got 'Number' instead", exception.message)
+        assertEquals("Expect: : after expression.", exception.message)
     }
 
     @Test
     fun testAssignDeclareWithDifferentTypesShouldPassSyntacticParser() {
         val lexer = Lexer
-        val syntaxParser = SyntacticParser()
-        val tokens: List<Token> = lexer.lex("let a: Number = \"testing\";")
 
-        val result: SyntacticParser.RootNode = syntaxParser.run(tokens)
+        val tokens: List<Token> = lexer.lex("let a: Number = 'testing';", listOf())
+        val syntaxParser = SyntacticParser(tokens)
+        val result: SyntacticParser.RootNode = syntaxParser.parse()
 
-        // Imprimir los nodos generados para verificar la estructura del AST
         println(result.getChildren())
         for (node in result.getChildren()) {
             println(node)
         }
 
-        // Representación esperada del nodo de declaración y asignación
-        val expected =
-            Node.AssignationDeclaration(
-                dataType = Node.DataType(type = "NUMBER"),
-                kindVariableDeclaration = "let",
-                identifier = "a",
-                value = Node.GenericLiteral(value = "\"testing\"", dataType = Node.DataType(type = "STRING")),
-                identifierPosition = Position(1, 2)
-            )
+        val expectedNode = StatementType.Variable(
+            designation = "let",
+            identifier = "a",
+            initializer = Expression.Literal(value = "testing", position = Position(1, 18)),
+            dataType = "Number",
+            position = Position(1, 1)
+        )
 
-        // Verificar que el AST generado contenga la estructura esperada
-        val generatedNode = result.getChildren().firstOrNull()
+        val generatedNode = result.getChildren().firstOrNull() as? StatementType.Variable
         assertNotNull(generatedNode, "El AST no debe estar vacío.")
-        assertEquals(expected, generatedNode)
+        assertEquals(expectedNode.designation, generatedNode?.designation)
+        assertEquals(expectedNode.identifier, generatedNode?.identifier)
+        assertEquals(expectedNode.dataType, generatedNode?.dataType)
+
+        // Verificar el valor inicializador
+        val initializer = generatedNode?.initializer as? Expression.Literal
+        assertNotNull(initializer, "El inicializador no debe ser nulo.")
+        assertEquals("'testing'", initializer?.value)
     }
 
     @Test
     fun testStatementEndError() {
-        val tokens: List<Token> = Lexer.lex("let a: Number = 7; println(a)")
-        assertThrows(IllegalArgumentException::class.java) {
-            SyntacticParser().run(tokens)
-        }
+        val tokens: List<Token> = Lexer.lex("let a: Number = 5; println(a);", listOf())
+        println(Parser().run(tokens))
+    }
+
+    @Test
+    fun statementSum3Elements() {
+        val tokens: List<Token> = Lexer.lex("let a: Number = 5 + 3 + 4 / (6 + 6); println(a);", listOf())
+        println(Parser().run(tokens))
     }
 }

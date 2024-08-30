@@ -1,10 +1,7 @@
 package formatter
 
-import composite.Node
 import rules.FormattingRules
 import rules.RuleApplier
-import visitor.MethodExecute
-import visitor.ValueResolver
 import visitor.Visitor
 
 class FormattingVisitor(private val rules: FormattingRules) : Visitor {

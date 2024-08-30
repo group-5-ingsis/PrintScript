@@ -1,18 +1,20 @@
 package parser
 
-import composite.Node
-import parser.exceptions.SemanticErrorException
+import Environment
+import SemanticErrorException
 import parser.validation.SemanticValidator
 import parser.validation.ValidationResult
+import visitor.NodeVisitor
 
 class SemanticParser {
     private val validator = SemanticValidator()
 
     @Throws(SemanticErrorException::class)
     fun run(ast: SyntacticParser.RootNode): SyntacticParser.RootNode {
-        var tempTable = buildTempVariableTable(ast)
-        val result = runValidators(ast.getChildren(), tempTable)
-        tempTable = emptyList()
+        val environment = Environment()
+        ast.accept(NodeVisitor(environment))
+        val result = runValidators(ast, environment)
+
         if (result.isInvalid) {
             throw SemanticErrorException("Invalid procedure: " + result.message)
         } else {
@@ -20,23 +22,7 @@ class SemanticParser {
         }
     }
 
-    private fun runValidators(nodes: List<Node>, variabletable: List<Node.Declaration>): ValidationResult {
-        return validator.validateSemantics(nodes, variabletable)
-    }
-
-    private fun buildTempVariableTable(ast: SyntacticParser.RootNode): List<Node.Declaration> {
-        val tempVariableTable = mutableListOf<Node.Declaration>()
-        val nodes = ast.getChildren()
-        for (node in nodes) {
-            if (node is Node.Declaration) {
-                tempVariableTable.add(node)
-            }
-            if (node is Node.AssignationDeclaration) {
-                tempVariableTable.add(
-                    Node.Declaration(node.dataType, node.kindVariableDeclaration, node.identifier, node.identifierPosition)
-                )
-            }
-        }
-        return tempVariableTable
+    private fun runValidators(nodes: SyntacticParser.RootNode, environment: Environment): ValidationResult {
+        return validator.validateSemantics(nodes, environment)
     }
 }
