@@ -12,10 +12,6 @@ import visitor.NodeVisitor
 
 
 class SyntacticParser(private val tokens : List<Token>) {
-  // use:
-  //
-  // val statement : List<StatementType> = SyntacticParser(tokens).parse();
-  // interpreter.interpret(statements)
 
 
     private var current = 0 // The next token of the interpreter to see
