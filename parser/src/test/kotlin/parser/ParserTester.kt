@@ -288,7 +288,7 @@ class ParserTester {
 
 
     @Test
-    fun statementSum3Elements() {
+    fun statementSumElements() {
         val tokens: List<Token> = Lexer.lex("let a: Number = 5 + 3 + 4 / (6 + 6); println(a);")
         val result = SyntacticParser(tokens).parse()
 

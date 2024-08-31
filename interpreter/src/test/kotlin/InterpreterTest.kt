@@ -12,7 +12,7 @@ class InterpreterTest {
 
     @Test
     fun testDeclarationWithNumber() {
-        val tokens: List<Token> = Lexer.lex("let a: Number;", listOf())
+        val tokens: List<Token> = Lexer.lex("let a: Number;")
         val ast = Parser().run(tokens)
         val scope: Environment = Environment()
         interpreter.interpret(ast, scope)
@@ -21,7 +21,7 @@ class InterpreterTest {
 
     @Test
     fun testDeclarationWithString() {
-        val tokens: List<Token> = Lexer.lex("let a: String;", listOf())
+        val tokens: List<Token> = Lexer.lex("let a: String;")
         val ast = Parser().run(tokens)
         val scope: Environment = Environment()
         interpreter.interpret(ast, scope)
@@ -30,7 +30,7 @@ class InterpreterTest {
 
     @Test
     fun testAssignationWithString() {
-        val tokens: List<Token> = Lexer.lex("let a: String = \"Hello World\";", listOf())
+        val tokens: List<Token> = Lexer.lex("let a: String = \"Hello World\";")
         val ast = Parser().run(tokens)
         val scope: Environment = Environment()
         interpreter.interpret(ast, scope)
@@ -39,7 +39,7 @@ class InterpreterTest {
 
     @Test
     fun testAssignationWithNumber() {
-        val tokens: List<Token> = Lexer.lex("let c : Number = 4; c = 2;", listOf())
+        val tokens: List<Token> = Lexer.lex("let c : Number = 4; c = 2;")
 
         val ast = Parser().run(tokens)
         val scope: Environment = Environment()
@@ -49,7 +49,7 @@ class InterpreterTest {
 
     @Test
     fun testAssignationWithLiteral() {
-        val tokens: List<Token> = Lexer.lex("let b: Number = 3; let a: Number = 7; a = b;", listOf())
+        val tokens: List<Token> = Lexer.lex("let b: Number = 3; let a: Number = 7; a = b;")
         val ast = Parser().run(tokens)
         val scope: Environment = Environment()
         interpreter.interpret(ast, scope)
@@ -59,7 +59,7 @@ class InterpreterTest {
 
     @Test
     fun testAssignationDeclarationWithNumber() {
-        val tokens: List<Token> = Lexer.lex("let a: Number = 2; a = 3;", listOf())
+        val tokens: List<Token> = Lexer.lex("let a: Number = 2; a = 3;")
 
         val ast = Parser().run(tokens)
         val scope: Environment = Environment()
@@ -70,17 +70,17 @@ class InterpreterTest {
 
     @Test
     fun testAssignationDeclarationWithString() {
-        val tokens: List<Token> = Lexer.lex("let b: String; b = \"Hello\";", listOf())
+        val tokens: List<Token> = Lexer.lex("let b: String; b = 'Hello';")
         val ast = Parser().run(tokens)
         val scope: Environment = Environment()
         interpreter.interpret(ast, scope)
 
-        assertEquals("hello", scope.get("a"))
+        assertEquals("'Hello'", scope.get("b"))
     }
 
 //    @Test
 //    fun testMethodCallWithString() {
-//        val tokens: List<Token> = Lexer.lex("let a: String; a = \"Hello\"; println(a);", listOf())
+//        val tokens: List<Token> = Lexer.lex("let a: String; a = \"Hello\"; println(a);")
 //        val ast = Parser().run(tokens)
 //        val scope: Environment = Environment()
 //
@@ -91,7 +91,7 @@ class InterpreterTest {
 
     @Test
     fun testMethodCallWithNumber() {
-        val tokens: List<Token> = Lexer.lex("let a: Number = 4; println(a);", listOf())
+        val tokens: List<Token> = Lexer.lex("let a: Number = 4; println(a);")
         val ast = Parser().run(tokens)
         val scope: Environment = Environment()
         assertTrue(interpreter.interpret(ast, scope).contains("4"))
@@ -99,7 +99,7 @@ class InterpreterTest {
 
     @Test
     fun testSumNumber() {
-        val tokens: List<Token> = Lexer.lex("let a: Number = 6 + 2 + 6;", listOf())
+        val tokens: List<Token> = Lexer.lex("let a: Number = 6 + 2 + 6;")
         val ast = Parser().run(tokens)
         val scope: Environment = Environment()
         interpreter.interpret(ast, scope)
@@ -109,7 +109,7 @@ class InterpreterTest {
 
     @Test
     fun testDivisionNumber() {
-        val tokens: List<Token> = Lexer.lex("let a: Number = 6 / 2;", listOf())
+        val tokens: List<Token> = Lexer.lex("let a: Number = 6 / 2;")
         val ast = Parser().run(tokens)
         val scope: Environment = Environment()
         interpreter.interpret(ast, scope)
@@ -119,7 +119,7 @@ class InterpreterTest {
 
     @Test
     fun testComplexExpression() {
-        val tokens: List<Token> = Lexer.lex("let a: Number = 6 / (2 + 5) - (5 * 6) ;", listOf())
+        val tokens: List<Token> = Lexer.lex("let a: Number = 6 / (2 + 5) - (5 * 6) ;")
         val ast = Parser().run(tokens)
         val scope: Environment = Environment()
         interpreter.interpret(ast, scope)
@@ -129,7 +129,7 @@ class InterpreterTest {
 
     @Test
     fun testSumWithIdentifier() {
-        val tokens: List<Token> = Lexer.lex("let a: Number = 6; let b: Number = a + 2;", listOf())
+        val tokens: List<Token> = Lexer.lex("let a: Number = 6; let b: Number = a + 2;")
         val ast = Parser().run(tokens)
         val scope: Environment = Environment()
         interpreter.interpret(ast, scope)
@@ -138,7 +138,7 @@ class InterpreterTest {
 
     @Test
     fun testBinaryOperationString() {
-        val tokens: List<Token> = Lexer.lex("let a: String = 'Hello' + 'World';", listOf())
+        val tokens: List<Token> = Lexer.lex("let a: String = 'Hello' + 'World';")
         val ast = Parser().run(tokens)
         val scope: Environment = Environment()
         interpreter.interpret(ast, scope)
@@ -147,7 +147,7 @@ class InterpreterTest {
 
     @Test
     fun testAddingAssignations() {
-        val tokens: List<Token> = Lexer.lex("let a: Number = 7; let b : Number = 8; let c : Number = a + 3 + b;", listOf())
+        val tokens: List<Token> = Lexer.lex("let a: Number = 7; let b : Number = 8; let c : Number = a + 3 + b;")
         val ast = Parser().run(tokens)
         val scope: Environment = Environment()
         interpreter.interpret(ast, scope)
