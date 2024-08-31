@@ -174,24 +174,34 @@ class ParserTester {
         val result: SyntacticParser.RootNode = SyntacticParser(tokens).parse()
 
 
-        val expectedNodeType = "STATEMENT_EXPRESSION"
-        val expectedIdentifier = "x"
-        val expectedValueNodeType = "VARIABLE"
-        val expectedValueIdentifier = "y"
+        // Assert
+        val children = result.getChildren()
+        assertEquals(3, children.size)
 
-        assertTrue(result.getChildren()[2] is StatementType.StatementExpression)
-        val actualNode = result.getChildren()[2] as StatementType.StatementExpression
+        // Check the first variable declaration and assignment
+        val firstVariable = children[0] as StatementType.Variable
+        assertEquals("x", firstVariable.identifier)
+        assertEquals("Number", firstVariable.dataType)
+        assertEquals("let", firstVariable.designation)
+        assertEquals(4, (firstVariable.initializer as Expression.Literal).value)
+
+        // Check the second variable declaration and assignment
+        val secondVariable = children[1] as StatementType.Variable
+        assertEquals("y", secondVariable.identifier)
+        assertEquals("Number", secondVariable.dataType)
+        assertEquals("let", secondVariable.designation)
+        assertEquals(2, (secondVariable.initializer as Expression.Literal).value)
+
+        // Check the assignment statement
+        val assignment = children[2] as StatementType.StatementExpression
+        val assignExpression = assignment.value as Expression.Assign
+        assertEquals("x", assignExpression.name)
+        val identifierExpression = assignExpression.value as Expression.Variable
+        assertEquals("y", identifierExpression.name)
 
 
-        val actualExpression = actualNode.value as Expression.Binary
-        val leftOperand = actualExpression.left as Expression.Variable
-        val rightOperand = actualExpression.right as Expression.Variable
 
-        // Verificación de las propiedades del nodo
-        assertEquals(expectedNodeType, actualNode.statementType)
-        assertEquals(expectedIdentifier, leftOperand.name)
-        assertEquals(expectedValueNodeType, rightOperand::class.simpleName?.uppercase())
-        assertEquals(expectedValueIdentifier, rightOperand.name)
+
     }
 
 
@@ -280,7 +290,42 @@ class ParserTester {
     @Test
     fun statementSum3Elements() {
         val tokens: List<Token> = Lexer.lex("let a: Number = 5 + 3 + 4 / (6 + 6); println(a);")
-        println(Parser().run(tokens))
+        val result = SyntacticParser(tokens).parse()
+
+        // Assert
+        val children = result.getChildren()
+        assertEquals(2, children.size)
+
+
+        val firstStatement = children[0] as StatementType.Variable
+        assertEquals("a", firstStatement.identifier)
+        assertEquals("Number", firstStatement.dataType)
+        assertEquals("let", firstStatement.designation)
+
+
+        val expression = firstStatement.initializer as Expression.Binary
+        assertTrue(expression.left is Expression.Binary)
+        assertEquals("+", expression.operator)
+
+        val leftExpression = expression.left as Expression.Binary
+        assertEquals(5, (leftExpression.left as Expression.Literal).value)
+        assertEquals("+", leftExpression.operator)
+        assertEquals(3, (leftExpression.right as Expression.Literal).value)
+
+        val rightExpression = expression.right as Expression.Binary
+        assertEquals(4, (rightExpression.left as Expression.Literal).value)
+        assertEquals("/", rightExpression.operator)
+
+        val groupingExpression = rightExpression.right as Expression.Grouping
+        val groupingInnerExpression = groupingExpression.expression as Expression.Binary
+        assertEquals(6, (groupingInnerExpression.left as Expression.Literal).value)
+        assertEquals("+", groupingInnerExpression.operator)
+        assertEquals(6, (groupingInnerExpression.right as Expression.Literal).value)
+
+        // Check the println statement
+        val secondStatement = children[1] as StatementType.Print
+        val printExpression = secondStatement.value.expression as Expression.Variable
+        assertEquals("a", printExpression.name)
     }
 
 

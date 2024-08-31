@@ -49,8 +49,8 @@ class Primary() : MiniExpressionParser{
             val expr = ExpressionType(Assigment(Comparison(Term(Factor(Unary(Primary())))))).parse(tokenMng.getTokens())
             val newTK = TokenManager(expr.first)
             newTK.consumeTokenValue(")")
-            return Pair(expr.first, Expression.Grouping(expr.second, position))
-        } else if (tokenMng.isValue("IDENTIFIER")){
+            return Pair(newTK.getTokens(), Expression.Grouping(expr.second, position))
+        } else if (tokenMng.checkNextTokenType("IDENTIFIER")){
             val idem = tokenMng.advance().value
             return Pair(tokenMng.getTokens(), Expression.Variable(idem, position))
         }

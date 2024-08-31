@@ -12,7 +12,6 @@ class PrintStatement: MiniStatementParser {
     override fun parse(tokens: List<Token>): ParseStatementResult {
         var manager = TokenManager(tokens)
         val position = manager.getPosition()
-        manager.advance()
         val ( remainingTokens, exp) = ExpressionType.makeExpressionEvaluator().parse(manager.getTokens())
         manager = TokenManager(remainingTokens)
         manager.consumeTokenValue(";")

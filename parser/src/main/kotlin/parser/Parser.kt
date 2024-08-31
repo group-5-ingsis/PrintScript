@@ -1,16 +1,23 @@
 package parser
 
+import Environment
 import SemanticErrorException
+import parser.validation.SemanticValidator
 import token.Token
+import visitor.NodeVisitor
 
 
+// Singleton object since it can be reused with different arguments.
 class Parser {
-    private val syntacticParser = SyntacticParser()
+    private val syntacticParser = SemanticValidator()
 
     @Throws(SemanticErrorException::class)
     fun run(tokens: List<Token>): SyntacticParser.RootNode {
-        val astRootNode = syntacticParser.run(tokens)
-        val semanticParser = SemanticParser()
-        return semanticParser.run(astRootNode)
+
+        val ast = SyntacticParser(tokens).parse()
+
+        return ast
+
     }
+
 }
