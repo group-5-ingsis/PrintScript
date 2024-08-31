@@ -10,7 +10,7 @@ class SemanticParserTester {
     @Test
     fun testAssignDeclareStatementShouldPass() {
         val lexer = Lexer
-        val syntaxParser = SyntacticParser(Lexer.lex("let a: Number = 23;", listOf()))
+        val syntaxParser = SyntacticParser(Lexer.lex("let a: Number = 23;"))
         val semanticParser = SemanticParser()
         val ast: SyntacticParser.RootNode = syntaxParser.parse()
         semanticParser.run(ast)
@@ -19,7 +19,7 @@ class SemanticParserTester {
     @Test
     fun testAssignDeclareStatementShouldFail() {
         val lexer = Lexer
-        val syntaxParser = SyntacticParser(Lexer.lex("let a: String = 23;", listOf()))
+        val syntaxParser = SyntacticParser(Lexer.lex("let a: String = 23;"))
         val semanticParser = SemanticParser()
         val ast: SyntacticParser.RootNode = syntaxParser.parse()
         assertFailsWith<SemanticErrorException> {
@@ -31,7 +31,7 @@ class SemanticParserTester {
     @Test
     fun testDeclarationStatementShouldFail() {
         val lexer = Lexer
-        val syntaxParser = SyntacticParser(Lexer.lex("let a: String; let a: Number;", listOf()))
+        val syntaxParser = SyntacticParser(Lexer.lex("let a: String; let a: Number;"))
         val semanticParser = SemanticParser()
         val ast: SyntacticParser.RootNode = syntaxParser.parse()
         assertFailsWith<SemanticErrorException> {
@@ -42,7 +42,7 @@ class SemanticParserTester {
     @Test
     fun testDeclarationStatementShouldPass() {
         val lexer = Lexer
-        val syntaxParser = SyntacticParser(Lexer.lex("let a: String;", listOf()))
+        val syntaxParser = SyntacticParser(Lexer.lex("let a: String;"))
         val semanticParser = SemanticParser()
         val ast: SyntacticParser.RootNode = syntaxParser.parse()
         semanticParser.run(ast)
@@ -51,7 +51,7 @@ class SemanticParserTester {
     @Test
     fun testAssignationStatementShouldPass() {
         val lexer = Lexer
-        val syntaxParser = SyntacticParser(Lexer.lex("let a: String; a = 'testing';", listOf()))
+        val syntaxParser = SyntacticParser(Lexer.lex("let a: String; a = 'testing';"))
         val semanticParser = SemanticParser()
         val ast: SyntacticParser.RootNode = syntaxParser.parse()
         semanticParser.run(ast)
@@ -60,7 +60,7 @@ class SemanticParserTester {
     @Test
     fun testAssignationToConstShouldFail() {
         val lexer = Lexer
-        val syntaxParser = SyntacticParser(Lexer.lex("const a: String = 'testing'; a = 'validator';", listOf()))
+        val syntaxParser = SyntacticParser(Lexer.lex("const a: String = 'testing'; a = 'validator';"))
         val semanticParser = SemanticParser()
 
         assertFailsWith<SemanticErrorException> {
@@ -72,7 +72,7 @@ class SemanticParserTester {
     @Test
     fun testAssignationToNonExistentVariableShouldFail() {
         val lexer = Lexer
-        val syntaxParser = SyntacticParser(Lexer.lex("let a: String; a = b;", listOf()))
+        val syntaxParser = SyntacticParser(Lexer.lex("let a: String; a = b;"))
         val semanticParser = SemanticParser()
 
         assertFailsWith<SemanticErrorException> {
@@ -84,7 +84,7 @@ class SemanticParserTester {
     @Test
     fun testAssignationToDifferentDeclaredTypeShouldFail() {
         val lexer = Lexer
-        val syntaxParser = SyntacticParser(Lexer.lex("let a: String; a = 22;", listOf()))
+        val syntaxParser = SyntacticParser(Lexer.lex("let a: String; a = 22;"))
         val semanticParser = SemanticParser()
         val ast: SyntacticParser.RootNode = syntaxParser.parse()
         assertFailsWith<SemanticErrorException> {
