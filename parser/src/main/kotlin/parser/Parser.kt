@@ -1,7 +1,8 @@
 package parser
 
-import parser.exceptions.SemanticErrorException
+import SemanticErrorException
 import token.Token
+
 
 class Parser {
     private val syntacticParser = SyntacticParser()

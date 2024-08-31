@@ -24,7 +24,7 @@ class ParserTester {
 
     @Test
     fun testOperation() {
-        val tokens = Lexer.lex("let a : Number = 3 + 5;", listOf())
+        val tokens = Lexer.lex("let a : Number = 3 + 5;")
         val parser = SyntacticParser(tokens)
         val ast = parser.parse()
 
@@ -58,7 +58,7 @@ class ParserTester {
 
     @Test
     fun testStringOperation() {
-        val tokens = Lexer.lex("let a: String = 'Hello' + 'World';", listOf())
+        val tokens = Lexer.lex("let a: String = 'Hello' + 'World';")
 
         val parser = SyntacticParser(tokens)
 
@@ -99,13 +99,13 @@ class ParserTester {
     @Test
     fun testTokenSplittingBySemicolon() {
         val lexer = Lexer
-        val tokens: List<Token> = lexer.lex("println(23);", listOf())
+        val tokens: List<Token> = lexer.lex("println(23);")
         println(getTokenSublist(tokens))
     }
 
     @Test
     fun testBuildDeclarationAST() {
-        val syntaxParser = SyntacticParser(tokens = Lexer.lex("let a: Number;", listOf()))
+        val syntaxParser = SyntacticParser(tokens = Lexer.lex("let a: Number;")
         val ast: SyntacticParser.RootNode = syntaxParser.parse()
         val expectedNodeType = "VARIABLE_EXPRESSION"
         val expectedDataType = "Number"
