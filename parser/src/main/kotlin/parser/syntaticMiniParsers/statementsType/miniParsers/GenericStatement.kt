@@ -36,6 +36,7 @@ class GenericStatement(private val nextStatementsList: List<Pair<String, MiniSta
 
             // Check if the next token in the queue matches the expected statement type
             if (manager.checkNextTokenType(statementType)) {
+                manager.advance()
                 return typeOfStatements.parse(manager.getTokens())  // Parse the tokens using the matching parser
             }
         }

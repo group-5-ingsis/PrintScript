@@ -11,7 +11,7 @@ class Term(private val parseInferiorFunction: MiniExpressionParser) : MiniExpres
     override fun parse(tokens: List<Token>): ParseResult {
         var (remainingTokens, expression) =  parseInferiorFunction.parse(tokens)
 
-        val tokenMng = TokenManager(remainingTokens)
+        var tokenMng = TokenManager(remainingTokens)
 
         fun isMinusOrPlus(): Boolean{
             return if (tokenMng.isNotTheEndOfTokens()){
@@ -25,8 +25,9 @@ class Term(private val parseInferiorFunction: MiniExpressionParser) : MiniExpres
             val position = tokenMng.getPosition()
             tokenMng.advance()
 
-            val (remainingTokens2, rightExpression) =  parseInferiorFunction.parse(tokens)
+            val (remainingTokens2, rightExpression) =  parseInferiorFunction.parse(tokenMng.getTokens())
             remainingTokens = remainingTokens2
+            tokenMng = TokenManager(remainingTokens2)
             expression = Expression.Binary(expression, tokenOperator, rightExpression, position)
         }
 

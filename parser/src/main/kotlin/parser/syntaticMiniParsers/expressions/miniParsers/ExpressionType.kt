@@ -13,7 +13,7 @@ class ExpressionType(private val parseInferiorFunction: MiniExpressionParser): M
 
     companion object{
         fun makeExpressionEvaluator(): ExpressionType {
-            return  ExpressionType(Assigment(Comparison(Term(Factor(Unary(Primary(makeExpressionEvaluator())))))))
+            return  ExpressionType(Assigment(Comparison(Term(Factor(Unary(Primary()))))))
         }
     }
 

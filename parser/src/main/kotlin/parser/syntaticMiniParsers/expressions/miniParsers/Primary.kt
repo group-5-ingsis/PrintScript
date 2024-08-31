@@ -8,7 +8,7 @@ import parser.syntaticMiniParsers.TokenManager
 import token.Token
 
 
-class Primary(private val parseInferiorFunction: MiniExpressionParser) : MiniExpressionParser{
+class Primary() : MiniExpressionParser{
 
     override fun parse(tokens: List<Token>): ParseResult {
 
@@ -39,13 +39,14 @@ class Primary(private val parseInferiorFunction: MiniExpressionParser) : MiniExp
         }else if (tokenMng.checkNextTokenType("NULL")){
             tokenMng.advance()
             return Pair(tokenMng.getTokens(), Expression.Literal(null, position))
-        }else if (tokenMng.checkTokensAreFromSomeTypes(listOf("NUMBER", "STRING"))){
 
-            return Pair(tokenMng.getTokens(), Expression.Literal(getNextLiteral(), position))
+        }else if (tokenMng.checkTokensAreFromSomeTypes(listOf("NUMBER", "STRING"))){
+            val nextLiteral = getNextLiteral()
+            return Pair(tokenMng.getTokens(), Expression.Literal(nextLiteral, position))
 
         }else if (tokenMng.peek().value == "("){
             tokenMng.advance()
-            val expr = ExpressionType(Assigment(Comparison(Term(Factor(Unary(this)))))).parse(tokenMng.getTokens())
+            val expr = ExpressionType(Assigment(Comparison(Term(Factor(Unary(Primary())))))).parse(tokenMng.getTokens())
             val newTK = TokenManager(expr.first)
             newTK.consumeTokenValue(")")
             return Pair(expr.first, Expression.Grouping(expr.second, position))
