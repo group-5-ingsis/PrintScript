@@ -1,15 +1,17 @@
 package nodes
 
+import Environment
+import VisitorResultExpressions
 import position.Position
-import visitor.NodeVisitor
+import position.visitor.ExpressionVisitor
 
 sealed class Expression {
     abstract val expressionType: String
     abstract val position: Position
 
-    fun acceptVisitor(visitor: NodeVisitor): Any? {
+    fun acceptVisitor(visitor: ExpressionVisitor, environment: Environment): VisitorResultExpressions {
         val func = visitor.getVisitorFunctionForExpression(expressionType)
-        return func(this)
+        return func(this, environment)
     }
 
     // There are complex expression that are variables exp: Position(x, y).y = 5, refers to this

@@ -2,7 +2,6 @@ package formatter
 
 import rules.FormattingRules
 import rules.RuleApplier
-import visitor.Visitor
 
 class FormattingVisitor(private val rules: FormattingRules) : Visitor {
     private val output = StringBuilder()

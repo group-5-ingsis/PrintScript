@@ -2,7 +2,8 @@ package parser.validation
 
 import Environment
 import nodes.StatementType
-import visitor.NodeVisitor
+import position.visitor.ExpressionVisitor
+import position.visitor.StatementVisitor
 
 class VariableStatementValidator : Validator<StatementType.Variable> {
     override fun validate(node: StatementType.Variable, scope: Environment): ValidationResult {
@@ -29,9 +30,9 @@ class VariableStatementValidator : Validator<StatementType.Variable> {
                 "Variable '${node.identifier}' has no value assigned."
             )
 
-        val initializerValue = value.acceptVisitor(NodeVisitor(varTable))
+        val initializerValue = value.acceptVisitor(ExpressionVisitor(), varTable)
 
-        val actualType = when (initializerValue) {
+        val actualType = when (initializerValue.first) {
             is String -> "String"
             is Int -> "Int"
             is Float -> "Float"

@@ -2,14 +2,14 @@ package interpreter
 
 import Environment
 import parser.SyntacticParser
-import visitor.NodeVisitor
+import position.visitor.StatementVisitor
 
 object Interpreter {
 
-    fun interpret(rootAstNode: SyntacticParser.RootNode, scope: Environment): String {
-        val nodeVisitor = NodeVisitor(scope)
-        rootAstNode.accept(nodeVisitor)
-        val output = nodeVisitor.getOutput()
-        return output
+    fun interpret(rootAstNode: SyntacticParser.RootNode, scope: Environment): Environment {
+        val nodeVisitor = StatementVisitor()
+        return rootAstNode.accept(nodeVisitor, scope)
     }
+
+
 }

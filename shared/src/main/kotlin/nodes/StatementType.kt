@@ -1,16 +1,18 @@
 package nodes
 
+import Environment
 import position.Position
-import visitor.Visitor
+import position.visitor.StatementVisitor
 
 sealed class StatementType {
 
     abstract val statementType: String
     abstract val position: Position
-    fun acceptVisitor(visitor: Visitor) {
-        val func = visitor.getVisitorFunctionForStatement(statementType)
 
-        func(this)
+
+    fun acceptVisitor(visitor: StatementVisitor, environment: Environment) : Environment{
+        val func = visitor.getVisitorFunctionForStatement(statementType)
+        return func(this, environment)
     }
 
     class Print(val value: Expression.Grouping, override val position: Position) : StatementType() {
@@ -36,7 +38,7 @@ sealed class StatementType {
         val dataType: String,
         override val position: Position
     ) : StatementType() {
-        override val statementType: String = "VARIABLE_EXPRESSION"
+        override val statementType: String = "VARIABLE_STATEMENT"
         init {
             DataTypeManager.checkDataType(dataType)
             DataTypeManager.checkVariableDec(designation)

@@ -4,7 +4,7 @@ import Environment
 import SemanticErrorException
 import parser.validation.SemanticValidator
 import parser.validation.ValidationResult
-import visitor.NodeVisitor
+import position.visitor.StatementVisitor
 
 class SemanticParser {
     private val validator = SemanticValidator()
@@ -12,8 +12,8 @@ class SemanticParser {
     @Throws(SemanticErrorException::class)
     fun run(ast: SyntacticParser.RootNode): SyntacticParser.RootNode {
         val environment = Environment()
-        ast.accept(NodeVisitor(environment))
-        val result = runValidators(ast, environment)
+        val newEnv = ast.accept(StatementVisitor(), environment)
+        val result = runValidators(ast, newEnv)
 
         if (result.isInvalid) {
             throw SemanticErrorException("Invalid procedure: " + result.message)
