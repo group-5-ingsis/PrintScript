@@ -125,7 +125,7 @@ class ParserTester {
 
         val syntaxParser = SyntacticParser(tokens = Lexer.lex("let a: Number;"))
         val ast: SyntacticParser.RootNode = syntaxParser.parse()
-        val expectedNodeType = "VARIABLE_EXPRESSION"
+        val expectedNodeType = "VARIABLE_STATEMENT"
         val expectedDataType = "Number"
         val expectedKindVariableDeclaration = "let"
         val expectedIdentifier = "a"

@@ -4,7 +4,6 @@ import Environment
 import SemanticErrorException
 import parser.validation.SemanticValidator
 import token.Token
-import visitor.NodeVisitor
 
 
 // Singleton object since it can be reused with different arguments.

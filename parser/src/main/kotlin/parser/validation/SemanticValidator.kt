@@ -7,7 +7,7 @@ import parser.SyntacticParser
 class SemanticValidator {
     private val validatorsForTypes: Map<String, Validator<StatementType>> =
         mutableMapOf(
-            "VARIABLE_EXPRESSION" to VariableStatementValidator() as Validator<StatementType>,
+            "VARIABLE_STATEMENT" to VariableStatementValidator() as Validator<StatementType>,
             "PRINT" to PrintValidator() as Validator<StatementType>,
             "STATEMENT_EXPRESSION" to StatementExpressionValidator() as Validator<StatementType>
         )

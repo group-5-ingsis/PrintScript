@@ -1,16 +1,12 @@
 package parser
 
 
-import UnknownExpressionException
-import exceptions.BadSyntacticException
-import nodes.DataTypeManager
-import nodes.Expression
+import Environment
 import nodes.StatementType
 import parser.syntaticMiniParsers.TokenManager
 import parser.syntaticMiniParsers.statementsType.miniParsers.GenericStatement
-import position.Position
+import position.visitor.StatementVisitor
 import token.Token
-import visitor.NodeVisitor
 
 
 class SyntacticParser(private val tokens : List<Token>) {
@@ -85,10 +81,13 @@ class SyntacticParser(private val tokens : List<Token>) {
       }
     }
 
-    fun accept(visitor: NodeVisitor) {
-      for (child in children) {
-        child.acceptVisitor(visitor)
+    fun accept(visitor: StatementVisitor, environment: Environment): Environment {
+        var env  = environment.getCopy()
+        for (child in children) {
+          env = child.acceptVisitor(visitor, env)
+
       }
+        return env
     }
 
 

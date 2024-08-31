@@ -3,7 +3,7 @@ package parser.validation
 import Environment
 import nodes.Expression
 import nodes.StatementType
-import visitor.NodeVisitor
+import position.visitor.ExpressionVisitor
 
 class StatementExpressionValidator : Validator<StatementType.StatementExpression> {
 
@@ -19,7 +19,7 @@ class StatementExpressionValidator : Validator<StatementType.StatementExpression
                         "Variable '$identifier' is not declared in the current scope."
                     )
 
-                val actualValue = valueExpression.acceptVisitor(NodeVisitor(scope))
+                val actualValue = valueExpression.acceptVisitor(ExpressionVisitor(), scope)
                 val actualType = getTypeInString(actualValue)
 
                 if (getTypeInString(variableInfo) != actualType) {
