@@ -7,7 +7,7 @@ import parser.syntaticMiniParsers.statementsType.MiniStatementParser
 import parser.syntaticMiniParsers.statementsType.ParseStatementResult
 import token.Token
 
-class ConstDeclaration: MiniStatementParser {
+class ConstDeclaration : MiniStatementParser {
     override fun parse(tokens: List<Token>): ParseStatementResult {
         val manager = TokenManager(tokens)
 

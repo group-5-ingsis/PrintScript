@@ -24,7 +24,6 @@ object TypesMapGenerator {
         val fileName = "token_types.txt"
         val map = mutableMapOf<String, String>()
 
-        // Access the file as a resource from the classpath
         val inputStream =
             this::class.java.classLoader.getResourceAsStream(fileName)
                 ?: throw IllegalArgumentException("Resource not found: $fileName")
@@ -51,10 +50,5 @@ object TypesMapGenerator {
     private fun createPattern(symbols: List<String>): String {
         if (symbols.isEmpty()) return ""
         return "^(${symbols.joinToString("|")})$"
-    }
-
-    fun isValidVariableName(value: String): Boolean {
-        val variableNamePattern = "^[a-zA-Z_][a-zA-Z0-9_]*$"
-        return value.matches(Regex(variableNamePattern))
     }
 }

@@ -4,7 +4,6 @@
  * and the variable's value.
  */
 
-
 typealias VisitorResultExpressions = Pair<Any?, Environment>
 
 class Environment {
@@ -37,7 +36,7 @@ class Environment {
      * @param declaration Specifies whether the variable is a constant ("const") or a regular variable ("let").
      * @throws IllegalArgumentException If `declaration` is "const" and `value` is `null`.
      */
-    fun define(name: String, value: Any?, declaration: String) : Environment {
+    fun define(name: String, value: Any?, declaration: String): Environment {
         val newEnvironment = getDeepCopyFromEnvironment()
 
         if (declaration == "const" && value == null) {
@@ -62,7 +61,7 @@ class Environment {
         throw Error("Undefined variable '$name'.")
     }
 
-    fun assign(name: String, value: Any?) : Environment {
+    fun assign(name: String, value: Any?): Environment {
         if (values.containsKey(name)) {
             val newScope = getDeepCopyFromEnvironment()
             val valueStored: Pair<String, Any?>? = newScope[name]
@@ -77,7 +76,7 @@ class Environment {
         throw Error("Undefined variable '$name'. and its try to be assigned")
     }
 
-    private fun checkDontReAssignToConst(value:  Pair<String, Any?>?, name: String){
+    private fun checkDontReAssignToConst(value: Pair<String, Any?>?, name: String) {
         if (value?.first == "const") {
             throw Exception("Cannot assign variable '$name' to a const.")
         }
@@ -109,12 +108,11 @@ class Environment {
         return deepCopiedValues
     }
 
-    fun getCopy(): Environment{
+    fun getCopy(): Environment {
         return Environment(getDeepCopyFromEnvironment())
     }
 
-    fun contains(varName: String): Boolean{
+    fun contains(varName: String): Boolean {
         return values.containsKey(varName)
     }
-
 }

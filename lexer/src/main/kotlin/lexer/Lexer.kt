@@ -1,33 +1,93 @@
 package lexer
 
-import SymbolProvider.getKeywordMatrix
 import token.Token
-import token.TokenGenerator.generateToken
+import token.TokenGenerator
 
-object Lexer {
-    fun lex(input: String): List<Token> {
-        return getTokenList(input)
+class Lexer(input: String) : Iterator<Token> {
+    private val inputIterator = input.iterator()
+    private var currentChar: Char? = null
+    private var currentBuffer = StringBuilder()
+    private var currentRow = 0
+    private var currentIndex = 0
+
+    private var nextToken: Token? = null
+
+    override fun hasNext(): Boolean {
+        return nextToken != null || inputIterator.hasNext() || currentBuffer.isNotEmpty()
     }
 
-    private fun getTokenList(keywords: String): List<Token> {
-        val keywordMatrix: List<List<String>> = getKeywordMatrix(keywords)
+    override fun next(): Token {
+        if (nextToken != null) {
+            val token = nextToken
+            nextToken = null
+            return token ?: throw NoSuchElementException("No more tokens")
+        }
 
-        val tokens: MutableList<Token> = mutableListOf()
+        while (inputIterator.hasNext()) {
+            currentChar = inputIterator.next()
+            currentIndex++
 
-        val lines = keywordMatrix.indices
+            if (currentChar == '\n') {
+                currentRow++
+                currentIndex = 0
+                if (currentBuffer.isNotEmpty()) {
+                    return generateTokenFromBuffer()
+                }
+                continue
+            }
 
-        for (line in lines) {
-            val words = keywordMatrix[line].indices
+            if (currentChar == ';' || currentChar == ':' || currentChar == '(' || currentChar == ')' || currentChar!!.isWhitespace()) {
+                if (currentBuffer.isNotEmpty()) {
+                    val token = generateTokenFromBuffer()
+                    nextToken = if (!currentChar!!.isWhitespace()) {
+                        TokenGenerator.generateToken(currentChar.toString(), currentRow, currentIndex - 1)
+                    } else {
+                        null
+                    }
+                    return token
+                }
 
-            for (wordPosition in words) {
-                val keyword = keywordMatrix[line][wordPosition]
+                if (!currentChar!!.isWhitespace()) {
+                    return TokenGenerator.generateToken(currentChar.toString(), currentRow, currentIndex - 1)
+                }
+                continue
+            }
 
-                val token = generateToken(keyword, line, wordPosition)
+            currentBuffer.append(currentChar)
 
-                tokens.add(token)
+            val bufferValue = currentBuffer.toString()
+            val currentType = TokenGenerator.getTypeFromValue(bufferValue)
+
+            if (currentType == "KEYWORD" && inputIterator.hasNext()) {
+                val nextChar = inputIterator.nextChar()
+
+                if (nextChar.isLetterOrDigit()) {
+                    val token = generateTokenFromBuffer()
+                    currentBuffer.append(nextChar)
+                    return token
+                }
+            }
+
+            val potentialNextType = TokenGenerator.getTypeFromValue(bufferValue)
+            if (currentType != potentialNextType && potentialNextType != "UNKNOWN") {
+                currentBuffer.deleteCharAt(currentBuffer.length - 1)
+                val token = generateTokenFromBuffer()
+                currentBuffer.append(currentChar)
+                return token
             }
         }
 
-        return tokens
+        if (currentBuffer.isNotEmpty()) {
+            return generateTokenFromBuffer()
+        }
+
+        throw NoSuchElementException("No more tokens")
+    }
+
+    private fun generateTokenFromBuffer(): Token {
+        val value = currentBuffer.toString()
+        currentBuffer.clear()
+
+        return TokenGenerator.generateToken(value, currentRow, currentIndex - value.length)
     }
 }

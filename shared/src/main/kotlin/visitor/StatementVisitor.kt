@@ -42,25 +42,21 @@ class StatementVisitor {
             }
         }
     }
-     fun visitPrintStm(statement: StatementType.Print, environment: Environment) : Environment {
+    fun visitPrintStm(statement: StatementType.Print, environment: Environment): Environment {
         val value = evaluateExpression(statement.value, environment)
-         println(value.first)
-         return environment
-
+        println(value.first)
+        return environment
     }
-     fun visitExpressionStm(statement: StatementType.StatementExpression, environment: Environment) : Environment{
+    fun visitExpressionStm(statement: StatementType.StatementExpression, environment: Environment): Environment {
         return evaluateExpression(statement.value, environment).second
     }
-     fun visitVariableStm(statement: StatementType.Variable, environment: Environment) : Environment{
+    fun visitVariableStm(statement: StatementType.Variable, environment: Environment): Environment {
         // remember that if the type is correct is check in other place.
         val nullValue = null
         if (statement.initializer != null) {
             val (newValue, newEnvironment) = evaluateExpression(statement.initializer, environment)
             return newEnvironment.define(statement.identifier, newValue, statement.designation)
         }
-         return environment.define(statement.identifier, nullValue, statement.designation)
+        return environment.define(statement.identifier, nullValue, statement.designation)
     }
-
-
-
 }

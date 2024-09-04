@@ -9,8 +9,7 @@ sealed class StatementType {
     abstract val statementType: String
     abstract val position: Position
 
-
-    fun acceptVisitor(visitor: StatementVisitor, environment: Environment) : Environment{
+    fun acceptVisitor(visitor: StatementVisitor, environment: Environment): Environment {
         val func = visitor.getVisitorFunctionForStatement(statementType)
         return func(this, environment)
     }

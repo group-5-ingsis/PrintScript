@@ -95,22 +95,18 @@ class TokenManager(tokens: List<Token>) {
         throw BadSyntacticException("Expect: $value after expression.")
     }
 
-
-     fun consumeTokenType(type: String): Token {
+    fun consumeTokenType(type: String): Token {
         if (peek().type == type) return advance()
 
         throw BadSyntacticException("Expect this type: $type")
     }
 
-
     fun isNotTheEndOfTokens(): Boolean {
-        return (! tokenQueue.isEmpty())
+        return (!tokenQueue.isEmpty())
     }
 
     fun checkTokensAreFromSomeTypes(types: List<String>): Boolean {
         val nextTokenType = peek().type
         return types.contains(nextTokenType)
     }
-
-
 }

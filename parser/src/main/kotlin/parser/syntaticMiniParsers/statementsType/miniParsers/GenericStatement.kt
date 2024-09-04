@@ -27,17 +27,15 @@ class GenericStatement(private val nextStatementsList: List<Pair<String, MiniSta
      * @throws NoSuchElementException if the token list is empty and no match is found.
      */
 
-
     override fun parse(tokens: List<Token>): ParseStatementResult {
-        val manager = TokenManager(tokens)  // Initialize the TokenManager with the provided tokens
+        val manager = TokenManager(tokens) // Initialize the TokenManager with the provided tokens
 
         // Iterate through the list of statement types and their corresponding parsers
         for ((statementType, typeOfStatements) in nextStatementsList) {
-
             // Check if the next token in the queue matches the expected statement type
             if (manager.checkNextTokenType(statementType)) {
                 manager.advance()
-                return typeOfStatements.parse(manager.getTokens())  // Parse the tokens using the matching parser
+                return typeOfStatements.parse(manager.getTokens()) // Parse the tokens using the matching parser
             }
         }
 
@@ -46,26 +44,28 @@ class GenericStatement(private val nextStatementsList: List<Pair<String, MiniSta
         return typeOfStatements.parse(manager.getTokens())
     }
 
-
-    companion object{
+    companion object {
         fun makeStatementParser(): MiniStatementParser {
-            val statement = GenericStatement(listOf(
-                Pair("PRINT", PrintStatement()),
-                Pair("", ExpressionStatement())
-            ))
+            val statement = GenericStatement(
+                listOf(
+                    Pair("PRINT", PrintStatement()),
+                    Pair("", ExpressionStatement())
+                )
+            )
 
             val declarationAssignationStatement = GenericStatement(
                 listOf(
                     Pair(
-                        "DECLARATION_KEYWORD", LetDeclaration()
+                        "DECLARATION_KEYWORD",
+                        LetDeclaration()
                     ),
                     Pair(
-                        "CONST", ConstDeclaration()
+                        "CONST",
+                        ConstDeclaration()
                     ),
                     Pair("", statement)
                 )
             )
-
 
             return declarationAssignationStatement
         }

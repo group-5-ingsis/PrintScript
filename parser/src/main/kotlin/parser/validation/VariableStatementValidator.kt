@@ -3,7 +3,6 @@ package parser.validation
 import Environment
 import nodes.StatementType
 import position.visitor.ExpressionVisitor
-import position.visitor.StatementVisitor
 
 class VariableStatementValidator : Validator<StatementType.Variable> {
     override fun validate(node: StatementType.Variable, scope: Environment): ValidationResult {

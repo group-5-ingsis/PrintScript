@@ -10,6 +10,4 @@ object Interpreter {
         val nodeVisitor = StatementVisitor()
         return rootAstNode.accept(nodeVisitor, scope)
     }
-
-
 }

@@ -1,3 +1,5 @@
+package token
+
 object SymbolProvider {
     /**
      * Extracts a matrix of keywords from the given input string.

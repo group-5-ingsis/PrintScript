@@ -7,7 +7,7 @@ import parser.syntaticMiniParsers.statementsType.MiniStatementParser
 import parser.syntaticMiniParsers.statementsType.ParseStatementResult
 import token.Token
 
-class ExpressionStatement(): MiniStatementParser {
+class ExpressionStatement() : MiniStatementParser {
     override fun parse(tokens: List<Token>): ParseStatementResult {
         val (remainingTokens, exp) = ExpressionType.makeExpressionEvaluator().parse(tokens)
         val manager = TokenManager(remainingTokens)

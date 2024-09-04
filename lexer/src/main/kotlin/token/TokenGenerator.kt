@@ -30,9 +30,8 @@ object TokenGenerator {
             }
         }
 
-        // cambiar de lugar -> Interpreter o StaticCodeAnalyzer
-        val isValidVariableName = TypesMapGenerator.isValidVariableName(value)
-        if (isValidVariableName) {
+        val variableNamePattern = "^[a-zA-Z_][a-zA-Z0-9_]*$"
+        if (value.matches(Regex(variableNamePattern))) {
             return "IDENTIFIER"
         }
 

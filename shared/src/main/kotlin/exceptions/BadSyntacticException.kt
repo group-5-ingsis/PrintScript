@@ -1,4 +1,3 @@
 package exceptions
 
-class BadSyntacticException(message: String) : Exception(message) {
-}
+class BadSyntacticException(message: String) : Exception(message)

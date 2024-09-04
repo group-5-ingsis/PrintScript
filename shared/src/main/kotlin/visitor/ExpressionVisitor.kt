@@ -4,18 +4,15 @@ import Environment
 import VisitorResultExpressions
 import nodes.Expression
 
-
 class ExpressionVisitor {
-
-
 
     private fun evaluateExpression(expr: Expression, environment: Environment): VisitorResultExpressions {
         return expr.acceptVisitor(this, environment)
     }
-     fun visitLiteralExp(exp: Expression.Literal, environment: Environment): VisitorResultExpressions {
+    fun visitLiteralExp(exp: Expression.Literal, environment: Environment): VisitorResultExpressions {
         return Pair(exp.value, environment)
     }
-     fun visitGroupExp(exp: Expression.Grouping, environment: Environment): VisitorResultExpressions {
+    fun visitGroupExp(exp: Expression.Grouping, environment: Environment): VisitorResultExpressions {
         return evaluateExpression(exp.expression, environment)
     }
     fun visitUnaryExpr(exp: Expression.Unary, environment: Environment): Pair<Any?, Environment> {
@@ -32,8 +29,6 @@ class ExpressionVisitor {
             else -> throw IllegalArgumentException("Unsupported types for ${exp.operator} in Unary operation: $rightObject")
         }
     }
-
-
 
     fun visitBinaryExpr(exp: Expression.Binary, scope: Environment): Pair<Any?, Environment> {
         val (left, leftScope) = evaluateExpression(exp.left, scope)
@@ -144,40 +139,40 @@ class ExpressionVisitor {
         }
     }
 
-    fun visitVariableExp(exp: Expression.Variable, scope: Environment) : VisitorResultExpressions {
+    fun visitVariableExp(exp: Expression.Variable, scope: Environment): VisitorResultExpressions {
         return Pair(scope.get(exp.name), scope)
     }
 
-     fun visitAssignExpr(exp: Expression.Assign, scope: Environment): VisitorResultExpressions {
+    fun visitAssignExpr(exp: Expression.Assign, scope: Environment): VisitorResultExpressions {
         val (value, newScope) = evaluateExpression(exp.value, scope)
-         val newScope2 = newScope.assign(exp.name, value)
+        val newScope2 = newScope.assign(exp.name, value)
         return Pair(value, newScope2)
     }
-     fun getVisitorFunctionForExpression(expressionType: String): (Expression, Environment) -> VisitorResultExpressions {
-         return when (expressionType) {
-             "ASSIGNMENT_EXPRESSION" -> { expr, env ->
-                 if (expr is Expression.Assign) visitAssignExpr(expr, env) else throw IllegalArgumentException("Invalid expression type for ASSIGNMENT_EXPRESSION")
-             }
-             "VARIABLE_EXPRESSION" -> { expr, env ->
-                 if (expr is Expression.Variable) visitVariableExp(expr, env) else throw IllegalArgumentException("Invalid expression type for VARIABLE_EXPRESSION")
-             }
-             "BINARY_EXPRESSION" -> { expr, env ->
-                 if (expr is Expression.Binary) visitBinaryExpr(expr, env) else throw IllegalArgumentException("Invalid expression type for BINARY_EXPRESSION")
-             }
-             "GROUPING_EXPRESSION" -> { expr, env ->
-                 if (expr is Expression.Grouping) visitGroupExp(expr, env) else throw IllegalArgumentException("Invalid expression type for GROUPING_EXPRESSION")
-             }
-             "LITERAL_EXPRESSION" -> { expr, env ->
-                 if (expr is Expression.Literal) visitLiteralExp(expr, env) else throw IllegalArgumentException("Invalid expression type for LITERAL_EXPRESSION")
-             }
-             "UNARY_EXPRESSION" -> { expr, env ->
-                 if (expr is Expression.Unary) visitUnaryExpr(expr, env) else throw IllegalArgumentException("Invalid expression type for UNARY_EXPRESSION")
-             }
-             "IDENTIFIER"-> { expr, env ->
-                 if (expr is Expression.IdentifierExpression) visitIdentifierExp(expr, env) else throw IllegalArgumentException("Invalid expression type for UNARY_EXPRESSION")
-             }
-             else -> throw IllegalArgumentException("Unsupported expression type: $expressionType")
-         }
+    fun getVisitorFunctionForExpression(expressionType: String): (Expression, Environment) -> VisitorResultExpressions {
+        return when (expressionType) {
+            "ASSIGNMENT_EXPRESSION" -> { expr, env ->
+                if (expr is Expression.Assign) visitAssignExpr(expr, env) else throw IllegalArgumentException("Invalid expression type for ASSIGNMENT_EXPRESSION")
+            }
+            "VARIABLE_EXPRESSION" -> { expr, env ->
+                if (expr is Expression.Variable) visitVariableExp(expr, env) else throw IllegalArgumentException("Invalid expression type for VARIABLE_EXPRESSION")
+            }
+            "BINARY_EXPRESSION" -> { expr, env ->
+                if (expr is Expression.Binary) visitBinaryExpr(expr, env) else throw IllegalArgumentException("Invalid expression type for BINARY_EXPRESSION")
+            }
+            "GROUPING_EXPRESSION" -> { expr, env ->
+                if (expr is Expression.Grouping) visitGroupExp(expr, env) else throw IllegalArgumentException("Invalid expression type for GROUPING_EXPRESSION")
+            }
+            "LITERAL_EXPRESSION" -> { expr, env ->
+                if (expr is Expression.Literal) visitLiteralExp(expr, env) else throw IllegalArgumentException("Invalid expression type for LITERAL_EXPRESSION")
+            }
+            "UNARY_EXPRESSION" -> { expr, env ->
+                if (expr is Expression.Unary) visitUnaryExpr(expr, env) else throw IllegalArgumentException("Invalid expression type for UNARY_EXPRESSION")
+            }
+            "IDENTIFIER" -> { expr, env ->
+                if (expr is Expression.IdentifierExpression) visitIdentifierExp(expr, env) else throw IllegalArgumentException("Invalid expression type for UNARY_EXPRESSION")
+            }
+            else -> throw IllegalArgumentException("Unsupported expression type: $expressionType")
+        }
     }
 
     fun visitIdentifierExp(exp: Expression.IdentifierExpression, environment: Environment): VisitorResultExpressions {
@@ -195,7 +190,6 @@ class ExpressionVisitor {
         return true
     }
 
-
     fun convertToDouble(value: Any?): Double {
         return when (value) {
             is Double -> value
@@ -206,6 +200,4 @@ class ExpressionVisitor {
             else -> throw IllegalArgumentException("Unsupported type: $value")
         }
     }
-
-
 }

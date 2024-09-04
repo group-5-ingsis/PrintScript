@@ -4,7 +4,6 @@ import org.junit.Assert.assertEquals
 import org.junit.Test
 import parser.Parser
 import token.Token
-import kotlin.test.assertTrue
 
 class InterpreterTest {
 
@@ -91,7 +90,6 @@ class InterpreterTest {
         val initialScope: Environment = Environment()
         val newScope = interpreter.interpret(ast, initialScope)
         assertEquals(4, newScope.get("a"))
-
     }
 
     @Test
