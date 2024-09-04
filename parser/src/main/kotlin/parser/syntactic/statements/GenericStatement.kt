@@ -1,8 +1,6 @@
-package parser.syntactic.statementsType.miniParsers
+package parser.syntactic.statements
 
 import parser.syntactic.TokenManager
-import parser.syntactic.statementsType.MiniStatementParser
-import parser.syntactic.statementsType.ParseStatementResult
 import token.Token
 
 /**
@@ -12,7 +10,7 @@ import token.Token
  *  - `String`: The expected type of statement as a string (e.g., "DECLARATION", "ASSIGNATION").
  *  - `MiniStatementParser`: The parser that should be used if the token matches the expected statement type.
  */
-class GenericStatement(private val nextStatementsList: List<Pair<String, MiniStatementParser>>) : MiniStatementParser {
+class GenericStatement(private val nextStatementsList: List<Pair<String, StatementParser>>) : StatementParser {
 
     /**
      * Parses a list of tokens and determines which type of statement it represents, then
@@ -45,7 +43,7 @@ class GenericStatement(private val nextStatementsList: List<Pair<String, MiniSta
     }
 
     companion object {
-        fun makeStatementParser(): MiniStatementParser {
+        fun makeStatementParser(): StatementParser {
             val statement = GenericStatement(
                 listOf(
                     Pair("PRINT", PrintStatement()),

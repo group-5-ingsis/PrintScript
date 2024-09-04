@@ -7,11 +7,11 @@ import parser.semantic.validation.ValidationResult
 import parser.syntactic.SyntacticParser
 import position.visitor.StatementVisitor
 
-class SemanticParser {
+object SemanticParser {
     private val validator = SemanticValidator()
 
     @Throws(SemanticErrorException::class)
-    fun run(ast: SyntacticParser.RootNode): SyntacticParser.RootNode {
+    fun validate(ast: SyntacticParser.RootNode): SyntacticParser.RootNode {
         val environment = Environment()
         val newEnv = ast.accept(StatementVisitor(), environment)
         val result = runValidators(ast, newEnv)

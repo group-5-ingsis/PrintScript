@@ -1,12 +1,10 @@
-package parser.syntactic.expressions.miniParsers
+package parser.syntactic.expressions
 
 import nodes.Expression
 import parser.syntactic.TokenManager
-import parser.syntactic.expressions.MiniExpressionParser
-import parser.syntactic.expressions.ParseResult
 import token.Token
 
-class Comparison(private val parseInferiorFunction: MiniExpressionParser) : MiniExpressionParser {
+class Comparison(private val parseInferiorFunction: ExpressionParser) : ExpressionParser {
 
     override fun parse(tokens: List<Token>): ParseResult {
         var (remainingTokens, expression) = parseInferiorFunction.parse(tokens)

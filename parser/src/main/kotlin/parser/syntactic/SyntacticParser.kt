@@ -2,13 +2,13 @@ package parser.syntactic
 
 import Environment
 import nodes.StatementType
-import parser.syntactic.statementsType.miniParsers.GenericStatement
+import parser.syntactic.statements.GenericStatement
 import position.visitor.StatementVisitor
 import token.Token
 
-class SyntacticParser(private val tokens: List<Token>) {
+object SyntacticParser {
 
-    fun parse(): RootNode {
+    fun parse(tokens: List<Token>): RootNode {
         val node = RootNode.create()
         var manager = TokenManager(tokens)
 

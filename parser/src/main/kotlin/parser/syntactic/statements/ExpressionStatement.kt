@@ -1,13 +1,11 @@
-package parser.syntactic.statementsType.miniParsers
+package parser.syntactic.statements
 
 import nodes.StatementType
 import parser.syntactic.TokenManager
-import parser.syntactic.expressions.miniParsers.ExpressionType
-import parser.syntactic.statementsType.MiniStatementParser
-import parser.syntactic.statementsType.ParseStatementResult
+import parser.syntactic.expressions.ExpressionType
 import token.Token
 
-class ExpressionStatement() : MiniStatementParser {
+class ExpressionStatement() : StatementParser {
     override fun parse(tokens: List<Token>): ParseStatementResult {
         val (remainingTokens, exp) = ExpressionType.makeExpressionEvaluator().parse(tokens)
         val manager = TokenManager(remainingTokens)

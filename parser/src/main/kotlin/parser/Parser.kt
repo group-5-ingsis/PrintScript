@@ -1,18 +1,50 @@
 package parser
 
-import exception.SemanticErrorException
-import parser.semantic.validation.SemanticValidator
+import parser.semantic.SemanticParser
 import parser.syntactic.SyntacticParser
 import token.Token
 
-// Singleton object since it can be reused with different arguments.
-class Parser {
-    private val syntacticParser = SemanticValidator()
+class Parser(private val lexer: Iterator<Token>) : Iterator<SyntacticParser.RootNode> {
+    private val tokens = mutableListOf<Token>()
+    private var currentNode: SyntacticParser.RootNode? = null
 
-    @Throws(SemanticErrorException::class)
-    fun run(tokens: List<Token>): SyntacticParser.RootNode {
-        val ast = SyntacticParser(tokens).parse()
+    override fun hasNext(): Boolean {
+        return lexer.hasNext() || tokens.isNotEmpty() || currentNode != null
+    }
 
-        return ast
+    override fun next(): SyntacticParser.RootNode {
+        if (currentNode != null) {
+            val node = currentNode
+            currentNode = null
+            return node ?: throw NoSuchElementException("No ASTNode formed")
+        }
+
+        while (lexer.hasNext()) {
+            val token = lexer.next()
+            tokens.add(token)
+
+            if (token.value == ";") {
+                currentNode = parseStatement(tokens)
+                tokens.clear()
+                return currentNode ?: throw NoSuchElementException("No ASTNode formed")
+            }
+        }
+
+        if (tokens.isNotEmpty()) {
+            currentNode = parseStatement(tokens)
+            tokens.clear()
+            return currentNode ?: throw NoSuchElementException("No ASTNode formed")
+        }
+
+        throw NoSuchElementException("No more AST nodes")
+    }
+
+    private fun parseStatement(tokens: List<Token>): SyntacticParser.RootNode {
+        if (tokens.isEmpty()) {
+            throw IllegalArgumentException("Cannot parse an empty token list")
+        }
+
+        val astNode = SyntacticParser.parse(tokens)
+        return SemanticParser.validate(astNode)
     }
 }

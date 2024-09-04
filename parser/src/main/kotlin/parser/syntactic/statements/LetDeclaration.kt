@@ -1,15 +1,13 @@
-package parser.syntactic.statementsType.miniParsers
+package parser.syntactic.statements
 
 import nodes.DataTypeManager
 import nodes.Expression
 import nodes.StatementType
 import parser.syntactic.TokenManager
-import parser.syntactic.expressions.miniParsers.ExpressionType
-import parser.syntactic.statementsType.MiniStatementParser
-import parser.syntactic.statementsType.ParseStatementResult
+import parser.syntactic.expressions.ExpressionType
 import token.Token
 
-class LetDeclaration : MiniStatementParser {
+class LetDeclaration : StatementParser {
     override fun parse(tokens: List<Token>): ParseStatementResult {
         var manager = TokenManager(tokens)
         val position = manager.getPosition()

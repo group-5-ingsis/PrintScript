@@ -4,7 +4,7 @@ import token.Token
 
 typealias ParseResult = Pair<List<Token>, Expression>
 
-interface MiniExpressionParser {
+interface ExpressionParser {
 
     fun parse(tokens: List<Token>): ParseResult
 }

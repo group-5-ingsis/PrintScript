@@ -1,13 +1,11 @@
-package parser.syntactic.expressions.miniParsers
+package parser.syntactic.expressions
 
 import exceptions.BadSyntacticException
 import nodes.Expression
 import parser.syntactic.TokenManager
-import parser.syntactic.expressions.MiniExpressionParser
-import parser.syntactic.expressions.ParseResult
 import token.Token
 
-class Assigment(private val parseInferiorFunction: MiniExpressionParser) : MiniExpressionParser {
+class Assigment(private val parseInferiorFunction: ExpressionParser) : ExpressionParser {
 
     override fun parse(tokens: List<Token>): ParseResult {
         val (remainingTokens, expression) = parseInferiorFunction.parse(tokens)

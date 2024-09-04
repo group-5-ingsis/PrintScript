@@ -1,13 +1,11 @@
-package parser.syntactic.expressions.miniParsers
+package parser.syntactic.expressions
 
 import exception.UnknownExpressionException
 import nodes.Expression
 import parser.syntactic.TokenManager
-import parser.syntactic.expressions.MiniExpressionParser
-import parser.syntactic.expressions.ParseResult
 import token.Token
 
-class Primary() : MiniExpressionParser {
+class Primary() : ExpressionParser {
 
     override fun parse(tokens: List<Token>): ParseResult {
         val tokenMng = TokenManager(tokens)
