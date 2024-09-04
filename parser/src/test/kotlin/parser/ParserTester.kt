@@ -5,6 +5,7 @@ import lexer.Lexer
 import nodes.Expression
 import nodes.StatementType
 import org.junit.Assert.assertNull
+import parser.syntactic.SyntacticParser
 import position.Position
 import token.Token
 import kotlin.test.*

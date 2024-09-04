@@ -3,7 +3,7 @@ package linter
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.jsonObject
-import parser.SyntacticParser
+import parser.syntactic.SyntacticParser
 import visitor.LinterVisitor
 import java.nio.file.Files
 import java.nio.file.Paths

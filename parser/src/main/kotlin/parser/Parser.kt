@@ -1,7 +1,8 @@
 package parser
 
-import SemanticErrorException
-import parser.validation.SemanticValidator
+import exception.SemanticErrorException
+import parser.semantic.validation.SemanticValidator
+import parser.syntactic.SyntacticParser
 import token.Token
 
 // Singleton object since it can be reused with different arguments.

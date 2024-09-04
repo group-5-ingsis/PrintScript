@@ -1,7 +1,7 @@
 import com.fasterxml.jackson.dataformat.yaml.YAMLMapper
 import formatter.Formatter
 import lexer.Lexer
-import parser.SyntacticParser
+import parser.syntactic.SyntacticParser
 import rules.FormattingRules
 import java.nio.file.Paths
 import kotlin.test.BeforeTest

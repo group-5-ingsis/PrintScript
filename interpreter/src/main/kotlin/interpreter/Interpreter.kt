@@ -1,7 +1,7 @@
 package interpreter
 
 import Environment
-import parser.SyntacticParser
+import parser.syntactic.SyntacticParser
 import position.visitor.StatementVisitor
 
 object Interpreter {
