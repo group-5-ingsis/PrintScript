@@ -40,7 +40,7 @@ class Lexer(input: String) : Iterator<Token> {
                 continue
             }
 
-            if (currentChar == ';' || currentChar == ':' || currentChar == '(' || currentChar == ')' || currentChar!!.isWhitespace()) {
+            if (currentChar == ':' || currentChar == '(' || currentChar == ')' || currentChar!!.isWhitespace()) {
                 if (currentBuffer.isNotEmpty()) {
                     val token = generateTokenFromBuffer()
                     nextToken = if (!currentChar!!.isWhitespace()) {
