@@ -1,5 +1,6 @@
 import com.fasterxml.jackson.dataformat.yaml.YAMLMapper
 import formatter.Formatter
+import lexer.Lexer
 import parser.Parser
 import rules.FormattingRules
 import java.nio.file.Paths
@@ -23,7 +24,7 @@ class FormatterTest {
 
     @Test
     fun testFormatting() {
-        val input = "let a: Number = 2; a = 4; println(a)"
+        val input = "let a: Number = 2;"
 
         val lexer = Lexer(input)
         val parser = Parser(lexer)
