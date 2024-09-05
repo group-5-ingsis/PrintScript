@@ -1,110 +1,131 @@
 package parser.syntactic
 
 import exceptions.BadSyntacticException
+import lexer.Lexer
 import position.Position
 import token.Token
 import java.util.*
 
-class TokenManager(tokens: List<Token>) {
+/**
+ * TokenManager se encarga de gestionar los tokens provenientes de un StreamingLexer.
+ * Proporciona métodos para avanzar, mirar, y validar tokens, y lanzar excepciones
+ * cuando no se cumplen las expectativas de valor o tipo de token.
+ */
+object TokenManager {
 
-    private val tokenQueue: Queue<Token> = LinkedList(tokens)
+    // Instancia de StreamingLexer que procesa el texto de entrada
+    private var lexerStreamer = Lexer("")
 
     /**
-     * See if the current token has x value
-     * @return true if the token value is from the current value
+     * Inicializa el texto que será procesado por el lexer.
+     * @param text Texto a analizar en busca de tokens.
+     */
+    fun setTextToLex(text: String) {
+        lexerStreamer = Lexer(text)
+    }
+
+    /**
+     * Verifica si el valor del siguiente token en el lexer coincide con el valor dado.
+     * @param value Valor esperado del siguiente token.
+     * @return `true` si el valor del siguiente token coincide, `false` en caso contrario.
      */
     fun isValue(value: String): Boolean {
-        return tokenQueue.peek().value == value
+        return lexerStreamer.peek().value == value
     }
 
+
+
     /**
-     * Consumes the next token from the queue.
-     * @return The token that was consumed.
-     * @throws NoSuchElementException if the queue is empty.
+     * Consume y devuelve el siguiente token del lexer.
+     * @return El token consumido.
+     * @throws NoSuchElementException si no hay más tokens disponibles.
      */
     fun advance(): Token {
-        return tokenQueue.poll() ?: throw NoSuchElementException("No more tokens to consume.")
+        return lexerStreamer.next()
     }
 
     /**
-     * Peeks at the next token in the queue without consuming it.
-     * @return The next token in the queue.
-     * @throws NoSuchElementException if the queue is empty.
+     * Mira el siguiente token sin consumirlo.
+     * @return El siguiente token en la secuencia.
+     * @throws NoSuchElementException si no hay más tokens disponibles.
      */
     fun peek(): Token {
-        return tokenQueue.peek() ?: throw NoSuchElementException("No tokens to peek at.")
+        return lexerStreamer.peek()
     }
 
     /**
-     * Checks if there are more tokens in the queue.
-     * @return True if there are more tokens, false otherwise.
+     * Verifica si hay más tokens por procesar.
+     * @return `true` si hay más tokens, `false` si no.
      */
     fun hasMoreTokens(): Boolean {
-        return tokenQueue.isNotEmpty()
+        return lexerStreamer.hasNext()
     }
 
     /**
-     * Checks if the next token in the queue matches the specified value.
-     * @param value The expected token value.
-     * @return True if the next token matches the value, false otherwise.
+     * Verifica si el valor del siguiente token coincide con el valor especificado.
+     * @param value Valor esperado del siguiente token.
+     * @return `true` si el valor coincide, `false` en caso contrario.
      */
     fun checkNextTokenValue(value: String): Boolean {
-        return tokenQueue.peek()?.value == value
+        val token = lexerStreamer.peek()
+        return token.value == value
     }
 
     /**
-     * Checks if the next token in the queue matches the specified type.
-     * @param type The expected token type.
-     * @return True if the next token matches the type, false otherwise.
+     * Verifica si el tipo del siguiente token coincide con el tipo especificado.
+     * @param type Tipo esperado del siguiente token.
+     * @return `true` si el tipo coincide, `false` en caso contrario.
      */
     fun checkNextTokenType(type: String): Boolean {
-        return tokenQueue.peek()?.type == type
+        val peek = lexerStreamer.peek()
+        return peek.type == type
     }
 
     /**
-     * Returns the remaining tokens in the queue as a list.
-     * @return A list of tokens that have not yet been consumed.
-     */
-    fun getTokens(): List<Token> {
-        return tokenQueue.toList()
-    }
-
-    /**
-     * Returns the position of the next token in the queue.
-     * @return The position of the next token.
-     * @throws NoSuchElementException if the queue is empty.
+     * Obtiene la posición del siguiente token.
+     * @return La posición del siguiente token.
+     * @throws NoSuchElementException si no hay más tokens disponibles.
      */
     fun getPosition(): Position {
-        return tokenQueue.peek()?.position ?: throw NoSuchElementException("No tokens to get position from.")
+        return lexerStreamer.peek().position ?: throw NoSuchElementException("No tokens to get position from.")
     }
 
     /**
-     * Consumes the next token in the queue if its value matches the specified value.
-     *
-     * This function checks if the value of the next token matches the expected value. If it does,
-     * the token is consumed (i.e., removed from the queue) and returned. If the value does not match,
-     * a `BadSyntacticException` is thrown to indicate that the expected token value was not found.
-     *
-     * @param value The expected value of the next token.
-     * @return The token that was consumed if its value matches the specified value.
-     * @throws BadSyntacticException if the value of the next token does not match the specified value.
+     * Consume el siguiente token si su valor coincide con el valor especificado.
+     * @param value Valor esperado del siguiente token.
+     * @return El token consumido si el valor coincide.
+     * @throws BadSyntacticException si el valor no coincide.
      */
     fun consumeTokenValue(value: String): Token {
         if (peek().value == value) return advance()
-
-        throw BadSyntacticException("Expect: $value after expression.")
+        throw BadSyntacticException("Expected value: '$value' but found: '${peek().value}'.")
     }
 
+    /**
+     * Consume el siguiente token si su tipo coincide con el tipo especificado.
+     * @param type Tipo esperado del siguiente token.
+     * @return El token consumido si el tipo coincide.
+     * @throws BadSyntacticException si el tipo no coincide.
+     */
     fun consumeTokenType(type: String): Token {
-        if (peek().type == type) return advance()
-
-        throw BadSyntacticException("Expect this type: $type")
+        val b = peek().type == type
+        if (b) return advance()
+        throw BadSyntacticException("Expected token type: '$type' but found: '${peek().type}'.")
     }
 
+    /**
+     * Verifica si no se ha llegado al final de la secuencia de tokens.
+     * @return `true` si no es el final, `false` si lo es.
+     */
     fun isNotTheEndOfTokens(): Boolean {
-        return (!tokenQueue.isEmpty())
+        return lexerStreamer.hasNext()
     }
 
+    /**
+     * Verifica si el tipo del siguiente token pertenece a una lista de tipos especificados.
+     * @param types Lista de tipos permitidos.
+     * @return `true` si el tipo del siguiente token está en la lista, `false` en caso contrario.
+     */
     fun checkTokensAreFromSomeTypes(types: List<String>): Boolean {
         val nextTokenType = peek().type
         return types.contains(nextTokenType)

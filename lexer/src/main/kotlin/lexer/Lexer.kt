@@ -16,6 +16,12 @@ class Lexer(input: String) : Iterator<Token> {
         return nextToken != null || inputIterator.hasNext() || currentBuffer.isNotEmpty()
     }
 
+    fun peek(): Token {
+        return nextToken ?: throw NoSuchElementException("No more tokens")
+    }
+
+
+
     override fun next(): Token {
         if (nextToken != null) {
             val token = nextToken

@@ -9,7 +9,7 @@ class FormattingVisitor(private val rules: FormattingRules) : Visitor {
 
     fun getFormattedOutput(): String = output.toString()
 
-    override fun visitAssignDeclare(assignationDeclaration: Node.AssignationDeclaration) {
+     fun visitAssignDeclare(assignationDeclaration: Node.AssignationDeclaration) {
         val assignationType = assignationDeclaration.kindVariableDeclaration
         val identifier = assignationDeclaration.identifier
         val dataType = setDataType(assignationDeclaration.dataType)
@@ -22,7 +22,7 @@ class FormattingVisitor(private val rules: FormattingRules) : Visitor {
         output.append("\n")
     }
 
-    override fun visitAssignation(assignation: Node.Assignation) {
+     fun visitAssignation(assignation: Node.Assignation) {
         val identifier = assignation.identifier.value
         val value = resolveValueWithBinaryOperation(assignation.value)
 
@@ -32,7 +32,7 @@ class FormattingVisitor(private val rules: FormattingRules) : Visitor {
         output.append("\n")
     }
 
-    override fun visitDeclaration(declaration: Node.Declaration) {
+     fun visitDeclaration(declaration: Node.Declaration) {
         val assignationType = declaration.kindVariableDeclaration
         val identifier = declaration.identifier
         val dataType = setDataType(declaration.dataType)
@@ -43,7 +43,7 @@ class FormattingVisitor(private val rules: FormattingRules) : Visitor {
         output.append("\n")
     }
 
-    override fun visitMethodCall(methodCall: Node.Method) {
+     fun visitMethodCall(methodCall: Node.Method) {
         val methodName = methodCall.identifier.value
         val arguments = methodCall.arguments
         val argumentsAsString = MethodExecute.getParametersAsString(arguments)
