@@ -5,38 +5,33 @@ import parser.syntactic.SyntacticParser
 import token.Token
 
 class Parser(private val lexer: Iterator<Token>) : Iterator<SyntacticParser.RootNode> {
-    private val tokens = mutableListOf<Token>()
-    private var currentNode: SyntacticParser.RootNode? = null
 
     override fun hasNext(): Boolean {
-        return lexer.hasNext() || tokens.isNotEmpty() || currentNode != null
+        return lexer.hasNext()
     }
 
     override fun next(): SyntacticParser.RootNode {
-        if (currentNode != null) {
-            val node = currentNode
-            currentNode = null
-            return node ?: throw NoSuchElementException("No ASTNode formed")
+        val node = parseTokens(emptyList())
+        return node ?: throw NoSuchElementException("No ASTNode formed")
+    }
+
+    private fun parseTokens(tokens: List<Token>): SyntacticParser.RootNode? {
+        if (!lexer.hasNext() && tokens.isNotEmpty()) {
+            return parseStatement(tokens)
         }
 
-        while (lexer.hasNext()) {
-            val token = lexer.next()
-            tokens.add(token)
-
-            if (token.value == ";") {
-                currentNode = parseStatement(tokens)
-                tokens.clear()
-                return currentNode ?: throw NoSuchElementException("No ASTNode formed")
-            }
+        if (!lexer.hasNext()) {
+            return null
         }
 
-        if (tokens.isNotEmpty()) {
-            currentNode = parseStatement(tokens)
-            tokens.clear()
-            return currentNode ?: throw NoSuchElementException("No ASTNode formed")
-        }
+        val token = lexer.next()
+        val newTokens = tokens + token
 
-        throw NoSuchElementException("No more AST nodes")
+        return if (token.value == ";") {
+            parseStatement(newTokens)
+        } else {
+            parseTokens(newTokens)
+        }
     }
 
     private fun parseStatement(tokens: List<Token>): SyntacticParser.RootNode {

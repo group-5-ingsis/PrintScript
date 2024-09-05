@@ -8,7 +8,7 @@ class AnalyzeCommand(private val file: String, private val version: String, priv
 //        val linterRules = FileReader.getFormattingRules(rulesFile, version)
 //
 //        return try {
-//            val tokens = Lexer.lex(fileContent)
+//            val tokens = lexer.Lexer.lex(fileContent)
 //
 //            val ast = Parser().run(tokens)
 //

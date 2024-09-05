@@ -74,7 +74,7 @@ class InterpreterTest {
 
 //    @Test
 //    fun testMethodCallWithString() {
-//        val tokens: List<Token> = Lexer.lex("let a: String; a = \"Hello\"; println(a);")
+//        val tokens: List<Token> = lexer.Lexer.lex("let a: String; a = \"Hello\"; println(a);")
 //        val ast = Parser().run(tokens)
 //        val scope: Environment = Environment()
 //
