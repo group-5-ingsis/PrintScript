@@ -33,8 +33,6 @@ object TokenManager {
         return lexerStreamer.peek().value == value
     }
 
-
-
     /**
      * Consume y devuelve el siguiente token del lexer.
      * @return El token consumido.
