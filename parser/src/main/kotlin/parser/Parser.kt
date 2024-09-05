@@ -30,13 +30,13 @@ class Parser(private val lexer: Iterator<Token>) : Iterator<SyntacticParser.Root
             }
         }
 
-        if (tokens.isNotEmpty()) {
-            currentNode = parseStatement(tokens)
-            tokens.clear()
-            return currentNode ?: throw NoSuchElementException("No ASTNode formed")
-        }
+//        if (tokens.isNotEmpty()) {
+//            currentNode = parseStatement(tokens)
+//            tokens.clear()
+//            return currentNode ?: throw NoSuchElementException("No ASTNode formed")
+//        }
 
-        throw NoSuchElementException("No more AST nodes")
+        throw NoSuchElementException("No more tokens left.")
     }
 
     private fun parseStatement(tokens: List<Token>): SyntacticParser.RootNode {
