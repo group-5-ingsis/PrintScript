@@ -46,7 +46,7 @@ class FormatterTest {
 
         val result = formatter.format(exampleRules)
 
-        val expected = "let a : Number = 2 + 2;\n"
+        val expected = "let a: Number = 2 + 2;\n"
 
         assertEquals(expected, result)
     }
