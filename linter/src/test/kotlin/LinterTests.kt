@@ -3,7 +3,7 @@ package linter
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.jsonObject
-import lexer.Lexer
+import lexer.TokenIterator
 import parser.Parser
 import java.nio.file.Files
 import java.nio.file.Paths
@@ -40,11 +40,11 @@ class LinterTests {
     @Test
     fun testCamelCaseRule() {
         val linter = Linter()
-        val lexer = Lexer
+        val tokenIterator = TokenIterator
         val parser = Parser()
         val linterRules = getLinterRules()
 
-        val tokens = lexer.lex("let ball_ball : String;")
+        val tokens = tokenIterator.lex("let ball_ball : String;")
         val ast = parser.run(tokens)
         val result = linter.lint(ast)
         val namingConvention = linterRules["identifier_naming_convention"]
@@ -63,11 +63,11 @@ class LinterTests {
     @Test
     fun testSnakeCaseRule() {
         val linter = Linter()
-        val lexer = Lexer
+        val tokenIterator = TokenIterator
         val parser = Parser()
         val linterRules = getLinterRules()
 
-        val tokens = lexer.lex("let myString : String;")
+        val tokens = tokenIterator.lex("let myString : String;")
         val ast = parser.run(tokens)
         val result = linter.lint(ast)
         val namingConvention = linterRules["identifier_naming_convention"]
@@ -86,11 +86,11 @@ class LinterTests {
     @Test
     fun testOffConvention() {
         val linter = Linter()
-        val lexer = Lexer
+        val tokenIterator = TokenIterator
         val parser = Parser()
         val linterRules = getLinterRules()
 
-        val tokens = lexer.lex("let ball_ball : String;")
+        val tokens = tokenIterator.lex("let ball_ball : String;")
         val ast = parser.run(tokens)
         val result = linter.lint(ast)
         val namingConvention = linterRules["identifier_naming_convention"]
@@ -103,11 +103,11 @@ class LinterTests {
     @Test
     fun testPrintlnCall() {
         val linter = Linter()
-        val lexer = Lexer
+        val tokenIterator = TokenIterator
         val parser = Parser()
         val linterRules = getLinterRules()
 
-        val tokens = lexer.lex("println(2 + 4);")
+        val tokens = tokenIterator.lex("println(2 + 4);")
         val ast = parser.run(tokens)
         val result = linter.lint(ast)
         val expressionAllowed = linterRules["println-expression-allowed"]

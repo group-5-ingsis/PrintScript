@@ -1,50 +1,68 @@
 package parser
 
-import parser.semantic.SemanticParser
+import exceptions.BadSyntacticException
+import nodes.StatementType
 import parser.syntactic.SyntacticParser
 import token.Token
 
-class Parser(private val lexer: Iterator<Token>) : Iterator<SyntacticParser.RootNode> {
-    private val tokens = mutableListOf<Token>()
-    private var currentNode: SyntacticParser.RootNode? = null
+/**
+ * A parser that takes an iterator of tokens and produces an iterator of statement types.
+ *
+ * @property lexer An iterator of tokens to be parsed.
+ */
+class Parser(private val lexer: Iterator<Token>) : Iterator<StatementType> {
 
+    /**
+     * Checks if there are more tokens to be parsed.
+     *
+     * @return `true` if there are more tokens, `false` otherwise.
+     */
     override fun hasNext(): Boolean {
-        return lexer.hasNext() || tokens.isNotEmpty() || currentNode != null
+        return lexer.hasNext()
     }
 
-    override fun next(): SyntacticParser.RootNode {
-        if (currentNode != null) {
-            val node = currentNode
-            currentNode = null
-            return node ?: throw NoSuchElementException("No ASTNode formed")
-        }
+    /**
+     * Parses the next statement from the tokens.
+     *
+     * @return The next parsed statement.
+     * @throws NoSuchElementException if there are no more tokens available to parse.
+     */
+    override fun next(): StatementType {
+        val mutableListTokensForParse: MutableList<Token> = mutableListOf()
+        var lastException: Exception? = null
 
         while (lexer.hasNext()) {
-            val token = lexer.next()
-            tokens.add(token)
+            mutableListTokensForParse.add(lexer.next())
 
-            if (token.value == ";") {
-                currentNode = parseStatement(tokens)
-                tokens.clear()
-                return currentNode ?: throw NoSuchElementException("No ASTNode formed")
+            try {
+                val (stm, tokens) = SyntacticParser.parse(mutableListTokensForParse)
+                if (tokens.isEmpty()) {
+                    return stm
+                }
+            } catch (e: Exception) {
+                if (!isAlowedExeption(e)){
+                    if (lastException != null && lastException::class == e::class && lastException.message == e.message) {
+                        throw e
+                    }
+                }
+
+                lastException = e
+
             }
         }
 
-//        if (tokens.isNotEmpty()) {
-//            currentNode = parseStatement(tokens)
-//            tokens.clear()
-//            return currentNode ?: throw NoSuchElementException("No ASTNode formed")
-//        }
-
-        throw NoSuchElementException("No more tokens left.")
+        throw NoSuchElementException("No more tokens available to parse")
     }
 
-    private fun parseStatement(tokens: List<Token>): SyntacticParser.RootNode {
-        if (tokens.isEmpty()) {
-            throw IllegalArgumentException("Cannot parse an empty token list")
-        }
+    private fun isAlowedExeption(e: Exception): Boolean {
+        val listMng = listOf(
+            "No tokens to get position from.",
+            "Find unknown expression at line: 0 and at index: 0",
+            "No tokens to parse"
+        )
 
-        val astNode = SyntacticParser.parse(tokens)
-        return SemanticParser.validate(astNode)
+        return e.message in listMng
     }
+
+
 }

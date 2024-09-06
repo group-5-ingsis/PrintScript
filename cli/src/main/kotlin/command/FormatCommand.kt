@@ -4,7 +4,7 @@ import cli.FileReader
 import cli.FileWriter
 import formatter.Formatter
 import interpreter.Interpreter
-import lexer.Lexer
+import lexer.TokenIterator
 import parser.Parser
 
 class FormatCommand(private val file: String, private val version: String, private val rulesFile: String) : Command {
@@ -13,7 +13,7 @@ class FormatCommand(private val file: String, private val version: String, priva
         val formattingRules = FileReader.getFormattingRules(rulesFile, version)
 
         return try {
-            val tokens = Lexer.lex(fileContent)
+            val tokens = TokenIterator.lex(fileContent)
 
             val ast = Parser().run(tokens)
 
