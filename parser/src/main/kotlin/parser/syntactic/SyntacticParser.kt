@@ -4,6 +4,7 @@ import Environment
 import nodes.StatementType
 import parser.syntactic.statements.GenericStatement
 import position.visitor.StatementVisitor
+import position.visitor.Visitor
 import token.Token
 
 object SyntacticParser {
@@ -73,6 +74,12 @@ object SyntacticParser {
                 env = child.acceptVisitor(visitor, env)
             }
             return env
+        }
+
+        fun accept(visitor: Visitor) {
+            for (child in children) {
+                child.accept(visitor)
+            }
         }
     }
 }

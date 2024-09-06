@@ -1,23 +1,20 @@
 package formatter
 
-import parser.syntactic.SyntacticParser
+import nodes.StatementType
 import rules.FormattingRules
 
-class Formatter(private val parser: Iterator<SyntacticParser.RootNode>) {
+class Formatter(private val parser: Iterator<StatementType>) {
 
     fun format(rules: FormattingRules): String {
-        val formattedOutput = StringBuilder()
+        val output = StringBuilder()
 
         while (parser.hasNext()) {
             val astNode = parser.next()
-            val formattedNode = formatASTNode(astNode, rules)
-            formattedOutput.append(formattedNode)
+            val formattingVisitor = FormatterVisitor(rules)
+            astNode.accept(formattingVisitor)
+            output.append(formattingVisitor.getFormattedOutput())
         }
 
-        return formattedOutput.toString()
-    }
-
-    private fun formatASTNode(node: SyntacticParser.RootNode, rules: FormattingRules): String {
-        return NodeFormatter.format(node, rules)
+        return output.toString()
     }
 }

@@ -3,6 +3,7 @@ package nodes
 import Environment
 import position.Position
 import position.visitor.StatementVisitor
+import position.visitor.Visitor
 
 sealed class StatementType {
 
@@ -14,12 +15,20 @@ sealed class StatementType {
         return func(this, environment)
     }
 
+    abstract fun accept(visitor: Visitor)
+
     class Print(val value: Expression.Grouping, override val position: Position) : StatementType() {
         override val statementType: String = "PRINT"
+        override fun accept(visitor: Visitor) {
+            return visitor.visitPrintStm(this)
+        }
     }
 
     class StatementExpression(val value: Expression, override val position: Position) : StatementType() {
         override val statementType: String = "STATEMENT_EXPRESSION"
+        override fun accept(visitor: Visitor) {
+            return visitor.visitExpressionStm(this)
+        }
     }
 
     /**
@@ -38,6 +47,10 @@ sealed class StatementType {
         override val position: Position
     ) : StatementType() {
         override val statementType: String = "VARIABLE_STATEMENT"
+        override fun accept(visitor: Visitor) {
+            return visitor.visitVariableStm(this)
+        }
+
         init {
             DataTypeManager.checkDataType(dataType)
             DataTypeManager.checkVariableDec(designation)

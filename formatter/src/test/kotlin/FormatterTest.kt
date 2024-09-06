@@ -26,9 +26,9 @@ class FormatterTest {
     fun testFormatting() {
         val input = "let a: Number = 2;"
 
-        val lexer = Lexer(input)
-        val parser = Parser(lexer)
-        val formatter = Formatter(parser)
+        val tokens = Lexer(input)
+        val astNodes = Parser(tokens)
+        val formatter = Formatter(astNodes)
 
         val result = formatter.format(exampleRules)
 
