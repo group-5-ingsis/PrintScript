@@ -31,7 +31,7 @@ class InterpreterTest {
 
     @Test
     fun testAssignationWithString() {
-        val tokens = TokenIterator("let a: String = 'Hello World' ;")
+        val tokens = TokenIterator("let a: String = \"Hello World\" ;")
         val parser = Parser(tokens)
         val ast1 = parser.next()
         val initialScope = Environment()

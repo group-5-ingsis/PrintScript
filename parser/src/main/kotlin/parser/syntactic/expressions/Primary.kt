@@ -36,7 +36,7 @@ class Primary() : ExpressionParser {
             return Pair(tokenMng.getTokens(), Expression.Literal(nextLiteral, position))
         } else if (tokenMng.peek().value == "(") {
             tokenMng.advance()
-            val expr = ExpressionType(Assigment(Comparison(Term(Factor(Unary(Primary())))))).parse(tokenMng.getTokens())
+            val expr = ExpressionType.makeExpressionEvaluator().parse(tokenMng.getTokens())
             val newTK = TokenManager(expr.first)
             newTK.consumeTokenValue(")")
             return Pair(newTK.getTokens(), Expression.Grouping(expr.second, position))
