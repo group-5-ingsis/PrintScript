@@ -1,5 +1,6 @@
 package formatter
 
+import nodes.Expression
 import nodes.StatementType
 import position.visitor.Visitor
 import rules.FormattingRules
@@ -22,17 +23,59 @@ class FormatterVisitor(private val rules: FormattingRules) : Visitor {
     }
 
     override fun visitExpressionStm(statement: StatementType.StatementExpression) {
-        val expression = statement.value
-        return expression.accept(this)
+        statement.value.accept(this)
     }
 
     override fun visitVariableStm(statement: StatementType.Variable) {
-        val spaceBeforeColon = if (rules.spaceBeforeColon) " " else ""
-        val spaceAfterColon = if (rules.spaceAfterColon) " " else ""
-        val spaceAroundAssignment = if (rules.spaceAroundAssignment) " " else ""
+        val variableKind = statement.designation
+        val identifier = statement.identifier
+        val dataType = statement.dataType
 
-        output.append("var ${statement.identifier}")
-        output.append("$spaceBeforeColon:${spaceAfterColon}${statement.dataType}")
-        output.append("$spaceAroundAssignment=${spaceAroundAssignment}${statement.initializer};\n")
+        val spaceForColons = ruleApplier.applySpaceForColon()
+        val spacesAroundAssignment = ruleApplier.applySpacesAroundAssignment()
+
+        output.append("$variableKind $identifier")
+        output.append("$spaceForColons$dataType")
+        output.append(spacesAroundAssignment)
+
+        statement.initializer?.accept(this)
+    }
+
+    override fun visitVariable(expression: Expression.Variable) {
+        output.append(expression.name)
+    }
+
+    override fun visitAssign(expression: Expression.Assign) {
+        val spaceAroundAssignment = if (rules.spaceAroundAssignment) " " else ""
+        output.append("${expression.name}$spaceAroundAssignment=$spaceAroundAssignment")
+        expression.value.accept(this)
+        output.append(";")
+    }
+
+    override fun visitBinary(expression: Expression.Binary) {
+        expression.left.accept(this)
+        val spaceAroundOperator = if (rules.spaceAroundAssignment) " " else ""
+        output.append("$spaceAroundOperator${expression.operator}$spaceAroundOperator")
+        expression.right.accept(this)
+    }
+
+    override fun visitGrouping(expression: Expression.Grouping) {
+        output.append("(")
+        expression.expression.accept(this)
+        output.append(")")
+    }
+
+    override fun visitLiteral(expression: Expression.Literal) {
+        val value = expression.value
+        output.append(value)
+    }
+
+    override fun visitUnary(expression: Expression.Unary) {
+        output.append(expression.operator)
+        expression.right.accept(this)
+    }
+
+    override fun visitIdentifier(expression: Expression.IdentifierExpression) {
+        output.append(expression.name)
     }
 }

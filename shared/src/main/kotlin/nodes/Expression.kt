@@ -21,48 +21,48 @@ sealed class Expression {
     data class Variable(val name: String, override val position: Position) : Expression() {
         override val expressionType = "VARIABLE_EXPRESSION"
         override fun accept(visitor: Visitor) {
-            TODO("Not yet implemented")
+            return visitor.visitVariable(this)
         }
     }
     data class Assign(val name: String, val value: Expression, override val position: Position) : Expression() {
         override val expressionType = "ASSIGNMENT_EXPRESSION"
         override fun accept(visitor: Visitor) {
-            TODO("Not yet implemented")
+            return visitor.visitAssign(this)
         }
     }
 
     data class Binary(val left: Expression, val operator: String, val right: Expression, override val position: Position) : Expression() {
         override val expressionType: String = "BINARY_EXPRESSION"
         override fun accept(visitor: Visitor) {
-            TODO("Not yet implemented")
+            return visitor.visitBinary(this)
         }
     }
 
     data class Grouping(val expression: Expression, override val position: Position) : Expression() {
         override val expressionType: String = "GROUPING_EXPRESSION"
         override fun accept(visitor: Visitor) {
-            TODO("Not yet implemented")
+            return visitor.visitGrouping(this)
         }
     }
 
     data class Literal(val value: Any?, override val position: Position) : Expression() {
         override val expressionType: String = "LITERAL_EXPRESSION"
         override fun accept(visitor: Visitor) {
-            TODO("Not yet implemented")
+            return visitor.visitLiteral(this)
         }
     }
 
     data class Unary(val operator: String, val right: Expression, override val position: Position) : Expression() {
         override val expressionType: String = "UNARY_EXPRESSION"
         override fun accept(visitor: Visitor) {
-            TODO("Not yet implemented")
+            return visitor.visitUnary(this)
         }
     }
 
     data class IdentifierExpression(val name: String, override val position: Position) : Expression() {
         override val expressionType: String = "IDENTIFIER"
         override fun accept(visitor: Visitor) {
-            TODO("Not yet implemented")
+            return visitor.visitIdentifier(this)
         }
     }
 }
