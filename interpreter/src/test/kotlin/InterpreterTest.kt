@@ -3,7 +3,6 @@ import lexer.TokenIterator
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import parser.Parser
-import token.Token
 
 class InterpreterTest {
 

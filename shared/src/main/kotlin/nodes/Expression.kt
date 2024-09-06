@@ -14,7 +14,6 @@ sealed class Expression {
         return func(this, environment)
     }
 
-
     // There are complex expression that are variables exp: Position(x, y).y = 5, refers to this
     data class Variable(val name: String, override val position: Position) : Expression() {
         override val expressionType = "VARIABLE_EXPRESSION"

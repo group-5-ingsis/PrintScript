@@ -9,7 +9,6 @@ import token.Token
 object SyntacticParser {
 
     fun parse(tokens: List<Token>): Pair<StatementType, List<Token>> {
-
         if (tokens.isNotEmpty()) {
             val currentParser = GenericStatement.makeStatementParser()
             val (remainingTokens, exp) = currentParser.parse(tokens)

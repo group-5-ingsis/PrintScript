@@ -4,7 +4,6 @@ import exceptions.BadSyntacticException
 import lexer.TokenIterator
 import nodes.Expression
 import nodes.StatementType
-import parser.syntactic.SyntacticParser
 import position.Position
 import token.Token
 import kotlin.test.*
@@ -27,7 +26,6 @@ class ParserTester {
         val tokens = TokenIterator("let a : Number = 3 + 5;")
         val parser = Parser(tokens)
         val ast1 = parser.next()
-
 
         val expectedAssignment = Expression.Binary(
             Expression.Literal(3, Position(1, 19)),
@@ -93,8 +91,6 @@ class ParserTester {
         assertEquals(expectedBinaryOperation.right, actualBinaryOperation.right)
         assertEquals(expectedBinaryOperation.position, actualBinaryOperation.position)
     }
-
-
 
     @Test
     fun testBuildDeclarationAST() {
@@ -227,8 +223,6 @@ class ParserTester {
         assertNotNull(initializer, "El inicializador no debe ser nulo.")
         assertEquals("'testing'", initializer.value)
     }
-
-
 
     @Test
     fun statementSumElements() {

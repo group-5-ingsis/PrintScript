@@ -9,12 +9,13 @@ class TokenManager(tokens: List<Token>) {
 
     private val tokenQueue: Queue<Token> = LinkedList(tokens)
     private var lastToken: Token = Token("", "", Position(0, 0))
+
     /**
      * See if the current token has x value
      * @return true if the token value is from the current value
      */
     fun isValue(value: String): Boolean {
-        if (tokenQueue.isEmpty() ) {
+        if (tokenQueue.isEmpty()) {
             return false
         }
         return peek().value == value
@@ -59,7 +60,6 @@ class TokenManager(tokens: List<Token>) {
      * @return True if the next token matches the value, false otherwise.
      */
     fun checkNextTokenValue(value: String): Boolean {
-
         return peek().value == value
     }
 

@@ -1,6 +1,5 @@
 package parser
 
-import exceptions.BadSyntacticException
 import nodes.StatementType
 import parser.syntactic.SyntacticParser
 import token.Token
@@ -40,14 +39,13 @@ class Parser(private val lexer: Iterator<Token>) : Iterator<StatementType> {
                     return stm
                 }
             } catch (e: Exception) {
-                if (!isAlowedExeption(e)){
+                if (!isAlowedExeption(e)) {
                     if (lastException != null && lastException::class == e::class && lastException.message == e.message) {
                         throw e
                     }
                 }
 
                 lastException = e
-
             }
         }
 
@@ -63,6 +61,4 @@ class Parser(private val lexer: Iterator<Token>) : Iterator<StatementType> {
 
         return e.message in listMng
     }
-
-
 }
