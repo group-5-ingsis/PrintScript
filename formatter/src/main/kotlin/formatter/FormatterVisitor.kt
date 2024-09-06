@@ -19,7 +19,10 @@ class FormatterVisitor(private val rules: FormattingRules) : Visitor {
         repeat(rules.newlineBeforePrintln) {
             output.append("\n")
         }
-        output.append("print(${statement.value});\n")
+        val value = statement.value
+        output.append("println")
+        value.accept(this)
+        output.append(";\n")
     }
 
     override fun visitExpressionStm(statement: StatementType.StatementExpression) {
@@ -39,10 +42,13 @@ class FormatterVisitor(private val rules: FormattingRules) : Visitor {
         output.append(spacesAroundAssignment)
 
         statement.initializer?.accept(this)
+
+        output.append(";\n")
     }
 
     override fun visitVariable(expression: Expression.Variable) {
-        output.append(expression.name)
+        val name = expression.name
+        output.append(name)
     }
 
     override fun visitAssign(expression: Expression.Assign) {
@@ -61,7 +67,8 @@ class FormatterVisitor(private val rules: FormattingRules) : Visitor {
 
     override fun visitGrouping(expression: Expression.Grouping) {
         output.append("(")
-        expression.expression.accept(this)
+        val insideExpression = expression.expression
+        insideExpression.accept(this)
         output.append(")")
     }
 

@@ -4,8 +4,7 @@ import lexer.Lexer
 import parser.Parser
 import rules.FormattingRules
 import java.nio.file.Paths
-import kotlin.test.BeforeTest
-import kotlin.test.Test
+import kotlin.test.*
 
 class FormatterTest {
 
@@ -23,7 +22,7 @@ class FormatterTest {
     }
 
     @Test
-    fun testFormatting() {
+    fun testSimpleAssignation() {
         val input = "let a:        Number = 2;"
 
         val tokens = Lexer(input)
@@ -32,6 +31,37 @@ class FormatterTest {
 
         val result = formatter.format(exampleRules)
 
-        println(result)
+        val expected = "let a: Number = 2;\n"
+
+        assertEquals(expected, result)
+    }
+
+    @Test
+    fun testAssignationWithBinarySum() {
+        val input = "let  a: Number = 2      +  2;"
+
+        val tokens = Lexer(input)
+        val astNodes = Parser(tokens)
+        val formatter = Formatter(astNodes)
+
+        val result = formatter.format(exampleRules)
+
+        val expected = "let a : Number = 2 + 2;\n"
+
+        assertEquals(expected, result)
+    }
+
+    @Test
+    fun testPrintLnFormatting() {
+        val input = "let a: Number = 2; println(a);"
+
+        val tokens = Lexer(input)
+        val astNodes = Parser(tokens)
+        val formatter = Formatter(astNodes)
+
+        val result = formatter.format(exampleRules)
+
+        val expected = "let a: Number = 2;\n\n\nprintln(a);\n"
+        assertEquals(expected, result)
     }
 }
