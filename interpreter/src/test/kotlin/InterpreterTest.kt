@@ -3,7 +3,6 @@ import lexer.Lexer
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import parser.Parser
-import token.Token
 
 class InterpreterTest {
 
@@ -11,138 +10,159 @@ class InterpreterTest {
 
     @Test
     fun testDeclarationWithNumber() {
-        val tokens: List<Token> = Lexer.lex("let a: Number;")
-        val ast = Parser().run(tokens)
-        val initialScope: Environment = Environment()
-        val newScope = interpreter.interpret(ast, initialScope)
+        val tokens = Lexer("let a: Number;")
+        val parser = Parser(tokens)
+        val ast1 = parser.next()
+        val initialScope = Environment()
+        val newScope = interpreter.interpret(ast1, initialScope)
         assertEquals(null, newScope.get("a"))
     }
 
     @Test
     fun testDeclarationWithString() {
-        val tokens: List<Token> = Lexer.lex("let a: String;")
-        val ast = Parser().run(tokens)
-        val initialScope: Environment = Environment()
-        val newScope = interpreter.interpret(ast, initialScope)
+        val tokens = Lexer("let a: String;")
+        val parser = Parser(tokens)
+        val ast1 = parser.next()
+        val initialScope = Environment()
+        val newScope = interpreter.interpret(ast1, initialScope)
         assertEquals(null, newScope.get("a"))
     }
 
     @Test
     fun testAssignationWithString() {
-        val tokens: List<Token> = Lexer.lex("let a: String = \"Hello World\";")
-        val ast = Parser().run(tokens)
-        val initialScope: Environment = Environment()
-        val newScope = interpreter.interpret(ast, initialScope)
+        val tokens = Lexer("let a: String = \"Hello World\" ;")
+        val parser = Parser(tokens)
+        val ast1 = parser.next()
+        val initialScope = Environment()
+        val newScope = interpreter.interpret(ast1, initialScope)
         assertEquals("\"Hello World\"", newScope.get("a"))
     }
 
     @Test
     fun testAssignationWithNumber() {
-        val tokens: List<Token> = Lexer.lex("let c : Number = 4; c = 2;")
-        val ast = Parser().run(tokens)
-        val initialScope: Environment = Environment()
-        val newScope = interpreter.interpret(ast, initialScope)
-        assertEquals(2, newScope.get("c"))
+        val tokens = Lexer("let c : Number = 4; c = 2;")
+        val parser = Parser(tokens)
+        val ast1 = parser.next()
+        val ast2 = parser.next()
+        val initialScope = Environment()
+        val newScope = interpreter.interpret(ast1, initialScope)
+        val finalScope = interpreter.interpret(ast2, newScope)
+        assertEquals(2, finalScope.get("c"))
     }
 
     @Test
     fun testAssignationWithLiteral() {
-        val tokens: List<Token> = Lexer.lex("let b: Number = 3; let a: Number = 7; a = b;")
-        val ast = Parser().run(tokens)
-        val initialScope: Environment = Environment()
-        val newScope = interpreter.interpret(ast, initialScope)
-        assertEquals(3, newScope.get("a"))
+        val tokens = Lexer("let b: Number = 3; let a: Number = 7; a = b;")
+        val parser = Parser(tokens)
+        val ast1 = parser.next()
+        val ast2 = parser.next()
+        val ast3 = parser.next()
+        val initialScope = Environment()
+        val newScope = interpreter.interpret(ast1, initialScope)
+        val intermediateScope = interpreter.interpret(ast2, newScope)
+        val finalScope = interpreter.interpret(ast3, intermediateScope)
+        assertEquals(3, finalScope.get("a"))
     }
 
     @Test
     fun testAssignationDeclarationWithNumber() {
-        val tokens: List<Token> = Lexer.lex("let a: Number = 2; a = 3;")
-        val ast = Parser().run(tokens)
-        val initialScope: Environment = Environment()
-        val newScope = interpreter.interpret(ast, initialScope)
-        assertEquals(3, newScope.get("a"))
+        val tokens = Lexer("let a: Number = 2; a = 3;")
+        val parser = Parser(tokens)
+        val ast1 = parser.next()
+        val ast2 = parser.next()
+        val initialScope = Environment()
+        val newScope = interpreter.interpret(ast1, initialScope)
+        val finalScope = interpreter.interpret(ast2, newScope)
+        assertEquals(3, finalScope.get("a"))
     }
 
     @Test
     fun testAssignationDeclarationWithString() {
-        val tokens: List<Token> = Lexer.lex("let b: String; b = 'Hello';")
-        val ast = Parser().run(tokens)
-        val initialScope: Environment = Environment()
-        val newScope = interpreter.interpret(ast, initialScope)
-        assertEquals("'Hello'", newScope.get("b"))
+        val tokens = Lexer("let b: String; b = 'Hello';")
+        val parser = Parser(tokens)
+        val ast1 = parser.next()
+        val ast2 = parser.next()
+        val initialScope = Environment()
+        val newScope = interpreter.interpret(ast1, initialScope)
+        val finalScope = interpreter.interpret(ast2, newScope)
+        assertEquals("'Hello'", finalScope.get("b"))
     }
-
-//    @Test
-//    fun testMethodCallWithString() {
-//        val tokens: List<Token> = lexer.Lexer.lex("let a: String; a = \"Hello\"; println(a);")
-//        val ast = Parser().run(tokens)
-//        val scope: Environment = Environment()
-//
-//        assertTrue(interpreter.interpret(ast, scope).contains( "Hello"))
-//        assertEquals("Hello", scope.get("a"))
-//
-//    }
 
     @Test
     fun testMethodCallWithNumber() {
-        val tokens: List<Token> = Lexer.lex("let a: Number = 4; println(a);")
-        val ast = Parser().run(tokens)
-        val initialScope: Environment = Environment()
-        val newScope = interpreter.interpret(ast, initialScope)
-        assertEquals(4, newScope.get("a"))
+        val tokens = Lexer("let a: Number = 4; println(a);")
+        val parser = Parser(tokens)
+        val ast1 = parser.next()
+        val ast2 = parser.next()
+        val initialScope = Environment()
+        val newScope = interpreter.interpret(ast1, initialScope)
+        val finalScope = interpreter.interpret(ast2, newScope)
+        assertEquals(4, finalScope.get("a"))
     }
 
     @Test
     fun testSumNumber() {
-        val tokens: List<Token> = Lexer.lex("let a: Number = 6 + 2 + 6;")
-        val ast = Parser().run(tokens)
-        val initialScope: Environment = Environment()
-        val newScope = interpreter.interpret(ast, initialScope)
+        val tokens = Lexer("let a: Number = 6 + 2 + 6;")
+        val parser = Parser(tokens)
+        val ast1 = parser.next()
+        val initialScope = Environment()
+        val newScope = interpreter.interpret(ast1, initialScope)
         assertEquals(14, newScope.get("a"))
     }
 
     @Test
     fun testDivisionNumber() {
-        val tokens: List<Token> = Lexer.lex("let a: Number = 6 / 2;")
-        val ast = Parser().run(tokens)
-        val initialScope: Environment = Environment()
-        val newScope = interpreter.interpret(ast, initialScope)
+        val tokens = Lexer("let a: Number = 6 / 2;")
+        val parser = Parser(tokens)
+        val ast1 = parser.next()
+        val initialScope = Environment()
+        val newScope = interpreter.interpret(ast1, initialScope)
         assertEquals(3, newScope.get("a"))
     }
 
     @Test
     fun testComplexExpression() {
-        val tokens: List<Token> = Lexer.lex("let a: Number = 6 / (2 + 5) - (5 * 6);")
-        val ast = Parser().run(tokens)
-        val initialScope: Environment = Environment()
-        val newScope = interpreter.interpret(ast, initialScope)
+        val tokens = Lexer("let a: Number = 6 / (2 + 5) - (5 * 6);")
+        val parser = Parser(tokens)
+        val ast1 = parser.next()
+        val initialScope = Environment()
+        val newScope = interpreter.interpret(ast1, initialScope)
         assertEquals(-30, newScope.get("a"))
     }
 
     @Test
     fun testSumWithIdentifier() {
-        val tokens: List<Token> = Lexer.lex("let a: Number = 6; let b: Number = a + 2;")
-        val ast = Parser().run(tokens)
-        val initialScope: Environment = Environment()
-        val newScope = interpreter.interpret(ast, initialScope)
-        assertEquals(8, newScope.get("b"))
+        val tokens = Lexer("let a: Number = 6; let b: Number = a + 2;")
+        val parser = Parser(tokens)
+        val ast1 = parser.next()
+        val ast2 = parser.next()
+        val initialScope = Environment()
+        val newScope = interpreter.interpret(ast1, initialScope)
+        val finalScope = interpreter.interpret(ast2, newScope)
+        assertEquals(8, finalScope.get("b"))
     }
 
     @Test
     fun testBinaryOperationString() {
-        val tokens: List<Token> = Lexer.lex("let a: String = 'Hello' + 'World';")
-        val ast = Parser().run(tokens)
-        val initialScope: Environment = Environment()
-        val newScope = interpreter.interpret(ast, initialScope)
-        assertEquals("'Hello''World'", newScope.get("a")) // Asegúrate de que la concatenación sea la correcta
+        val tokens = Lexer("let a: String = 'Hello' + 'World';")
+        val parser = Parser(tokens)
+        val ast1 = parser.next()
+        val initialScope = Environment()
+        val newScope = interpreter.interpret(ast1, initialScope)
+        assertEquals("'Hello''World'", newScope.get("a"))
     }
 
     @Test
     fun testAddingAssignations() {
-        val tokens: List<Token> = Lexer.lex("let a: Number = 7; let b : Number = 8; let c : Number = a + 3 + b;")
-        val ast = Parser().run(tokens)
-        val initialScope: Environment = Environment()
-        val newScope = interpreter.interpret(ast, initialScope)
-        assertEquals(18, newScope.get("c"))
+        val tokens = Lexer("let a: Number = 7; let b : Number = 8; let c : Number = a + 3 + b;")
+        val parser = Parser(tokens)
+        val ast1 = parser.next()
+        val ast2 = parser.next()
+        val ast3 = parser.next()
+        val initialScope = Environment()
+        val newScope = interpreter.interpret(ast1, initialScope)
+        val intermediateScope = interpreter.interpret(ast2, newScope)
+        val finalScope = interpreter.interpret(ast3, intermediateScope)
+        assertEquals(18, finalScope.get("c"))
     }
 }

@@ -8,18 +8,13 @@ import token.Token
 
 object SyntacticParser {
 
-    fun parse(tokens: List<Token>): RootNode {
-        val node = RootNode.create()
-        var manager = TokenManager(tokens)
-
-        while (manager.isNotTheEndOfTokens()) {
-            val currentTokens = manager.getTokens()
+    fun parse(tokens: List<Token>): Pair<StatementType, List<Token>> {
+        if (tokens.isNotEmpty()) {
             val currentParser = GenericStatement.makeStatementParser()
-            val (remainingTokens, exp) = currentParser.parse(currentTokens)
-            node.addChild(exp)
-            manager = TokenManager(remainingTokens)
+            val (remainingTokens, exp) = currentParser.parse(tokens)
+            return Pair(exp, remainingTokens)
         }
-        return node
+        throw Exception("No tokens to parse")
     }
 
     /**

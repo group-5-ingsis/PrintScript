@@ -11,6 +11,7 @@ class Primary() : ExpressionParser {
         val tokenMng = TokenManager(tokens)
 
         fun getNextLiteral(): Any {
+            // Only works for strings and numbers
             val next = tokenMng.advance()
             return if (next.type == "STRING") {
                 next.value
@@ -35,8 +36,8 @@ class Primary() : ExpressionParser {
             return Pair(tokenMng.getTokens(), Expression.Literal(nextLiteral, position))
         } else if (tokenMng.peek().value == "(") {
             tokenMng.advance()
-            val expr = ExpressionType(Assigment(Comparison(Term(Factor(Unary(Primary())))))).parse(tokenMng.getTokens())
-            val newTK = parser.syntactic.TokenManager(expr.first)
+            val expr = ExpressionType.makeExpressionEvaluator().parse(tokenMng.getTokens())
+            val newTK = TokenManager(expr.first)
             newTK.consumeTokenValue(")")
             return Pair(newTK.getTokens(), Expression.Grouping(expr.second, position))
         } else if (tokenMng.checkNextTokenType("IDENTIFIER")) {
