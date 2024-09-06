@@ -3,7 +3,7 @@ package lexer
 import token.Token
 import token.TokenGenerator
 
-class TokenIterator(input: String) : Iterator<Token> {
+class Lexer(input: String) : Iterator<Token> {
     private val inputIterator = input.iterator()
     private var currentChar: Char? = null
     private var currentBuffer = StringBuilder()

@@ -2,7 +2,7 @@ package command
 
 import cli.FileReader
 import interpreter.Interpreter
-import lexer.TokenIterator
+import lexer.Lexer
 import parser.Parser
 
 class ValidationCommand(private val file: String, private val version: String) : Command {
@@ -21,7 +21,7 @@ class ValidationCommand(private val file: String, private val version: String) :
             for (statement in statements) {
                 val trimmedStatement = statement.trim()
 
-                val tokens = TokenIterator.lex(trimmedStatement)
+                val tokens = Lexer.lex(trimmedStatement)
 
                 val ast = parser.run(tokens)
 

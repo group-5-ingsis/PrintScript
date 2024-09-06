@@ -2,7 +2,7 @@ package command
 
 import cli.FileReader
 import interpreter.Interpreter
-import lexer.TokenIterator
+import lexer.Lexer
 import parser.Parser
 
 class ExecuteCommand(private val file: String, private val version: String) : Command {
@@ -14,7 +14,7 @@ class ExecuteCommand(private val file: String, private val version: String) : Co
         }
 
         return try {
-            val tokens = TokenIterator.lex(fileContent)
+            val tokens = Lexer.lex(fileContent)
 
             val ast = Parser().run(tokens)
 

@@ -1,11 +1,11 @@
 import junit.framework.TestCase.assertEquals
-import lexer.TokenIterator
+import lexer.Lexer
 import org.junit.Assert.assertThrows
 import position.Position
 import token.Token
 import kotlin.test.Test
 
-class TokenIteratorTest {
+class LexerTest {
     @Test
     fun testLexSimpleString() {
         val input = "let x = 10"
@@ -16,7 +16,7 @@ class TokenIteratorTest {
                 Token("=", "ASSIGNMENT", Position(1, 3)),
                 Token("10", "NUMBER", Position(1, 4))
             )
-        val actual = TokenIterator.lex(input)
+        val actual = Lexer.lex(input)
         assertEquals(expected, actual)
     }
 
@@ -30,7 +30,7 @@ class TokenIteratorTest {
                 Token("=", "ASSIGNMENT", Position(1, 3)),
                 Token("\"Hello\"", "STRING", Position(1, 4))
             )
-        val actual = TokenIterator.lex(input)
+        val actual = Lexer.lex(input)
         assertEquals(expected, actual)
     }
 
@@ -45,7 +45,7 @@ class TokenIteratorTest {
                 Token("-", "OPERATOR", Position(1, 4)),
                 Token("z", "IDENTIFIER", Position(1, 5))
             )
-        val actual = TokenIterator.lex(input)
+        val actual = Lexer.lex(input)
         assertEquals(expected, actual)
     }
 
@@ -63,7 +63,7 @@ class TokenIteratorTest {
                 Token("=", "ASSIGNMENT", Position(2, 3)),
                 Token("20", "NUMBER", Position(2, 4))
             )
-        val actual = TokenIterator.lex(input)
+        val actual = Lexer.lex(input)
         assertEquals(expected, actual)
     }
 
@@ -71,7 +71,7 @@ class TokenIteratorTest {
     fun testLexerUnknownCharacters() {
         val input = "let a @ ball"
         assertThrows(IllegalArgumentException::class.java) {
-            TokenIterator.lex(input)
+            Lexer.lex(input)
         }
     }
 
@@ -85,7 +85,7 @@ class TokenIteratorTest {
                 Token("=", "ASSIGNMENT", Position(1, 3)),
                 Token("'hello'", "STRING", Position(1, 4))
             )
-        val actual = TokenIterator.lex(input)
+        val actual = Lexer.lex(input)
         assertEquals(expected, actual)
     }
 }

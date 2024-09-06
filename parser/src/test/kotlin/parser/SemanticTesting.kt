@@ -1,14 +1,14 @@
 package parser
 
-import lexer.TokenIterator
+import lexer.Lexer
 import org.junit.Test
 
 class SemanticTesting {
 
     @Test
     fun testDeclarationShouldPass() {
-        val tokenIterator = TokenIterator("let a: String;")
-        val parser = Parser(tokenIterator)
+        val lexer = Lexer("let a: String;")
+        val parser = Parser(lexer)
         println(parser.next())
     }
 

@@ -1,7 +1,7 @@
 package parser
 
 import exceptions.BadSyntacticException
-import lexer.TokenIterator
+import lexer.Lexer
 import nodes.Expression
 import nodes.StatementType
 import position.Position
@@ -23,7 +23,7 @@ class ParserTester {
 
     @Test
     fun testOperation() {
-        val tokens = TokenIterator("let a : Number = 3 + 5;")
+        val tokens = Lexer("let a : Number = 3 + 5;")
         val parser = Parser(tokens)
         val ast1 = parser.next()
 
@@ -57,7 +57,7 @@ class ParserTester {
 
     @Test
     fun testStringOperation() {
-        val tokens = TokenIterator("let a: String = 'Hello' + 'World';")
+        val tokens = Lexer("let a: String = 'Hello' + 'World';")
         val parser = Parser(tokens)
         val ast1 = parser.next()
 
@@ -94,7 +94,7 @@ class ParserTester {
 
     @Test
     fun testBuildDeclarationAST() {
-        val tokens = TokenIterator("let a: Number;")
+        val tokens = Lexer("let a: Number;")
         val parser = Parser(tokens)
         val ast1 = parser.next()
 
@@ -113,7 +113,7 @@ class ParserTester {
 
     @Test
     fun testBuildAssignationAST() {
-        val tokens = TokenIterator("let x : Number = 3; x = 4;")
+        val tokens = Lexer("let x : Number = 3; x = 4;")
         val parser = Parser(tokens)
         val ast1 = parser.next()
         val ast2 = parser.next()
@@ -140,7 +140,7 @@ class ParserTester {
 
     @Test
     fun testAssignationWithVariable() {
-        val tokens = TokenIterator("let x: Number = 4; let y : Number = 2; x = y;")
+        val tokens = Lexer("let x: Number = 4; let y : Number = 2; x = y;")
         val parser = Parser(tokens)
         val ast1 = parser.next()
         val ast2 = parser.next()
@@ -170,7 +170,7 @@ class ParserTester {
 
     @Test
     fun testBuildMethodCallAST() {
-        val tokens = TokenIterator("println(4);")
+        val tokens = Lexer("println(4);")
         val parser = Parser(tokens)
         val ast1 = parser.next()
 
@@ -188,7 +188,7 @@ class ParserTester {
 
     @Test
     fun testDeclarationWithoutColonShouldFail() {
-        val tokens = TokenIterator("let a Number;")
+        val tokens = Lexer("let a Number;")
         val parser = Parser(tokens)
         // Verifica que se lance una excepción de tipo IllegalArgumentException cuando se ejecuta el parser
         val exception = assertFailsWith<BadSyntacticException> {
@@ -200,7 +200,7 @@ class ParserTester {
 
     @Test
     fun testAssignDeclareWithDifferentTypesShouldPassSyntacticParser() {
-        val tokens = TokenIterator("let a: Number = 'testing';")
+        val tokens = Lexer("let a: Number = 'testing';")
         val parser = Parser(tokens)
         val ast1 = parser.next()
 
@@ -226,7 +226,7 @@ class ParserTester {
 
     @Test
     fun statementSumElements() {
-        val tokens = TokenIterator("let a: Number = 5 + 3 + 4 / (6 + 6); println(a);")
+        val tokens = Lexer("let a: Number = 5 + 3 + 4 / (6 + 6); println(a);")
         val parser = Parser(tokens)
         val ast1 = parser.next()
         val ast2 = parser.next()

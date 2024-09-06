@@ -1,5 +1,5 @@
 import interpreter.Interpreter
-import lexer.TokenIterator
+import lexer.Lexer
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import parser.Parser
@@ -10,7 +10,7 @@ class InterpreterTest {
 
     @Test
     fun testDeclarationWithNumber() {
-        val tokens = TokenIterator("let a: Number;")
+        val tokens = Lexer("let a: Number;")
         val parser = Parser(tokens)
         val ast1 = parser.next()
         val initialScope = Environment()
@@ -20,7 +20,7 @@ class InterpreterTest {
 
     @Test
     fun testDeclarationWithString() {
-        val tokens = TokenIterator("let a: String;")
+        val tokens = Lexer("let a: String;")
         val parser = Parser(tokens)
         val ast1 = parser.next()
         val initialScope = Environment()
@@ -30,7 +30,7 @@ class InterpreterTest {
 
     @Test
     fun testAssignationWithString() {
-        val tokens = TokenIterator("let a: String = \"Hello World\" ;")
+        val tokens = Lexer("let a: String = \"Hello World\" ;")
         val parser = Parser(tokens)
         val ast1 = parser.next()
         val initialScope = Environment()
@@ -40,7 +40,7 @@ class InterpreterTest {
 
     @Test
     fun testAssignationWithNumber() {
-        val tokens = TokenIterator("let c : Number = 4; c = 2;")
+        val tokens = Lexer("let c : Number = 4; c = 2;")
         val parser = Parser(tokens)
         val ast1 = parser.next()
         val ast2 = parser.next()
@@ -52,7 +52,7 @@ class InterpreterTest {
 
     @Test
     fun testAssignationWithLiteral() {
-        val tokens = TokenIterator("let b: Number = 3; let a: Number = 7; a = b;")
+        val tokens = Lexer("let b: Number = 3; let a: Number = 7; a = b;")
         val parser = Parser(tokens)
         val ast1 = parser.next()
         val ast2 = parser.next()
@@ -66,7 +66,7 @@ class InterpreterTest {
 
     @Test
     fun testAssignationDeclarationWithNumber() {
-        val tokens = TokenIterator("let a: Number = 2; a = 3;")
+        val tokens = Lexer("let a: Number = 2; a = 3;")
         val parser = Parser(tokens)
         val ast1 = parser.next()
         val ast2 = parser.next()
@@ -78,7 +78,7 @@ class InterpreterTest {
 
     @Test
     fun testAssignationDeclarationWithString() {
-        val tokens = TokenIterator("let b: String; b = 'Hello';")
+        val tokens = Lexer("let b: String; b = 'Hello';")
         val parser = Parser(tokens)
         val ast1 = parser.next()
         val ast2 = parser.next()
@@ -90,7 +90,7 @@ class InterpreterTest {
 
     @Test
     fun testMethodCallWithNumber() {
-        val tokens = TokenIterator("let a: Number = 4; println(a);")
+        val tokens = Lexer("let a: Number = 4; println(a);")
         val parser = Parser(tokens)
         val ast1 = parser.next()
         val ast2 = parser.next()
@@ -102,7 +102,7 @@ class InterpreterTest {
 
     @Test
     fun testSumNumber() {
-        val tokens = TokenIterator("let a: Number = 6 + 2 + 6;")
+        val tokens = Lexer("let a: Number = 6 + 2 + 6;")
         val parser = Parser(tokens)
         val ast1 = parser.next()
         val initialScope = Environment()
@@ -112,7 +112,7 @@ class InterpreterTest {
 
     @Test
     fun testDivisionNumber() {
-        val tokens = TokenIterator("let a: Number = 6 / 2;")
+        val tokens = Lexer("let a: Number = 6 / 2;")
         val parser = Parser(tokens)
         val ast1 = parser.next()
         val initialScope = Environment()
@@ -122,7 +122,7 @@ class InterpreterTest {
 
     @Test
     fun testComplexExpression() {
-        val tokens = TokenIterator("let a: Number = 6 / (2 + 5) - (5 * 6);")
+        val tokens = Lexer("let a: Number = 6 / (2 + 5) - (5 * 6);")
         val parser = Parser(tokens)
         val ast1 = parser.next()
         val initialScope = Environment()
@@ -132,7 +132,7 @@ class InterpreterTest {
 
     @Test
     fun testSumWithIdentifier() {
-        val tokens = TokenIterator("let a: Number = 6; let b: Number = a + 2;")
+        val tokens = Lexer("let a: Number = 6; let b: Number = a + 2;")
         val parser = Parser(tokens)
         val ast1 = parser.next()
         val ast2 = parser.next()
@@ -144,7 +144,7 @@ class InterpreterTest {
 
     @Test
     fun testBinaryOperationString() {
-        val tokens = TokenIterator("let a: String = 'Hello' + 'World';")
+        val tokens = Lexer("let a: String = 'Hello' + 'World';")
         val parser = Parser(tokens)
         val ast1 = parser.next()
         val initialScope = Environment()
@@ -154,7 +154,7 @@ class InterpreterTest {
 
     @Test
     fun testAddingAssignations() {
-        val tokens = TokenIterator("let a: Number = 7; let b : Number = 8; let c : Number = a + 3 + b;")
+        val tokens = Lexer("let a: Number = 7; let b : Number = 8; let c : Number = a + 3 + b;")
         val parser = Parser(tokens)
         val ast1 = parser.next()
         val ast2 = parser.next()
