@@ -8,7 +8,7 @@ import java.util.*
 class TokenManager(tokens: List<Token>) {
 
     private val tokenQueue: Queue<Token> = LinkedList(tokens)
-
+    private var lastToken: Token? = null
     /**
      * See if the current token has x value
      * @return true if the token value is from the current value
@@ -23,6 +23,10 @@ class TokenManager(tokens: List<Token>) {
      * @throws NoSuchElementException if the queue is empty.
      */
     fun advance(): Token {
+        if (tokenQueue.isEmpty() && lastToken != null) {
+            return lastToken as Token
+        }
+        lastToken = tokenQueue.peek()
         return tokenQueue.poll() ?: throw NoSuchElementException("No more tokens to consume.")
     }
 
@@ -32,6 +36,9 @@ class TokenManager(tokens: List<Token>) {
      * @throws NoSuchElementException if the queue is empty.
      */
     fun peek(): Token {
+        if (tokenQueue.isEmpty() && lastToken != null) {
+            return lastToken as Token
+        }
         return tokenQueue.peek() ?: throw NoSuchElementException("No tokens to peek at.")
     }
 
@@ -49,6 +56,7 @@ class TokenManager(tokens: List<Token>) {
      * @return True if the next token matches the value, false otherwise.
      */
     fun checkNextTokenValue(value: String): Boolean {
+
         return tokenQueue.peek()?.value == value
     }
 
