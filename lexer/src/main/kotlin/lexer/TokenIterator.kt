@@ -36,7 +36,9 @@ class TokenIterator(input: String) : Iterator<Token> {
                 continue
             }
 
-            if (currentChar == ';' || currentChar == ':' || currentChar == '(' || currentChar == ')' || currentChar!!.isWhitespace()) {
+            val separators = listOf(';', ':', '(', ')', '\'', '"')
+
+            if (currentChar!!.isWhitespace() || separators.contains(currentChar)) {
                 if (currentBuffer.isNotEmpty()) {
                     val token = generateTokenFromBuffer()
                     nextToken = if (!currentChar!!.isWhitespace()) {
