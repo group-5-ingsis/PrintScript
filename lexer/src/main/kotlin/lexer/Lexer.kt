@@ -36,7 +36,22 @@ class Lexer(input: String) : Iterator<Token> {
                 continue
             }
 
-            val separators = listOf(';', ':', '(', ')', '\'', '"')
+            val separators = listOf(';', ':', '(', ')')
+
+            if (currentChar == '\'' || currentChar == '\"') {
+                val startQuote = currentChar
+                currentBuffer.append(currentChar)
+                while (inputIterator.hasNext()) {
+                    currentChar = inputIterator.next()
+                    currentIndex++
+                    currentBuffer.append(currentChar)
+
+                    if (currentChar == startQuote) {
+                        break
+                    }
+                }
+                return generateTokenFromBuffer()
+            }
 
             if (currentChar!!.isWhitespace() || separators.contains(currentChar)) {
                 if (currentBuffer.isNotEmpty()) {
