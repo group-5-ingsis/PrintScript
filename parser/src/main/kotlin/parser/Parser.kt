@@ -53,6 +53,7 @@ class Parser(private val lexer: Iterator<Token>) : Iterator<StatementType> {
             }
         }
 
+        // TODO change. Add SemanticParser validation.
         throw NoSuchElementException("No more tokens available to parse")
     }
 

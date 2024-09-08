@@ -8,29 +8,9 @@ import position.visitor.ExpressionVisitor
 class StatementExpressionValidator : Validator<StatementType.StatementExpression> {
 
     override fun validate(node: StatementType.StatementExpression, scope: Environment): ValidationResult {
-        when (val exp: Expression = node.value) {
+        return when (val exp: Expression = node.value) {
             is Expression.Assign -> {
-                val identifier = exp.name
-                val valueExpression = exp.value
-                val variableInfo = scope.get(identifier)
-                    ?: return ValidationResult(
-                        true,
-                        node,
-                        "Variable '$identifier' is not declared in the current scope."
-                    )
-
-                val actualValue = valueExpression.acceptVisitor(ExpressionVisitor(), scope)
-                val actualType = getTypeInString(actualValue)
-
-                if (getTypeInString(variableInfo) != actualType) {
-                    return ValidationResult(
-                        true,
-                        node,
-                        "Type mismatch: Expected '$variableInfo' but found '$actualType' in assignment to '$identifier'."
-                    )
-                }
-
-                return ValidationResult(false, null, null)
+                handleAssign(exp, scope, node)
             }
 
 //            is Expression.Binary -> TODO()
@@ -41,6 +21,29 @@ class StatementExpressionValidator : Validator<StatementType.StatementExpression
 //            is Expression.Variable -> TODO()
             else -> return ValidationResult(false, null, null)
         }
+    }
+
+    private fun handleAssign(exp: Expression.Assign, scope: Environment, node: StatementType.StatementExpression): ValidationResult {
+        val identifier = exp.name
+        val valueExpression = exp.value
+        val variableInfo = scope.get(identifier)
+            ?: return ValidationResult(
+                true,
+                node,
+                "Variable '$identifier' is not declared in the current scope."
+            )
+
+        val actualValue = valueExpression.acceptVisitor(ExpressionVisitor(), scope)
+        val actualType = getTypeInString(actualValue)
+
+        if (getTypeInString(variableInfo) != actualType) {
+            return ValidationResult(
+                true,
+                node,
+                "Type mismatch: Expected '$variableInfo' but found '$actualType' in assignment to '$identifier'."
+            )
+        }
+        return ValidationResult(false, null, null)
     }
 
     private fun getTypeInString(actualValue: Any?): String {
