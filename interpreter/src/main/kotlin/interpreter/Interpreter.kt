@@ -7,7 +7,7 @@ import position.visitor.statementVisitorResult
 
 class Interpreter() {
 
-    fun interpret(scope: Environment, parser: Iterator<StatementType>, sb : StringBuilder): statementVisitorResult {
+    fun interpret(scope: Environment, parser: Iterator<StatementType>, sb: StringBuilder): statementVisitorResult {
         var currentScope = scope
         var stB = StringBuilder(sb.toString())
         while (parser.hasNext()) {

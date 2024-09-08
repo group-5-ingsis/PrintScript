@@ -51,7 +51,6 @@ class StatementVisitor {
         return Pair(stringBuilder, environment)
     }
 
-
     private fun visitExpressionStm(statement: StatementType.StatementExpression, environment: Environment, stringBuilder: StringBuilder): statementVisitorResult {
         val newEnvironment = evaluateExpression(statement.value, environment).second
         return Pair(stringBuilder, newEnvironment)

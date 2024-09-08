@@ -44,7 +44,7 @@ class InterpreterTest {
         val stringBuilder = StringBuilder()
         val result = interpreter.interpret(initialScope, parser, stringBuilder)
         assertEquals(4, result.second.get("a"))
-        assertEquals("\n4\n", result.first.toString())  // Verificar lo que se imprimió
+        assertEquals("\n4\n", result.first.toString()) // Verificar lo que se imprimió
     }
 
     @Test
@@ -106,7 +106,8 @@ class InterpreterTest {
     @Test
     fun testPrintExpressionAndVariable() {
         val tokens = Lexer(
-"let a: Number = 42; println(a); println(a + 8);")
+            "let a: Number = 42; println(a); println(a + 8);"
+        )
         val parser = Parser(tokens)
         val interpreter = Interpreter()
         val initialScope = Environment()
@@ -115,11 +116,10 @@ class InterpreterTest {
 
         // Verificamos que se haya impreso tanto la variable como la expresión
         assertEquals("\n42\n\n50\n", result.first.toString())
-        assertEquals(42, result.second.get("a"))  // Verificamos el valor de la variable
+        assertEquals(42, result.second.get("a")) // Verificamos el valor de la variable
     }
 
     private val interpreter = Interpreter()
-
 
     @Test
     fun testDivisionNumber() {
@@ -160,7 +160,4 @@ class InterpreterTest {
         // No hay salida esperada en el StringBuilder para esta operación
         assertEquals("", finalScope.first.toString())
     }
-
-
-
 }
