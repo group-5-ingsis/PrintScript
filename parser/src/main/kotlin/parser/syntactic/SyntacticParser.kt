@@ -2,54 +2,19 @@ package parser.syntactic
 
 import Environment
 import nodes.StatementType
-import parser.syntactic.statements.GenericStatement
+import parser.syntactic.statements.GenericStatementParser
 import position.visitor.StatementVisitor
 import position.visitor.Visitor
 import token.Token
 
 object SyntacticParser {
+    /* Notes on types of Expression/Statement on 'syntactic-parser-notes.txt' */
 
     fun parse(tokens: List<Token>): Pair<StatementType, List<Token>> {
-        if (tokens.isNotEmpty()) {
-            val currentParser = GenericStatement.makeStatementParser()
-            val (remainingTokens, exp) = currentParser.parse(tokens)
-            return Pair(exp, remainingTokens)
-        }
-        throw Exception("No tokens to parse")
+        val currentParser = GenericStatementParser.makeStatementParser()
+        val (remainingTokens, exp) = currentParser.parse(tokens)
+        return Pair(exp, remainingTokens)
     }
-
-    /**
-     * DIFFERENT KIND OF EXPRESSIONS
-     *
-     *   expression     → assigment ;
-     *   assigment      → IDENTIFIER "=" assignment
-     *                | comparison ;
-     *   comparison     → term ( ( ">" | ">=" | "<" | "<=" ) term )* ;
-     *   term           → factor ( ( "-" | "+" ) factor )* ;
-     *   factor         → unary ( ( "/" | "*" ) unary )* ;
-     *   unary          → ( "!" | "-" ) unary
-     *   | primary ;
-     *   primary        → NUMBER | STRING | "true" | "false" | "null"
-     *   | "(" expression ")" | IDENTIFIER ;
-     *
-     */
-
-    /**
-     * DIFFERENT KIND OF STATEMENTS:
-     *
-     * program        →  declaration* EOF ;
-     *
-     * declaration    → varDecl
-     *                | statement ; // later here: functions, and classes
-     *
-     * statement      → exprStmt
-     *                | printStmt ;
-     *
-     * exprStmt       → expression ";" ;
-     * printStmt      → "print" expression ";" ;
-     * varDecl        → "let" IDENTIFIER VARIABLE_TYPE ( "=" expression )? ";" ;
-     *
-     */
 
     class RootNode private constructor() {
         private val children = mutableListOf<StatementType>()

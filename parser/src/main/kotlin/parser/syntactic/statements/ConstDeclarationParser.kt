@@ -5,7 +5,7 @@ import parser.syntactic.TokenManager
 import parser.syntactic.expressions.ExpressionType
 import token.Token
 
-class ConstDeclaration : StatementParser {
+class ConstDeclarationParser : StatementParser {
     override fun parse(tokens: List<Token>): ParseStatementResult {
         val manager = TokenManager(tokens)
 

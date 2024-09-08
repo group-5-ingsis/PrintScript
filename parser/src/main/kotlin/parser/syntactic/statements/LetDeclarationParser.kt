@@ -7,7 +7,7 @@ import parser.syntactic.TokenManager
 import parser.syntactic.expressions.ExpressionType
 import token.Token
 
-class LetDeclaration : StatementParser {
+class LetDeclarationParser : StatementParser {
 
     override fun parse(tokens: List<Token>): ParseStatementResult {
         var manager = TokenManager(tokens)

@@ -1,0 +1,28 @@
+     * DIFFERENT KINDS OF EXPRESSIONS
+     *
+     *   expression     → assigment ;
+     *   assigment      → IDENTIFIER "=" assignment
+     *                | comparison ;
+     *   comparison     → term ( ( ">" | ">=" | "<" | "<=" ) term )* ;
+     *   term           → factor ( ( "-" | "+" ) factor )* ;
+     *   factor         → unary ( ( "/" | "*" ) unary )* ;
+     *   unary          → ( "!" | "-" ) unary
+     *   | primary ;
+     *   primary        → NUMBER | STRING | "true" | "false" | "null"
+     *   | "(" expression ")" | IDENTIFIER ;
+     *
+
+     * DIFFERENT KINDS OF STATEMENTS:
+     *
+     * program        →  declaration* EOF ;
+     *
+     * declaration    → varDecl
+     *                | statement ; // later here: functions, and classes
+     *
+     * statement      → exprStmt
+     *                | printStmt ;
+     *
+     * exprStmt       → expression ";" ;
+     * printStmt      → "print" expression ";" ;
+     * varDecl        → "let" IDENTIFIER VARIABLE_TYPE ( "=" expression )? ";" ;
+     *

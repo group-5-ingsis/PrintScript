@@ -10,7 +10,7 @@ import token.Token
  *  - `String`: The expected type of statement as a string (e.g., "DECLARATION", "ASSIGNATION").
  *  - `MiniStatementParser`: The parser that should be used if the token matches the expected statement type.
  */
-class GenericStatement(private val nextStatementsList: List<Pair<String, StatementParser>>) : StatementParser {
+class GenericStatementParser(private val nextStatementsList: List<Pair<String, StatementParser>>) : StatementParser {
 
     /**
      * Parses a list of tokens and determines which type of statement it represents, then
@@ -29,6 +29,7 @@ class GenericStatement(private val nextStatementsList: List<Pair<String, Stateme
         val manager = TokenManager(tokens) // Initialize the TokenManager with the provided tokens
 
         // Iterate through the list of statement types and their corresponding parsers
+        // TODO change this logic. Consume one token at a time until it matches an expression/statement type.
         for ((statementType, typeOfStatements) in nextStatementsList) {
             // Check if the next token in the queue matches the expected statement type
             if (manager.nextTokenMatchesExpectedType(statementType)) {
@@ -44,22 +45,23 @@ class GenericStatement(private val nextStatementsList: List<Pair<String, Stateme
 
     companion object {
         fun makeStatementParser(): StatementParser {
-            val statement = GenericStatement(
+            // TODO change this.
+            val statement = GenericStatementParser(
                 listOf(
-                    Pair("PRINT", PrintStatement()),
-                    Pair("", ExpressionStatement())
+                    Pair("PRINT", PrintStatementParser()),
+                    Pair("", ExpressionStatementParser())
                 )
             )
 
-            val declarationAssignationStatement = GenericStatement(
+            val declarationAssignationStatement = GenericStatementParser(
                 listOf(
                     Pair(
                         "DECLARATION_KEYWORD",
-                        LetDeclaration()
+                        LetDeclarationParser()
                     ),
                     Pair(
                         "CONST",
-                        ConstDeclaration()
+                        ConstDeclarationParser()
                     ),
                     Pair("", statement)
                 )

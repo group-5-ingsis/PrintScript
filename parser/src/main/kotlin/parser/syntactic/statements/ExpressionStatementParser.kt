@@ -5,7 +5,7 @@ import parser.syntactic.TokenManager
 import parser.syntactic.expressions.ExpressionType
 import token.Token
 
-class ExpressionStatement() : StatementParser {
+class ExpressionStatementParser : StatementParser {
     override fun parse(tokens: List<Token>): ParseStatementResult {
         val (remainingTokens, exp) = ExpressionType.makeExpressionEvaluator().parse(tokens)
         val manager = TokenManager(remainingTokens)
