@@ -6,6 +6,7 @@ import parser.semantic.validation.SemanticValidator
 import parser.semantic.validation.ValidationResult
 import parser.syntactic.SyntacticParser
 import position.visitor.StatementVisitor
+import java.lang.StringBuilder
 
 object SemanticParser {
     private val validator = SemanticValidator()
@@ -13,8 +14,8 @@ object SemanticParser {
     @Throws(SemanticErrorException::class)
     fun validate(ast: SyntacticParser.RootNode): SyntacticParser.RootNode {
         val environment = Environment()
-        val newEnv = ast.accept(StatementVisitor(), environment)
-        val result = runValidators(ast, newEnv)
+        val newEnv = ast.accept(StatementVisitor(), environment, StringBuilder())
+        val result = runValidators(ast, newEnv.second)
 
         if (result.isInvalid) {
             throw SemanticErrorException("Invalid procedure: " + result.message)

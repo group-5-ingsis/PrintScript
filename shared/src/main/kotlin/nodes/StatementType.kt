@@ -4,15 +4,16 @@ import Environment
 import position.Position
 import position.visitor.StatementVisitor
 import position.visitor.Visitor
+import position.visitor.statementVisitorResult
 
 sealed class StatementType {
 
     abstract val statementType: String
     abstract val position: Position
 
-    fun acceptVisitor(visitor: StatementVisitor, environment: Environment): Environment {
+    fun acceptVisitor(visitor: StatementVisitor, environment: Environment, sb: StringBuilder): statementVisitorResult {
         val func = visitor.getVisitorFunctionForStatement(statementType)
-        return func(this, environment)
+        return func(this, environment, sb)
     }
 
     abstract fun accept(visitor: Visitor)

@@ -5,6 +5,7 @@ import nodes.StatementType
 import parser.syntactic.statements.GenericStatementParser
 import position.visitor.StatementVisitor
 import position.visitor.Visitor
+import position.visitor.statementVisitorResult
 import token.Token
 
 object SyntacticParser {
@@ -33,12 +34,15 @@ object SyntacticParser {
             }
         }
 
-        fun accept(visitor: StatementVisitor, environment: Environment): Environment {
+        fun accept(visitor: StatementVisitor, environment: Environment, sb: StringBuilder): statementVisitorResult {
             var env = environment.getCopy()
+            var sbb = StringBuilder(sb.toString())
             for (child in children) {
-                env = child.acceptVisitor(visitor, env)
+                val result = child.acceptVisitor(visitor, env, sb)
+                env = result.second
+                sbb = result.first
             }
-            return env
+            return Pair(sbb, env)
         }
 
         fun accept(visitor: Visitor) {

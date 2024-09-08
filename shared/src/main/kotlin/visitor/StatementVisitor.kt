@@ -5,33 +5,35 @@ import VisitorResultExpressions
 import nodes.Expression
 import nodes.StatementType
 
+typealias statementVisitorResult = Pair<StringBuilder, Environment>
+
 class StatementVisitor {
     private fun evaluateExpression(expr: Expression, scope: Environment): VisitorResultExpressions {
         val visitor = ExpressionVisitor()
         return expr.acceptVisitor(visitor, scope)
     }
 
-    fun getVisitorFunctionForStatement(statementType: String): (StatementType, Environment) -> Environment {
+    fun getVisitorFunctionForStatement(statementType: String): (StatementType, Environment, StringBuilder) -> statementVisitorResult {
         return when (statementType) {
-            "PRINT" -> { statement, env ->
+            "PRINT" -> { statement, env, sb ->
                 if (statement is StatementType.Print) {
-                    visitPrintStm(statement, env)
+                    visitPrintStm(statement, env, sb)
                 } else {
                     throw IllegalArgumentException("Invalid statement type for PRINT: ${statement::class.simpleName}")
                 }
             }
 
-            "STATEMENT_EXPRESSION" -> { statement, env ->
+            "STATEMENT_EXPRESSION" -> { statement, env, sb ->
                 if (statement is StatementType.StatementExpression) {
-                    visitExpressionStm(statement, env)
+                    visitExpressionStm(statement, env, sb)
                 } else {
                     throw IllegalArgumentException("Invalid statement type for STATEMENT_EXPRESSION: ${statement::class.simpleName}")
                 }
             }
 
-            "VARIABLE_STATEMENT" -> { statement, env ->
+            "VARIABLE_STATEMENT" -> { statement, env, sb ->
                 if (statement is StatementType.Variable) {
-                    visitVariableStm(statement, env)
+                    visitVariableStm(statement, env, sb)
                 } else {
                     throw IllegalArgumentException("Invalid statement type for VARIABLE_STATEMENT: ${statement::class.simpleName}")
                 }
@@ -42,20 +44,27 @@ class StatementVisitor {
             }
         }
     }
-    private fun visitPrintStm(statement: StatementType.Print, environment: Environment): Environment {
+
+    private fun visitPrintStm(statement: StatementType.Print, environment: Environment, stringBuilder: StringBuilder): statementVisitorResult {
         val value = evaluateExpression(statement.value, environment)
-        println(value.first)
-        return environment
+        stringBuilder.append("\n${value.first}\n")
+        return Pair(stringBuilder, environment)
     }
-    private fun visitExpressionStm(statement: StatementType.StatementExpression, environment: Environment): Environment {
-        return evaluateExpression(statement.value, environment).second
+
+
+    private fun visitExpressionStm(statement: StatementType.StatementExpression, environment: Environment, stringBuilder: StringBuilder): statementVisitorResult {
+        val newEnvironment = evaluateExpression(statement.value, environment).second
+        return Pair(stringBuilder, newEnvironment)
     }
-    private fun visitVariableStm(statement: StatementType.Variable, environment: Environment): Environment {
+
+    private fun visitVariableStm(statement: StatementType.Variable, environment: Environment, stringBuilder: StringBuilder): statementVisitorResult {
         val nullValue = null
-        if (statement.initializer != null) {
-            val (newValue, newEnvironment) = evaluateExpression(statement.initializer, environment)
-            return newEnvironment.define(statement.identifier, newValue, statement.designation)
+        val newEnvironment = if (statement.initializer != null) {
+            val (newValue, env) = evaluateExpression(statement.initializer, environment)
+            env.define(statement.identifier, newValue, statement.designation)
+        } else {
+            environment.define(statement.identifier, nullValue, statement.designation)
         }
-        return environment.define(statement.identifier, nullValue, statement.designation)
+        return Pair(stringBuilder, newEnvironment)
     }
 }
