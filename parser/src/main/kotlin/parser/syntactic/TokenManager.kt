@@ -69,7 +69,7 @@ class TokenManager(tokens: List<Token>) {
      * @param type The expected token type.
      * @return True if the next token matches the type, false otherwise.
      */
-    fun checkNextTokenType(type: String): Boolean {
+    fun nextTokenMatchesExpectedType(type: String): Boolean {
         return peek().type == type
     }
 

@@ -10,7 +10,7 @@ class Comparison(private val parseInferiorFunction: ExpressionParser) : Expressi
         var (remainingTokens, expression) = parseInferiorFunction.parse(tokens)
         val tokenManager = TokenManager(remainingTokens)
 
-        while (tokenManager.checkNextTokenType("COMPARISON")) {
+        while (tokenManager.nextTokenMatchesExpectedType("COMPARISON")) {
             val position = tokenManager.getPosition()
             val tokenOperator = tokenManager.peek().value
 

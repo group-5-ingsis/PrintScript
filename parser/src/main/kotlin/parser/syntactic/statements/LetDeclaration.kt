@@ -8,6 +8,7 @@ import parser.syntactic.expressions.ExpressionType
 import token.Token
 
 class LetDeclaration : StatementParser {
+
     override fun parse(tokens: List<Token>): ParseStatementResult {
         var manager = TokenManager(tokens)
         val position = manager.getPosition()

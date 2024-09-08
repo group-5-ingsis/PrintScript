@@ -25,10 +25,10 @@ class Primary() : ExpressionParser {
         }
 
         val position = tokenMng.getPosition()
-        if (tokenMng.checkNextTokenType("BOOLEAN")) {
+        if (tokenMng.nextTokenMatchesExpectedType("BOOLEAN")) {
             val token = tokenMng.advance()
             return Pair(tokenMng.getTokens(), Expression.Literal(token.value.toBoolean(), position))
-        } else if (tokenMng.checkNextTokenType("NULL")) {
+        } else if (tokenMng.nextTokenMatchesExpectedType("NULL")) {
             tokenMng.advance()
             return Pair(tokenMng.getTokens(), Expression.Literal(null, position))
         } else if (tokenMng.checkTokensAreFromSomeTypes(listOf("NUMBER", "STRING"))) {
@@ -40,7 +40,7 @@ class Primary() : ExpressionParser {
             val newTK = TokenManager(expr.first)
             newTK.consumeTokenValue(")")
             return Pair(newTK.getTokens(), Expression.Grouping(expr.second, position))
-        } else if (tokenMng.checkNextTokenType("IDENTIFIER")) {
+        } else if (tokenMng.nextTokenMatchesExpectedType("IDENTIFIER")) {
             val idem = tokenMng.advance().value
             return Pair(tokenMng.getTokens(), Expression.Variable(idem, position))
         }
