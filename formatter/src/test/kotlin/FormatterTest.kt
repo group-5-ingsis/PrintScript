@@ -52,6 +52,36 @@ class FormatterTest {
     }
 
     @Test
+    fun testAssignationWithTripleSum() {
+        val input = "let  a: Number = 2      +  2+2*4;"
+
+        val tokens = Lexer(input)
+        val astNodes = Parser(tokens)
+        val formatter = Formatter(astNodes)
+
+        val result = formatter.format(exampleRules)
+
+        val expected = "let a: Number = 2 + 2 + 2 * 4;\n"
+
+        assertEquals(expected, result)
+    }
+
+    @Test
+    fun testAssignationWithComplexOperation() {
+        val input = "let  a: Number = (2      +  2)+ 2*4;"
+
+        val tokens = Lexer(input)
+        val astNodes = Parser(tokens)
+        val formatter = Formatter(astNodes)
+
+        val result = formatter.format(exampleRules)
+
+        val expected = "let a: Number = (2 + 2) + 2 * 4;\n"
+
+        assertEquals(expected, result)
+    }
+
+    @Test
     fun testPrintLnFormatting() {
         val input = "let a: Number = 2; println(a);"
 
