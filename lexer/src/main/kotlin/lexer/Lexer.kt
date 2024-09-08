@@ -31,7 +31,7 @@ class Lexer(input: String) : Iterator<Token> {
                     state = state.copy(buffer = StringBuilder(), currentIndex = 0)
                     continue
                 } else if (state.buffer.isNotEmpty()) {
-                    return generateTokenFromBuffer(state.buffer, currentRow, state.currentIndex)
+                    return TokenGenerator.generateTokenFromBuffer(state.buffer, currentRow, state.currentIndex)
                 } else {
                     throw NoSuchElementException("No more tokens")
                 }
@@ -44,7 +44,7 @@ class Lexer(input: String) : Iterator<Token> {
                 currentRow++
                 state = state.copy(buffer = StringBuilder(), currentIndex = 0)
                 if (state.buffer.isNotEmpty()) {
-                    return generateTokenFromBuffer(state.buffer, currentRow, state.currentIndex)
+                    return TokenGenerator.generateTokenFromBuffer(state.buffer, currentRow, state.currentIndex)
                 }
                 continue
             }
@@ -61,14 +61,15 @@ class Lexer(input: String) : Iterator<Token> {
                         break
                     }
                 }
-                return generateTokenFromBuffer(newBuffer, currentRow, newIndex)
+                return TokenGenerator.generateTokenFromBuffer(newBuffer, currentRow, newIndex)
             }
 
             if (currentChar.isWhitespace() || separators.contains(currentChar)) {
                 if (state.buffer.isNotEmpty()) {
-                    val token = generateTokenFromBuffer(state.buffer, currentRow, state.currentIndex)
+                    val token = TokenGenerator.generateTokenFromBuffer(state.buffer, currentRow, state.currentIndex)
                     state = state.copy(
-                        buffer = StringBuilder(), currentIndex = 0,
+                        buffer = StringBuilder(),
+                        currentIndex = 0,
                         nextToken = if (!currentChar.isWhitespace()) {
                             TokenGenerator.generateToken(currentChar.toString(), currentRow, newIndex - 1)
                         } else {
@@ -91,17 +92,11 @@ class Lexer(input: String) : Iterator<Token> {
             val potentialNextType = TokenGenerator.getTypeFromValue(bufferValue)
             if (currentType != potentialNextType && potentialNextType != "UNKNOWN") {
                 val trimmedBuffer = StringBuilder(state.buffer).deleteCharAt(state.buffer.length - 1)
-                val token = generateTokenFromBuffer(trimmedBuffer, currentRow, state.currentIndex)
+                val token = TokenGenerator.generateTokenFromBuffer(trimmedBuffer, currentRow, state.currentIndex)
                 return token
             }
 
             state = state.copy(buffer = newBuffer, currentIndex = newIndex)
         }
-    }
-
-    private fun generateTokenFromBuffer(buffer: StringBuilder, row: Int, index: Int): Token {
-        val value = buffer.toString()
-        val token = TokenGenerator.generateToken(value, row, index - value.length)
-        return token
     }
 }

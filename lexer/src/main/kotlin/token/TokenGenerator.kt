@@ -37,4 +37,10 @@ object TokenGenerator {
 
         return "UNKNOWN"
     }
+
+    fun generateTokenFromBuffer(buffer: StringBuilder, row: Int, index: Int): Token {
+        val value = buffer.toString()
+        val token = TokenGenerator.generateToken(value, row, index - value.length)
+        return token
+    }
 }
