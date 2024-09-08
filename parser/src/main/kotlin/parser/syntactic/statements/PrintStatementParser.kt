@@ -6,7 +6,7 @@ import parser.syntactic.TokenManager
 import parser.syntactic.expressions.ExpressionType
 import token.Token
 
-class PrintStatement : StatementParser {
+class PrintStatementParser : StatementParser {
     override fun parse(tokens: List<Token>): ParseStatementResult {
         var manager = TokenManager(tokens)
         val position = manager.getPosition()

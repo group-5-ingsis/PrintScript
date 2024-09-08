@@ -9,13 +9,13 @@ class ExpressionVisitor {
     private fun evaluateExpression(expr: Expression, environment: Environment): VisitorResultExpressions {
         return expr.acceptVisitor(this, environment)
     }
-    fun visitLiteralExp(exp: Expression.Literal, environment: Environment): VisitorResultExpressions {
+    private fun visitLiteralExp(exp: Expression.Literal, environment: Environment): VisitorResultExpressions {
         return Pair(exp.value, environment)
     }
-    fun visitGroupExp(exp: Expression.Grouping, environment: Environment): VisitorResultExpressions {
+    private fun visitGroupExp(exp: Expression.Grouping, environment: Environment): VisitorResultExpressions {
         return evaluateExpression(exp.expression, environment)
     }
-    fun visitUnaryExpr(exp: Expression.Unary, environment: Environment): Pair<Any?, Environment> {
+    private fun visitUnaryExpr(exp: Expression.Unary, environment: Environment): Pair<Any?, Environment> {
         val rightObject = evaluateExpression(exp.right, environment)
         return when (exp.operator) {
             "-" -> {
@@ -30,7 +30,7 @@ class ExpressionVisitor {
         }
     }
 
-    fun visitBinaryExpr(exp: Expression.Binary, scope: Environment): Pair<Any?, Environment> {
+    private fun visitBinaryExpr(exp: Expression.Binary, scope: Environment): Pair<Any?, Environment> {
         val (left, leftScope) = evaluateExpression(exp.left, scope)
         val (right, rigthScope) = evaluateExpression(exp.right, leftScope)
 
@@ -139,11 +139,11 @@ class ExpressionVisitor {
         }
     }
 
-    fun visitVariableExp(exp: Expression.Variable, scope: Environment): VisitorResultExpressions {
+    private fun visitVariableExp(exp: Expression.Variable, scope: Environment): VisitorResultExpressions {
         return Pair(scope.get(exp.name), scope)
     }
 
-    fun visitAssignExpr(exp: Expression.Assign, scope: Environment): VisitorResultExpressions {
+    private fun visitAssignExpr(exp: Expression.Assign, scope: Environment): VisitorResultExpressions {
         val (value, newScope) = evaluateExpression(exp.value, scope)
         val newScope2 = newScope.assign(exp.name, value)
         return Pair(value, newScope2)
@@ -175,11 +175,11 @@ class ExpressionVisitor {
         }
     }
 
-    fun visitIdentifierExp(exp: Expression.IdentifierExpression, environment: Environment): VisitorResultExpressions {
+    private fun visitIdentifierExp(exp: Expression.IdentifierExpression, environment: Environment): VisitorResultExpressions {
         return Pair(exp, environment)
     }
 
-    fun checkNumberOperands(operator: String, left: Any, right: Any) {
+    private fun checkNumberOperands(operator: String, left: Any, right: Any) {
         if (left is Number && right is Number) return
         throw RuntimeException("error in operator: $operator , $left and $right  must be numbers.")
     }
@@ -190,7 +190,7 @@ class ExpressionVisitor {
         return true
     }
 
-    fun convertToDouble(value: Any?): Double {
+    private fun convertToDouble(value: Any?): Double {
         return when (value) {
             is Double -> value
             is Float -> value.toDouble()

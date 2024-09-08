@@ -5,12 +5,13 @@ import nodes.StatementType
 import position.visitor.ExpressionVisitor
 
 class VariableStatementValidator : Validator<StatementType.Variable> {
+
     override fun validate(node: StatementType.Variable, scope: Environment): ValidationResult {
         if (scope.get(node.identifier) != null) {
             return ValidationResult(
                 true,
                 node,
-                "Variable " + node.identifier + " has already been declared."
+                "Variable ${node.identifier} has already been declared."
             )
         }
 
@@ -20,7 +21,7 @@ class VariableStatementValidator : Validator<StatementType.Variable> {
         return validateDeclaration(node)
     }
 
-    fun validateAssignDeclaration(node: StatementType.Variable, varTable: Environment): ValidationResult {
+    private fun validateAssignDeclaration(node: StatementType.Variable, varTable: Environment): ValidationResult {
         val expectedType = node.dataType
         val value = node.initializer
             ?: return ValidationResult(
@@ -54,6 +55,7 @@ class VariableStatementValidator : Validator<StatementType.Variable> {
 
         return ValidationResult(false, null, null)
     }
+
     private fun validateDeclaration(node: StatementType.Variable): ValidationResult {
         if (node.designation == "const" && node.initializer == null) {
             return ValidationResult(
