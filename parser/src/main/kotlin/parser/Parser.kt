@@ -40,7 +40,7 @@ class Parser(private val lexer: Iterator<Token>) : Iterator<StatementType> {
                     return stm
                 }
             } catch (e: Exception) {
-                if (!lexer.hasNext()){
+                if (!lexer.hasNext()) {
                     throw e
                 }
                 if (!isAllowedException(e)) {

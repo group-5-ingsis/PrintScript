@@ -104,7 +104,7 @@ class TokenManager(tokens: List<Token>) {
     fun consumeTokenValue(value: String): Token {
         if (peek().value == value) return advance()
 
-        throw BadSyntacticException("Expect: $value after expression in : " + peek().position.toString())
+        throw BadSyntacticException("Expected '$value' after expression in " + peek().position.toString())
     }
 
     fun consumeTokenType(type: String): Token {

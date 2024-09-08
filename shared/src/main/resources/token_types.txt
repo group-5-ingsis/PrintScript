@@ -1,5 +1,5 @@
 OPERATOR :: \+, \-, \*, /
-DECLARATION_KEYWORD :: let,const
+DECLARATION_KEYWORD :: let
 VARIABLE_TYPE :: String,Number
 PRINT :: println
 COMPARISON :: >,>=,<,<=

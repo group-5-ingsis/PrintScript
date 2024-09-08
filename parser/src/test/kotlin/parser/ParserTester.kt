@@ -5,21 +5,9 @@ import lexer.Lexer
 import nodes.Expression
 import nodes.StatementType
 import position.Position
-import token.Token
 import kotlin.test.*
 
 class ParserTester {
-    private fun getTokenSublist(tokens: List<Token>): List<List<Token>> {
-        val tokenSublists = mutableListOf<List<Token>>()
-        var j = 0
-        for ((index, token) in tokens.withIndex()) {
-            if (token.type == "PUNCTUATION" && token.value == ";") {
-                tokenSublists.add(tokens.subList(j, index))
-                j += index + 1
-            }
-        }
-        return tokenSublists
-    }
 
     @Test
     fun testOperation() {
@@ -195,7 +183,7 @@ class ParserTester {
             parser.next()
         }
 
-        assertEquals("Expect: : after expression.", exception.message)
+        assertEquals("Expected ':' after expression in Line 1, symbol 8", exception.message)
     }
 
     @Test

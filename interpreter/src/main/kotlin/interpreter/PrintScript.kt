@@ -5,7 +5,7 @@ import lexer.Lexer
 import parser.Parser
 
 class PrintScript {
-    fun run(input: String) : Environment {
+    fun run(input: String): Environment {
         val lexer = Lexer(input)
         val parser = Parser(lexer)
         var scope = Environment()
@@ -15,5 +15,4 @@ class PrintScript {
         }
         return scope
     }
-
 }
