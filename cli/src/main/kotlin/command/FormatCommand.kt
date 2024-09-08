@@ -3,7 +3,6 @@ package command
 import cli.FileReader
 import cli.FileWriter
 import formatter.Formatter
-import interpreter.Interpreter
 import lexer.Lexer
 import parser.Parser
 
@@ -13,25 +12,19 @@ class FormatCommand(private val file: String, private val version: String, priva
         val formattingRules = FileReader.getFormattingRules(rulesFile, version)
 
         return try {
-            val tokens = Lexer.lex(fileContent)
+            val tokens = Lexer(fileContent)
 
-            val ast = Parser().run(tokens)
+            val ast = Parser(tokens)
 
-            Interpreter.interpret(ast)
+            val formatter = Formatter(ast)
 
-            val formattedContent = StringBuilder()
+            val result = formatter.format(formattingRules)
 
-            for (child in ast.getChildren()) {
-                val formattedLine = Formatter.format(child, formattingRules)
-                formattedContent.append(formattedLine)
-            }
-
-            val formattedFileContents = formattedContent.toString().trimEnd()
-            FileWriter.writeToFile(file, version, formattedFileContents)
+            FileWriter.writeToFile(file, version, result)
 
             "File formatted successfully"
         } catch (e: Exception) {
-            "Validation error: ${e.message}"
+            "Formatting Error: ${e.message}"
         }
     }
 }

@@ -38,7 +38,6 @@ class CLIApplication : Application() {
         val versionLabel = Label("Select Version:")
         val fileLabel = Label("Available Files:")
         val recentCommandsLabel = Label("Recent Commands:")
-        val yamlFilesLabel = Label("YAML Files:")
 
         // ComboBoxes
         val commandComboBox = ComboBox<String>()

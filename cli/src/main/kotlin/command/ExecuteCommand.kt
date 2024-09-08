@@ -14,15 +14,15 @@ class ExecuteCommand(private val file: String, private val version: String) : Co
         }
 
         return try {
-            val tokens = Lexer.lex(fileContent)
+            val tokens = Lexer(fileContent)
 
-            val ast = Parser().run(tokens)
+            val ast = Parser(tokens)
 
-            val output = Interpreter.interpret(ast)
+            val output = Interpreter(ast)
 
             "$output\nFinished executing $file"
         } catch (e: Exception) {
-            "Validation error: ${e.message}"
+            "Execution Error: ${e.message}"
         }
     }
 }

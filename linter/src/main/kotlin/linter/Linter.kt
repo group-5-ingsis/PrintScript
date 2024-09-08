@@ -4,19 +4,31 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.jsonObject
 import parser.syntactic.SyntacticParser
-import visitor.LinterVisitor
 import java.nio.file.Files
 import java.nio.file.Paths
 
-class Linter {
-    fun lint(rootAstNode: SyntacticParser.RootNode): LinterResult {
+class Linter(private val parser: Iterator<SyntacticParser.RootNode>) {
+
+    fun lint(): LinterResult {
         val linterRulesMap = getLinterRules()
         val linterVisitor = LinterVisitor(linterRulesMap)
-        try {
-            rootAstNode.accept(linterVisitor)
-            return LinterResult(true, "No errors found")
-        } catch (e: Exception) {
-            return LinterResult(false, e.message ?: "Unknown error")
+        val resultBuilder = StringBuilder()
+        var noErrors = true
+
+        while (parser.hasNext()) {
+            val rootAstNode = parser.next()
+            try {
+                rootAstNode.accept(linterVisitor)
+            } catch (e: Exception) {
+                resultBuilder.appendLine(e.message ?: "Unknown error")
+                noErrors = false
+            }
+        }
+
+        return if (noErrors) {
+            LinterResult(true, "No errors found")
+        } else {
+            LinterResult(false, resultBuilder.toString())
         }
     }
 

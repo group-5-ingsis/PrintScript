@@ -1,7 +1,6 @@
 package command
 
 import cli.FileReader
-import interpreter.Interpreter
 import lexer.Lexer
 import parser.Parser
 
@@ -14,19 +13,8 @@ class ValidationCommand(private val file: String, private val version: String) :
         }
 
         return try {
-            val statements = fileContent.split("(?<=;)".toRegex()).filter { it.isNotBlank() }
-
-            val parser = Parser()
-
-            for (statement in statements) {
-                val trimmedStatement = statement.trim()
-
-                val tokens = Lexer.lex(trimmedStatement)
-
-                val ast = parser.run(tokens)
-
-                Interpreter.interpret(ast)
-            }
+            val tokens = Lexer(fileContent)
+            Parser(tokens)
 
             "File Validated"
         } catch (e: Exception) {
