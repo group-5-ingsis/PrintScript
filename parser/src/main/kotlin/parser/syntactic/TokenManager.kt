@@ -104,13 +104,13 @@ class TokenManager(tokens: List<Token>) {
     fun consumeTokenValue(value: String): Token {
         if (peek().value == value) return advance()
 
-        throw BadSyntacticException("Expect: $value after expression.")
+        throw BadSyntacticException("Expect: $value after expression in : " + peek().position.toString())
     }
 
     fun consumeTokenType(type: String): Token {
         if (peek().type == type) return advance()
 
-        throw BadSyntacticException("Expect this type: $type")
+        throw BadSyntacticException("Expect this type: $type in " + peek().position.toString())
     }
 
     fun isNotTheEndOfTokens(): Boolean {

@@ -40,6 +40,9 @@ class Parser(private val lexer: Iterator<Token>) : Iterator<StatementType> {
                     return stm
                 }
             } catch (e: Exception) {
+                if (!lexer.hasNext()){
+                    throw e
+                }
                 if (!isAllowedException(e)) {
                     if (lastException != null && lastException::class == e::class && lastException.message == e.message) {
                         throw e
