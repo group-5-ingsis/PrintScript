@@ -9,7 +9,7 @@ object TokenGenerator {
         symbolIndex: Int
     ): Token {
         val type = getTypeFromValue(value)
-        val position = Position(row + 1, symbolIndex + 1)
+        val position = Position(row, symbolIndex)
 
         if (type == "UNKNOWN") {
             throw IllegalArgumentException("Unknown symbol $value in line ${position.line} index ${position.symbolIndex}")
@@ -23,9 +23,7 @@ object TokenGenerator {
 
         for ((pattern, type) in typesMap) {
             val patternInMap = Regex(pattern)
-            val hasType = value.matches(patternInMap)
-
-            if (hasType) {
+            if (value.matches(patternInMap)) {
                 return type
             }
         }
@@ -36,11 +34,5 @@ object TokenGenerator {
         }
 
         return "UNKNOWN"
-    }
-
-    fun generateTokenFromBuffer(buffer: StringBuilder, row: Int, index: Int): Token {
-        val value = buffer.toString()
-        val token = TokenGenerator.generateToken(value, row, index - value.length)
-        return token
     }
 }

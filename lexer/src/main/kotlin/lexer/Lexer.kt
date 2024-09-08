@@ -8,6 +8,7 @@ class Lexer(input: String) : Iterator<Token> {
     private var currentLine: String = ""
     private var lineIterator = currentLine.iterator()
     private var currentRow = 0
+    private var currentIndex = 0 // Character index in the current line
 
     private var state = LexerState()
 
@@ -28,24 +29,22 @@ class Lexer(input: String) : Iterator<Token> {
                     currentLine = linesIterator.next()
                     lineIterator = currentLine.iterator()
                     currentRow++
-                    state = state.copy(buffer = StringBuilder(), currentIndex = 0)
+                    currentIndex = 0 // Reset index for new line
+                    state = state.copy(buffer = StringBuilder())
                     continue
                 } else if (state.buffer.isNotEmpty()) {
-                    return TokenGenerator.generateTokenFromBuffer(state.buffer, currentRow, state.currentIndex)
+                    return generateTokenFromBuffer(state.buffer)
                 } else {
                     throw NoSuchElementException("No more tokens")
                 }
             }
 
             val currentChar = lineIterator.next()
-            val newIndex = state.currentIndex + 1
+            currentIndex++
 
             if (currentChar == '\n') {
                 currentRow++
-                state = state.copy(buffer = StringBuilder(), currentIndex = 0)
-                if (state.buffer.isNotEmpty()) {
-                    return TokenGenerator.generateTokenFromBuffer(state.buffer, currentRow, state.currentIndex)
-                }
+                state = state.copy(buffer = state.buffer)
                 continue
             }
 
@@ -53,25 +52,24 @@ class Lexer(input: String) : Iterator<Token> {
 
             if (currentChar == '\'' || currentChar == '\"') {
                 val startQuote = currentChar
-                val newBuffer = StringBuilder().append(currentChar)
+                val newBuffer = StringBuilder(state.buffer).append(currentChar)
                 while (lineIterator.hasNext()) {
                     val nextChar = lineIterator.next()
+                    currentIndex++
                     newBuffer.append(nextChar)
                     if (nextChar == startQuote) {
                         break
                     }
                 }
-                return TokenGenerator.generateTokenFromBuffer(newBuffer, currentRow, newIndex)
+                return generateTokenFromBuffer(newBuffer)
             }
 
             if (currentChar.isWhitespace() || separators.contains(currentChar)) {
                 if (state.buffer.isNotEmpty()) {
-                    val token = TokenGenerator.generateTokenFromBuffer(state.buffer, currentRow, state.currentIndex)
+                    val token = generateTokenFromBuffer(state.buffer)
                     state = state.copy(
-                        buffer = StringBuilder(),
-                        currentIndex = 0,
                         nextToken = if (!currentChar.isWhitespace()) {
-                            TokenGenerator.generateToken(currentChar.toString(), currentRow, newIndex - 1)
+                            TokenGenerator.generateToken(currentChar.toString(), currentRow, currentIndex - 1)
                         } else {
                             null
                         }
@@ -80,23 +78,21 @@ class Lexer(input: String) : Iterator<Token> {
                 }
 
                 if (!currentChar.isWhitespace()) {
-                    return TokenGenerator.generateToken(currentChar.toString(), currentRow, newIndex - 1)
+                    return TokenGenerator.generateToken(currentChar.toString(), currentRow, currentIndex - 1)
                 }
                 continue
             }
 
             val newBuffer = StringBuilder(state.buffer).append(currentChar)
-            val bufferValue = newBuffer.toString()
-            val currentType = TokenGenerator.getTypeFromValue(bufferValue)
-
-            val potentialNextType = TokenGenerator.getTypeFromValue(bufferValue)
-            if (currentType != potentialNextType && potentialNextType != "UNKNOWN") {
-                val trimmedBuffer = StringBuilder(state.buffer).deleteCharAt(state.buffer.length - 1)
-                val token = TokenGenerator.generateTokenFromBuffer(trimmedBuffer, currentRow, state.currentIndex)
-                return token
-            }
-
-            state = state.copy(buffer = newBuffer, currentIndex = newIndex)
+            state = state.copy(buffer = newBuffer)
         }
+    }
+
+    private fun generateTokenFromBuffer(buffer: StringBuilder): Token {
+        val value = buffer.toString()
+        val symbolIndex = currentIndex - value.length
+        val token = TokenGenerator.generateToken(value, currentRow, symbolIndex)
+        state = state.copy(buffer = StringBuilder(), currentIndex = symbolIndex)
+        return token
     }
 }

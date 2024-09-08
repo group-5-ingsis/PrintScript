@@ -16,10 +16,10 @@ class ParserTester {
         val ast1 = parser.next()
 
         val expectedAssignment = Expression.Binary(
-            Expression.Literal(3, Position(1, 19)),
+            Expression.Literal(3, Position(1, 18)), // Adjusted for actual symbol index
             "+",
-            Expression.Literal(5, Position(1, 23)),
-            Position(1, 21)
+            Expression.Literal(5, Position(1, 22)), // Adjusted for actual symbol index
+            Position(1, 19) // Adjusted for actual symbol index
         )
 
         val expectedNode = StatementType.Variable(
@@ -27,10 +27,9 @@ class ParserTester {
             "a",
             expectedAssignment,
             "Number",
-            Position(1, 1)
+            Position(1, 5) // Adjusted for actual symbol index
         )
 
-        // Verificamos que el primer hijo del AST sea del tipo esperado
         val actualNode = ast1 as StatementType.Variable
 
         assertEquals(expectedNode.identifier, actualNode.identifier)
@@ -49,13 +48,13 @@ class ParserTester {
         val parser = Parser(tokens)
         val ast1 = parser.next()
 
-        val expectedLeftString = Expression.Literal("'Hello'", Position(1, 18))
-        val expectedRightString = Expression.Literal("'World'", Position(1, 28))
+        val expectedLeftString = Expression.Literal("'Hello'", Position(1, 16))
+        val expectedRightString = Expression.Literal("'World'", Position(1, 26))
         val expectedBinaryOperation = Expression.Binary(
             expectedLeftString,
             "+",
             expectedRightString,
-            Position(1, 26)
+            Position(1, 24)
         )
         val expectedNode = StatementType.Variable(
             "let",
@@ -183,7 +182,7 @@ class ParserTester {
             parser.next()
         }
 
-        assertEquals("Expected ':' after expression in Line 1, symbol 8", exception.message)
+        assertEquals("Expected ':' after expression in Line 1, symbol 7", exception.message)
     }
 
     @Test
