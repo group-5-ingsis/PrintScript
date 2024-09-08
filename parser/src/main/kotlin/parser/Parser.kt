@@ -40,7 +40,7 @@ class Parser(private val lexer: Iterator<Token>) : Iterator<StatementType> {
                     return stm
                 }
             } catch (e: Exception) {
-                if (!isAlowedExeption(e)) {
+                if (!isAllowedException(e)) {
                     if (lastException != null && lastException::class == e::class && lastException.message == e.message) {
                         throw e
                     }
@@ -53,7 +53,7 @@ class Parser(private val lexer: Iterator<Token>) : Iterator<StatementType> {
         throw NoSuchElementException("No more tokens available to parse")
     }
 
-    private fun isAlowedExeption(e: Exception): Boolean {
+    private fun isAllowedException(e: Exception): Boolean {
         val listMng = listOf(
             "No tokens to get position from.",
             "Find unknown expression at line: 0 and at index: 0",
