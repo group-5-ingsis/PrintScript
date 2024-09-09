@@ -3,14 +3,16 @@ package lexer
 import token.Token
 import token.TokenGenerator
 
-class Lexer(input: String) : Iterator<Token> {
+class Lexer(input: String, version: String = "1.1") : Iterator<Token> {
     private val linesIterator = input.lines().iterator()
     private var currentLine: String = ""
     private var lineIterator = currentLine.iterator()
     private var currentRow = 0
-    private var currentIndex = 0 // Character index in the current line
+    private var currentIndex = 0
 
     private var state = LexerState()
+
+    private val tokenGenerator = TokenGenerator(version)
 
     override fun hasNext(): Boolean {
         return state.nextToken != null || (linesIterator.hasNext() || lineIterator.hasNext() || state.buffer.isNotEmpty())
@@ -69,7 +71,7 @@ class Lexer(input: String) : Iterator<Token> {
                     val token = generateTokenFromBuffer(state.buffer)
                     state = state.copy(
                         nextToken = if (!currentChar.isWhitespace()) {
-                            TokenGenerator.generateToken(currentChar.toString(), currentRow, currentIndex - 1)
+                            tokenGenerator.generateToken(currentChar.toString(), currentRow, currentIndex - 1)
                         } else {
                             null
                         }
@@ -78,7 +80,7 @@ class Lexer(input: String) : Iterator<Token> {
                 }
 
                 if (!currentChar.isWhitespace()) {
-                    return TokenGenerator.generateToken(currentChar.toString(), currentRow, currentIndex - 1)
+                    return tokenGenerator.generateToken(currentChar.toString(), currentRow, currentIndex - 1)
                 }
                 continue
             }
@@ -91,7 +93,7 @@ class Lexer(input: String) : Iterator<Token> {
     private fun generateTokenFromBuffer(buffer: StringBuilder): Token {
         val value = buffer.toString()
         val symbolIndex = currentIndex - value.length
-        val token = TokenGenerator.generateToken(value, currentRow, symbolIndex)
+        val token = tokenGenerator.generateToken(value, currentRow, symbolIndex)
         state = state.copy(buffer = StringBuilder(), currentIndex = symbolIndex)
         return token
     }

@@ -4,11 +4,16 @@ import java.io.BufferedReader
 import java.io.InputStreamReader
 
 object TypesMapGenerator {
-    fun getTypesMap(): Map<String, String> {
-        val defaultPatternsMap = getDefaultPatternsMap()
-        val variablePattensMap = getVariablePatternsMap()
+    fun getTypesMap(version: String): Map<String, String> {
+        return when (version) {
+            "1.0" -> getVersionTypesMap("1.0")
+            "1.1" -> getVersionTypesMap("1.1")
+            else -> throw IllegalArgumentException("Unknown version: $version")
+        }
+    }
 
-        return defaultPatternsMap + variablePattensMap
+    private fun getVersionTypesMap(version: String): Map<String, String> {
+        return getDefaultPatternsMap() + getVariablePatternsMap(version)
     }
 
     private fun getDefaultPatternsMap(): Map<String, String> {
@@ -20,8 +25,8 @@ object TypesMapGenerator {
         )
     }
 
-    private fun getVariablePatternsMap(): Map<String, String> {
-        val fileName = "token_types.txt"
+    private fun getVariablePatternsMap(version: String): Map<String, String> {
+        val fileName = "$version/token_types.txt"
         val map = mutableMapOf<String, String>()
 
         val inputStream =
