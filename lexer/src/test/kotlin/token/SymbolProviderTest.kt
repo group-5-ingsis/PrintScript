@@ -1,4 +1,5 @@
-import token.SymbolProvider
+package token
+
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
