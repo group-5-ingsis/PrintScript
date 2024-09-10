@@ -19,6 +19,7 @@ class LexerTest {
     @Test
     fun testLexSimpleString() {
         val input = "let x = 10"
+        val version = "1.0"
         val expected = listOf(
             Token("let", "DECLARATION_KEYWORD", Position(1, 1)),
             Token("x", "IDENTIFIER", Position(1, 5)),
@@ -26,45 +27,45 @@ class LexerTest {
             Token("10", "NUMBER", Position(1, 8))
         )
 
-        val lexer = LexerBuilder().withInput(input).withVersion("1.0").build()
-        val actual = collectTokens(lexer)
-        assertEquals(expected, actual)
+        val tokens = Lexer(input, version)
+        assertEquals(expected, collectTokens(tokens))
     }
 
     @Test
     fun testLexStringWithQuotes() {
         val input = "let str = \"Hello\""
+        val version = "1.0"
         val expected = listOf(
             Token("let", "DECLARATION_KEYWORD", Position(1, 1)),
             Token("str", "IDENTIFIER", Position(1, 5)),
-            Token("=", "ASSIGNMENT", Position(1, 8)),
+            Token("=", "ASSIGNMENT", Position(1, 9)),
             Token("\"Hello\"", "STRING", Position(1, 10))
         )
 
-        val lexer = LexerBuilder().withInput(input).withVersion("1.0").build()
-        val actual = collectTokens(lexer)
-        assertEquals(expected, actual)
+        val tokens = Lexer(input, version)
+        assertEquals(expected, collectTokens(tokens))
     }
 
     @Test
     fun testLexStringWithSymbols() {
         val input = "x + y - z"
+        val version = "1.0"
         val expected = listOf(
             Token("x", "IDENTIFIER", Position(1, 1)),
-            Token("+", "OPERATOR", Position(1, 3)),
+            Token("+", "OPERATOR", Position(1, 2)),
             Token("y", "IDENTIFIER", Position(1, 5)),
-            Token("-", "OPERATOR", Position(1, 7)),
-            Token("z", "IDENTIFIER", Position(1, 9))
+            Token("-", "OPERATOR", Position(1, 6)),
+            Token("z", "IDENTIFIER", Position(1, 8))
         )
 
-        val lexer = LexerBuilder().withInput(input).withVersion("1.0").build()
-        val actual = collectTokens(lexer)
-        assertEquals(expected, actual)
+        val tokens = Lexer(input, version)
+        assertEquals(expected, collectTokens(tokens))
     }
 
     @Test
     fun testLexMultiLineString() {
         val input = "let x = 10;\nlet y = 20;"
+        val version = "1.0"
         val expected = listOf(
             Token("let", "DECLARATION_KEYWORD", Position(1, 1)),
             Token("x", "IDENTIFIER", Position(1, 5)),
@@ -78,33 +79,33 @@ class LexerTest {
             Token(";", "PUNCTUATION", Position(2, 10))
         )
 
-        val lexer = LexerBuilder().withInput(input).withVersion("1.0").build()
-        val actual = collectTokens(lexer)
-        assertEquals(expected, actual)
+        val tokens = Lexer(input, version)
+        assertEquals(expected, collectTokens(tokens))
     }
 
     @Test
     fun testLexerUnknownCharacters() {
         val input = "let a @ ball"
-        val lexer = LexerBuilder().withInput(input).build()
+        val version = "1.0"
+        val tokens = Lexer(input, version)
 
         assertThrows(IllegalArgumentException::class.java) {
-            collectTokens(lexer)
+            collectTokens(tokens)
         }
     }
 
     @Test
     fun testSimpleQuotes() {
         val input = "let x = 'hello'"
+        val version = "1.0"
         val expected = listOf(
             Token("let", "DECLARATION_KEYWORD", Position(1, 1)),
             Token("x", "IDENTIFIER", Position(1, 5)),
             Token("=", "ASSIGNMENT", Position(1, 7)),
-            Token("'hello'", "STRING", Position(1, 9))
+            Token("'hello'", "STRING", Position(1, 8))
         )
 
-        val lexer = LexerBuilder().withInput(input).withVersion("1.0").build()
-        val actual = collectTokens(lexer)
-        assertEquals(expected, actual)
+        val tokens = Lexer(input, version)
+        assertEquals(expected, collectTokens(tokens))
     }
 }

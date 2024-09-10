@@ -1,32 +1,15 @@
-
 package parser
 
 import nodes.StatementType
 import parser.syntactic.SyntacticParser
 import token.Token
 
-/**
- * A parser that takes an iterator of tokens and produces an iterator of statement types.
- *
- * @property lexer An iterator of tokens to be parsed.
- */
-class Parser(private val lexer: Iterator<Token>) : Iterator<StatementType> {
+class Parser(private val lexer: Iterator<Token>, private val version: String = "1.1") : Iterator<StatementType> {
 
-    /**
-     * Checks if there are more tokens to be parsed.
-     *
-     * @return `true` if there are more tokens, `false` otherwise.
-     */
     override fun hasNext(): Boolean {
         return lexer.hasNext()
     }
 
-    /**
-     * Parses the next statement from the tokens.
-     *
-     * @return The next parsed statement.
-     * @throws NoSuchElementException if there are no more tokens available to parse.
-     */
     override fun next(): StatementType {
         val mutableListTokensForParse: MutableList<Token> = mutableListOf()
         var lastException: Exception? = null
@@ -35,7 +18,7 @@ class Parser(private val lexer: Iterator<Token>) : Iterator<StatementType> {
             mutableListTokensForParse.add(lexer.next())
 
             try {
-                val (stm, tokens) = SyntacticParser.parse(mutableListTokensForParse)
+                val (stm, tokens) = SyntacticParser.parse(mutableListTokensForParse, version)
                 if (tokens.isEmpty()) {
                     return stm
                 }

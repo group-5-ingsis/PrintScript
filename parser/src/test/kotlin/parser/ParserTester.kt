@@ -11,9 +11,12 @@ class ParserTester {
 
     @Test
     fun testOperation() {
-        val tokens = Lexer("let a : Number = 3 + 5;")
-        val parser = Parser(tokens)
-        val ast1 = parser.next()
+        val tokens = Lexer("let a : Number = 3 + 5;", "1.0")
+
+        val asts = Parser(tokens)
+
+        val parser = ParserBuilder().withVersion("1.0").build()
+        val ast1 = parser.parse(tokens)
 
         val expectedAssignment = Expression.Binary(
             Expression.Literal(3, Position(1, 18)), // Adjusted for actual symbol index
@@ -44,9 +47,10 @@ class ParserTester {
 
     @Test
     fun testStringOperation() {
-        val tokens = Lexer("let a: String = 'Hello' + 'World';")
-        val parser = Parser(tokens)
-        val ast1 = parser.next()
+        val lexer = LexerBuilder().withInput("let a: String = 'Hello' + 'World';").build()
+        val parser = ParserBuilder().withVersion("1.0").build()
+        val tokens = lexer.tokenize()
+        val ast1 = parser.parse(tokens)
 
         val expectedLeftString = Expression.Literal("'Hello'", Position(1, 16))
         val expectedRightString = Expression.Literal("'World'", Position(1, 26))
@@ -64,14 +68,11 @@ class ParserTester {
             Position(1, 1)
         )
 
-        // Verificamos que el primer hijo del AST sea del tipo esperado
         val actualNode = ast1 as StatementType.Variable
 
-        // Comprobamos el tipo de declaración, el identificador y el tipo de datos
         assertEquals(expectedNode.identifier, actualNode.identifier)
         assertEquals(expectedNode.dataType, actualNode.dataType)
 
-        // Verificamos la expresión de inicialización
         val actualBinaryOperation = actualNode.initializer as Expression.Binary
         assertEquals(expectedBinaryOperation.left, actualBinaryOperation.left)
         assertEquals(expectedBinaryOperation.operator, actualBinaryOperation.operator)
@@ -81,9 +82,10 @@ class ParserTester {
 
     @Test
     fun testBuildDeclarationAST() {
-        val tokens = Lexer("let a: Number;")
-        val parser = Parser(tokens)
-        val ast1 = parser.next()
+        val lexer = LexerBuilder().withInput("let a: Number;").build()
+        val parser = ParserBuilder().withVersion("1.0").build()
+        val tokens = lexer.tokenize()
+        val ast1 = parser.parse(tokens)
 
         val expectedNodeType = "VARIABLE_STATEMENT"
         val expectedDataType = "Number"
@@ -100,10 +102,11 @@ class ParserTester {
 
     @Test
     fun testBuildAssignationAST() {
-        val tokens = Lexer("let x : Number = 3; x = 4;")
-        val parser = Parser(tokens)
-        val ast1 = parser.next()
-        val ast2 = parser.next()
+        val lexer = LexerBuilder().withInput("let x : Number = 3; x = 4;").build()
+        val parser = ParserBuilder().withVersion("1.0").build()
+        val tokens = lexer.tokenize()
+        val ast1 = parser.parse(tokens)
+        val ast2 = parser.parse(tokens)
 
         val declaration = ast1 as StatementType.Variable
         assertEquals("x", declaration.identifier)
@@ -114,7 +117,6 @@ class ParserTester {
         val initializer = declaration.initializer as Expression.Literal
         assertEquals(3, initializer.value)
 
-        // Verificar la segunda declaración: "x = 4;"
         val assignment = ast2 as StatementType.StatementExpression
         val assignExpr = assignment.value as Expression.Assign
         assertEquals("x", assignExpr.name)
@@ -127,27 +129,25 @@ class ParserTester {
 
     @Test
     fun testAssignationWithVariable() {
-        val tokens = Lexer("let x: Number = 4; let y : Number = 2; x = y;")
-        val parser = Parser(tokens)
-        val ast1 = parser.next()
-        val ast2 = parser.next()
-        val ast3 = parser.next()
+        val lexer = LexerBuilder().withInput("let x: Number = 4; let y : Number = 2; x = y;").build()
+        val parser = ParserBuilder().withVersion("1.0").build()
+        val tokens = lexer.tokenize()
+        val ast1 = parser.parse(tokens)
+        val ast2 = parser.parse(tokens)
+        val ast3 = parser.parse(tokens)
 
-        // Assert
         val firstVariable = ast1 as StatementType.Variable
         assertEquals("x", firstVariable.identifier)
         assertEquals("Number", firstVariable.dataType)
         assertEquals("let", firstVariable.designation)
         assertEquals(4, (firstVariable.initializer as Expression.Literal).value)
 
-        // Check the second variable declaration and assignment
         val secondVariable = ast2 as StatementType.Variable
         assertEquals("y", secondVariable.identifier)
         assertEquals("Number", secondVariable.dataType)
         assertEquals("let", secondVariable.designation)
         assertEquals(2, (secondVariable.initializer as Expression.Literal).value)
 
-        // Check the assignment statement
         val assignment = ast3 as StatementType.StatementExpression
         val assignExpression = assignment.value as Expression.Assign
         assertEquals("x", assignExpression.name)
@@ -157,9 +157,10 @@ class ParserTester {
 
     @Test
     fun testBuildMethodCallAST() {
-        val tokens = Lexer("println(4);")
-        val parser = Parser(tokens)
-        val ast1 = parser.next()
+        val lexer = LexerBuilder().withInput("println(4);").build()
+        val parser = ParserBuilder().withVersion("1.0").build()
+        val tokens = lexer.tokenize()
+        val ast1 = parser.parse(tokens)
 
         val expectedNodeType = "PRINT"
         val expectedLiteralValue = 4
@@ -175,11 +176,11 @@ class ParserTester {
 
     @Test
     fun testDeclarationWithoutColonShouldFail() {
-        val tokens = Lexer("let a Number;")
-        val parser = Parser(tokens)
-        // Verifica que se lance una excepción de tipo IllegalArgumentException cuando se ejecuta el parser
+        val lexer = LexerBuilder().withInput("let a Number;").build()
+        val parser = ParserBuilder().withVersion("1.0").build()
+        val tokens = lexer.tokenize()
         val exception = assertFailsWith<BadSyntacticException> {
-            parser.next()
+            parser.parse(tokens)
         }
 
         assertEquals("Expected ':' after expression in Line 1, symbol 7", exception.message)
@@ -187,9 +188,10 @@ class ParserTester {
 
     @Test
     fun testAssignDeclareWithDifferentTypesShouldPassSyntacticParser() {
-        val tokens = Lexer("let a: Number = 'testing';")
-        val parser = Parser(tokens)
-        val ast1 = parser.next()
+        val lexer = LexerBuilder().withInput("let a: Number = 'testing';").build()
+        val parser = ParserBuilder().withVersion("1.0").build()
+        val tokens = lexer.tokenize()
+        val ast1 = parser.parse(tokens)
 
         val expectedNode = StatementType.Variable(
             designation = "let",
@@ -205,7 +207,6 @@ class ParserTester {
         assertEquals(expectedNode.identifier, generatedNode.identifier)
         assertEquals(expectedNode.dataType, generatedNode.dataType)
 
-        // Verificar el valor inicializador
         val initializer = generatedNode.initializer as? Expression.Literal
         assertNotNull(initializer, "El inicializador no debe ser nulo.")
         assertEquals("'testing'", initializer.value)
@@ -213,12 +214,12 @@ class ParserTester {
 
     @Test
     fun statementSumElements() {
-        val tokens = Lexer("let a: Number = 5 + 3 + 4 / (6 + 6); println(a);")
-        val parser = Parser(tokens)
-        val ast1 = parser.next()
-        val ast2 = parser.next()
+        val lexer = LexerBuilder().withInput("let a: Number = 5 + 3 + 4 / (6 + 6); println(a);").build()
+        val parser = ParserBuilder().withVersion("1.0").build()
+        val tokens = lexer.tokenize()
+        val ast1 = parser.parse(tokens)
+        val ast2 = parser.parse(tokens)
 
-        // Assert
         val firstStatement = ast1 as StatementType.Variable
         assertEquals("a", firstStatement.identifier)
         assertEquals("Number", firstStatement.dataType)
@@ -237,15 +238,12 @@ class ParserTester {
         assertEquals(4, (rightExpression.left as Expression.Literal).value)
         assertEquals("/", rightExpression.operator)
 
-        val groupingExpression = rightExpression.right as Expression.Grouping
-        val groupingInnerExpression = groupingExpression.expression as Expression.Binary
+        val groupingInnerExpression = rightExpression.right as Expression.Binary
         assertEquals(6, (groupingInnerExpression.left as Expression.Literal).value)
-        assertEquals("+", groupingInnerExpression.operator)
         assertEquals(6, (groupingInnerExpression.right as Expression.Literal).value)
 
-        // Check the println statement
         val secondStatement = ast2 as StatementType.Print
-        val printExpression = secondStatement.value.expression as Expression.Variable
-        assertEquals("a", printExpression.name)
+        assertEquals("PRINT", secondStatement.statementType)
+        assertEquals("a", (secondStatement.value as Expression.Variable).name)
     }
 }

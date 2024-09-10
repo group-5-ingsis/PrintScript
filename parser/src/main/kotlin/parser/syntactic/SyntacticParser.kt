@@ -9,10 +9,10 @@ import position.visitor.statementVisitorResult
 import token.Token
 
 object SyntacticParser {
-    /* Notes on types of Expression/Statement on 'syntactic-parser-notes.txt' */
 
-    fun parse(tokens: List<Token>): Pair<StatementType, List<Token>> {
-        val currentParser = GenericStatementParser.makeStatementParser()
+    fun parse(tokens: List<Token>, version: String): Pair<StatementType, List<Token>> {
+        val currentParser = GenericStatementParser.makeStatementParser(version)
+
         val (remainingTokens, exp) = currentParser.parse(tokens)
         return Pair(exp, remainingTokens)
     }
