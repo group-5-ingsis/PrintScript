@@ -1,6 +1,6 @@
 OPERATOR :: \+, \-, \*, /
-DECLARATION_KEYWORD :: let
-VARIABLE_TYPE :: String,Number
+LET :: let
+VARIABLE_TYPE :: String,Number,Boolean
 PRINT :: println
 COMPARISON :: >,>=,<,<=
 BOOLEAN :: true,false

@@ -83,7 +83,7 @@ class GenericStatementParser(private val nextStatementsList: List<Pair<String, S
 
             val declarationAssignationStatement = GenericStatementParser(
                 listOf(
-                    Pair("VAR", LetDeclarationParser(expresionEvaluatorV_1_1)), // Changed keyword for version 1.1
+                    Pair("LET", LetDeclarationParser(expresionEvaluatorV_1_1)), // Changed keyword for version 1.1
                     Pair("CONST", ConstDeclarationParser(expresionEvaluatorV_1_1)),
                     Pair("", statement)
                 )

@@ -6,7 +6,8 @@ object DataTypeManager {
         "Number",
         "Int",
         "Float",
-        "Double"
+        "Double",
+        "Boolean"
     )
     private val checkOfAllowedKeyWordsForDeclareVariables = listOf(
         "let",
