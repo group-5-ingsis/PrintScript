@@ -14,9 +14,9 @@ class ExecuteCommand(private val file: String, private val version: String) : Co
         }
 
         return try {
-            val tokens = Lexer(fileContent)
+            val tokens = Lexer(fileContent, version)
 
-            val ast = Parser(tokens)
+            val ast = Parser(tokens, version)
 
             val output = Interpreter(ast)
 

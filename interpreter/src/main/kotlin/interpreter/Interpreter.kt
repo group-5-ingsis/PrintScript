@@ -5,19 +5,21 @@ import nodes.StatementType
 import position.visitor.StatementVisitor
 import position.visitor.statementVisitorResult
 
-class Interpreter() {
+object Interpreter {
 
-    fun interpret(scope: Environment, parser: Iterator<StatementType>, sb: StringBuilder): statementVisitorResult {
-        var currentScope = scope
-        var stB = StringBuilder(sb.toString())
-        while (parser.hasNext()) {
-            val statement = parser.next()
+    private val env = Environment()
+
+    fun interpret(astIterator: Iterator<StatementType>, version: String = "1.1"): statementVisitorResult {
+        var sb = StringBuilder()
+        var currentScope = env
+        while (astIterator.hasNext()) {
+            val statement = astIterator.next()
             val nodeVisitor = StatementVisitor()
             val result = statement.acceptVisitor(nodeVisitor, currentScope, sb)
             currentScope = result.second
-            stB = result.first
+            sb = result.first
         }
 
-        return Pair(stB, currentScope)
+        return Pair(sb, currentScope)
     }
 }
