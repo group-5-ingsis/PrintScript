@@ -14,13 +14,11 @@ class FormatCommand(private val file: String, private val version: String, priva
         return try {
             val tokens = Lexer(fileContent)
 
-            val ast = Parser(tokens)
+            val asts = Parser(tokens)
 
-            val formatter = Formatter(ast)
+            val formattedResult = Formatter.format(asts, formattingRules, version)
 
-            val result = formatter.format(formattingRules)
-
-            FileWriter.writeToFile(file, version, result)
+            FileWriter.writeToFile(file, version, formattedResult)
 
             "File formatted successfully"
         } catch (e: Exception) {
