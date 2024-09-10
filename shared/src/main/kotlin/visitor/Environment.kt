@@ -5,28 +5,27 @@
  */
 
 typealias VisitorResultExpressions = Pair<Any?, Environment>
-
-class Environment {
-
+class Environment(
+    val enclosing: Environment? = null, // Previous environment
+    initialValues: HashMap<String, Pair<String, Any?>> = HashMap() // Initial values
+) {
     // Map that stores the variables, where the key is the variable name and the value is a pair
     // containing the declaration ("const" or "let") and the variable's value.
-    private val values: HashMap<String, Pair<String, Any?>>
+    private val values: HashMap<String, Pair<String, Any?>> = HashMap(initialValues) // Initializes the values map
 
     /**
-     * Primary constructor: Initializes the environment with a new empty HashMap.
+     * Primary constructor: Initializes the environment with an empty HashMap and no parent environment.
      */
-    constructor() {
-        values = HashMap()
-    }
+    constructor() : this(null, HashMap())
 
     /**
-     * Secondary constructor: Initializes the environment with an existing HashMap.
+     * Secondary constructor: Initializes the environment with an existing HashMap and an optional parent environment.
      *
      * @param initialValues The initial values for the environment.
+     * @param parentEnvironment The parent environment to inherit from.
      */
-    constructor(initialValues: HashMap<String, Pair<String, Any?>>) {
-        values = HashMap(initialValues) // Creates a shallow copy of the passed map
-    }
+    constructor(initialValues: HashMap<String, Pair<String, Any?>>, parentEnvironment: Environment? = null) : this(parentEnvironment, initialValues)
+
 
     /**
      * Defines a new variable in the environment.
@@ -58,6 +57,8 @@ class Environment {
         if (values.containsKey(name)) {
             return values[name]?.second
         }
+        if (enclosing != null) return enclosing.get(name);
+
         throw Error("Undefined variable '$name'.")
     }
 
@@ -72,6 +73,7 @@ class Environment {
             newScope[name] = Pair(keyWord, value)
             return Environment(newScope)
         }
+        if (enclosing != null) return Environment(values, enclosing.assign(name, value))
 
         throw Error("Undefined variable '$name'. and its try to be assigned")
     }
@@ -109,7 +111,8 @@ class Environment {
     }
 
     fun getCopy(): Environment {
-        return Environment(getDeepCopyFromEnvironment())
+        if (enclosing == null) return Environment(getDeepCopyFromEnvironment())
+        return Environment(getDeepCopyFromEnvironment(), enclosing.getCopy())
     }
 
     fun contains(varName: String): Boolean {

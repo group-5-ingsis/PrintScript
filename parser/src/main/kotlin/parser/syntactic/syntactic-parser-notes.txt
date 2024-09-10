@@ -20,8 +20,13 @@
      *                | statement ; // later here: functions, and classes
      *
      * statement      → exprStmt
+     *                | ifStmt
      *                | printStmt ;
+     *                | block ;
      *
+     * block          → "{" declaration* "}" ;
+     * ifStmt         → "if" "(" expression ")" statement
+                      ( "else" statement )? ;
      * exprStmt       → expression ";" ;
      * printStmt      → "print" expression ";" ;
      * varDecl        → "let" IDENTIFIER VARIABLE_TYPE ( "=" expression )? ";" ;

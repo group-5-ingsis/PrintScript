@@ -9,6 +9,9 @@ class ExpressionVisitor {
     private fun evaluateExpression(expr: Expression, environment: Environment): VisitorResultExpressions {
         return expr.acceptVisitor(this, environment)
     }
+
+
+
     private fun visitLiteralExp(exp: Expression.Literal, environment: Environment): VisitorResultExpressions {
         return Pair(exp.value, environment)
     }

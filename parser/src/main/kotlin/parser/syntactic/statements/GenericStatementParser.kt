@@ -75,6 +75,8 @@ class GenericStatementParser(private val nextStatementsList: List<Pair<String, S
             val statement = GenericStatementParser(
                 listOf(
                     Pair("PRINT", PrintStatementParser(expresionEvaluatorV_1_1)),
+                    Pair("IF", IfStatementParser(expresionEvaluatorV_1_1, ::createV1_1Parser)),
+                    Pair("LEFT_BRACE", BlockStatementParser(::createV1_1Parser)),
                     Pair("", ExpressionStatementParser(expresionEvaluatorV_1_1))
                 )
             )

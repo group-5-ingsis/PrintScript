@@ -7,6 +7,8 @@ interface Visitor {
     fun visitPrintStm(statement: StatementType.Print)
     fun visitExpressionStm(statement: StatementType.StatementExpression)
     fun visitVariableStm(statement: StatementType.Variable)
+    fun visitBlockStm(statement: StatementType.BlockStatement)
+    fun visitIfStm(statement: StatementType.ifStament)
     fun visitVariable(expression: Expression.Variable)
     fun visitAssign(expression: Expression.Assign)
     fun visitBinary(expression: Expression.Binary)

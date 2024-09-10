@@ -13,8 +13,45 @@ class StatementVisitor {
         return expr.acceptVisitor(visitor, scope)
     }
 
+    private fun visitBlockStm(statement: StatementType.BlockStatement, environment: Environment, stringBuilder: StringBuilder): statementVisitorResult {
+        var newEnvironment = Environment(enclosing = environment)
+        var stB = StringBuilder(stringBuilder.toString())
+        statement.listStm.forEach {
+            val (newStringBuilder, newEnv) = it.acceptVisitor(this, newEnvironment, stringBuilder)
+
+            stB = newStringBuilder
+            newEnvironment = newEnv
+
+        }
+        return Pair(stB, newEnvironment)
+    }
+
+    private fun visitIfStm(statement: StatementType.ifStatement, environment: Environment, stringBuilder: StringBuilder): statementVisitorResult {
+        val (value, newEnvironment) = evaluateExpression(statement.condition, environment)
+        val newStringBuilder = StringBuilder(stringBuilder.toString())
+        return if (value as Boolean) {
+            statement.thenBranch.acceptVisitor(this, newEnvironment, newStringBuilder)
+        } else {
+            statement.elseBranch?.acceptVisitor(this, newEnvironment, newStringBuilder) ?: Pair(newStringBuilder, newEnvironment)
+        }
+    }
+
     fun getVisitorFunctionForStatement(statementType: String): (StatementType, Environment, StringBuilder) -> statementVisitorResult {
         return when (statementType) {
+            "IF_STATEMENT" -> { statement, env, sb ->
+                if (statement is StatementType.ifStatement) {
+                    visitIfStm(statement, env, sb)
+                } else {
+                    throw IllegalArgumentException("Invalid statement type for IF_STATEMENT: ${statement::class.simpleName}")
+                }
+            }
+            "BLOCK_STATEMENT" -> { statement, env, sb ->
+                if (statement is StatementType.BlockStatement) {
+                    visitBlockStm(statement, env, sb)
+                } else {
+                    throw IllegalArgumentException("Invalid statement type for BLOCK_STATEMENT: ${statement::class.simpleName}")
+                }
+            }
             "PRINT" -> { statement, env, sb ->
                 if (statement is StatementType.Print) {
                     visitPrintStm(statement, env, sb)

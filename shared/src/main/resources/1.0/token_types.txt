@@ -6,3 +6,9 @@ COMPARISON :: >,>=,<,<=
 BOOLEAN :: true,false
 NULL :: null
 CONST :: const
+LEFT_BRACE :: {
+RIGHT_BRACE :: }
+IF :: if
+ELSE :: else
+
+}
