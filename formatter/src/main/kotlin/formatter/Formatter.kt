@@ -3,9 +3,9 @@ package formatter
 import nodes.StatementType
 import rules.FormattingRules
 
-class Formatter(private val parser: Iterator<StatementType>) {
+object Formatter {
 
-    fun format(rules: FormattingRules): String {
+    fun format(parser: Iterator<StatementType>, rules: FormattingRules, version: String): String {
         val output = StringBuilder()
 
         while (parser.hasNext()) {
