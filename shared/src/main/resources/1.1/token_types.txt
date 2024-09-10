@@ -1,5 +1,6 @@
 OPERATOR :: \+, \-, \*, /
-DECLARATION_KEYWORD :: let, const
+DECLARATION_KEYWORD :: let
+CONST :: const
 VARIABLE_TYPE :: String,Number, Boolean
 METHOD :: readEnv, readInput
 PRINT :: println
