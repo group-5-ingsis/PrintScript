@@ -2,7 +2,3 @@ OPERATOR :: \+, \-, \*, /
 DECLARATION_KEYWORD :: let
 VARIABLE_TYPE :: String,Number
 PRINT :: println
-COMPARISON :: >,>=,<,<=
-BOOLEAN :: true,false
-NULL :: null
-CONST :: const

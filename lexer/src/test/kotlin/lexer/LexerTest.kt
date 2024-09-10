@@ -16,6 +16,10 @@ class LexerTest {
         return tokens
     }
 
+    // -----------------
+    // --- 1.0 Tests ---
+    // -----------------
+
     @Test
     fun testLexSimpleString() {
         val input = "let x = 10"
@@ -106,6 +110,100 @@ class LexerTest {
         )
 
         val tokens = Lexer(input, version)
+        assertEquals(expected, collectTokens(tokens))
+    }
+
+    // -----------------
+    // --- 1.1 Tests ---
+    // -----------------
+
+    @Test
+    fun testLexConstVariableDeclaration() {
+        val input = "const pi: Number = 3.14;"
+        val version = "1.1"
+        val tokens = Lexer(input, version)
+
+        val expected = listOf(
+            Token("const", "DECLARATION_KEYWORD", Position(1, 1)),
+            Token("pi", "IDENTIFIER", Position(1, 7)),
+            Token(":", "PUNCTUATION", Position(1, 8)),
+            Token("Number", "VARIABLE_TYPE", Position(1, 11)),
+            Token("=", "ASSIGNMENT", Position(1, 18)),
+            Token("3.14", "NUMBER", Position(1, 20)),
+            Token(";", "PUNCTUATION", Position(1, 23))
+        )
+
+        assertEquals(expected, collectTokens(tokens))
+    }
+
+    @Test
+    fun testLexBooleanTypes() {
+        val input = "let isTrue: Boolean = true; isFalse = false;"
+        val version = "1.1"
+        val tokens = Lexer(input, version)
+        val expected = listOf(
+            Token("let", "DECLARATION_KEYWORD", Position(1, 1)),
+            Token("isTrue", "IDENTIFIER", Position(1, 5)),
+            Token(":", "PUNCTUATION", Position(1, 10)),
+            Token("Boolean", "VARIABLE_TYPE", Position(1, 13)),
+            Token("=", "ASSIGNMENT", Position(1, 21)),
+            Token("true", "BOOLEAN", Position(1, 23)),
+            Token(";", "PUNCTUATION", Position(1, 26)),
+            Token("isFalse", "IDENTIFIER", Position(1, 29)),
+            Token("=", "ASSIGNMENT", Position(1, 37)),
+            Token("false", "BOOLEAN", Position(1, 39)),
+            Token(";", "PUNCTUATION", Position(1, 43))
+        )
+
+        assertEquals(expected, collectTokens(tokens))
+    }
+
+    @Test
+    fun testLexIfElseStatement() {
+        val input = "if (true) { y = 5; } else { y = 0; }"
+        val version = "1.1"
+        val tokens = Lexer(input, version)
+
+        val expected = listOf(
+            Token("if", "CONDITIONAL", Position(1, 1)),
+            Token("(", "PUNCTUATION", Position(1, 3)),
+            Token("true", "BOOLEAN", Position(1, 5)),
+            Token(")", "PUNCTUATION", Position(1, 8)),
+            Token("{", "PUNCTUATION", Position(1, 11)),
+            Token("y", "IDENTIFIER", Position(1, 13)),
+            Token("=", "ASSIGNMENT", Position(1, 15)),
+            Token("5", "NUMBER", Position(1, 17)),
+            Token(";", "PUNCTUATION", Position(1, 17)),
+            Token("}", "PUNCTUATION", Position(1, 20)),
+            Token("else", "CONDITIONAL", Position(1, 22)),
+            Token("{", "PUNCTUATION", Position(1, 27)),
+            Token("y", "IDENTIFIER", Position(1, 29)),
+            Token("=", "ASSIGNMENT", Position(1, 31)),
+            Token("0", "NUMBER", Position(1, 33)),
+            Token(";", "PUNCTUATION", Position(1, 33)),
+            Token("}", "PUNCTUATION", Position(1, 35))
+        )
+
+        assertEquals(expected, collectTokens(tokens))
+    }
+
+    @Test
+    fun testLexReadInputAndReadEnvMethods() {
+        val input = "readInput(); readEnv();"
+        val version = "1.1"
+        val tokens = Lexer(input, version)
+
+        val expected = listOf(
+            Token("readInput", "METHOD", Position(1, 1)),
+            Token("(", "PUNCTUATION", Position(1, 9)),
+            Token(")", "PUNCTUATION", Position(1, 10)),
+            Token(";", "PUNCTUATION", Position(1, 11)),
+            Token("readEnv", "METHOD", Position(1, 14)),
+            Token("(", "PUNCTUATION", Position(1, 20)),
+            Token(")", "PUNCTUATION", Position(1, 21)),
+            Token(";", "PUNCTUATION", Position(1, 22))
+        )
+
         assertEquals(expected, collectTokens(tokens))
     }
 }
