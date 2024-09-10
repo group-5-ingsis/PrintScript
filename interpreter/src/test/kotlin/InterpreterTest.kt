@@ -5,10 +5,12 @@ import org.junit.Test
 import parser.Parser
 class InterpreterTest {
 
+    val version = "1.0"
+
     @Test
     fun testDeclarationWithNumber() {
-        val tokens = Lexer("let a: Number;")
-        val parser = Parser(tokens)
+        val tokens = Lexer("let a: Number;", version)
+        val parser = Parser(tokens, version)
         val interpreter = Interpreter()
         val initialScope = Environment()
         val result = interpreter.interpret(initialScope, parser, StringBuilder())
@@ -17,8 +19,8 @@ class InterpreterTest {
 
     @Test
     fun testDeclarationWithString() {
-        val tokens = Lexer("let a: String;")
-        val parser = Parser(tokens)
+        val tokens = Lexer("let a: String;", version)
+        val parser = Parser(tokens, version)
         val interpreter = Interpreter()
         val initialScope = Environment()
         val result = interpreter.interpret(initialScope, parser, StringBuilder())
@@ -27,8 +29,8 @@ class InterpreterTest {
 
     @Test
     fun testAssignationWithString() {
-        val tokens = Lexer("let a: String = \"Hello World\" ;")
-        val parser = Parser(tokens)
+        val tokens = Lexer("let a: String = \"Hello World\" ;", version)
+        val parser = Parser(tokens, version)
         val interpreter = Interpreter()
         val initialScope = Environment()
         val result = interpreter.interpret(initialScope, parser, StringBuilder())
@@ -37,8 +39,8 @@ class InterpreterTest {
 
     @Test
     fun testMethodCallWithNumber() {
-        val tokens = Lexer("let a: Number = 4; println(a);")
-        val parser = Parser(tokens)
+        val tokens = Lexer("let a: Number = 4; println(a);", version)
+        val parser = Parser(tokens, version)
         val interpreter = Interpreter()
         val initialScope = Environment()
         val stringBuilder = StringBuilder()
@@ -49,8 +51,8 @@ class InterpreterTest {
 
     @Test
     fun testSumNumber() {
-        val tokens = Lexer("let a: Number = 6 + 2 + 6;")
-        val parser = Parser(tokens)
+        val tokens = Lexer("let a: Number = 6 + 2 + 6;", version)
+        val parser = Parser(tokens, version)
         val interpreter = Interpreter()
         val initialScope = Environment()
         val result = interpreter.interpret(initialScope, parser, StringBuilder())
@@ -59,8 +61,8 @@ class InterpreterTest {
 
     @Test
     fun testBinaryOperationString() {
-        val tokens = Lexer("let a: String = 'Hello' + 'World';")
-        val parser = Parser(tokens)
+        val tokens = Lexer("let a: String = 'Hello' + 'World';", version)
+        val parser = Parser(tokens, version)
         val interpreter = Interpreter()
         val initialScope = Environment()
         val result = interpreter.interpret(initialScope, parser, StringBuilder())
@@ -69,8 +71,8 @@ class InterpreterTest {
 
     @Test
     fun testAddingAssignations() {
-        val tokens = Lexer("let a: Number = 7; let b : Number = 8; let c : Number = a + 3 + b;")
-        val parser = Parser(tokens)
+        val tokens = Lexer("let a: Number = 7; let b : Number = 8; let c : Number = a + 3 + b;", version)
+        val parser = Parser(tokens, version)
         val interpreter = Interpreter()
         val initialScope = Environment()
         val result = interpreter.interpret(initialScope, parser, StringBuilder())
@@ -79,8 +81,8 @@ class InterpreterTest {
 
     @Test
     fun testSinglePrint() {
-        val tokens = Lexer("println(\"Hello, World!\");")
-        val parser = Parser(tokens)
+        val tokens = Lexer("println(\"Hello, World!\");", version)
+        val parser = Parser(tokens, version)
         val interpreter = Interpreter()
         val initialScope = Environment()
         val stringBuilder = StringBuilder()
@@ -92,8 +94,8 @@ class InterpreterTest {
 
     @Test
     fun testMultiplePrintStatements() {
-        val tokens = Lexer("println(\"First print\"); println(\"Second print\");")
-        val parser = Parser(tokens)
+        val tokens = Lexer("println(\"First print\"); println(\"Second print\");", version)
+        val parser = Parser(tokens, version)
         val interpreter = Interpreter()
         val initialScope = Environment()
         val stringBuilder = StringBuilder()
@@ -106,9 +108,10 @@ class InterpreterTest {
     @Test
     fun testPrintExpressionAndVariable() {
         val tokens = Lexer(
-            "let a: Number = 42; println(a); println(a + 8);"
+            "let a: Number = 42; println(a); println(a + 8);",
+            version
         )
-        val parser = Parser(tokens)
+        val parser = Parser(tokens, version)
         val interpreter = Interpreter()
         val initialScope = Environment()
         val stringBuilder = StringBuilder()
@@ -123,8 +126,8 @@ class InterpreterTest {
 
     @Test
     fun testDivisionNumber() {
-        val tokens = Lexer("let a: Number = 6 / 2;")
-        val parser = Parser(tokens)
+        val tokens = Lexer("let a: Number = 6 / 2;", version)
+        val parser = Parser(tokens, version)
         val initialScope = Environment()
         val stringBuilder = StringBuilder()
 
@@ -136,8 +139,8 @@ class InterpreterTest {
 
     @Test
     fun testComplexExpression() {
-        val tokens = Lexer("let a: Number = 6 / (2 + 5) - (5 * 6);")
-        val parser = Parser(tokens)
+        val tokens = Lexer("let a: Number = 6 / (2 + 5) - (5 * 6);", version)
+        val parser = Parser(tokens, version)
         val initialScope = Environment()
         val stringBuilder = StringBuilder()
 
@@ -149,8 +152,8 @@ class InterpreterTest {
 
     @Test
     fun testSumWithIdentifier() {
-        val tokens = Lexer("let a: Number = 6; let b: Number = a + 2;")
-        val parser = Parser(tokens)
+        val tokens = Lexer("let a: Number = 6; let b: Number = a + 2;", version)
+        val parser = Parser(tokens, version)
 
         val initialScope = Environment()
         val stringBuilder = StringBuilder()
