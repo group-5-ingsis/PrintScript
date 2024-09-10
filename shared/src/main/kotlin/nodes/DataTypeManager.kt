@@ -2,11 +2,11 @@ package nodes
 
 object DataTypeManager {
     private val listOfAllowDataTypes = listOf(
-        "String",
-        "Number",
-        "Int",
-        "Float",
-        "Double"
+        "string",
+        "number",
+        "int",
+        "float",
+        "double"
     )
     private val checkOfAllowedKeyWordsForDeclareVariables = listOf(
         "let",
