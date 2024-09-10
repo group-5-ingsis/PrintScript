@@ -7,6 +7,10 @@ import position.visitor.ExpressionVisitor
 class VariableStatementValidator : Validator<StatementType.Variable> {
 
     override fun validate(node: StatementType.Variable, scope: Environment): ValidationResult {
+        if (isAssignDeclaration(node)) {
+            return validateAssignDeclaration(node, scope)
+        }
+
         if (scope.get(node.identifier) != null) {
             return ValidationResult(
                 true,
@@ -15,9 +19,6 @@ class VariableStatementValidator : Validator<StatementType.Variable> {
             )
         }
 
-        if (isAssignDeclaration(node)) {
-            return validateAssignDeclaration(node, scope)
-        }
         return validateDeclaration(node)
     }
 
