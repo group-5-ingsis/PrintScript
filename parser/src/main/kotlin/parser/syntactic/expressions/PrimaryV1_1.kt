@@ -5,7 +5,10 @@ import nodes.Expression
 import parser.syntactic.TokenManager
 import token.Token
 
-class Primary() : ExpressionParser {
+class PrimaryV1_1() : ExpressionParser {
+
+
+
 
     override fun parse(tokens: List<Token>): ParseResult {
         val tokenMng = TokenManager(tokens)
@@ -25,10 +28,14 @@ class Primary() : ExpressionParser {
         }
 
         val position = tokenMng.getPosition()
+
         if (tokenMng.nextTokenMatchesExpectedType("BOOLEAN")) {
             val token = tokenMng.advance()
             return Pair(tokenMng.getTokens(), Expression.Literal(token.value.toBoolean(), position))
-        } else if (tokenMng.nextTokenMatchesExpectedType("NULL")) {
+        }
+
+
+        if (tokenMng.nextTokenMatchesExpectedType("NULL")) {
             tokenMng.advance()
             return Pair(tokenMng.getTokens(), Expression.Literal(null, position))
         } else if (tokenMng.checkTokensAreFromSomeTypes(listOf("NUMBER", "STRING"))) {
@@ -36,7 +43,8 @@ class Primary() : ExpressionParser {
             return Pair(tokenMng.getTokens(), Expression.Literal(nextLiteral, position))
         } else if (tokenMng.peek().value == "(") {
             tokenMng.advance()
-            val expr = ExpressionType.makeExpressionEvaluator().parse(tokenMng.getTokens())
+            val expressionEvaluator = ExpressionType.makeExpressionEvaluatorV1_1()
+            val expr = expressionEvaluator.parse(tokenMng.getTokens())
             val newTK = TokenManager(expr.first)
             newTK.consumeTokenValue(")")
             return Pair(newTK.getTokens(), Expression.Grouping(expr.second, position))

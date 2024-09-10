@@ -1,6 +1,7 @@
 package parser.syntactic.statements
 
 import parser.syntactic.TokenManager
+import parser.syntactic.expressions.ExpressionType
 import token.Token
 
 /**
@@ -39,11 +40,15 @@ class GenericStatementParser(private val nextStatementsList: List<Pair<String, S
 
     companion object {
 
+        val expresionEvaluatorV_1 = ExpressionType.makeExpressionEvaluatorV1_0()
+        val expresionEvaluatorV_1_1 = ExpressionType.makeExpressionEvaluatorV1_1()
+
+
         fun makeStatementParser(version: String): StatementParser {
             return when (version) {
                 "1.0" -> createV1Parser()
                 "1.1" -> createV1_1Parser()
-                else -> throw IllegalArgumentException("Unsupported version: $version")
+                else -> throw Error("version not supported")
             }
         }
 
@@ -51,15 +56,14 @@ class GenericStatementParser(private val nextStatementsList: List<Pair<String, S
         private fun createV1Parser(): StatementParser {
             val statement = GenericStatementParser(
                 listOf(
-                    Pair("PRINT", PrintStatementParser()),
-                    Pair("", ExpressionStatementParser())
+                    Pair("PRINT", PrintStatementParser(expresionEvaluatorV_1)),
+                    Pair("", ExpressionStatementParser(expresionEvaluatorV_1))
                 )
             )
 
             val declarationAssignationStatement = GenericStatementParser(
                 listOf(
-                    Pair("DECLARATION_KEYWORD", LetDeclarationParser()),
-                    Pair("CONST", ConstDeclarationParser()),
+                    Pair("DECLARATION_KEYWORD", LetDeclarationParser(expresionEvaluatorV_1)),
                     Pair("", statement)
                 )
             )
@@ -70,15 +74,15 @@ class GenericStatementParser(private val nextStatementsList: List<Pair<String, S
         private fun createV1_1Parser(): StatementParser {
             val statement = GenericStatementParser(
                 listOf(
-                    Pair("PRINT", PrintStatementParser()),
-                    Pair("", ExpressionStatementParser())
+                    Pair("PRINT", PrintStatementParser(expresionEvaluatorV_1_1)),
+                    Pair("", ExpressionStatementParser(expresionEvaluatorV_1_1))
                 )
             )
 
             val declarationAssignationStatement = GenericStatementParser(
                 listOf(
-                    Pair("VAR", LetDeclarationParser()), // Changed keyword for version 1.1
-                    Pair("CONST", ConstDeclarationParser()),
+                    Pair("VAR", LetDeclarationParser(expresionEvaluatorV_1_1)), // Changed keyword for version 1.1
+                    Pair("CONST", ConstDeclarationParser(expresionEvaluatorV_1_1)),
                     Pair("", statement)
                 )
             )

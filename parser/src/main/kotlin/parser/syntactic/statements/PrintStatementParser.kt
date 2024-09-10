@@ -6,11 +6,11 @@ import parser.syntactic.TokenManager
 import parser.syntactic.expressions.ExpressionType
 import token.Token
 
-class PrintStatementParser : StatementParser {
+class PrintStatementParser(private val expressionEvaluator: ExpressionType) : StatementParser {
     override fun parse(tokens: List<Token>): ParseStatementResult {
         var manager = TokenManager(tokens)
         val position = manager.getPosition()
-        val (remainingTokens, exp) = ExpressionType.makeExpressionEvaluator().parse(manager.getTokens())
+        val (remainingTokens, exp) = expressionEvaluator.parse(manager.getTokens())
         manager = TokenManager(remainingTokens)
         manager.consumeTokenValue(";")
 
