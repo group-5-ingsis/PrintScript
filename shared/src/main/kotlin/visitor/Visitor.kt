@@ -8,7 +8,7 @@ interface Visitor {
     fun visitExpressionStm(statement: StatementType.StatementExpression)
     fun visitVariableStm(statement: StatementType.Variable)
     fun visitBlockStm(statement: StatementType.BlockStatement)
-    fun visitIfStm(statement: StatementType.ifStament)
+    fun visitIfStm(statement: StatementType.IfStatement)
     fun visitVariable(expression: Expression.Variable)
     fun visitAssign(expression: Expression.Assign)
     fun visitBinary(expression: Expression.Binary)

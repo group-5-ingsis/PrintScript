@@ -34,7 +34,7 @@ class IfStatementParser(private val expresionEvaluatorV_1_1: ExpressionType, val
         } else {
             Pair(null, newManager2.getTokens())
         }
-        return Pair(resTokens3, StatementType.ifStatement(currentPosition, condition, thenBranch, elseBranch))
+        return Pair(resTokens3, StatementType.IfStatement(currentPosition, condition, thenBranch, elseBranch))
 
     }
 }

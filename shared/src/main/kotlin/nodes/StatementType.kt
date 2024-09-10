@@ -17,7 +17,7 @@ sealed class StatementType {
             return visitor.visitBlockStm(this)
         }
     }
-    class ifStatement(override val position: Position, val condition: Expression, val thenBranch: StatementType, val elseBranch: StatementType?): StatementType() {
+    class IfStatement(override val position: Position, val condition: Expression, val thenBranch: StatementType, val elseBranch: StatementType?): StatementType() {
         override val statementType: String = "IF_STATEMENT"
         override fun accept(visitor: Visitor) {
             return visitor.visitIfStm(this)

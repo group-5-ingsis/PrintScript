@@ -26,10 +26,13 @@ class StatementVisitor {
         return Pair(stB, newEnvironment)
     }
 
-    private fun visitIfStm(statement: StatementType.ifStatement, environment: Environment, stringBuilder: StringBuilder): statementVisitorResult {
+    private fun visitIfStm(statement: StatementType.IfStatement, environment: Environment, stringBuilder: StringBuilder): statementVisitorResult {
         val (value, newEnvironment) = evaluateExpression(statement.condition, environment)
         val newStringBuilder = StringBuilder(stringBuilder.toString())
-        return if (value as Boolean) {
+        if (value !is Boolean) {
+            throw IllegalArgumentException("Invalid value for if statement: $value" + "in " + statement.position.toString() + " expected boolean")
+        }
+        return if (value) {
             statement.thenBranch.acceptVisitor(this, newEnvironment, newStringBuilder)
         } else {
             statement.elseBranch?.acceptVisitor(this, newEnvironment, newStringBuilder) ?: Pair(newStringBuilder, newEnvironment)
@@ -39,7 +42,7 @@ class StatementVisitor {
     fun getVisitorFunctionForStatement(statementType: String): (StatementType, Environment, StringBuilder) -> statementVisitorResult {
         return when (statementType) {
             "IF_STATEMENT" -> { statement, env, sb ->
-                if (statement is StatementType.ifStatement) {
+                if (statement is StatementType.IfStatement) {
                     visitIfStm(statement, env, sb)
                 } else {
                     throw IllegalArgumentException("Invalid statement type for IF_STATEMENT: ${statement::class.simpleName}")
