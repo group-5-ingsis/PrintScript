@@ -5,9 +5,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 
 class TokenGeneratorTest {
-    private val tokenGenerator = TokenGenerator() // Default version 1.1
-
-    @Test
+    private val tokenGenerator = TokenGenerator("1.0") @Test
     fun testGenerateTokenDeclarationKeyword() {
         val input = "let"
         val expected = Token("let", "DECLARATION_KEYWORD", Position(1, 1))
