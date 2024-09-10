@@ -1,5 +1,6 @@
 package parser
 
+import exception.SemanticErrorException
 import nodes.StatementType
 import parser.semantic.SemanticParser
 import parser.syntactic.SyntacticParser
@@ -24,6 +25,8 @@ class Parser(private val lexer: Iterator<Token>, private val version: String = "
                     SemanticParser.validate(stm)
                     return stm
                 }
+            } catch (e: SemanticErrorException) {
+                throw e
             } catch (e: Exception) {
                 if (!lexer.hasNext()) {
                     throw e
