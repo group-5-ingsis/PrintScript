@@ -23,7 +23,8 @@ class StatementVisitor {
             newEnvironment = newEnv
 
         }
-        return Pair(stB, newEnvironment)
+        val env = newEnvironment.enclosing ?: throw IllegalArgumentException("Environment enclosing is null")
+        return Pair(stB, env)
     }
 
     private fun visitIfStm(statement: StatementType.IfStatement, environment: Environment, stringBuilder: StringBuilder): statementVisitorResult {

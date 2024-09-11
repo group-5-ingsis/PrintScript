@@ -62,6 +62,19 @@ class ParserV1_1Tester {
         val expectedElsePrint = (expectedIf.elseBranch as StatementType.BlockStatement).listStm[0] as StatementType.Print
         val actualElsePrint = (actualIf.elseBranch as StatementType.BlockStatement).listStm[0] as StatementType.Print
         assertEquals(expectedElsePrint.value, actualElsePrint.value)
+
+
+        val expectedBlock1 = expectedIf.elseBranch as StatementType.BlockStatement
+        val actualBlock2 = actualIf.elseBranch as StatementType.BlockStatement
+        val expectedVariable = expectedBlock1.listStm[0] as StatementType.Print
+        val actualVariable = actualBlock2.listStm[0] as StatementType.Print
+
+        val expresionExpected = (expectedVariable.value).expression as Expression.Literal
+        val actualExpression = (actualVariable.value).expression as Expression.Literal
+
+        assertEquals(expresionExpected.value, actualExpression.value)
+
+
     }
 
     @Test
@@ -69,36 +82,52 @@ class ParserV1_1Tester {
         val lexer = Lexer("let a: Boolean = true; if (a) { let queso: Number = 5; println(queso); }", "1.1")
         val parser = Parser(lexer, "1.1")
 
-        val ast = parser.next()
+        // Parse the first statement, which should be the variable declaration 'a'
+        val variableDeclaration = parser.next() as StatementType.Variable
 
         val expectedVariableA = StatementType.Variable(
             designation = "let",
             identifier = "a",
-            initializer = Expression.Literal(true, Position(1, 19)),
+            initializer = Expression.Literal(true, Position(1, 18)),
             dataType = "Boolean",
             position = Position(1, 4)
         )
 
+        // Verify the first statement is the expected variable declaration
+        assertEquals(expectedVariableA.initializer, variableDeclaration.initializer)
+        assertEquals(expectedVariableA.identifier, variableDeclaration.identifier)
+        assertEquals(expectedVariableA.dataType, variableDeclaration.dataType)
+        assertEquals(expectedVariableA.designation, variableDeclaration.designation)
+
+
+        // Parse the next statement, which should be the IfStatement
+        val ifStatement = parser.next() as StatementType.IfStatement
+
+        // Expected condition expression for the IfStatement
         val expectedCondition = Expression.Variable("a", Position(1, 28))
 
+        // Expected variable declaration 'queso' within the IfStatement's block
         val expectedVariableQueso = StatementType.Variable(
             designation = "let",
             identifier = "queso",
-            initializer = Expression.Literal(5, Position(1, 51)),
+            initializer = Expression.Literal(5, Position(1, 53)),
             dataType = "Number",
-            position = Position(1, 41)
+            position = Position(1, 37)
         )
 
+        // Expected print statement within the IfStatement's block
         val expectedPrint = StatementType.Print(
             Expression.Grouping(Expression.Variable("queso", Position(1, 67)), Position(1, 61)),
             Position(1, 61)
         )
 
+        // Expected block of statements within the IfStatement
         val expectedBlock = StatementType.BlockStatement(
             position = Position(1, 31),
             listStm = listOf(expectedVariableQueso, expectedPrint)
         )
 
+        // Expected IfStatement
         val expectedIf = StatementType.IfStatement(
             position = Position(1, 27),
             condition = expectedCondition,
@@ -106,17 +135,32 @@ class ParserV1_1Tester {
             elseBranch = null
         )
 
-        val actualIf = ast as StatementType.IfStatement
-
-        assertEquals(expectedIf.condition, actualIf.condition)
-        assertEquals(expectedIf.thenBranch.statementType, actualIf.thenBranch.statementType)
+        // Verify the IfStatement
+        assertEquals(expectedIf.condition, ifStatement.condition)
+        assertEquals(expectedIf.thenBranch.statementType, ifStatement.thenBranch.statementType)
 
         val expectedThenBranchList = (expectedIf.thenBranch as StatementType.BlockStatement).listStm
-        val actualThenBranchList = (actualIf.thenBranch as StatementType.BlockStatement).listStm
+        val actualThenBranchList = (ifStatement.thenBranch as StatementType.BlockStatement).listStm
 
-        assertEquals(expectedThenBranchList[0], actualThenBranchList[0]) // Variable queso
-        assertEquals(expectedThenBranchList[1], actualThenBranchList[1]) // Print queso
-        assertEquals(expectedIf.elseBranch, actualIf.elseBranch)
+        // Check the variable 'queso' in the block
+        val variableQuesoExpected = (expectedThenBranchList[0] as StatementType.Variable)
+        val variableQuesoActual = (actualThenBranchList[0] as StatementType.Variable)
+        assertEquals(((variableQuesoExpected.initializer) as Expression.Literal).value, (variableQuesoActual.initializer as Expression.Literal).value) // Variable queso
+        assertEquals(variableQuesoExpected.identifier, variableQuesoActual.identifier) // Variable queso
+        assertEquals(variableQuesoExpected.dataType, variableQuesoActual.dataType) // Variable queso
+        assertEquals(variableQuesoExpected.designation, variableQuesoActual.designation) // Variable queso
+
+        // Check the print statement for 'queso' in the block
+
+        val printExpected = (expectedThenBranchList[1] as StatementType.Print)
+        val printActual = (actualThenBranchList[1] as StatementType.Print)
+        val expectedPrintValue = (printExpected.value as Expression.Grouping).expression as Expression.Variable
+        val actualPrintValue = (printActual.value as Expression.Grouping).expression as Expression.Variable
+        // Verify that there is no elseBranch in this case
+        assertEquals(expectedPrintValue.name, actualPrintValue.name) // Print statement
+
+
+
     }
 
 

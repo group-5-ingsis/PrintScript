@@ -42,8 +42,8 @@ class Environment(
             throw IllegalArgumentException("$value cannot be null if declaration is 'const'")
         }
         newEnvironment[name] = Pair(declaration, value)
-
-        return Environment(newEnvironment)
+        if (enclosing == null) return Environment(newEnvironment)
+        return Environment(enclosing.getCopy(), newEnvironment)
     }
 
     /**
