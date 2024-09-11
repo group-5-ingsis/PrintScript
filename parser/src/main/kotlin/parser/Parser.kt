@@ -1,5 +1,6 @@
 package parser
 
+import Environment
 import exception.SemanticErrorException
 import nodes.StatementType
 import parser.semantic.SemanticParser
@@ -7,6 +8,8 @@ import parser.syntactic.SyntacticParser
 import token.Token
 
 class Parser(private val lexer: Iterator<Token>, private val version: String = "1.1") : Iterator<StatementType> {
+
+    var env = Environment()
 
     override fun hasNext(): Boolean {
         return lexer.hasNext()
@@ -17,12 +20,13 @@ class Parser(private val lexer: Iterator<Token>, private val version: String = "
         var lastException: Exception? = null
 
         while (lexer.hasNext()) {
-            mutableListTokensForParse.add(lexer.next())
+            val token = lexer.next()
+            mutableListTokensForParse.add(token)
 
             try {
                 val (stm, tokens) = SyntacticParser.parse(mutableListTokensForParse, version)
                 if (tokens.isEmpty()) {
-                    SemanticParser.validate(stm)
+                    env = SemanticParser.validate(stm, env)
                     return stm
                 }
             } catch (e: SemanticErrorException) {

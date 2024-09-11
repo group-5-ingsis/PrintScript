@@ -12,15 +12,17 @@ object SemanticParser {
     private val validator = SemanticValidator()
 
     @Throws(SemanticErrorException::class)
-    fun validate(ast: StatementType): StatementType {
-        val environment = Environment()
-        val newEnv = ast.acceptVisitor(StatementVisitor(), environment, StringBuilder())
-        val result = runValidators(ast, newEnv.second)
+    fun validate(ast: StatementType, environment: Environment): Environment {
+        val statementVisitor = StatementVisitor()
+        val stringBuilder = StringBuilder()
 
+        val visitorResult = ast.acceptVisitor(statementVisitor, environment, stringBuilder)
+        val newEnvironment = visitorResult.second
+        val result = runValidators(ast, newEnvironment)
         if (result.isInvalid) {
             throw SemanticErrorException("Invalid procedure: " + result.message)
         } else {
-            return ast
+            return newEnvironment
         }
     }
 
