@@ -89,4 +89,65 @@ class FormatterTest {
         val expected = "let a: number = 2;\n\n\nprintln(a);\n"
         assertEquals(expected, result)
     }
+
+    @Test
+    fun testIfStatementFormatting() {
+        val input = "if (true) { let b: number = 3; }"
+        val version = "1.1"
+
+        val tokens = Lexer(input, version)
+        val astNodes = Parser(tokens, version)
+        val result = Formatter.format(astNodes, exampleRules, version)
+
+        // Assuming the indent is set to 4 spaces in the rules
+        val expected = """
+        if (true) {
+            let b: number = 3;
+        }
+        
+        """.trimIndent()
+
+        assertEquals(expected, result)
+    }
+
+    @Test
+    fun testIfStatementWithElseFormatting() {
+        val input = "if (true) { let b: number = 3; } else { let a: number = 4;};"
+        val version = "1.1"
+
+        val tokens = Lexer(input, version)
+        val astNodes = Parser(tokens, version)
+        val result = Formatter.format(astNodes, exampleRules, version)
+
+        val expected = """
+        if (true) {
+            let b: number = 3;
+        } else {
+            let a: number = 4;
+        }
+        """.trimIndent()
+
+        assertEquals(expected, result)
+    }
+
+    @Test
+    fun testDoubleIfStatementFormatting() {
+        val input = "if (true) { if (true) {let a: number = 2;} };"
+
+        val version = "1.1"
+
+        val tokens = Lexer(input, version)
+        val astNodes = Parser(tokens, version)
+        val result = Formatter.format(astNodes, exampleRules, version)
+
+        val expected = """
+    if (true) {
+        if (true) {
+            let a: number = 2;
+        }
+    }
+        """.trimIndent()
+
+        assertEquals(expected, result)
+    }
 }

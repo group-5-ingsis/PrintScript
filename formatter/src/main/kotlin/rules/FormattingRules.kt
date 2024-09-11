@@ -7,5 +7,6 @@ data class FormattingRules @JsonCreator constructor(
     @JsonProperty("spaceBeforeColon") val spaceBeforeColon: Boolean,
     @JsonProperty("spaceAfterColon") val spaceAfterColon: Boolean,
     @JsonProperty("spaceAroundAssignment") val spaceAroundAssignment: Boolean,
-    @JsonProperty("newlineBeforePrintln") val newlineBeforePrintln: Int
+    @JsonProperty("newlineBeforePrintln") val newlineBeforePrintln: Int,
+    @JsonProperty("blockIndentation") val blockIndentation: Int
 )

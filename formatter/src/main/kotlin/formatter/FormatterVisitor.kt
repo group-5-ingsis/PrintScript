@@ -10,6 +10,7 @@ class FormatterVisitor(private val rules: FormattingRules) : Visitor {
 
     private val output = StringBuilder()
     private val ruleApplier = RuleApplier(rules)
+    private var currentIndent = 0
 
     fun getFormattedOutput(): String {
         return output.toString()
@@ -44,6 +45,62 @@ class FormatterVisitor(private val rules: FormattingRules) : Visitor {
         statement.initializer?.accept(this)
 
         output.append(";\n")
+    }
+
+    private fun appendIndent() {
+        repeat(currentIndent) {
+            output.append(" ")
+        }
+    }
+
+    override fun visitBlockStm(statement: StatementType.BlockStatement) {
+        statement.listStm.forEach {
+            appendIndent()
+            it.accept(this)
+        }
+        currentIndent -= rules.blockIndentation
+        appendIndent()
+    }
+
+    override fun visitIfStm(statement: StatementType.IfStatement) {
+        appendIndent()
+        output.append("if (")
+        val condition = statement.condition
+        condition.accept(this)
+        output.append(") ")
+
+        output.append("{\n")
+
+        currentIndent += rules.blockIndentation
+        val thenBranch = statement.thenBranch
+        thenBranch.accept(this)
+        currentIndent -= rules.blockIndentation
+
+        appendIndent()
+        output.append("}")
+
+        val elseBranch = statement.elseBranch
+        elseBranch?.let {
+            output.append(" else ")
+
+            if (it is StatementType.BlockStatement) {
+                output.append("{\n")
+                currentIndent += rules.blockIndentation
+                appendIndent()
+                currentIndent += rules.blockIndentation
+                it.accept(this)
+                currentIndent -= rules.blockIndentation
+                appendIndent()
+                output.append("}")
+            } else {
+                output.append("{\n")
+                currentIndent += rules.blockIndentation
+                it.accept(this)
+                currentIndent -= rules.blockIndentation
+                appendIndent()
+                output.append("}")
+            }
+        }
     }
 
     override fun visitVariable(expression: Expression.Variable) {
