@@ -1,10 +1,10 @@
 package nodes
 
 import Environment
-import VisitorResultExpressions
 import position.Position
 import position.visitor.ExpressionVisitor
 import position.visitor.Visitor
+import position.visitor.VisitorResultExpressions
 
 sealed class Expression {
     abstract val expressionType: String

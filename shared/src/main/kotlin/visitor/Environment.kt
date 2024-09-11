@@ -7,8 +7,6 @@ import nodes.StatementType
  * and the variable's value.
  */
 
-typealias VisitorResultExpressions = Pair<Any?, Environment>
-
 class Environment(
     val enclosing: Environment? = null, // Previous environment
     initialValues: HashMap<String, StatementType.Variable> = HashMap() // Initial values

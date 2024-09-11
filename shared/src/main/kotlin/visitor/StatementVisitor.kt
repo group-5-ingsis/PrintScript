@@ -1,7 +1,6 @@
 package position.visitor
 
 import Environment
-import VisitorResultExpressions
 import nodes.Expression
 import nodes.StatementType
 
