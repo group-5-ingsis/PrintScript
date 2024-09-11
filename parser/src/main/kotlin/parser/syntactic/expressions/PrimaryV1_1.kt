@@ -4,7 +4,6 @@ import exception.UnknownExpressionException
 import nodes.Expression
 import parser.syntactic.TokenManager
 import token.Token
-import kotlin.math.exp
 
 class PrimaryV1_1() : ExpressionParser {
 
@@ -48,13 +47,12 @@ class PrimaryV1_1() : ExpressionParser {
         } else if (tokenMng.nextTokenMatchesExpectedType("IDENTIFIER")) {
             val idem = tokenMng.advance().value
             return Pair(tokenMng.getTokens(), Expression.Variable(idem, position))
-        } else if (tokenMng.nextTokenMatchesExpectedType("READ_INPUT")){
+        } else if (tokenMng.nextTokenMatchesExpectedType("READ_INPUT")) {
             tokenMng.advance()
             val expressionEvaluator = ExpressionType.makeExpressionEvaluatorV1_1()
             val expr = expressionEvaluator.parse(tokenMng.getTokens())
             return Pair(expr.first, Expression.ReadInput(position, expr.second as Expression.Grouping))
-
-        }else if (tokenMng.nextTokenMatchesExpectedType("READ_ENV")){
+        } else if (tokenMng.nextTokenMatchesExpectedType("READ_ENV")) {
             tokenMng.advance()
             val expressionEvaluator = ExpressionType.makeExpressionEvaluatorV1_1()
             val expr = expressionEvaluator.parse(tokenMng.getTokens())

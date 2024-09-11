@@ -42,7 +42,8 @@ class LinterVisitor(private val linterRules: LinterRules) : Visitor {
     }
 
     override fun visitExpressionStm(statement: StatementType.StatementExpression) {
-        TODO("Not yet implemented")
+        val position = statement.position
+        linterResult = LinterResult(true, "No errors found at $position")
     }
 
     override fun visitVariableStm(statement: StatementType.Variable) {

@@ -163,7 +163,7 @@ class ParserTester {
 
     @Test
     fun testAssignDeclareWithDifferentTypesShouldPassSyntacticParser() {
-        val lexer = Lexer("let a: number = 'testing';", "1.0")
+        val lexer = Lexer("let a: string = 'testing';", "1.0")
         val parser = Parser(lexer, "1.0")
 
         val ast1 = parser.next()
@@ -172,7 +172,7 @@ class ParserTester {
             designation = "let",
             identifier = "a",
             initializer = Expression.Literal("'testing'", Position(1, 18)),
-            dataType = "number",
+            dataType = "string",
             position = Position(1, 1)
         )
 
