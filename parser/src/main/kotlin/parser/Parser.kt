@@ -1,15 +1,14 @@
 package parser
 
-import Environment
-import exception.SemanticErrorException
+import lexer.Lexer
 import nodes.StatementType
-import parser.semantic.SemanticParser
 import parser.syntactic.SyntacticParser
 import token.Token
+import java.util.Queue
 
 class Parser(private val lexer: Iterator<Token>, private val version: String = "1.1") : Iterator<StatementType> {
 
-    var env = Environment()
+    val momentList: ArrayDeque<Token> =  ArrayDeque()
 
     override fun hasNext(): Boolean {
         return lexer.hasNext()
@@ -19,18 +18,20 @@ class Parser(private val lexer: Iterator<Token>, private val version: String = "
         val mutableListTokensForParse: MutableList<Token> = mutableListOf()
         var lastException: Exception? = null
 
-        while (lexer.hasNext()) {
-            val token = lexer.next()
-            mutableListTokensForParse.add(token)
+        while (lexer.hasNext() || momentList.isNotEmpty()) {
+
+            if (momentList.isNotEmpty()){
+                mutableListTokensForParse.add(momentList.removeFirst())
+            }else {
+                mutableListTokensForParse.add(lexer.next())
+            }
+
 
             try {
                 val (stm, tokens) = SyntacticParser.parse(mutableListTokensForParse, version)
-                if (tokens.isEmpty()) {
-                    env = SemanticParser.validate(stm, env)
+                ifChecker()
                     return stm
-                }
-            } catch (e: SemanticErrorException) {
-                throw e
+
             } catch (e: Exception) {
                 if (!lexer.hasNext()) {
                     throw e
@@ -47,6 +48,17 @@ class Parser(private val lexer: Iterator<Token>, private val version: String = "
 
         // TODO change. Add SemanticParser validation.
         throw NoSuchElementException("No more tokens available to parse")
+    }
+
+    private fun ifChecker() {
+        if (lexer.hasNext()){
+            val next = lexer.next()
+            momentList.add(next)
+            if (next.type == "ELSE"){
+                throw Exception("Exeption for continue the loop")
+            }
+        }
+
     }
 
     private fun isAllowedException(e: Exception): Boolean {

@@ -13,16 +13,26 @@ object TypesMapGenerator {
     }
 
     private fun getVersionTypesMap(version: String): Map<String, String> {
-        return getDefaultPatternsMap() + getVariablePatternsMap(version)
+        return getDefaultPatternsMap(version) + getVariablePatternsMap(version)
     }
 
-    private fun getDefaultPatternsMap(): Map<String, String> {
-        return mapOf(
-            "=" to "ASSIGNMENT",
-            """^-?\d+(\.\d+)?$""" to "NUMBER",
-            """^(['"]).*\1$""" to "STRING",
-            """^[,;.(){}:\"\']$""" to "PUNCTUATION"
-        )
+    private fun getDefaultPatternsMap(version: String): Map<String, String> {
+        return when(version) {
+            "1.0" -> mapOf(
+                "=" to "ASSIGNMENT",
+                """^-?\d+(\.\d+)?$""" to "NUMBER",
+                """^(['"]).*\1$""" to "STRING",
+                """^[,;.(){}:\"\']$""" to "PUNCTUATION"
+            )
+            "1.1" ->mapOf(
+                "=" to "ASSIGNMENT",
+                """^-?\d+(\.\d+)?$""" to "NUMBER",
+                """^(['"]).*\1$""" to "STRING",
+                """^[,;.():\"\']$""" to "PUNCTUATION"
+            )
+            else -> throw IllegalArgumentException("Unknown version: $version")
+        }
+
     }
 
     private fun getVariablePatternsMap(version: String): Map<String, String> {

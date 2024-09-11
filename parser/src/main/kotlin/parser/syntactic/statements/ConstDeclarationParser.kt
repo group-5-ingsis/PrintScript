@@ -6,7 +6,7 @@ import parser.syntactic.TokenManager
 import parser.syntactic.expressions.ExpressionType
 import token.Token
 
-class ConstDeclarationParser : StatementParser {
+class ConstDeclarationParser(private val expressionEvaluator: ExpressionType) : StatementParser {
 
     override fun parse(tokens: List<Token>): ParseStatementResult {
         val manager = TokenManager(tokens)
@@ -18,7 +18,7 @@ class ConstDeclarationParser : StatementParser {
             throw SemanticErrorException("Invalid procedure: variable '${identifier.value}' of type 'const' cannot be declared. ")
         }
         manager.consumeTokenValue("=")
-        val initializer = ExpressionType.makeExpressionEvaluator().parse(manager.getTokens())
+        val initializer = expressionEvaluator.parse(manager.getTokens())
         return Pair(initializer.first, StatementType.Variable("const", identifier.value, initializer.second, dataType, position))
     }
 }

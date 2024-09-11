@@ -11,6 +11,19 @@ sealed class StatementType {
     abstract val statementType: String
     abstract val position: Position
 
+    class BlockStatement(override val position: Position, val listStm: List<StatementType>): StatementType()  {
+        override val statementType: String = "BLOCK_STATEMENT"
+        override fun accept(visitor: Visitor) {
+            return visitor.visitBlockStm(this)
+        }
+    }
+    class IfStatement(override val position: Position, val condition: Expression, val thenBranch: StatementType, val elseBranch: StatementType?): StatementType() {
+        override val statementType: String = "IF_STATEMENT"
+        override fun accept(visitor: Visitor) {
+            return visitor.visitIfStm(this)
+        }
+    }
+
     fun acceptVisitor(visitor: StatementVisitor, environment: Environment, sb: StringBuilder): statementVisitorResult {
         val func = visitor.getVisitorFunctionForStatement(statementType)
         return func(this, environment, sb)

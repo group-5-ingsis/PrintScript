@@ -50,7 +50,7 @@ class Lexer(input: String, version: String = "1.1") : Iterator<Token> {
                 continue
             }
 
-            val separators = listOf(';', ':', '(', ')', '+', '-', '/', '*')
+            val separators = listOf(';', ':', '(', ')', '+', '-', '/', '*', '}', '{')
 
             if (currentChar == '\'' || currentChar == '\"') {
                 val startQuote = currentChar

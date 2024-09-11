@@ -21,7 +21,7 @@ class Assigment(private val parseInferiorFunction: ExpressionParser) : Expressio
                 // use case example ->  newPoint(x + 2, 0).y = 3;
                 // this should be a Variable:  newPoint(x + 2, 0).y
 
-                val (newTokens, exp) = ExpressionType.makeExpressionEvaluator().parse(tokenManager.getTokens())
+                val (newTokens, exp) = parseInferiorFunction.parse(tokenManager.getTokens())
 
                 return Pair(newTokens, Expression.Assign(expression.name, exp, position))
             }

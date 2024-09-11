@@ -7,7 +7,7 @@ import parser.syntactic.TokenManager
 import parser.syntactic.expressions.ExpressionType
 import token.Token
 
-class LetDeclarationParser : StatementParser {
+class LetDeclarationParser(private val expressionEvaluator: ExpressionType) : StatementParser {
 
     override fun parse(tokens: List<Token>): ParseStatementResult {
         var manager = TokenManager(tokens)
@@ -20,7 +20,7 @@ class LetDeclarationParser : StatementParser {
 
         if (manager.isValue("=")) {
             manager.consumeTokenValue("=")
-            val (remainingTokens, exp) = ExpressionType.makeExpressionEvaluator().parse(manager.getTokens())
+            val (remainingTokens, exp) = expressionEvaluator.parse(manager.getTokens())
             initializer = exp
             manager = TokenManager(remainingTokens)
             DataTypeManager.checkDataTypeIsOkWithExpression(initializer, dataType)
