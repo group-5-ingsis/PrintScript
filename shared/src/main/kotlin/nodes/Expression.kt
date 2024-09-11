@@ -1,7 +1,7 @@
 package nodes
 
-import Environment
 import position.Position
+import position.visitor.Environment
 import position.visitor.ExpressionVisitor
 import position.visitor.Visitor
 import position.visitor.VisitorResultExpressions

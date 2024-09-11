@@ -28,12 +28,10 @@ class SemanticTesting {
     fun testAssignationToDifferentTypeShouldFail() {
         val lexer = Lexer("let a: string; a = 22;")
         val parser = Parser(lexer)
-//        assertFailsWith(SemanticErrorException::class) {
-//            parser.next()
-//
-//        }
-        parser.next()
-        parser.next()
+        assertFailsWith(SemanticErrorException::class) {
+            parser.next()
+            parser.next()
+        }
     }
 
     @Test
@@ -58,10 +56,9 @@ class SemanticTesting {
     fun testAssignationOfInexistentVariableShouldFail() {
         val lexer = Lexer("b = 23;")
         val parser = Parser(lexer)
-//        assertFailsWith(SemanticErrorException::class) {
-//
-//        }
-        parser.next()
+        assertFailsWith(Error::class) {
+            parser.next()
+        }
     }
 
     @Test
@@ -77,6 +74,28 @@ class SemanticTesting {
         val parser = Parser(lexer)
         assertFailsWith(SemanticErrorException::class) {
             parser.next()
+        }
+    }
+
+    @Test
+    fun testPrintlnCorrect() {
+        val lexer = Lexer("let b: string = 23; println(b)")
+        val parser = Parser(lexer)
+    }
+
+    @Test
+    fun testPrintlnMultipleArguments() {
+        val lexer = Lexer("let b: string = 23; println(b, 2)")
+        val parser = Parser(lexer)
+    }
+
+    @Test
+    fun testPrintlnUnknownVariable() {
+        val tokens = Lexer("let something: string; println(something);")
+        val parser = Parser(tokens)
+        assertFailsWith(SemanticErrorException::class) {
+            val next = parser.next()
+            val next2 = parser.next()
         }
     }
 }

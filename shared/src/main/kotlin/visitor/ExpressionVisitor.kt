@@ -1,6 +1,5 @@
 package position.visitor
 
-import Environment
 import nodes.Expression
 import nodes.StatementType
 
@@ -173,11 +172,17 @@ class ExpressionVisitor {
 
     private fun visitAssignExpr(exp: Expression.Assign, scope: Environment): VisitorResultExpressions {
         val (value, newScope) = evaluateExpression(exp.value, scope)
-        val newScope2 = newScope.assign(exp.name, value)
-        return Pair(value, newScope2)
+        // val newScope2 = newScope.assign(exp.name, value)
+        return Pair(value, newScope)
     }
     fun getVisitorFunctionForExpression(expressionType: String): (Expression, Environment) -> VisitorResultExpressions {
         return when (expressionType) {
+            "READ_INPUT" -> { expr, env ->
+                if (expr is Expression.ReadInput) visitReadInput(expr, env) else throw IllegalArgumentException("Invalid expression type for READ_INPUT")
+            }
+            "READ_ENV" -> { expr, env ->
+                if (expr is Expression.ReadEnv) visitReadEnv(expr, env) else throw IllegalArgumentException("Invalid expression type for READ_ENV")
+            }
             "ASSIGNMENT_EXPRESSION" -> { expr, env ->
                 if (expr is Expression.Assign) visitAssignExpr(expr, env) else throw IllegalArgumentException("Invalid expression type for ASSIGNMENT_EXPRESSION")
             }
@@ -201,6 +206,16 @@ class ExpressionVisitor {
             }
             else -> throw IllegalArgumentException("Unsupported expression type: $expressionType")
         }
+    }
+
+    private fun visitReadInput(expr: Expression.ReadInput, env: Environment): VisitorResultExpressions {
+        TODO("inplementInput")
+
+        return Pair(0, env)
+    }
+    private fun visitReadEnv(expr: Expression.ReadEnv, env: Environment): VisitorResultExpressions {
+        TODO("Inplement read env")
+        return Pair(0, env)
     }
 
     private fun visitIdentifierExp(exp: Expression.IdentifierExpression, environment: Environment): VisitorResultExpressions {

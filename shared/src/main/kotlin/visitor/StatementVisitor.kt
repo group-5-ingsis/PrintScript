@@ -1,12 +1,12 @@
 package position.visitor
 
-import Environment
 import nodes.Expression
 import nodes.StatementType
 
 typealias statementVisitorResult = Pair<StringBuilder, Environment>
 
 class StatementVisitor {
+
     private fun evaluateExpression(expr: Expression, scope: Environment): VisitorResultExpressions {
         val visitor = ExpressionVisitor()
         return expr.acceptVisitor(visitor, scope)
@@ -88,8 +88,9 @@ class StatementVisitor {
     }
 
     private fun visitPrintStm(statement: StatementType.Print, environment: Environment, stringBuilder: StringBuilder): statementVisitorResult {
-        val value = evaluateExpression(statement.value, environment)
-        stringBuilder.append("\n${value.first}\n")
+        val value = statement.value
+        val newValue = evaluateExpression(value, environment)
+        stringBuilder.append("\n${newValue.first}\n")
         return Pair(stringBuilder, environment)
     }
 

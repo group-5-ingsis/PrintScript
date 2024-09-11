@@ -1,9 +1,9 @@
 package parser
 
-import Environment
 import nodes.StatementType
 import parser.semantic.SemanticParser
 import parser.syntactic.SyntacticParser
+import position.visitor.Environment
 import token.Token
 
 class Parser(private val lexer: Iterator<Token>, private val version: String = "1.1") : Iterator<StatementType> {
@@ -49,7 +49,6 @@ class Parser(private val lexer: Iterator<Token>, private val version: String = "
             }
         }
 
-        // TODO change. Add SemanticParser validation.
         throw NoSuchElementException("No more tokens available to parse")
     }
 
