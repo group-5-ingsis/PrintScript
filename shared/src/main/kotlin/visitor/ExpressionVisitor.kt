@@ -209,8 +209,6 @@ class ExpressionVisitor {
     }
 
     private fun visitReadInput(expr: Expression.ReadInput, env: Environment): VisitorResultExpressions {
-        TODO("inplementInput")
-
         return Pair(0, env)
     }
     private fun visitReadEnv(expr: Expression.ReadEnv, env: Environment): VisitorResultExpressions {

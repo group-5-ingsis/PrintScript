@@ -27,12 +27,15 @@ class LinterVisitor(private val linterRules: LinterRules) : Visitor {
         val expression = statement.value.expression
         val position = statement.position
         val expressionType = expression.expressionType
+        checkExpressionArgs(expressionType, position, "printlnExpressionAllowed", "println()")
+    }
 
-        if (rulesMap["printlnExpressionAllowed"] == false) {
+    private fun checkExpressionArgs(expressionType: String, position: Position, ruleName: String, statementName: String) {
+        if (rulesMap[ruleName] == false) {
             if (expressionType != "VARIABLE_EXPRESSION" && expressionType != "LITERAL_EXPRESSION") {
                 linterResult = LinterResult(
                     false,
-                    "println() statements must receive a literal or identifier expression at $position, got $expressionType."
+                    "$statementName statements must receive a literal or identifier, not an expression. At $position, got $expressionType."
                 )
                 return
             }
@@ -42,8 +45,12 @@ class LinterVisitor(private val linterRules: LinterRules) : Visitor {
     }
 
     override fun visitExpressionStm(statement: StatementType.StatementExpression) {
-        val position = statement.position
-        linterResult = LinterResult(true, "No errors found at $position")
+        if (statement.value.expressionType == "READ_INPUT") {
+            statement.value.accept(this)
+        } else {
+            val position = statement.position
+            linterResult = LinterResult(true, "No errors found at $position")
+        }
     }
 
     override fun visitVariableStm(statement: StatementType.Variable) {
@@ -79,11 +86,16 @@ class LinterVisitor(private val linterRules: LinterRules) : Visitor {
     }
 
     override fun visitBlockStm(statement: StatementType.BlockStatement) {
-        TODO("Not yet implemented")
+        statement.listStm.forEach() {
+            it.accept(this)
+        }
     }
 
     override fun visitIfStm(statement: StatementType.IfStatement) {
-        TODO("Not yet implemented")
+        statement.thenBranch.accept(this)
+        if (statement.elseBranch != null) {
+            statement.elseBranch!!.accept(this)
+        }
     }
 
     override fun visitVariable(expression: Expression.Variable) {
@@ -118,6 +130,18 @@ class LinterVisitor(private val linterRules: LinterRules) : Visitor {
 
     override fun visitIdentifier(expression: Expression.IdentifierExpression) {
         val position = expression.position
+        linterResult = LinterResult(true, "No errors found at $position")
+    }
+
+    override fun visitReadInput(readInput: Expression.ReadInput) {
+        val expression = readInput.value.expression
+        val position = readInput.position
+        val expressionType = expression.expressionType
+        checkExpressionArgs(expressionType, position, "readInputExpressionAllowed", "readInput()")
+    }
+
+    override fun visitReadEnv(readEnv: Expression.ReadEnv) {
+        val position = readEnv.position
         linterResult = LinterResult(true, "No errors found at $position")
     }
 }
