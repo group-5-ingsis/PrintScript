@@ -20,17 +20,15 @@ class SyntacticTesting {
     fun testDeclarationWithParenthesisShouldFail() {
         val lexer = Lexer("let a: String(")
         val parser = Parser(lexer)
-        // assertFailsWith(BadSyntacticException::class) {
-        // }
-        println(parser.next())
+        assertFailsWith(BadSyntacticException::class) {
+            println(parser.next())
+        }
     }
 
     @Test
     fun testDeclarationShouldPass() {
         val lexer = Lexer("let a: String;")
         val parser = Parser(lexer)
-        assertFailsWith(BadSyntacticException::class) {
-            println(parser.next())
-        }
+        println(parser.next())
     }
 }

@@ -143,7 +143,9 @@ class ExpressionVisitor {
     }
 
     private fun visitVariableExp(exp: Expression.Variable, scope: Environment): VisitorResultExpressions {
-        return Pair(scope.get(exp.name), scope)
+        val expressionName = exp.name
+        val name = scope.get(expressionName)
+        return Pair(name, scope)
     }
 
     private fun visitAssignExpr(exp: Expression.Assign, scope: Environment): VisitorResultExpressions {

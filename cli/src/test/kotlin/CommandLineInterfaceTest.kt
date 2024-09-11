@@ -34,8 +34,8 @@ class CommandLineInterfaceTest {
 
     @Test
     fun `test correct File Analisis`() {
-        val command = "analyze HelloWorld.ps 1.0 rules.yaml"
+        val command = "analyze HelloWorld.ps 1.0 linterRules.json"
         val result = CommandLineInterface.execute(command)
-        assertEquals("Need More Coverage", result)
+        assertEquals("OK: No linting errors found", result)
     }
 }

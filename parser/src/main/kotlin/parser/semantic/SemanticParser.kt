@@ -2,9 +2,9 @@ package parser.semantic
 
 import Environment
 import exception.SemanticErrorException
+import nodes.StatementType
 import parser.semantic.validation.SemanticValidator
 import parser.semantic.validation.ValidationResult
-import parser.syntactic.SyntacticParser
 import position.visitor.StatementVisitor
 import java.lang.StringBuilder
 
@@ -12,19 +12,21 @@ object SemanticParser {
     private val validator = SemanticValidator()
 
     @Throws(SemanticErrorException::class)
-    fun validate(ast: SyntacticParser.RootNode): SyntacticParser.RootNode {
-        val environment = Environment()
-        val newEnv = ast.accept(StatementVisitor(), environment, StringBuilder())
-        val result = runValidators(ast, newEnv.second)
+    fun validate(ast: StatementType, environment: Environment): Environment {
+        val statementVisitor = StatementVisitor()
+        val stringBuilder = StringBuilder()
 
+        val visitorResult = ast.acceptVisitor(statementVisitor, environment, stringBuilder)
+        val newEnvironment = visitorResult.second
+        val result = runValidators(ast, newEnvironment)
         if (result.isInvalid) {
             throw SemanticErrorException("Invalid procedure: " + result.message)
         } else {
-            return ast
+            return newEnvironment
         }
     }
 
-    private fun runValidators(nodes: SyntacticParser.RootNode, environment: Environment): ValidationResult {
-        return validator.validateSemantics(nodes, environment)
+    private fun runValidators(node: StatementType, environment: Environment): ValidationResult {
+        return validator.validateSemantics(node, environment)
     }
 }

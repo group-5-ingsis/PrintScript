@@ -1,5 +1,4 @@
 OPERATOR :: \+, \-, \*, /
 DECLARATION_KEYWORD :: let
-VARIABLE_TYPE :: String,Number
+VARIABLE_TYPE :: string,number
 PRINT :: println
-NULL :: null
