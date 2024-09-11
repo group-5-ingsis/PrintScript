@@ -1,7 +1,6 @@
-
 package parser.syntactic
 
-import exceptions.BadSyntacticException
+import exceptions.InvalidSyntaxException
 import position.Position
 import token.Token
 import java.util.*
@@ -99,18 +98,18 @@ class TokenManager(tokens: List<Token>) {
      *
      * @param value The expected value of the next token.
      * @return The token that was consumed if its value matches the specified value.
-     * @throws BadSyntacticException if the value of the next token does not match the specified value.
+     * @throws InvalidSyntaxException if the value of the next token does not match the specified value.
      */
     fun consumeTokenValue(value: String): Token {
         if (peek().value == value) return advance()
 
-        throw BadSyntacticException("Expected '$value' after expression in " + peek().position.toString())
+        throw InvalidSyntaxException("Expected '$value' after expression in " + peek().position.toString())
     }
 
     fun consumeTokenType(type: String): Token {
         if (peek().type == type) return advance()
 
-        throw BadSyntacticException("Expect this type: $type in " + peek().position.toString())
+        throw InvalidSyntaxException("Expect this type: $type in " + peek().position.toString())
     }
 
     fun isNotTheEndOfTokens(): Boolean {

@@ -90,7 +90,8 @@ class StatementVisitor {
     private fun visitPrintStm(statement: StatementType.Print, environment: Environment, stringBuilder: StringBuilder): statementVisitorResult {
         val value = statement.value
         val newValue = evaluateExpression(value, environment)
-        stringBuilder.append("\n${newValue.first}\n")
+        val printTarget = newValue.first
+        stringBuilder.append(printTarget)
         return Pair(stringBuilder, environment)
     }
 

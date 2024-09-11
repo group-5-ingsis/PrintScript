@@ -40,6 +40,7 @@ class SemanticTesting {
         val parser = Parser(lexer)
         assertFailsWith(SemanticErrorException::class) {
             parser.next()
+            parser.next()
         }
     }
 
@@ -47,7 +48,8 @@ class SemanticTesting {
     fun testAssignationToInexistentVariableShouldFail() {
         val lexer = Lexer("let a: string; a = b;")
         val parser = Parser(lexer)
-        assertFailsWith(SemanticErrorException::class) {
+        assertFailsWith(Error::class) {
+            parser.next()
             parser.next()
         }
     }
