@@ -37,6 +37,7 @@ class VariableStatementValidator : Validator<StatementType.Variable> {
         val actualType = when (initializerValue.first) {
             is String -> "string"
             is Number -> "number"
+            is Boolean -> "boolean"
             else -> return ValidationResult(
                 true,
                 node,

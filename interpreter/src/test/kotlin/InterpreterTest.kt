@@ -3,6 +3,7 @@ import lexer.Lexer
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import parser.Parser
+
 class InterpreterTest {
 
     val version = "1.0"

@@ -10,10 +10,10 @@ import java.lang.StringBuilder
 
 object SemanticParser {
     private val validator = SemanticValidator()
+    private val statementVisitor = StatementVisitor()
 
     @Throws(SemanticErrorException::class)
     fun validate(ast: StatementType, environment: Environment): Environment {
-        val statementVisitor = StatementVisitor()
         val stringBuilder = StringBuilder()
 
         val visitorResult = ast.acceptVisitor(statementVisitor, environment, stringBuilder)

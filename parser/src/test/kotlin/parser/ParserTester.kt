@@ -1,6 +1,5 @@
 package parser
 
-import arrow.core.right
 import exceptions.BadSyntacticException
 import lexer.Lexer
 import nodes.Expression
