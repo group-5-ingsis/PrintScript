@@ -7,7 +7,8 @@ import position.visitor.ExpressionVisitor
 class VariableStatementValidator : Validator<StatementType.Variable> {
 
     override fun validate(node: StatementType.Variable, scope: Environment): ValidationResult {
-        if (isAssignDeclaration(node)) {
+        val assignDeclaration = isAssignDeclaration(node)
+        if (assignDeclaration) {
             return validateAssignDeclaration(node, scope)
         }
 
@@ -34,11 +35,8 @@ class VariableStatementValidator : Validator<StatementType.Variable> {
         val initializerValue = value.acceptVisitor(ExpressionVisitor(), varTable)
 
         val actualType = when (initializerValue.first) {
-            is String -> "String"
-            is Int -> "Int"
-            is Float -> "Float"
-            is Double -> "Double"
-            is Number -> "Number"
+            is String -> "string"
+            is Number -> "number"
             else -> return ValidationResult(
                 true,
                 node,

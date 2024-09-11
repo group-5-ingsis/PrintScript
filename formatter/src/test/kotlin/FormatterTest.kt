@@ -23,75 +23,70 @@ class FormatterTest {
 
     @Test
     fun testSimpleAssignation() {
-        val input = "let a:        Number = 2;"
+        val input = "let a:        number = 2;"
+        val version = "1.0"
 
-        val tokens = Lexer(input)
-        val astNodes = Parser(tokens)
-        val formatter = Formatter(astNodes)
+        val tokens = Lexer(input, version)
+        val astNodes = Parser(tokens, version)
+        val result = Formatter.format(astNodes, exampleRules, version)
 
-        val result = formatter.format(exampleRules)
-
-        val expected = "let a: Number = 2;\n"
+        val expected = "let a: number = 2;\n"
 
         assertEquals(expected, result)
     }
 
     @Test
     fun testAssignationWithBinarySum() {
-        val input = "let  a: Number = 2      +  2;"
+        val input = "let  a: number = 2      +  2;"
+        val version = "1.0"
 
-        val tokens = Lexer(input)
-        val astNodes = Parser(tokens)
-        val formatter = Formatter(astNodes)
+        val tokens = Lexer(input, version)
+        val astNodes = Parser(tokens, version)
+        val result = Formatter.format(astNodes, exampleRules, version)
 
-        val result = formatter.format(exampleRules)
-
-        val expected = "let a: Number = 2 + 2;\n"
+        val expected = "let a: number = 2 + 2;\n"
 
         assertEquals(expected, result)
     }
 
     @Test
     fun testAssignationWithTripleSum() {
-        val input = "let  a: Number = 2      +  2+2*4;"
+        val input = "let  a: number = 2      +  2+2*4;"
+        val version = "1.0"
 
-        val tokens = Lexer(input)
-        val astNodes = Parser(tokens)
-        val formatter = Formatter(astNodes)
+        val tokens = Lexer(input, version)
+        val astNodes = Parser(tokens, version)
+        val result = Formatter.format(astNodes, exampleRules, version)
 
-        val result = formatter.format(exampleRules)
-
-        val expected = "let a: Number = 2 + 2 + 2 * 4;\n"
+        val expected = "let a: number = 2 + 2 + 2 * 4;\n"
 
         assertEquals(expected, result)
     }
 
     @Test
     fun testAssignationWithComplexOperation() {
-        val input = "let  a: Number = (2      +  2)+ 2*4;"
+        val input = "let  a: number = (2      +  2)+ 2*4;"
+        val version = "1.0"
 
-        val tokens = Lexer(input)
-        val astNodes = Parser(tokens)
-        val formatter = Formatter(astNodes)
+        val tokens = Lexer(input, version)
+        val astNodes = Parser(tokens, version)
+        val result = Formatter.format(astNodes, exampleRules, version)
 
-        val result = formatter.format(exampleRules)
-
-        val expected = "let a: Number = (2 + 2) + 2 * 4;\n"
+        val expected = "let a: number = (2 + 2) + 2 * 4;\n"
 
         assertEquals(expected, result)
     }
 
     @Test
     fun testPrintLnFormatting() {
-        val input = "let a: Number = 2; println(a);"
+        val input = "let a: number = 2; println(a);"
+        val version = "1.0"
 
-        val tokens = Lexer(input)
-        val astNodes = Parser(tokens)
-        val formatter = Formatter(astNodes)
+        val tokens = Lexer(input, version)
+        val astNodes = Parser(tokens, version)
+        val result = Formatter.format(astNodes, exampleRules, version)
 
-        val result = formatter.format(exampleRules)
-
-        val expected = "let a: Number = 2;\n\n\nprintln(a);\n"
+        val expected = "let a: number = 2;\n\n\nprintln(a);\n"
         assertEquals(expected, result)
     }
 }

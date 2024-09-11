@@ -5,7 +5,7 @@ import rules.FormattingRules
 
 object Formatter {
 
-    fun format(parser: Iterator<StatementType>, rules: FormattingRules, version: String): String {
+    fun format(parser: Iterator<StatementType>, rules: FormattingRules, version: String = "1.1"): String {
         val output = StringBuilder()
 
         while (parser.hasNext()) {
