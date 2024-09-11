@@ -16,4 +16,6 @@ interface Visitor {
     fun visitLiteral(expression: Expression.Literal)
     fun visitUnary(expression: Expression.Unary)
     fun visitIdentifier(expression: Expression.IdentifierExpression)
+    fun visitReadInput(readInput: Expression.ReadInput) {}
+    fun visitReadEnv(readEnv: Expression.ReadEnv) {}
 }
