@@ -28,11 +28,14 @@ class StatementVisitor {
 
     private fun visitIfStm(statement: StatementType.IfStatement, environment: Environment, stringBuilder: StringBuilder): statementVisitorResult {
         val (value, newEnvironment) = evaluateExpression(statement.condition, environment)
+        if (value !is StatementType.Variable) {
+            throw Error("Expression is not a variable")
+        }
         val newStringBuilder = StringBuilder(stringBuilder.toString())
-        if (value !is Boolean) {
+        if (value.initializer?.value !is Boolean) {
             throw IllegalArgumentException("Invalid value for if statement: $value" + "in " + statement.position.toString() + " expected boolean")
         }
-        return if (value) {
+        return if (value.initializer.value is Boolean) {
             statement.thenBranch.acceptVisitor(this, newEnvironment, newStringBuilder)
         } else {
             statement.elseBranch?.acceptVisitor(this, newEnvironment, newStringBuilder) ?: Pair(newStringBuilder, newEnvironment)
@@ -97,12 +100,18 @@ class StatementVisitor {
     }
 
     private fun visitVariableStm(statement: StatementType.Variable, environment: Environment, stringBuilder: StringBuilder): statementVisitorResult {
-        val nullValue = null
         val newEnvironment = if (statement.initializer != null) {
             val (newValue, env) = evaluateExpression(statement.initializer, environment)
-            env.define(statement.identifier, newValue, statement.designation)
+            val newVariable = StatementType.Variable(
+                designation = statement.designation,
+                identifier = statement.identifier,
+                initializer = Expression.Literal(newValue, statement.position),
+                dataType = statement.dataType,
+                position = statement.position
+            )
+            env.define(newVariable)
         } else {
-            environment.define(statement.identifier, nullValue, statement.designation)
+            environment.define(statement)
         }
         return Pair(stringBuilder, newEnvironment)
     }

@@ -12,13 +12,13 @@ class VariableStatementValidator : Validator<StatementType.Variable> {
             return validateAssignDeclaration(node, scope)
         }
 
-        if (scope.get(node.identifier) != null) {
-            return ValidationResult(
-                true,
-                node,
-                "Variable ${node.identifier} has already been declared."
-            )
-        }
+//        if (scope.get(node.identifier) != null) {
+//            return ValidationResult(
+//                true,
+//                node,
+//                "Variable ${node.identifier} has already been declared."
+//            )
+//        }
 
         return validateDeclaration(node)
     }

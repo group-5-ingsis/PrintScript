@@ -10,7 +10,7 @@ class InterpreterV1_1 {
 
     @Test
     fun testDeclarationWithNumber() {
-        val input = "let a: Boolean = true; if (a) { let queso: Number = 5; println(queso); } else {println(\"hola\");}"
+        val input = "let a: boolean = true; if (a) { let queso: number = 5; println(queso); } else {println(\"hola\");}"
         val version = "1.1"
         val tokens = Lexer(input, version)
         val parser = Parser(tokens, version)
@@ -28,7 +28,7 @@ class InterpreterV1_1 {
 
     @Test
     fun testDeclarationReAssignation() {
-        val input = "let a: Boolean = true; if (a) {a = false; let arbol : Number = 44 ;  println(a); } else {println(\"hola\");}"
+        val input = "let a: boolean = true; if (a) {a = false; let arbol : number = 44 ;  println(a); } else {println(\"hola\");}"
         val version = "1.1"
         val tokens = Lexer(input, version)
         val parser = Parser(tokens, version)

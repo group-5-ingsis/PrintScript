@@ -3,6 +3,7 @@ package position.visitor
 import Environment
 import VisitorResultExpressions
 import nodes.Expression
+import nodes.StatementType
 
 class ExpressionVisitor {
 
@@ -35,11 +36,30 @@ class ExpressionVisitor {
         val (left, leftScope) = evaluateExpression(exp.left, scope)
         val (right, rigthScope) = evaluateExpression(exp.right, leftScope)
 
-        fun checkTypesForOperation(left: Any?, right: Any?): Pair<Any, Any> {
+        fun checkTypesForOperation(left: Any?, right: Any?): Pair<Any?, Any?> {
             return when {
                 left is Number && right is Number -> Pair(left, right)
+                left is StatementType.Variable && right is StatementType.Variable -> {
+                    Pair(
+                        scope.get(left.identifier).initializer?.value,
+                        scope.get(right.identifier).initializer?.value
+                    )
+                }
+                left is StatementType.Variable && right is Number -> {
+                    Pair(scope.get(left.identifier).initializer?.value, right)
+                }
+                left is StatementType.Variable && right is String -> {
+                    Pair(scope.get(left.identifier).initializer?.value, right)
+                }
+                left is Number && right is StatementType.Variable -> {
+                    Pair(left, scope.get(right.identifier).initializer?.value)
+                }
+                left is String && right is StatementType.Variable -> {
+                    Pair(left, scope.get(right.identifier).initializer?.value)
+                }
+
                 left is String && right is String -> Pair(left, right)
-                else -> throw IllegalArgumentException("Unsupported types for ${exp.operator} operation: $left and $right")
+                else -> throw IllegalArgumentException("Unsupported types for '${exp.operator}' operation: $left and $right")
             }
         }
 
@@ -47,7 +67,9 @@ class ExpressionVisitor {
 
         return when (exp.operator) {
             "-" -> {
-                checkNumberOperands(exp.operator, leftValue, rightValue)
+                if (leftValue != null && rightValue != null) {
+                    checkNumberOperands(exp.operator, leftValue, rightValue)
+                }
                 val result = if (leftValue is Int && rightValue is Int) {
                     leftValue - rightValue
                 } else {
@@ -56,7 +78,9 @@ class ExpressionVisitor {
                 Pair(result, rigthScope)
             }
             "/" -> {
-                checkNumberOperands(exp.operator, leftValue, rightValue)
+                if (leftValue != null && rightValue != null) {
+                    checkNumberOperands(exp.operator, leftValue, rightValue)
+                }
                 val result = if (leftValue is Int && rightValue is Int) {
                     leftValue / rightValue
                 } else {
@@ -65,7 +89,9 @@ class ExpressionVisitor {
                 Pair(result, rigthScope)
             }
             "*" -> {
-                checkNumberOperands(exp.operator, leftValue, rightValue)
+                if (leftValue != null && rightValue != null) {
+                    checkNumberOperands(exp.operator, leftValue, rightValue)
+                }
                 val result = if (leftValue is Int && rightValue is Int) {
                     leftValue * rightValue
                 } else {
@@ -78,7 +104,7 @@ class ExpressionVisitor {
                     leftValue is Int && rightValue is Int -> leftValue + rightValue
                     leftValue is Number && rightValue is Number -> (leftValue as Number).toDouble() + (rightValue as Number).toDouble()
                     leftValue is String && rightValue is String -> leftValue + rightValue
-                    else -> throw IllegalArgumentException("Unsupported types for PLUS operation: ${leftValue::class.simpleName} and ${rightValue::class.simpleName}, must be numbers or strings")
+                    else -> throw IllegalArgumentException("Unsupported types for PLUS operation: ${leftValue!!::class.simpleName} and ${rightValue!!::class.simpleName}, must be numbers or strings")
                 }
                 Pair(result, rigthScope)
             }
@@ -87,7 +113,7 @@ class ExpressionVisitor {
                     leftValue is Int && rightValue is Int -> leftValue > rightValue
                     leftValue is Number && rightValue is Number -> (leftValue as Number).toDouble() > (rightValue as Number).toDouble()
                     leftValue is String && rightValue is String -> leftValue > rightValue
-                    else -> throw IllegalArgumentException("Unsupported types for GREATER THAN operation: ${leftValue::class.simpleName} and ${rightValue::class.simpleName}")
+                    else -> throw IllegalArgumentException("Unsupported types for GREATER THAN operation: ${leftValue!!::class.simpleName} and ${rightValue!!::class.simpleName}")
                 }
                 Pair(result, rigthScope)
             }
@@ -96,7 +122,7 @@ class ExpressionVisitor {
                     leftValue is Int && rightValue is Int -> leftValue >= rightValue
                     leftValue is Number && rightValue is Number -> (leftValue as Number).toDouble() >= (rightValue as Number).toDouble()
                     leftValue is String && rightValue is String -> leftValue >= rightValue
-                    else -> throw IllegalArgumentException("Unsupported types for GREATER THAN OR EQUAL operation: ${leftValue::class.simpleName} and ${rightValue::class.simpleName}")
+                    else -> throw IllegalArgumentException("Unsupported types for GREATER THAN OR EQUAL operation: ${leftValue!!::class.simpleName} and ${rightValue!!::class.simpleName}")
                 }
                 Pair(result, rigthScope)
             }
@@ -105,7 +131,7 @@ class ExpressionVisitor {
                     leftValue is Int && rightValue is Int -> leftValue < rightValue
                     leftValue is Number && rightValue is Number -> (leftValue as Number).toDouble() < (rightValue as Number).toDouble()
                     leftValue is String && rightValue is String -> leftValue < rightValue
-                    else -> throw IllegalArgumentException("Unsupported types for LESS THAN operation: ${leftValue::class.simpleName} and ${rightValue::class.simpleName}")
+                    else -> throw IllegalArgumentException("Unsupported types for LESS THAN operation: ${leftValue!!::class.simpleName} and ${rightValue!!::class.simpleName}")
                 }
                 Pair(result, rigthScope)
             }
@@ -114,7 +140,7 @@ class ExpressionVisitor {
                     leftValue is Int && rightValue is Int -> leftValue <= rightValue
                     leftValue is Number && rightValue is Number -> (leftValue as Number).toDouble() <= (rightValue as Number).toDouble()
                     leftValue is String && rightValue is String -> leftValue <= rightValue
-                    else -> throw IllegalArgumentException("Unsupported types for LESS THAN OR EQUAL operation: ${leftValue::class.simpleName} and ${rightValue::class.simpleName}")
+                    else -> throw IllegalArgumentException("Unsupported types for LESS THAN OR EQUAL operation: ${leftValue!!::class.simpleName} and ${rightValue!!::class.simpleName}")
                 }
                 Pair(result, rigthScope)
             }
@@ -123,7 +149,7 @@ class ExpressionVisitor {
                     leftValue is Int && rightValue is Int -> leftValue == rightValue
                     leftValue is Number && rightValue is Number -> (leftValue as Number).toDouble() == (rightValue as Number).toDouble()
                     leftValue is String && rightValue is String -> leftValue == rightValue
-                    else -> throw IllegalArgumentException("Unsupported types for EQUAL operation: ${leftValue::class.simpleName} and ${rightValue::class.simpleName}")
+                    else -> throw IllegalArgumentException("Unsupported types for EQUAL operation: ${leftValue!!::class.simpleName} and ${rightValue!!::class.simpleName}")
                 }
                 Pair(result, rigthScope)
             }
@@ -132,7 +158,7 @@ class ExpressionVisitor {
                     leftValue is Int && rightValue is Int -> leftValue != rightValue
                     leftValue is Number && rightValue is Number -> (leftValue as Number).toDouble() != (rightValue as Number).toDouble()
                     leftValue is String && rightValue is String -> leftValue != rightValue
-                    else -> throw IllegalArgumentException("Unsupported types for NOT EQUAL operation: ${leftValue::class.simpleName} and ${rightValue::class.simpleName}")
+                    else -> throw IllegalArgumentException("Unsupported types for NOT EQUAL operation: ${leftValue!!::class.simpleName} and ${rightValue!!::class.simpleName}")
                 }
                 Pair(result, rigthScope)
             }

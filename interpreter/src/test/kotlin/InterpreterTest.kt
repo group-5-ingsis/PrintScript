@@ -14,7 +14,7 @@ class InterpreterTest {
         val tokens = Lexer(input, version)
         val asts = Parser(tokens, version)
         val result = Interpreter.interpret(asts, version)
-        assertEquals(null, result.second.get("a"))
+        assertEquals(null, result.second.get("a").initializer)
     }
 
     @Test
@@ -23,7 +23,7 @@ class InterpreterTest {
         val tokens = Lexer(input, version)
         val asts = Parser(tokens, version)
         val result = Interpreter.interpret(asts, version)
-        assertEquals(null, result.second.get("a"))
+        assertEquals(null, result.second.get("a").initializer)
     }
 
     @Test
@@ -32,7 +32,7 @@ class InterpreterTest {
         val tokens = Lexer(input, version)
         val asts = Parser(tokens, version)
         val result = Interpreter.interpret(asts, version)
-        assertEquals("\"Hello World\"", result.second.get("a"))
+        assertEquals("\"Hello World\"", result.second.get("a").initializer?.value)
     }
 
     @Test
@@ -41,7 +41,7 @@ class InterpreterTest {
         val tokens = Lexer(input, version)
         val asts = Parser(tokens, version)
         val result = Interpreter.interpret(asts, version)
-        assertEquals(4, result.second.get("a"))
+        assertEquals(4, result.second.get("a").initializer)
         assertEquals("\n4\n", result.first.toString()) // Verificar lo que se imprimió
     }
 
@@ -51,7 +51,7 @@ class InterpreterTest {
         val tokens = Lexer(input, version)
         val asts = Parser(tokens, version)
         val result = Interpreter.interpret(asts, version)
-        assertEquals(14, result.second.get("a"))
+        assertEquals(14, result.second.get("a").initializer?.value)
     }
 
     @Test
@@ -60,7 +60,7 @@ class InterpreterTest {
         val tokens = Lexer(input, version)
         val asts = Parser(tokens, version)
         val result = Interpreter.interpret(asts, version)
-        assertEquals("'Hello''World'", result.second.get("a"))
+        assertEquals("'Hello''World'", result.second.get("a").initializer?.value)
     }
 
     @Test
@@ -69,7 +69,7 @@ class InterpreterTest {
         val tokens = Lexer(input, version)
         val asts = Parser(tokens, version)
         val result = Interpreter.interpret(asts, version)
-        assertEquals(18, result.second.get("c"))
+        assertEquals(18, result.second.get("c").initializer?.value)
     }
 
     @Test
@@ -103,7 +103,7 @@ class InterpreterTest {
 
         // Verificamos que se haya impreso tanto la variable como la expresión
         assertEquals("\n42\n\n50\n", result.first.toString())
-        assertEquals(42, result.second.get("a")) // Verificamos el valor de la variable
+        assertEquals(42, result.second.get("a").initializer?.value) // Verificamos el valor de la variable
     }
 
     @Test
@@ -132,7 +132,7 @@ class InterpreterTest {
         val tokens = Lexer(input, version)
         val asts = Parser(tokens, version)
         val result = Interpreter.interpret(asts, version)
-        assertEquals(8, result.second.get("b"))
+        assertEquals(8, result.second.get("b").initializer?.value)
         // No hay salida esperada en el StringBuilder para esta operación
         assertEquals("", result.first.toString())
     }

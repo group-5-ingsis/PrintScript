@@ -26,13 +26,8 @@ class StatementExpressionValidator : Validator<StatementType.StatementExpression
     private fun handleAssign(exp: Expression.Assign, scope: Environment, node: StatementType.StatementExpression): ValidationResult {
         val identifier = exp.name
         val valueExpression = exp.value
+        /* null check for getting the value is made on Environment. */
         val variableInfo = scope.get(identifier)
-            ?: return ValidationResult(
-                true,
-                node,
-                "Variable '$identifier' is not declared in the current scope."
-            )
-
         val actualValue = valueExpression.acceptVisitor(ExpressionVisitor(), scope)
         val actualType = getTypeInString(actualValue)
 
@@ -48,11 +43,12 @@ class StatementExpressionValidator : Validator<StatementType.StatementExpression
 
     private fun getTypeInString(actualValue: Any?): String {
         return when (actualValue) {
-            is String -> "String"
-            is Int -> "Int"
-            is Float -> "Float"
-            is Double -> "Double"
-            is Number -> "Number"
+            is String -> "string"
+//            is Int -> "Int"
+//            is Float -> "Float"
+//            is Double -> "Double"
+            is Number -> "number"
+            is Boolean -> "boolean"
             else -> throw Error("Type not supported")
         }
     }
