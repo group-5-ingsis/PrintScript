@@ -39,7 +39,7 @@ class LinterTests {
 
     @Test
     fun testPrintlnCallValidWithIdentifier() {
-        val input = "let a : String = 'hello' ;println(a);"
+        val input = "let a : string = 'hello' ;println(a);"
         val tokens = Lexer(input, version)
         val asts = Parser(tokens, version)
         val rules = LinterRulesV1("camel-case", false)
@@ -51,7 +51,7 @@ class LinterTests {
 
     @Test
     fun testDeclarationOffValid() {
-        val input = "let aA : String = 'hello'; let a_b : String = 'hello';"
+        val input = "let aA : string = 'hello'; let a_b : string = 'hello';"
         val tokens = Lexer(input, version)
         val asts = Parser(tokens, version)
         val rules = LinterRulesV1("off", false)
@@ -63,7 +63,7 @@ class LinterTests {
 
     @Test
     fun testDeclarationSnake_Case() {
-        val input = "let aA : String = 'hello'; let a_b : String = 'hello';"
+        val input = "let aA : string = 'hello'; let a_b : String = 'hello';"
         val tokens = Lexer(input, version)
         val asts = Parser(tokens, version)
         val rules = LinterRulesV1("snake-case", false)
@@ -79,7 +79,7 @@ class LinterTests {
 
     @Test
     fun testDeclarationCamelCase() {
-        val input = "let aA : String = 'hello'; let a_b : String = 'hello';"
+        val input = "let aA : string = 'hello'; let a_b : String = 'hello';"
         val tokens = Lexer(input, version)
         val asts = Parser(tokens, version)
         val rules = LinterRulesV1("camel-case", false)
