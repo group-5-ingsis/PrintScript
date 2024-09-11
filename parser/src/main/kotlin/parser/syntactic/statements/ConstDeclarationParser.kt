@@ -9,7 +9,7 @@ import token.Token
 class ConstDeclarationParser(private val expressionEvaluator: ExpressionType) : StatementParser {
 
     override fun parse(tokens: List<Token>): ParseStatementResult {
-        val manager = TokenManager(tokens)
+        var manager = TokenManager(tokens)
         val position = manager.getPosition()
         val identifier = manager.consumeTokenType("IDENTIFIER")
         manager.consumeTokenValue(":")
@@ -19,6 +19,7 @@ class ConstDeclarationParser(private val expressionEvaluator: ExpressionType) : 
         }
         manager.consumeTokenValue("=")
         val initializer = expressionEvaluator.parse(manager.getTokens())
+        manager.consumeTokenValue(";")
         return Pair(initializer.first, StatementType.Variable("const", identifier.value, initializer.second, dataType, position))
     }
 }
