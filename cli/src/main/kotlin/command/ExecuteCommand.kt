@@ -4,6 +4,7 @@ import cli.FileReader
 import interpreter.Interpreter
 import lexer.Lexer
 import parser.Parser
+import position.visitor.Environment
 
 class ExecuteCommand(private val file: String, private val version: String) : Command {
     override fun execute(): String {
@@ -16,11 +17,19 @@ class ExecuteCommand(private val file: String, private val version: String) : Co
         return try {
             val tokens = Lexer(fileContent, version)
 
-            val ast = Parser(tokens, version)
+            val asts = Parser(tokens, version)
 
-            val output = Interpreter.interpret(ast, version)
+            val outputBuilder = StringBuilder()
+            var currentEnvironment = Environment()
 
-            "$output\nFinished executing $file"
+            while (asts.hasNext()) {
+                val statement = asts.next()
+                val result = Interpreter.interpret(statement, version, currentEnvironment)
+                outputBuilder.append(result.first.toString())
+                currentEnvironment = result.second
+            }
+
+            "${outputBuilder}\nFinished executing $file"
         } catch (e: Exception) {
             "Execution Error: ${e.message}"
         }

@@ -91,7 +91,7 @@ class StatementVisitor {
         val value = statement.value
         val newValue = evaluateExpression(value, environment)
         val printTarget = newValue.first
-        stringBuilder.append("\n$printTarget\n")
+        stringBuilder.append(printTarget)
         return Pair(stringBuilder, environment)
     }
 
