@@ -7,17 +7,14 @@ import position.visitor.statementVisitorResult
 
 object Interpreter {
 
-    private val env = Environment()
-
-    fun interpret(statement: StatementType, version: String = "1.1"): statementVisitorResult {
+    fun interpret(statement: StatementType, version: String = "1.1", scope: Environment): statementVisitorResult {
         val sb = StringBuilder()
-        var currentScope = env
 
         val nodeVisitor = StatementVisitor()
-        val result = statement.acceptVisitor(nodeVisitor, currentScope, sb)
-        currentScope = result.second
-        sb.append(result.first)
+        val result = statement.acceptVisitor(nodeVisitor, scope, sb)
 
-        return Pair(sb, currentScope)
+        val printOutput = result.first
+        val newScope = result.second
+        return Pair(printOutput, newScope)
     }
 }
