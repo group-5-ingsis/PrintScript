@@ -19,9 +19,9 @@ class Parser(private val lexer: Iterator<Token>, private val version: String = "
 
             try {
                 val (stm, tokens) = SyntacticParser.parse(mutableListTokensForParse, version)
-                if (tokens.isEmpty() && (!hasNext())) {
+
                     return stm
-                }
+
             } catch (e: Exception) {
                 if (!lexer.hasNext()) {
                     throw e

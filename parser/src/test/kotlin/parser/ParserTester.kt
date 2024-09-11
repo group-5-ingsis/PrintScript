@@ -1,5 +1,6 @@
 package parser
 
+import arrow.core.right
 import exceptions.BadSyntacticException
 import lexer.Lexer
 import nodes.Expression
@@ -210,12 +211,13 @@ class ParserTester {
         assertEquals(4, (rightExpression.left as Expression.Literal).value)
         assertEquals("/", rightExpression.operator)
 
-        val groupingInnerExpression = rightExpression.right as Expression.Binary
-        assertEquals(6, (groupingInnerExpression.left as Expression.Literal).value)
-        assertEquals(6, (groupingInnerExpression.right as Expression.Literal).value)
+        val groupingInnerExpression = rightExpression.right as Expression.Grouping
+        val groupingBinary = groupingInnerExpression.expression as Expression.Binary
+        assertEquals(6, (groupingBinary.right as Expression.Literal).value)
+        assertEquals(6, (groupingBinary.left as Expression.Literal).value)
 
         val secondStatement = parser.next() as StatementType.Print
         assertEquals("PRINT", secondStatement.statementType)
-        assertEquals("a", (secondStatement.value as Expression.Variable).name)
+        assertEquals("a", (secondStatement.value.expression as Expression.Variable).name)
     }
 }
