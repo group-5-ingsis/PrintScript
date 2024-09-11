@@ -1,12 +1,14 @@
 package parser
 
+import Environment
 import nodes.StatementType
+import parser.semantic.SemanticParser
 import parser.syntactic.SyntacticParser
 import token.Token
 
 class Parser(private val lexer: Iterator<Token>, private val version: String = "1.1") : Iterator<StatementType> {
-
-    val momentList: ArrayDeque<Token> = ArrayDeque()
+    private var env = Environment()
+    private val momentList: ArrayDeque<Token> = ArrayDeque()
 
     override fun hasNext(): Boolean {
         return lexer.hasNext()
@@ -26,6 +28,12 @@ class Parser(private val lexer: Iterator<Token>, private val version: String = "
             try {
                 val (stm, tokens) = SyntacticParser.parse(mutableListTokensForParse, version)
                 ifChecker()
+
+                if (tokens.isEmpty()) {
+                    env = SemanticParser.validate(stm, env)
+                    return stm
+                }
+
                 return stm
             } catch (e: Exception) {
                 if (!lexer.hasNext()) {
