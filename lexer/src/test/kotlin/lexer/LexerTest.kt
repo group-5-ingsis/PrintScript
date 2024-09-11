@@ -142,7 +142,7 @@ class LexerTest {
         val version = "1.1"
         val tokens = Lexer(input, version)
         val expected = listOf(
-            Token("let", "DECLARATION_KEYWORD", Position(1, 1)),
+            Token("let", "LET", Position(1, 1)),
             Token("isTrue", "IDENTIFIER", Position(1, 5)),
             Token(":", "PUNCTUATION", Position(1, 10)),
             Token("boolean", "VARIABLE_TYPE", Position(1, 13)),
@@ -165,23 +165,23 @@ class LexerTest {
         val tokens = Lexer(input, version)
 
         val expected = listOf(
-            Token("if", "CONDITIONAL", Position(1, 1)),
+            Token("if", "IF", Position(1, 1)),
             Token("(", "PUNCTUATION", Position(1, 3)),
             Token("true", "BOOLEAN", Position(1, 5)),
             Token(")", "PUNCTUATION", Position(1, 8)),
-            Token("{", "PUNCTUATION", Position(1, 11)),
+            Token("{", "LEFT_BRACE", Position(1, 10)),
             Token("y", "IDENTIFIER", Position(1, 13)),
             Token("=", "ASSIGNMENT", Position(1, 15)),
             Token("5", "NUMBER", Position(1, 17)),
             Token(";", "PUNCTUATION", Position(1, 17)),
-            Token("}", "PUNCTUATION", Position(1, 20)),
-            Token("else", "CONDITIONAL", Position(1, 22)),
-            Token("{", "PUNCTUATION", Position(1, 27)),
+            Token("}", "RIGHT_BRACE", Position(1, 19)),
+            Token("else", "ELSE", Position(1, 22)),
+            Token("{", "LEFT_BRACE", Position(1, 26)),
             Token("y", "IDENTIFIER", Position(1, 29)),
             Token("=", "ASSIGNMENT", Position(1, 31)),
             Token("0", "NUMBER", Position(1, 33)),
             Token(";", "PUNCTUATION", Position(1, 33)),
-            Token("}", "PUNCTUATION", Position(1, 35))
+            Token("}", "RIGHT_BRACE", Position(1, 35))
         )
 
         assertEquals(expected, collectTokens(tokens))

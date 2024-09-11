@@ -17,14 +17,14 @@ object TypesMapGenerator {
     }
 
     private fun getDefaultPatternsMap(version: String): Map<String, String> {
-        return when(version) {
+        return when (version) {
             "1.0" -> mapOf(
                 "=" to "ASSIGNMENT",
                 """^-?\d+(\.\d+)?$""" to "NUMBER",
                 """^(['"]).*\1$""" to "STRING",
                 """^[,;.(){}:\"\']$""" to "PUNCTUATION"
             )
-            "1.1" ->mapOf(
+            "1.1" -> mapOf(
                 "=" to "ASSIGNMENT",
                 """^-?\d+(\.\d+)?$""" to "NUMBER",
                 """^(['"]).*\1$""" to "STRING",
@@ -32,7 +32,6 @@ object TypesMapGenerator {
             )
             else -> throw IllegalArgumentException("Unknown version: $version")
         }
-
     }
 
     private fun getVariablePatternsMap(version: String): Map<String, String> {

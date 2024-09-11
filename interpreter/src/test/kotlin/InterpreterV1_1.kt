@@ -6,7 +6,6 @@ import parser.Parser
 
 class InterpreterV1_1 {
 
-
     val version = "1.1"
 
     @Test
@@ -27,7 +26,6 @@ class InterpreterV1_1 {
         assertFalse(env.contains("queso"))
     }
 
-
     @Test
     fun testDeclarationReAssignation() {
         val input = "let a: Boolean = true; if (a) {a = false; let arbol : Number = 44 ;  println(a); } else {println(\"hola\");}"
@@ -46,5 +44,4 @@ class InterpreterV1_1 {
         assertEquals(env.get("a"), false)
         assertFalse(env.contains("arbol"))
     }
-
 }

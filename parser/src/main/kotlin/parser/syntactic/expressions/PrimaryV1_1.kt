@@ -7,9 +7,6 @@ import token.Token
 
 class PrimaryV1_1() : ExpressionParser {
 
-
-
-
     override fun parse(tokens: List<Token>): ParseResult {
         val tokenMng = TokenManager(tokens)
 
@@ -33,7 +30,6 @@ class PrimaryV1_1() : ExpressionParser {
             val token = tokenMng.advance()
             return Pair(tokenMng.getTokens(), Expression.Literal(token.value.toBoolean(), position))
         }
-
 
         if (tokenMng.nextTokenMatchesExpectedType("NULL")) {
             tokenMng.advance()

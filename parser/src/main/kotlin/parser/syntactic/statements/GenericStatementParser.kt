@@ -43,7 +43,6 @@ class GenericStatementParser(private val nextStatementsList: List<Pair<String, S
         val expresionEvaluatorV_1 = ExpressionType.makeExpressionEvaluatorV1_0()
         val expresionEvaluatorV_1_1 = ExpressionType.makeExpressionEvaluatorV1_1()
 
-
         fun makeStatementParser(version: String): StatementParser {
             return when (version) {
                 "1.0" -> createV1Parser()

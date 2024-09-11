@@ -15,6 +15,5 @@ class ExpressionType(private val parseInferiorFunction: ExpressionParser) : Expr
         fun makeExpressionEvaluatorV1_1(): ExpressionType {
             return ExpressionType(Assigment(Comparison(Term(Factor(Unary(PrimaryV1_1()))))))
         }
-
     }
 }

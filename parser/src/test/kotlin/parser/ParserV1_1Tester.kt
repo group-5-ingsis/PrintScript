@@ -29,10 +29,7 @@ class ParserV1_1Tester {
         val contentActualThenBranch = (actualIf1.thenBranch as StatementType.BlockStatement).listStm[0] as StatementType.Print
         assertEquals(contentExpectedThenBranch.value, contentActualThenBranch.value)
         assertEquals(expectedIf1.elseBranch, actualIf1.elseBranch)
-
     }
-
-
 
     @Test
     fun testIfElseStm() {
@@ -63,7 +60,6 @@ class ParserV1_1Tester {
         val actualElsePrint = (actualIf.elseBranch as StatementType.BlockStatement).listStm[0] as StatementType.Print
         assertEquals(expectedElsePrint.value, actualElsePrint.value)
 
-
         val expectedBlock1 = expectedIf.elseBranch as StatementType.BlockStatement
         val actualBlock2 = actualIf.elseBranch as StatementType.BlockStatement
         val expectedVariable = expectedBlock1.listStm[0] as StatementType.Print
@@ -73,8 +69,6 @@ class ParserV1_1Tester {
         val actualExpression = (actualVariable.value).expression as Expression.Literal
 
         assertEquals(expresionExpected.value, actualExpression.value)
-
-
     }
 
     @Test
@@ -98,7 +92,6 @@ class ParserV1_1Tester {
         assertEquals(expectedVariableA.identifier, variableDeclaration.identifier)
         assertEquals(expectedVariableA.dataType, variableDeclaration.dataType)
         assertEquals(expectedVariableA.designation, variableDeclaration.designation)
-
 
         // Parse the next statement, which should be the IfStatement
         val ifStatement = parser.next() as StatementType.IfStatement
@@ -158,15 +151,5 @@ class ParserV1_1Tester {
         val actualPrintValue = (printActual.value as Expression.Grouping).expression as Expression.Variable
         // Verify that there is no elseBranch in this case
         assertEquals(expectedPrintValue.name, actualPrintValue.name) // Print statement
-
-
-
     }
-
-
-
-
-
-
-
 }

@@ -1,12 +1,11 @@
 OPERATOR :: \+, \-, \*, /
 LET :: let
-VARIABLE_TYPE :: String,Number,Boolean
+VARIABLE_TYPE :: string,number,boolean
 PRINT :: println
-COMPARISON :: >,>=,<,<=
 BOOLEAN :: true,false
-NULL :: null
 CONST :: const
 IF :: if
 ELSE :: else
 LEFT_BRACE :: \{
 RIGHT_BRACE :: \}
+METHOD :: readInput, readEnv

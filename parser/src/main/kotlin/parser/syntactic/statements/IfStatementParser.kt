@@ -1,12 +1,11 @@
 package parser.syntactic.statements
 
 import nodes.StatementType
-import org.w3c.dom.xpath.XPathEvaluator
 import parser.syntactic.TokenManager
 import parser.syntactic.expressions.ExpressionType
 import token.Token
 
-class IfStatementParser(private val expresionEvaluatorV_1_1: ExpressionType, val statementEvaluator: ()-> StatementParser) : StatementParser {
+class IfStatementParser(private val expresionEvaluatorV_1_1: ExpressionType, val statementEvaluator: () -> StatementParser) : StatementParser {
 
     override fun parse(tokens: List<Token>): ParseStatementResult {
         val stmEvaluator = statementEvaluator()
@@ -35,6 +34,5 @@ class IfStatementParser(private val expresionEvaluatorV_1_1: ExpressionType, val
             Pair(null, newManager2.getTokens())
         }
         return Pair(resTokens3, StatementType.IfStatement(currentPosition, condition, thenBranch, elseBranch))
-
     }
 }

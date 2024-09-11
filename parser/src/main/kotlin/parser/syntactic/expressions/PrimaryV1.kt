@@ -7,11 +7,7 @@ import token.Token
 
 class PrimaryV1() : ExpressionParser {
 
-
-
-
     override fun parse(tokens: List<Token>): ParseResult {
-
         val tokenMng = TokenManager(tokens)
 
         fun getNextLiteral(): Any {
@@ -29,7 +25,6 @@ class PrimaryV1() : ExpressionParser {
         }
 
         val position = tokenMng.getPosition()
-
 
         if (tokenMng.nextTokenMatchesExpectedType("NULL")) {
             tokenMng.advance()

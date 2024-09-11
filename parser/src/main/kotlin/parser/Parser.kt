@@ -1,14 +1,12 @@
 package parser
 
-import lexer.Lexer
 import nodes.StatementType
 import parser.syntactic.SyntacticParser
 import token.Token
-import java.util.Queue
 
 class Parser(private val lexer: Iterator<Token>, private val version: String = "1.1") : Iterator<StatementType> {
 
-    val momentList: ArrayDeque<Token> =  ArrayDeque()
+    val momentList: ArrayDeque<Token> = ArrayDeque()
 
     override fun hasNext(): Boolean {
         return lexer.hasNext()
@@ -19,19 +17,16 @@ class Parser(private val lexer: Iterator<Token>, private val version: String = "
         var lastException: Exception? = null
 
         while (lexer.hasNext() || momentList.isNotEmpty()) {
-
-            if (momentList.isNotEmpty()){
+            if (momentList.isNotEmpty()) {
                 mutableListTokensForParse.add(momentList.removeFirst())
-            }else {
+            } else {
                 mutableListTokensForParse.add(lexer.next())
             }
-
 
             try {
                 val (stm, tokens) = SyntacticParser.parse(mutableListTokensForParse, version)
                 ifChecker()
-                    return stm
-
+                return stm
             } catch (e: Exception) {
                 if (!lexer.hasNext()) {
                     throw e
@@ -51,14 +46,13 @@ class Parser(private val lexer: Iterator<Token>, private val version: String = "
     }
 
     private fun ifChecker() {
-        if (lexer.hasNext()){
+        if (lexer.hasNext()) {
             val next = lexer.next()
             momentList.add(next)
-            if (next.type == "ELSE"){
+            if (next.type == "ELSE") {
                 throw Exception("Exeption for continue the loop")
             }
         }
-
     }
 
     private fun isAllowedException(e: Exception): Boolean {

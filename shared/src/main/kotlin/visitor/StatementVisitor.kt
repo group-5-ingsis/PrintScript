@@ -21,7 +21,6 @@ class StatementVisitor {
 
             stB = newStringBuilder
             newEnvironment = newEnv
-
         }
         val env = newEnvironment.enclosing ?: throw IllegalArgumentException("Environment enclosing is null")
         return Pair(stB, env)

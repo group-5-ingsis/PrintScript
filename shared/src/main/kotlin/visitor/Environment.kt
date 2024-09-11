@@ -26,7 +26,6 @@ class Environment(
      */
     constructor(initialValues: HashMap<String, Pair<String, Any?>>, parentEnvironment: Environment? = null) : this(parentEnvironment, initialValues)
 
-
     /**
      * Defines a new variable in the environment.
      *
@@ -57,7 +56,7 @@ class Environment(
         if (values.containsKey(name)) {
             return values[name]?.second
         }
-        if (enclosing != null) return enclosing.get(name);
+        if (enclosing != null) return enclosing.get(name)
 
         throw Error("Undefined variable '$name'.")
     }
