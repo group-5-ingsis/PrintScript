@@ -9,16 +9,14 @@ object Interpreter {
 
     private val env = Environment()
 
-    fun interpret(astIterator: Iterator<StatementType>, version: String = "1.1"): statementVisitorResult {
-        var sb = StringBuilder()
+    fun interpret(statement: StatementType, version: String = "1.1"): statementVisitorResult {
+        val sb = StringBuilder()
         var currentScope = env
-        while (astIterator.hasNext()) {
-            val statement = astIterator.next()
-            val nodeVisitor = StatementVisitor()
-            val result = statement.acceptVisitor(nodeVisitor, currentScope, sb)
-            currentScope = result.second
-            sb = result.first
-        }
+
+        val nodeVisitor = StatementVisitor()
+        val result = statement.acceptVisitor(nodeVisitor, currentScope, sb)
+        currentScope = result.second
+        sb.append(result.first)
 
         return Pair(sb, currentScope)
     }
