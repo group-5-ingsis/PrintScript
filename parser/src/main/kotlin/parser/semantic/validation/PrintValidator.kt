@@ -10,24 +10,27 @@ class PrintValidator : Validator<StatementType.Print> {
         val groupingExpression = node.value
         val innerExpression = groupingExpression.expression
 
+        // Validate if the innerExpression is a variable
         if (innerExpression is Expression.Variable) {
-            try {
-                val name = innerExpression.name
-                val value = scope.get(name)
-                return ValidationResult(
+            val name = innerExpression.name
+            return try {
+                val variable = scope.get(name) // This will throw an error if the variable is not found
+                ValidationResult(
                     isInvalid = false,
                     where = null,
                     message = null
                 )
-            } catch (_: Error) {
-                return ValidationResult(
+            } catch (e: Error) {
+                // If an error is caught, it means the variable was not found
+                ValidationResult(
                     isInvalid = true,
                     where = node,
-                    message = "Invalid expression type '${innerExpression::class.simpleName}' for print statement"
+                    message = "Variable '$name' is not defined"
                 )
             }
         }
 
+        // Validate if the innerExpression is a literal
         if (innerExpression is Expression.Literal) {
             return ValidationResult(
                 isInvalid = false,
@@ -36,6 +39,7 @@ class PrintValidator : Validator<StatementType.Print> {
             )
         }
 
+        // If it's neither a variable nor a literal, return an invalid result
         return ValidationResult(
             isInvalid = true,
             where = node,
