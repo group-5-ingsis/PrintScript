@@ -1,6 +1,6 @@
 package parser.syntactic.expressions
 
-import exceptions.BadSyntacticException
+import exceptions.InvalidSyntaxException
 import nodes.Expression
 import parser.syntactic.TokenManager
 import token.Token
@@ -25,7 +25,7 @@ class Assigment(private val parseInferiorFunction: ExpressionParser) : Expressio
 
                 return Pair(newTokens, Expression.Assign(expression.name, exp, position))
             }
-            throw BadSyntacticException("Invalid assignment target. at: " + position.line + " line, and: " + position.symbolIndex + "column")
+            throw InvalidSyntaxException("Invalid assignment target. at: " + position.line + " line, and: " + position.symbolIndex + "column")
         }
         return Pair(remainingTokens, expression)
     }
