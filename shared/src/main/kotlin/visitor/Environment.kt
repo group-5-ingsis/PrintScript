@@ -95,7 +95,7 @@ class Environment(
         throw Error("Cannot perform assignation on undefined variable '$name'.")
     }
 
-    private fun getTypeForValue(value: Any?): String {
+    fun getTypeForValue(value: Any?): String {
         return when (value) {
             Int -> "number"
             Float -> "number"

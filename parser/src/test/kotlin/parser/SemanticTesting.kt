@@ -76,4 +76,26 @@ class SemanticTesting {
             parser.next()
         }
     }
+
+    @Test
+    fun testPrintlnCorrect() {
+        val lexer = Lexer("let b: string = 23; println(b)")
+        val parser = Parser(lexer)
+    }
+
+    @Test
+    fun testPrintlnMultipleArguments() {
+        val lexer = Lexer("let b: string = 23; println(b, 2)")
+        val parser = Parser(lexer)
+    }
+
+    @Test
+    fun testPrintlnUnknownVariable() {
+        val tokens = Lexer("let something: string; println(something);")
+        val parser = Parser(tokens)
+        assertFailsWith(SemanticErrorException::class) {
+            val next = parser.next()
+            val next2 = parser.next()
+        }
+    }
 }
