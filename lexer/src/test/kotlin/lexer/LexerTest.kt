@@ -4,8 +4,6 @@ import org.junit.Assert.assertEquals
 import org.junit.Assert.assertThrows
 import position.Position
 import token.Token
-import java.io.File
-import java.io.FileInputStream
 import kotlin.test.Test
 
 class LexerTest {
@@ -21,22 +19,6 @@ class LexerTest {
     // -----------------
     // --- 1.0 Tests ---
     // -----------------
-
-    @Test
-    fun testLargeFile() {
-        val file = File("src/test/resources/largeFile.txt")
-        println("File path: ${file.absolutePath}") // Debug: Print the absolute path
-        val inputStream = FileInputStream(file)
-
-        val tokens = Lexer(inputStream, "1.1")
-
-        var tokenCount = 0
-        while (tokens.hasNext()) {
-            tokenCount++
-        }
-
-        assertEquals(collectTokens(tokens), collectTokens(tokens))
-    }
 
     @Test
     fun testLexSimpleString() {

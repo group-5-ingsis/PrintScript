@@ -12,6 +12,7 @@ class Lexer(reader: BufferedReader, version: String = "1.1") : Iterator<Token> {
     private var lineIterator = currentLine.iterator()
     private var currentRow = 0
     private var currentIndex = 0
+    private val separators = listOf(';', ':', '(', ')', '+', '-', '/', '*', '}', '{', '=')
 
     private var state = LexerState()
     private val tokenGenerator = TokenGenerator(version)
@@ -56,8 +57,6 @@ class Lexer(reader: BufferedReader, version: String = "1.1") : Iterator<Token> {
                 continue
             }
 
-            val separators = listOf(';', ':', '(', ')', '+', '-', '/', '*', '}', '{', '=')
-
             if (currentChar == '\'' || currentChar == '\"') {
                 val startQuote = currentChar
                 val newBuffer = StringBuilder(state.buffer).append(currentChar)
@@ -86,7 +85,8 @@ class Lexer(reader: BufferedReader, version: String = "1.1") : Iterator<Token> {
                 }
 
                 if (!currentChar.isWhitespace()) {
-                    return tokenGenerator.generateToken(currentChar.toString(), currentRow, currentIndex - 1)
+                    // return tokenGenerator.generateToken(currentChar.toString(), currentRow, currentIndex - 1)
+                    return tokenGenerator.generateToken(currentChar.toString(), currentRow, currentIndex)
                 }
                 continue
             }
