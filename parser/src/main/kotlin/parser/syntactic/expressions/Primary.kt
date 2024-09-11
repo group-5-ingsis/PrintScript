@@ -5,7 +5,7 @@ import nodes.Expression
 import parser.syntactic.TokenManager
 import token.Token
 
-class Primary() : ExpressionParser {
+class Primary : ExpressionParser {
 
     override fun parse(tokens: List<Token>): ParseResult {
         val tokenMng = TokenManager(tokens)

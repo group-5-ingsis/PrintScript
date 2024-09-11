@@ -2,9 +2,9 @@ package parser.semantic
 
 import Environment
 import exception.SemanticErrorException
+import nodes.StatementType
 import parser.semantic.validation.SemanticValidator
 import parser.semantic.validation.ValidationResult
-import parser.syntactic.SyntacticParser
 import position.visitor.StatementVisitor
 import java.lang.StringBuilder
 
@@ -12,9 +12,9 @@ object SemanticParser {
     private val validator = SemanticValidator()
 
     @Throws(SemanticErrorException::class)
-    fun validate(ast: SyntacticParser.RootNode): SyntacticParser.RootNode {
+    fun validate(ast: StatementType): StatementType {
         val environment = Environment()
-        val newEnv = ast.accept(StatementVisitor(), environment, StringBuilder())
+        val newEnv = ast.acceptVisitor(StatementVisitor(), environment, StringBuilder())
         val result = runValidators(ast, newEnv.second)
 
         if (result.isInvalid) {
@@ -24,7 +24,7 @@ object SemanticParser {
         }
     }
 
-    private fun runValidators(nodes: SyntacticParser.RootNode, environment: Environment): ValidationResult {
-        return validator.validateSemantics(nodes, environment)
+    private fun runValidators(node: StatementType, environment: Environment): ValidationResult {
+        return validator.validateSemantics(node, environment)
     }
 }
