@@ -1,7 +1,7 @@
 OPERATOR :: \+, \-, \*, /
 DECLARATION_KEYWORD :: let
+VARIABLE_TYPE :: string, number, boolean
 CONST :: const
-VARIABLE_TYPE :: String,Number, Boolean
 METHOD :: readEnv, readInput
 PRINT :: println
 BOOLEAN :: true, false
