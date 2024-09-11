@@ -1,7 +1,7 @@
 package parser.semantic.validation
 
-import Environment
 import nodes.StatementType
+import position.visitor.Environment
 import position.visitor.ExpressionVisitor
 
 class VariableStatementValidator : Validator<StatementType.Variable> {
