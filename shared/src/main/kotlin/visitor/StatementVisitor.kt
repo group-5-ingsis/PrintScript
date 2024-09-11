@@ -6,6 +6,7 @@ import nodes.StatementType
 typealias statementVisitorResult = Pair<StringBuilder, Environment>
 
 class StatementVisitor {
+
     private fun evaluateExpression(expr: Expression, scope: Environment): VisitorResultExpressions {
         val visitor = ExpressionVisitor()
         return expr.acceptVisitor(visitor, scope)

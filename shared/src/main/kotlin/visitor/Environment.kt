@@ -80,9 +80,6 @@ class Environment(
 
             checkDontReAssignToConst(valueStored, name)
 
-            if (!assignationMatchesDeclaredType(value, valueStored)) {
-            }
-
             val keyWord = valueStored?.designation ?: throw Error("keyWord for assignation cannot be null")
             newScope[name] = StatementType.Variable(
                 designation = keyWord,
@@ -98,8 +95,19 @@ class Environment(
         throw Error("Cannot perform assignation on undefined variable '$name'.")
     }
 
+    private fun getTypeForValue(value: Any?): String {
+        return when (value) {
+            Int -> "number"
+            Float -> "number"
+            String -> "string"
+            Boolean -> "boolean"
+            else -> "undefined"
+        }
+    }
+
     private fun assignationMatchesDeclaredType(value: Any?, valueStored: StatementType.Variable?): Boolean {
-        return valueStored?.dataType == value
+        val actualType = getTypeForValue(value)
+        return valueStored?.dataType == actualType
     }
 
     private fun checkDontReAssignToConst(value: StatementType.Variable?, name: String) {

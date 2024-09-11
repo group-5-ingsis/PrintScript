@@ -1,5 +1,6 @@
 package parser.semantic.validation
 
+import exception.SemanticErrorException
 import nodes.Expression
 import nodes.StatementType
 import position.visitor.Environment
@@ -29,24 +30,25 @@ class StatementExpressionValidator : Validator<StatementType.StatementExpression
         /* null check for getting the value is made on Environment. */
         val variableInfo = scope.get(identifier)
         val actualValue = valueExpression.acceptVisitor(ExpressionVisitor(), scope)
-        val actualType = getTypeInString(actualValue)
+        val actualType = getTypeInString(actualValue.first)
 
-        if (getTypeInString(variableInfo) != actualType) {
-            return ValidationResult(
-                true,
-                node,
-                "Type mismatch: Expected '$variableInfo' but found '$actualType' in assignment to '$identifier'."
+        if (!assignedTypeMatchesDeclaredType(actualType, variableInfo.dataType)) {
+            throw SemanticErrorException(
+                "Declared value '${variableInfo.dataType}' of variable '${variableInfo.identifier}' does not match assigned type '$actualType'."
             )
         }
         return ValidationResult(false, null, null)
     }
 
+    private fun assignedTypeMatchesDeclaredType(actualType: String, dataType: String): Boolean {
+        return actualType == dataType
+    }
+
     private fun getTypeInString(actualValue: Any?): String {
         return when (actualValue) {
             is String -> "string"
-//            is Int -> "Int"
-//            is Float -> "Float"
-//            is Double -> "Double"
+            is Int -> "number"
+            is Float -> "number"
             is Number -> "number"
             is Boolean -> "boolean"
             else -> throw Error("Type not supported")

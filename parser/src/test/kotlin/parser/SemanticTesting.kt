@@ -28,12 +28,10 @@ class SemanticTesting {
     fun testAssignationToDifferentTypeShouldFail() {
         val lexer = Lexer("let a: string; a = 22;")
         val parser = Parser(lexer)
-//        assertFailsWith(SemanticErrorException::class) {
-//            parser.next()
-//
-//        }
-        parser.next()
-        parser.next()
+        assertFailsWith(SemanticErrorException::class) {
+            parser.next()
+            parser.next()
+        }
     }
 
     @Test
@@ -58,10 +56,9 @@ class SemanticTesting {
     fun testAssignationOfInexistentVariableShouldFail() {
         val lexer = Lexer("b = 23;")
         val parser = Parser(lexer)
-//        assertFailsWith(SemanticErrorException::class) {
-//
-//        }
-        parser.next()
+        assertFailsWith(Error::class) {
+            parser.next()
+        }
     }
 
     @Test
