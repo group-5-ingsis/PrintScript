@@ -2,17 +2,23 @@ package lexer
 
 import token.Token
 import token.TokenGenerator
+import java.io.BufferedReader
+import java.io.InputStream
+import java.io.InputStreamReader
 
-class Lexer(input: String, version: String = "1.1") : Iterator<Token> {
-    private val linesIterator = input.lines().iterator()
+class Lexer(reader: BufferedReader, version: String = "1.1") : Iterator<Token> {
+    private val linesIterator = reader.lineSequence().iterator()
     private var currentLine: String = ""
     private var lineIterator = currentLine.iterator()
     private var currentRow = 0
     private var currentIndex = 0
 
     private var state = LexerState()
-
     private val tokenGenerator = TokenGenerator(version)
+
+    constructor(input: String, version: String = "1.1") : this(BufferedReader(input.reader()), version)
+
+    constructor(inputStream: InputStream, version: String = "1.1") : this(BufferedReader(InputStreamReader(inputStream)), version)
 
     override fun hasNext(): Boolean {
         return state.nextToken != null || (linesIterator.hasNext() || lineIterator.hasNext() || state.buffer.isNotEmpty())
