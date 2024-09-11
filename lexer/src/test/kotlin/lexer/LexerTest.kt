@@ -124,7 +124,7 @@ class LexerTest {
         val tokens = Lexer(input, version)
 
         val expected = listOf(
-            Token("const", "DECLARATION_KEYWORD", Position(1, 1)),
+            Token("const", "CONST", Position(1, 1)),
             Token("pi", "IDENTIFIER", Position(1, 7)),
             Token(":", "PUNCTUATION", Position(1, 8)),
             Token("number", "VARIABLE_TYPE", Position(1, 11)),
