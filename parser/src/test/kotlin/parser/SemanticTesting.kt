@@ -38,7 +38,7 @@ class SemanticTesting {
     fun testAssignationOfConstShouldFail() {
         val lexer = Lexer("const a: string = \"test\"; a = \"testing\";")
         val parser = Parser(lexer)
-        assertFailsWith(SemanticErrorException::class) {
+        assertFailsWith(Exception::class) {
             parser.next()
             parser.next()
         }

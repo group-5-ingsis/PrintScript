@@ -34,17 +34,17 @@ class PrintValidator : Validator<StatementType.Print> {
         if (innerExpression is Expression.Variable) {
             val name = innerExpression.name
             return try {
-                scope.get(name)
+                scope.get(name).initializer!!
                 ValidationResult(
                     isInvalid = false,
                     where = null,
                     message = null
                 )
-            } catch (_: Error) {
+            } catch (_: Exception) {
                 ValidationResult(
                     isInvalid = true,
                     where = node,
-                    message = "Variable '$name' is not defined"
+                    message = "Variable '$name' does not have an assigned value. "
                 )
             }
         }
