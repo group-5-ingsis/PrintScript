@@ -88,10 +88,15 @@ class StatementVisitor {
     }
 
     private fun visitPrintStm(statement: StatementType.Print, environment: Environment, stringBuilder: StringBuilder): statementVisitorResult {
+        // Evaluate the expression to get the value to print
         val value = statement.value
         val newValue = evaluateExpression(value, environment)
         val printTarget = newValue.first
-        stringBuilder.append(printTarget)
+
+        val trimmedPrintTarget = printTarget.toString().trim().removeSurrounding("\"", "\"")
+
+        stringBuilder.append(trimmedPrintTarget)
+
         return Pair(stringBuilder, environment)
     }
 
