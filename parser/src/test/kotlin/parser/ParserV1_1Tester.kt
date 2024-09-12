@@ -4,8 +4,14 @@ import lexer.Lexer
 import nodes.Expression
 import nodes.StatementType
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertThrows
 import org.junit.Test
 import position.Position
+import position.visitor.Environment
+import token.Token
+import kotlin.test.assertFalse
+import kotlin.test.assertNotNull
+import kotlin.test.assertTrue
 
 class ParserV1_1Tester {
 
@@ -152,5 +158,58 @@ class ParserV1_1Tester {
         val actualPrintValue = (printActual.value as Expression.Grouping).expression as Expression.Variable
         // Verify that there is no elseBranch in this case
         assertEquals(expectedPrintValue.name, actualPrintValue.name) // Print statement
+    }
+
+
+    @Test
+    fun `next should return a valid statement`() {
+        val lexer = Lexer("  if (true){println(\"hola\");}", "1.1")
+        val parser = Parser(lexer, "1.1")
+
+
+        val statement = parser.next()
+
+        assertNotNull(statement, "Expected next() to return a statement")
+        assertTrue(statement is StatementType.IfStatement, "Expected an IfStatement")
+    }
+
+
+    @Test
+    fun `hasNext should return true when lexer has tokens`() {
+        val tokens = listOf(
+            Token("IF", "IF_STATEMENT", Position(1, 0)),
+            Token("ELSE", "ELSE_STATEMENT", Position(1, 2))
+        )
+        val parser = Parser(tokens.iterator())
+
+        assertTrue(parser.hasNext(), "Expected hasNext() to return true")
+    }
+
+    @Test
+    fun `hasNext should return false when lexer has no tokens`() {
+        val parser = Parser(emptyList<Token>().iterator())
+
+        assertFalse(parser.hasNext(), "Expected hasNext() to return false")
+    }
+
+    @Test
+    fun `setEnv should update the environment`() {
+        val parser = Parser(emptyList<Token>().iterator())
+        val newEnv = Environment()
+
+        parser.setEnv(newEnv)
+
+        kotlin.test.assertEquals(newEnv, parser.getEnv(), "Expected environment to be updated")
+    }
+
+
+
+    @Test
+    fun `next should throw NoSuchElementException when no tokens available`() {
+        val parser = Parser(emptyList<Token>().iterator())
+
+        assertThrows(NoSuchElementException::class.java) {
+            parser.next()
+        }
     }
 }

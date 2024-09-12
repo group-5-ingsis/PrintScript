@@ -17,38 +17,4 @@ object SyntacticParser {
         return Pair(exp, remainingTokens)
     }
 
-    class RootNode private constructor() {
-        private val children = mutableListOf<StatementType>()
-
-        fun addChild(child: StatementType) {
-            children.add(child)
-        }
-
-        fun getChildren(): List<StatementType> {
-            return children
-        }
-
-        companion object {
-            internal fun create(): RootNode {
-                return RootNode()
-            }
-        }
-
-        fun accept(visitor: StatementVisitor, environment: Environment, sb: StringBuilder): statementVisitorResult {
-            var env = environment.getCopy()
-            var sbb = StringBuilder(sb.toString())
-            for (child in children) {
-                val result = child.acceptVisitor(visitor, env, sb)
-                env = result.second
-                sbb = result.first
-            }
-            return Pair(sbb, env)
-        }
-
-        fun accept(visitor: Visitor) {
-            for (child in children) {
-                child.accept(visitor)
-            }
-        }
-    }
 }

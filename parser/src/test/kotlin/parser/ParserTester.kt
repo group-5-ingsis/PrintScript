@@ -4,7 +4,10 @@ import exceptions.InvalidSyntaxException
 import lexer.Lexer
 import nodes.Expression
 import nodes.StatementType
+import org.junit.Assert.assertThrows
 import position.Position
+import position.visitor.Environment
+import token.Token
 import kotlin.test.*
 
 class ParserTester {
@@ -139,6 +142,8 @@ class ParserTester {
 
 
 
+
+
     @Test
     fun statementSumElements() {
         val lexer = Lexer("let a: number = 5 + 3 + 4 / (6 + 6); println(a);", "1.0")
@@ -171,4 +176,9 @@ class ParserTester {
         assertEquals("PRINT", secondStatement.statementType)
         assertEquals("a", (secondStatement.value.expression as Expression.Variable).name)
     }
+
+
+
+
+
 }

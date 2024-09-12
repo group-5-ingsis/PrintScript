@@ -1,5 +1,6 @@
 import interpreter.Interpreter
 import lexer.Lexer
+import nodes.StatementType
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import parser.Parser
@@ -28,6 +29,18 @@ class InterpreterTest {
         // Check that the variable 'a' was declared, but has no value
         val variable = currentEnvironment.get("a")
         assertEquals(null, variable.initializer?.value)
+    }
+
+
+    @Test
+    fun printWhitOutTics(){
+        val lexer = Lexer("println(\"hola\");", "1.0")
+        val parser = Parser(lexer, "1.0")
+
+        val ast1 = parser.next()
+        val currentEnvironment = Environment()
+        val result = Interpreter.interpret(ast1, version, currentEnvironment)
+        assertEquals("hola", result.first.toString())
     }
 
     @Test
@@ -397,6 +410,26 @@ class InterpreterTest {
 
         assertEquals("Name:\n" + "Hello world!", outputBuilder.toString().trim())
     }
+
+    @Test
+    fun testString(){
+        val file = "let a : string = \"Hello\" + \" Word \" ;"
+
+        val input = "world"
+
+        val tokens = Lexer(file, version)
+        val asts = Parser(tokens, version, input)
+
+        val outputBuilder = StringBuilder()
+        var currentEnvironment = Environment()
+
+            val statement = asts.next()
+            val result = Interpreter.interpret(statement, version, currentEnvironment, input)
+
+        print(result.first.toString())
+    }
+
+
 
     @Test
     fun print() {

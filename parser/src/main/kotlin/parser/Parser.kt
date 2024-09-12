@@ -17,6 +17,9 @@ class Parser(private val lexer: Iterator<Token>, private val version: String = "
     fun setEnv(env: Environment) {
         this.env = env
     }
+    fun getEnv() : Environment{
+        return env
+    }
 
     override fun next(): StatementType {
         val mutableListTokensForParse: MutableList<Token> = mutableListOf()

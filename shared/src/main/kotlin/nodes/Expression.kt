@@ -46,10 +46,15 @@ sealed class Expression {
         }
     }
 
-    data class Literal(override val value: Any?, override val position: Position) : Expression() {
+    data class Literal(override var value: Any?, override val position: Position) : Expression() {
         override val expressionType: String = "LITERAL_EXPRESSION"
         override fun accept(visitor: Visitor) {
             return visitor.visitLiteral(this)
+        }
+        init {
+            if (value is String) {
+                value = (value as String).removeSurrounding("\"")
+            }
         }
     }
 
