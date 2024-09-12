@@ -19,19 +19,15 @@ class InterpreterV1_1 {
         val ast1 = parser.next()
         val ifstm = parser.next()
 
-
         // Ejecutar la interpretación
         val (_, env) = Interpreter.interpret(ast1, version, Environment())
         val (stringBuilder, env2) = Interpreter.interpret(ifstm, version, env)
-
 
         val expectedOutput = "5" // Asumiendo que el valor de 'queso' se imprime seguido de un salto de línea
         assertEquals(expectedOutput, stringBuilder.toString())
         assertFalse(stringBuilder.toString().contains("hola"))
         assertTrue(env2.contains("a"))
         assertFalse(env2.contains("queso"))
-
-
     }
 
     @Test
@@ -44,13 +40,9 @@ class InterpreterV1_1 {
         val ast1 = parser.next()
         val ifstm = parser.next()
 
-
         // Ejecutar la interpretación
         val (_, env) = Interpreter.interpret(ast1, version, Environment())
         val (stringBuilder, env2) = Interpreter.interpret(ifstm, version, env)
-
-
-
 
         // Verificar el contenido del StringBuilder
         val expectedOutput = "\nfalse\n" // Asumiendo que el valor de 'queso' se imprime seguido de un salto de línea

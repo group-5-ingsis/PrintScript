@@ -40,7 +40,6 @@ class ParserTester {
         assertEquals(expectedAssignment.left, actualAssignment.left)
         assertEquals(expectedAssignment.operator, actualAssignment.operator)
         assertEquals(expectedAssignment.right, actualAssignment.right)
-
     }
 
     @Test
@@ -75,7 +74,6 @@ class ParserTester {
         assertEquals(expectedBinaryOperation.left, actualBinaryOperation.left)
         assertEquals(expectedBinaryOperation.operator, actualBinaryOperation.operator)
         assertEquals(expectedBinaryOperation.right, actualBinaryOperation.right)
-
     }
 
     @Test
@@ -136,8 +134,6 @@ class ParserTester {
 
         assertEquals("Expected ':' after expression in Line 1, symbol 7", exception.message)
     }
-
-
 
     @Test
     fun statementSumElements() {

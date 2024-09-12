@@ -65,8 +65,6 @@ class Environment(
         } else {
             return result
         }
-
-
     }
 
     fun assign(name: String, value: Any?): Environment {
@@ -111,7 +109,6 @@ class Environment(
             throw Exception("Cannot assign variable '$name' to a const.")
         }
     }
-
 
     private fun alternativeCopy(): HashMap<String, StatementType.Variable> {
         return HashMap(values)
