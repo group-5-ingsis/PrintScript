@@ -172,8 +172,8 @@ class ExpressionVisitor {
 
     private fun visitAssignExpr(exp: Expression.Assign, scope: Environment): VisitorResultExpressions {
         val (value, newScope) = evaluateExpression(exp.value, scope)
-        // val newScope2 = newScope.assign(exp.name, value)
-        return Pair(value, newScope)
+        val newScope2 = newScope.assign(exp.name, value)
+        return Pair(value, newScope2)
     }
     fun getVisitorFunctionForExpression(expressionType: String): (Expression, Environment) -> VisitorResultExpressions {
         return when (expressionType) {
