@@ -232,13 +232,11 @@ class ExpressionVisitor(val readInput: String? = null) {
     private fun visitReadEnv(expr: Expression.ReadEnv, env: Environment): VisitorResultExpressions {
         val key = expr.value
 
-        val value = env.get(key.toString())
+        val value = key.expression.value
 
-        val stringBuilder = StringBuilder().apply {
-            append(value)
-        }
+        val envValue = env.get(value.toString())
 
-        return Pair(stringBuilder, env)
+        return Pair(envValue, env)
     }
 
     private fun visitIdentifierExp(exp: Expression.IdentifierExpression, environment: Environment): VisitorResultExpressions {
