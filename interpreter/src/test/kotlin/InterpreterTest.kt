@@ -376,4 +376,25 @@ class InterpreterTest {
 
         assertEquals("outside of conditional", outputBuilder.toString().trim())
     }
+
+    @Test
+    fun testReadInput() {
+        val file = "const name: string = readInput(\"Name:\"); println(\"Hello\" + name + \"!\");"
+        val input = "world"
+
+        val tokens = Lexer(file, version)
+        val asts = Parser(tokens, version)
+
+        val outputBuilder = StringBuilder()
+        var currentEnvironment = Environment()
+
+        while (asts.hasNext()) {
+            val statement = asts.next()
+            val result = Interpreter.interpret(statement, version, currentEnvironment, input)
+            outputBuilder.append(result.first.toString())
+            currentEnvironment = result.second
+        }
+
+        assertEquals("Name:\n" + "Hello world!", outputBuilder.toString().trim())
+    }
 }

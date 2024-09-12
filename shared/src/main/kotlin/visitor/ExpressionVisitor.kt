@@ -3,7 +3,7 @@ package position.visitor
 import nodes.Expression
 import nodes.StatementType
 
-class ExpressionVisitor {
+class ExpressionVisitor(val readInput: String? = null) {
 
     private fun evaluateExpression(expr: Expression, environment: Environment): VisitorResultExpressions {
         return expr.acceptVisitor(this, environment)
@@ -225,8 +225,10 @@ class ExpressionVisitor {
     }
 
     private fun visitReadInput(expr: Expression.ReadInput, env: Environment): VisitorResultExpressions {
-        return Pair(0, env)
+        val input = readInput ?: throw IllegalArgumentException("No input provided and readInput is required.")
+        return Pair(input, env)
     }
+
     private fun visitReadEnv(expr: Expression.ReadEnv, env: Environment): VisitorResultExpressions {
         TODO("Inplement read env")
         return Pair(0, env)

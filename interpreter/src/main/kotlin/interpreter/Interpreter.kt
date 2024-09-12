@@ -7,10 +7,15 @@ import position.visitor.statementVisitorResult
 
 object Interpreter {
 
-    fun interpret(statement: StatementType, version: String = "1.1", scope: Environment): statementVisitorResult {
+    fun interpret(
+        statement: StatementType,
+        version: String = "1.1",
+        scope: Environment,
+        readInput: String? = null
+    ): statementVisitorResult {
         val sb = StringBuilder()
 
-        val nodeVisitor = StatementVisitor()
+        val nodeVisitor = StatementVisitor(readInput)
         val result = statement.acceptVisitor(nodeVisitor, scope, sb)
 
         val printOutput = result.first
