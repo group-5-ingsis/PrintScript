@@ -19,7 +19,7 @@ class LinterTests {
         linter.lint(asts)
         assertEquals(1, linter.getErrors().size)
         assertEquals(
-            "println() statements must receive a literal or identifier expression at Line 1, symbol 7, got BINARY_EXPRESSION.",
+            "println() statements must receive a literal or identifier, not an expression. At Line 1, symbol 7, got BINARY_EXPRESSION.",
             linter.getErrors()[0].getMessage()
         )
         println(linter.getErrors())

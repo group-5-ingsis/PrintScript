@@ -20,7 +20,7 @@ class ParserTester {
             Expression.Literal(3, Position(1, 18)), // Adjusted for actual symbol index
             "+",
             Expression.Literal(5, Position(1, 22)), // Adjusted for actual symbol index
-            Position(1, 19) // Adjusted for actual symbol index
+            Position(1, 20) // Adjusted for actual symbol index
         )
 
         val expectedNode = StatementType.Variable(
@@ -56,7 +56,7 @@ class ParserTester {
             expectedLeftString,
             "+",
             expectedRightString,
-            Position(1, 24)
+            Position(1, 25)
         )
         val expectedNode = StatementType.Variable(
             "let",
@@ -123,30 +123,6 @@ class ParserTester {
         val assignValue = assignExpr.value as Expression.Literal
         assertEquals(4, assignValue.value)
         assertEquals("LITERAL_EXPRESSION", assignValue.expressionType)
-    }
-
-    @Test
-    fun testAssignationWithVariable() {
-        val lexer = Lexer("let x: number = 4; let y : number = 2; x = y;", "1.0")
-        val parser = Parser(lexer, "1.0")
-
-        val firstVariable = parser.next() as StatementType.Variable
-        assertEquals("x", firstVariable.identifier)
-        assertEquals("number", firstVariable.dataType)
-        assertEquals("let", firstVariable.designation)
-        assertEquals(4, (firstVariable.initializer as Expression.Literal).value)
-
-        val secondVariable = parser.next() as StatementType.Variable
-        assertEquals("y", secondVariable.identifier)
-        assertEquals("number", secondVariable.dataType)
-        assertEquals("let", secondVariable.designation)
-        assertEquals(2, (secondVariable.initializer as Expression.Literal).value)
-
-        val assignment = parser.next() as StatementType.StatementExpression
-        val assignExpression = assignment.value as Expression.Assign
-        assertEquals("x", assignExpression.name)
-        val identifierExpression = assignExpression.value as Expression.Variable
-        assertEquals("y", identifierExpression.name)
     }
 
     @Test

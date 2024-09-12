@@ -92,7 +92,7 @@ class FormatterTest {
 
     @Test
     fun testIfStatementFormatting() {
-        val input = "if (true) { let b: number = 3; }"
+        val input = "let c : boolean = true; if (c) { let b: number = 3; }"
         val version = "1.1"
 
         val tokens = Lexer(input, version)
@@ -101,10 +101,10 @@ class FormatterTest {
 
         // Assuming the indent is set to 4 spaces in the rules
         val expected = """
-        if (true) {
+        let c: boolean = true;
+        if (c) {
             let b: number = 3;
         }
-        
         """.trimIndent()
 
         assertEquals(expected, result)
@@ -112,7 +112,7 @@ class FormatterTest {
 
     @Test
     fun testIfStatementWithElseFormatting() {
-        val input = "if (true) { let b: number = 3; } else { let a: number = 4;};"
+        val input = "let c : boolean = true; if (c) { let b: number = 3; } else { let a: number = 4;};"
         val version = "1.1"
 
         val tokens = Lexer(input, version)
@@ -120,7 +120,8 @@ class FormatterTest {
         val result = Formatter.format(astNodes, exampleRules, version)
 
         val expected = """
-        if (true) {
+        let c: boolean = true;
+        if (c) {
             let b: number = 3;
         } else {
             let a: number = 4;
@@ -132,7 +133,7 @@ class FormatterTest {
 
     @Test
     fun testDoubleIfStatementFormatting() {
-        val input = "if (true) { if (true) {let a: number = 2;} };"
+        val input = "let c : boolean = true; if (c) { if (c) {let a: number = 2;} };"
 
         val version = "1.1"
 
