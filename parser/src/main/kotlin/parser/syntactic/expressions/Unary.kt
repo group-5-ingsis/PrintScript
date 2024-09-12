@@ -9,7 +9,7 @@ class Unary(private val parseInferiorFunction: ExpressionParser) : ExpressionPar
     override fun parse(tokens: List<Token>): ParseResult {
         val tokenManager = TokenManager(tokens)
 
-        if (tokenManager.isValue("!")) {
+        if (tokenManager.isValue("!") && tokenManager.isType("OPERATOR")) {
             val tokenOperator = tokenManager.peek().value
             val position = tokenManager.getPosition()
             tokenManager.advance()

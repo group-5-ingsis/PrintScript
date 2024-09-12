@@ -100,4 +100,33 @@ class SemanticTesting {
             val next2 = parser.next()
         }
     }
+
+    @Test
+    fun testPrintVariable() {
+        val tokens = Lexer("let something: number = 23; println(something);")
+        val parser = Parser(tokens)
+        val next = parser.next()
+        val next2 = parser.next()
+    }
+
+    @Test
+    fun testPrintNumber() {
+        val tokens = Lexer("println(1);")
+        val parser = Parser(tokens)
+        parser.next()
+    }
+
+    @Test
+    fun testPrintString() {
+        val tokens = Lexer("println(\"Hello World!\");")
+        val parser = Parser(tokens)
+        parser.next()
+    }
+
+    @Test
+    fun testPrintSum() {
+        val tokens = Lexer("println(3 + 4);")
+        val parser = Parser(tokens)
+        parser.next()
+    }
 }

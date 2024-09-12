@@ -128,10 +128,11 @@ class StatementVisitor(val readInput: String? = null) {
     private fun visitVariableStm(statement: StatementType.Variable, environment: Environment, stringBuilder: StringBuilder): statementVisitorResult {
         val newEnvironment = if (statement.initializer != null) {
             val (newValue, env) = evaluateExpression(statement.initializer, environment)
+            val initializer = Expression.Literal(newValue, statement.position)
             val newVariable = StatementType.Variable(
                 designation = statement.designation,
                 identifier = statement.identifier,
-                initializer = Expression.Literal(newValue, statement.position),
+                initializer = initializer,
                 dataType = statement.dataType,
                 position = statement.position
             )

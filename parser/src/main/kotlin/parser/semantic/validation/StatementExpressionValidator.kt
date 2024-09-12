@@ -14,12 +14,6 @@ class StatementExpressionValidator(private val input: String?) : Validator<State
                 handleAssign(exp, scope, node)
             }
 
-//            is Expression.Binary -> TODO()
-//            is Expression.Grouping -> TODO()
-//            is Expression.IdentifierExpression -> TODO()
-//            is Expression.Literal -> TODO()
-//            is Expression.Unary -> TODO()
-//            is Expression.Variable -> TODO()
             else -> return ValidationResult(false, null, null)
         }
     }

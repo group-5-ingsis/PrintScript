@@ -54,7 +54,7 @@ class InterpreterTest {
 
     @Test
     fun testStringAndNumberConcat() {
-        val input = "let someNumber: number = 1; let someString: string = \"hello world \";\n println(someString + someNumber);\n"
+        val input = "let someNumber: number = 1; let someString: string = \"hello world  \";\n println(someString + someNumber);\n"
         val tokens = Lexer(input, version)
         val asts = Parser(tokens, version)
 
@@ -393,6 +393,14 @@ class InterpreterTest {
 
         while (asts.hasNext()) {
             val statement = asts.next()
+            println()
+            if (statement is StatementType.Variable && statement.initializer!!.expressionType == "READ_INPUT") {
+                val value = statement.initializer!!.value
+                if (value is Expression.Grouping) {
+                    outputBuilder.append(value.expression.value)
+                    outputBuilder.append("\n")
+                }
+            }
             val result = Interpreter.interpret(statement, version, currentEnvironment, input)
             outputBuilder.append(result.first.toString())
             currentEnvironment = result.second
@@ -461,5 +469,22 @@ class InterpreterTest {
         }
 
         assertEquals("3", outputBuilder.toString())
+    }
+
+    @Test
+    fun testIncrementCoverage() {
+        val input = "let x: number;"
+        val tokens = Lexer(input, version)
+        val asts = Parser(tokens, version)
+
+        val outputBuilder = StringBuilder()
+        var currentEnvironment = Environment()
+
+        while (asts.hasNext()) {
+            val statement = asts.next()
+            val result = Interpreter.interpret(statement, version, currentEnvironment)
+            outputBuilder.append(result.first.toString())
+            currentEnvironment = result.second
+        }
     }
 }

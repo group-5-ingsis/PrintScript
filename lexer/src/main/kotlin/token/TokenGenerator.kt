@@ -15,7 +15,15 @@ class TokenGenerator(private val version: String = "1.1") {
             throw IllegalArgumentException("Unknown symbol $value in line ${position.line} index ${position.symbolIndex}")
         }
 
+        if (type == "STRING") {
+            return Token(removeQuotes(value), type, position)
+        }
+
         return Token(value, type, position)
+    }
+
+    private fun removeQuotes(value: String): String {
+        return value.substring(1, value.length - 1)
     }
 
     private fun getTypeFromValue(value: String): String {
