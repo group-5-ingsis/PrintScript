@@ -393,6 +393,7 @@ class InterpreterTest {
             val result = Interpreter.interpret(statement, version, currentEnvironment, input)
             outputBuilder.append(result.first.toString())
             currentEnvironment = result.second
+            asts.setEnv(currentEnvironment)
         }
 
         assertEquals("Name:\n" + "Hello world!", outputBuilder.toString().trim())
