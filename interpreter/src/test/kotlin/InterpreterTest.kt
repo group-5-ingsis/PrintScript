@@ -457,6 +457,31 @@ class InterpreterTest {
     }
 
     @Test
+    fun testReadEnvHelloWorld() {
+        val input =
+            "const name: string = readEnv(\"NAME\"); " +
+                "println(\"Hello \" + name + 22);\n"
+
+        val tokens = Lexer(input, version)
+        val asts = Parser(tokens, version)
+
+        val outputBuilder = StringBuilder()
+        var currentEnvironment = createEnvironmentFromMap(System.getenv())
+
+        while (asts.hasNext()) {
+            asts.setEnv(currentEnvironment)
+            val statement = asts.next()
+            val result = Interpreter.interpret(statement, version, currentEnvironment)
+            val first = result.first
+            outputBuilder.append(first.toString())
+            currentEnvironment = result.second
+            asts.setEnv(currentEnvironment)
+        }
+
+        assertEquals("Hello WORLD22", outputBuilder.toString().trim())
+    }
+
+    @Test
     fun print() {
         val input = "println(1 + 1 + 1);"
         val tokens = Lexer(input, version)
