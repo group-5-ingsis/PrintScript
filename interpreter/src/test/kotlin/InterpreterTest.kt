@@ -298,4 +298,38 @@ class InterpreterTest {
 
         assertEquals(8, actual)
     }
+
+    @Test
+    fun testValidConstDeclaration() {
+        val input = "const b: string = \"this should be valid in 1.1\";"
+        val tokens = Lexer(input, version)
+        val asts = Parser(tokens, version)
+
+        val outputBuilder = StringBuilder()
+        var currentEnvironment = Environment()
+
+        while (asts.hasNext()) {
+            val statement = asts.next()
+            val result = Interpreter.interpret(statement, version, currentEnvironment)
+            outputBuilder.append(result.first.toString())
+            currentEnvironment = result.second
+        }
+    }
+
+    @Test
+    fun testValidLetDeclaration() {
+        val input = "let b: string = \"this should be valid in 1.1\";"
+        val tokens = Lexer(input, version)
+        val asts = Parser(tokens, version)
+
+        val outputBuilder = StringBuilder()
+        var currentEnvironment = Environment()
+
+        while (asts.hasNext()) {
+            val statement = asts.next()
+            val result = Interpreter.interpret(statement, version, currentEnvironment)
+            outputBuilder.append(result.first.toString())
+            currentEnvironment = result.second
+        }
+    }
 }

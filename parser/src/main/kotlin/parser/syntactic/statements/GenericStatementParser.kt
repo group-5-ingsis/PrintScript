@@ -22,18 +22,17 @@ class GenericStatementParser(private val nextStatementsList: List<Pair<String, S
      * @throws NoSuchElementException if the token list is empty and no match is found.
      */
     override fun parse(tokens: List<Token>): ParseStatementResult {
-        val manager = TokenManager(tokens) // Initialize the TokenManager with the provided tokens
+        val manager = TokenManager(tokens)
 
-        // Iterate through the list of statement types and their corresponding parsers
         for ((statementType, typeOfStatements) in nextStatementsList) {
-            // Check if the next token in the queue matches the expected statement type
-            if (manager.nextTokenMatchesExpectedType(statementType)) {
+            val nextTokenMatchesExpectedType = manager.nextTokenMatchesExpectedType(statementType)
+            if (nextTokenMatchesExpectedType) {
                 manager.advance()
-                return typeOfStatements.parse(manager.getTokens()) // Parse the tokens using the matching parser
+                val tokens = manager.getTokens()
+                return typeOfStatements.parse(tokens)
             }
         }
 
-        // If no match is found, use the last parser in the list as a fallback
         val (_, typeOfStatements) = nextStatementsList.last()
         return typeOfStatements.parse(manager.getTokens())
     }
