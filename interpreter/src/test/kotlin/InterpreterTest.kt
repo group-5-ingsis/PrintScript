@@ -1,8 +1,11 @@
 import interpreter.Interpreter
 import lexer.Lexer
+import nodes.Expression
+import nodes.StatementType
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import parser.Parser
+import position.Position
 import position.visitor.Environment
 
 class InterpreterTest {
@@ -398,6 +401,47 @@ class InterpreterTest {
         assertEquals("Name:\n" + "Hello world!", outputBuilder.toString().trim())
     }
 
+    private fun createEnvironmentFromMap(envVarsMap: Map<String, String>): Environment {
+        var env = Environment()
+
+        for ((key, value) in envVarsMap) {
+            val variable = StatementType.Variable(
+                designation = "const",
+                identifier = key,
+                initializer = Expression.Literal(value, Position(0, 0)),
+                dataType = determineDataType(value),
+                position = Position(0, 0)
+            )
+
+            env = env.define(variable)
+        }
+
+        return env
+    }
+
+    fun determineDataType(value: String): String {
+        return "string"
+    }
+
+    @Test
+    fun testReadEnv() {
+        val input =
+            "const name: string = readEnv(\"BEST_FOOTBALL_CLUB\");println(\"What is the best football club?\"); println(name);\n"
+        val tokens = Lexer(input, version)
+        val asts = Parser(tokens, version)
+
+        val outputBuilder = StringBuilder()
+        var currentEnvironment = createEnvironmentFromMap(System.getenv())
+
+        while (asts.hasNext()) {
+            val statement = asts.next()
+            val result = Interpreter.interpret(statement, version, currentEnvironment)
+            outputBuilder.append(result.first.toString())
+            currentEnvironment = result.second
+            asts.setEnv(currentEnvironment)
+        }
+    }
+
     @Test
     fun print() {
         val input = "println(1 + 1 + 1);"
@@ -412,6 +456,7 @@ class InterpreterTest {
             val result = Interpreter.interpret(statement, version, currentEnvironment)
             outputBuilder.append(result.first.toString())
             currentEnvironment = result.second
+            asts.setEnv(currentEnvironment)
         }
 
         assertEquals("3", outputBuilder.toString())
