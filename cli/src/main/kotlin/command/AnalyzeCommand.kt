@@ -8,6 +8,7 @@ import linter.Linter
 import parser.Parser
 import rules.LinterRules
 import rules.LinterRulesV1
+import rules.LinterRulesV2
 
 class AnalyzeCommand(private val file: String, private val version: String, private val rulesFile: String) : Command {
     private val fileContent = FileReader.getFileContents(file, version)
@@ -44,6 +45,14 @@ class AnalyzeCommand(private val file: String, private val version: String, priv
                 linterRules = LinterRulesV1(
                     identifierNamingConvention = rulesMap["identifierNamingConvention"] as String,
                     printlnExpressionAllowed = rulesMap["printlnExpressionAllowed"] as Boolean
+                )
+            }
+            "1.1" -> {
+                val rulesMap = jsonToMap(rulesFile)
+                linterRules = LinterRulesV2(
+                    identifierNamingConvention = rulesMap["identifierNamingConvention"] as String,
+                    printlnExpressionAllowed = rulesMap["printlnExpressionAllowed"] as Boolean,
+                    readInputExpressionAllowed = rulesMap["readInputExpressionAllowed"] as Boolean
                 )
             }
             else -> throw IllegalArgumentException("Unsupported version: $version")

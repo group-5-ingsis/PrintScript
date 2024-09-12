@@ -56,9 +56,9 @@ class LexerTest {
         val version = "1.0"
         val expected = listOf(
             Token("x", "IDENTIFIER", Position(1, 1)),
-            Token("+", "OPERATOR", Position(1, 2)),
+            Token("+", "OPERATOR", Position(1, 3)),
             Token("y", "IDENTIFIER", Position(1, 5)),
-            Token("-", "OPERATOR", Position(1, 6)),
+            Token("-", "OPERATOR", Position(1, 7)),
             Token("z", "IDENTIFIER", Position(1, 8))
         )
 
@@ -166,22 +166,22 @@ class LexerTest {
 
         val expected = listOf(
             Token("if", "IF", Position(1, 1)),
-            Token("(", "PUNCTUATION", Position(1, 3)),
+            Token("(", "PUNCTUATION", Position(1, 4)),
             Token("true", "BOOLEAN", Position(1, 5)),
             Token(")", "PUNCTUATION", Position(1, 8)),
-            Token("{", "LEFT_BRACE", Position(1, 10)),
+            Token("{", "LEFT_BRACE", Position(1, 11)),
             Token("y", "IDENTIFIER", Position(1, 13)),
             Token("=", "ASSIGNMENT", Position(1, 15)),
             Token("5", "NUMBER", Position(1, 17)),
             Token(";", "PUNCTUATION", Position(1, 17)),
-            Token("}", "RIGHT_BRACE", Position(1, 19)),
+            Token("}", "RIGHT_BRACE", Position(1, 20)),
             Token("else", "ELSE", Position(1, 22)),
-            Token("{", "LEFT_BRACE", Position(1, 26)),
+            Token("{", "LEFT_BRACE", Position(1, 27)),
             Token("y", "IDENTIFIER", Position(1, 29)),
             Token("=", "ASSIGNMENT", Position(1, 31)),
             Token("0", "NUMBER", Position(1, 33)),
             Token(";", "PUNCTUATION", Position(1, 33)),
-            Token("}", "RIGHT_BRACE", Position(1, 35))
+            Token("}", "RIGHT_BRACE", Position(1, 36))
         )
 
         assertEquals(expected, collectTokens(tokens))
@@ -196,12 +196,12 @@ class LexerTest {
         val expected = listOf(
             Token("readInput", "READ_INPUT", Position(1, 1)),
             Token("(", "PUNCTUATION", Position(1, 9)),
-            Token(")", "PUNCTUATION", Position(1, 10)),
-            Token(";", "PUNCTUATION", Position(1, 11)),
+            Token(")", "PUNCTUATION", Position(1, 11)),
+            Token(";", "PUNCTUATION", Position(1, 12)),
             Token("readEnv", "READ_ENV", Position(1, 14)),
             Token("(", "PUNCTUATION", Position(1, 20)),
-            Token(")", "PUNCTUATION", Position(1, 21)),
-            Token(";", "PUNCTUATION", Position(1, 22))
+            Token(")", "PUNCTUATION", Position(1, 22)),
+            Token(";", "PUNCTUATION", Position(1, 23))
         )
 
         assertEquals(expected, collectTokens(tokens))
