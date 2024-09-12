@@ -3,10 +3,10 @@ package parser.semantic.validation
 import nodes.StatementType
 import position.visitor.Environment
 
-class SemanticValidator {
+class SemanticValidator(private val readInput: String?) {
     private val validatorsForTypes: Map<String, Validator<StatementType>> =
         mutableMapOf(
-            "VARIABLE_STATEMENT" to VariableStatementValidator() as Validator<StatementType>,
+            "VARIABLE_STATEMENT" to VariableStatementValidator(readInput) as Validator<StatementType>,
             "PRINT" to PrintValidator() as Validator<StatementType>,
             "STATEMENT_EXPRESSION" to StatementExpressionValidator() as Validator<StatementType>
         )

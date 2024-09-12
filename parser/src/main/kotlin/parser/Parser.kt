@@ -6,7 +6,7 @@ import parser.syntactic.SyntacticParser
 import position.visitor.Environment
 import token.Token
 
-class Parser(private val lexer: Iterator<Token>, private val version: String = "1.1") : Iterator<StatementType> {
+class Parser(private val lexer: Iterator<Token>, private val version: String = "1.1", private val readInput: String? = null) : Iterator<StatementType> {
     private var env = Environment()
     private val momentList: ArrayDeque<Token> = ArrayDeque()
 
@@ -30,7 +30,7 @@ class Parser(private val lexer: Iterator<Token>, private val version: String = "
                 ifChecker()
 
                 if (tokens.isEmpty()) {
-                    env = SemanticParser.validate(stm, env)
+                    env = SemanticParser.validate(stm, env, readInput)
                     return stm
                 }
 

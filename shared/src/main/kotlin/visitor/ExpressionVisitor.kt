@@ -104,7 +104,7 @@ class ExpressionVisitor(val readInput: String? = null) {
                     leftValue is Number && rightValue is Number ->
                         leftValue.toDouble() + rightValue.toDouble()
 
-                    leftValue is String && rightValue is String -> leftValue + rightValue
+                    leftValue is String && rightValue is String -> leftValue.dropLast(1) + rightValue.drop(1)
 
                     leftValue is Number && rightValue is String -> leftValue.toString() + rightValue.trim().removeSurrounding("\"")
 
@@ -225,7 +225,8 @@ class ExpressionVisitor(val readInput: String? = null) {
     }
 
     private fun visitReadInput(expr: Expression.ReadInput, env: Environment): VisitorResultExpressions {
-        val input = readInput ?: throw IllegalArgumentException("No input provided and readInput is required.")
+        val input = readInput
+        println(input)
         return Pair(input, env)
     }
 

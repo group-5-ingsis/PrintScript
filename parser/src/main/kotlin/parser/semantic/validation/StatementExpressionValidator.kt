@@ -29,7 +29,7 @@ class StatementExpressionValidator : Validator<StatementType.StatementExpression
         val valueExpression = exp.value
         /* null check for getting the value is made on Environment. */
         val variableInfo = scope.get(identifier)
-        val actualValue = valueExpression.acceptVisitor(ExpressionVisitor(), scope)
+        val actualValue = valueExpression.acceptVisitor(ExpressionVisitor("asd"), scope)
         val actualType = getTypeInString(actualValue.first)
 
         if (!assignedTypeMatchesDeclaredType(actualType, variableInfo.dataType)) {

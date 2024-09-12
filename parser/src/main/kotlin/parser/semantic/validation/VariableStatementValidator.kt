@@ -4,7 +4,7 @@ import nodes.StatementType
 import position.visitor.Environment
 import position.visitor.ExpressionVisitor
 
-class VariableStatementValidator : Validator<StatementType.Variable> {
+class VariableStatementValidator(private val readInput: String?) : Validator<StatementType.Variable> {
 
     override fun validate(node: StatementType.Variable, scope: Environment): ValidationResult {
         val assignDeclaration = isAssignDeclaration(node)
@@ -32,7 +32,7 @@ class VariableStatementValidator : Validator<StatementType.Variable> {
                 "Variable '${node.identifier}' has no value assigned."
             )
 
-        val initializerValue = value.acceptVisitor(ExpressionVisitor(), varTable)
+        val initializerValue = value.acceptVisitor(ExpressionVisitor(readInput), varTable)
 
         val actualType = when (initializerValue.first) {
             is String -> "string"
