@@ -37,6 +37,8 @@ class ExpressionVisitor(val readInput: String? = null) {
         fun checkTypesForOperation(left: Any?, right: Any?): Pair<Any?, Any?> {
             return when {
                 left is Number && right is Number -> Pair(left, right)
+                left is Number && right is String -> Pair(left, right)
+                left is String && right is Number -> Pair(left, right)
                 left is StatementType.Variable && right is StatementType.Variable -> {
                     Pair(
                         scope.get(left.identifier).initializer?.value,
@@ -235,7 +237,7 @@ class ExpressionVisitor(val readInput: String? = null) {
         val value = key.expression.value
 
         val name = removeSurroundingQuotes(value.toString())
-        val envValue = env.get(name).initializer
+        val envValue = env.get(name).initializer?.value
 
         return Pair(envValue, env)
     }

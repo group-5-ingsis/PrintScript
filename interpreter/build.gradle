@@ -10,5 +10,6 @@ dependencies {
 
 test {
     environment "BEST_FOOTBALL_CLUB", "San Lorenzo"
+    environment "NAME", "WORLD"
     useJUnit()
 }
