@@ -226,7 +226,6 @@ class ExpressionVisitor(val readInput: String? = null) {
 
     private fun visitReadInput(expr: Expression.ReadInput, env: Environment): VisitorResultExpressions {
         val input = readInput
-        println(input)
         return Pair(input.toString().trim(), env)
     }
 

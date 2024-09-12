@@ -106,7 +106,7 @@ class LexerTest {
             Token("let", "DECLARATION_KEYWORD", Position(1, 1)),
             Token("x", "IDENTIFIER", Position(1, 5)),
             Token("=", "ASSIGNMENT", Position(1, 7)),
-            Token("'hello'", "STRING", Position(1, 8))
+            Token("hello", "STRING", Position(1, 8))
         )
 
         val tokens = Lexer(input, version)

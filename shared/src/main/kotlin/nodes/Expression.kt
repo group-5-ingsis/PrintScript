@@ -51,7 +51,6 @@ sealed class Expression {
         override fun accept(visitor: Visitor) {
             return visitor.visitLiteral(this)
         }
-
     }
 
     data class Unary(val operator: String, val right: Expression, override val position: Position, override val value: Any? = null) : Expression() {

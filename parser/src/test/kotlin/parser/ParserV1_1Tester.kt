@@ -160,19 +160,16 @@ class ParserV1_1Tester {
         assertEquals(expectedPrintValue.name, actualPrintValue.name) // Print statement
     }
 
-
     @Test
     fun `next should return a valid statement`() {
         val lexer = Lexer("  if (true){println(\"hola\");}", "1.1")
         val parser = Parser(lexer, "1.1")
-
 
         val statement = parser.next()
 
         assertNotNull(statement, "Expected next() to return a statement")
         assertTrue(statement is StatementType.IfStatement, "Expected an IfStatement")
     }
-
 
     @Test
     fun `hasNext should return true when lexer has tokens`() {
@@ -201,8 +198,6 @@ class ParserV1_1Tester {
 
         kotlin.test.assertEquals(newEnv, parser.getEnv(), "Expected environment to be updated")
     }
-
-
 
     @Test
     fun `next should throw NoSuchElementException when no tokens available`() {

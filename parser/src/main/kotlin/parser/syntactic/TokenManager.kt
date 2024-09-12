@@ -21,6 +21,13 @@ class TokenManager(tokens: List<Token>) {
         return peek().value == value
     }
 
+    fun isType(value: String): Boolean {
+        if (tokenQueue.isEmpty()) {
+            return false
+        }
+        return peek().type == value
+    }
+
     /**
      * Consumes the next token from the queue.
      * @return The token that was consumed.

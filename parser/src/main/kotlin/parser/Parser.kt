@@ -17,7 +17,7 @@ class Parser(private val lexer: Iterator<Token>, private val version: String = "
     fun setEnv(env: Environment) {
         this.env = env
     }
-    fun getEnv() : Environment{
+    fun getEnv(): Environment {
         return env
     }
 
