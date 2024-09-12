@@ -54,7 +54,7 @@ class InterpreterTest {
 
     @Test
     fun testStringAndNumberConcat() {
-        val input = "let someNumber: number = 1; let someString: string = \"hello world  \";\n println(someString + someNumber);\n"
+        val input = "let someNumber: number = 1; let someString: string = \"hello world \";\n println(someString + someNumber);\n"
         val tokens = Lexer(input, version)
         val asts = Parser(tokens, version)
 

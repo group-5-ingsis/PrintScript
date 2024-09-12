@@ -106,15 +106,15 @@ class ExpressionVisitor(val readInput: String? = null) {
 
                     leftValue is String && rightValue is String -> leftValue + rightValue
 
-                    leftValue is Number && rightValue is String -> leftValue.toString() + rightValue.trim().removeSurrounding("\"")
+                    leftValue is Number && rightValue is String -> leftValue.toString() + rightValue.removeSurrounding("\"")
 
-                    leftValue is String && rightValue is Number -> leftValue.trim().removeSurrounding("\"") + rightValue.toString()
+                    leftValue is String && rightValue is Number -> leftValue.removeSurrounding("\"") + rightValue.toString()
 
                     leftValue is StatementType.Variable && rightValue is String -> {
-                        scope.get(leftValue.identifier).initializer?.value.toString() + rightValue.trim().removeSurrounding("\"")
+                        scope.get(leftValue.identifier).initializer?.value.toString() + rightValue.removeSurrounding("\"")
                     }
                     rightValue is StatementType.Variable && leftValue is String -> {
-                        leftValue.trim().removeSurrounding("\"") + scope.get(rightValue.identifier).initializer?.value.toString()
+                        leftValue.removeSurrounding("\"") + scope.get(rightValue.identifier).initializer?.value.toString()
                     }
 
                     else -> throw IllegalArgumentException("Unsupported types for PLUS operation: ${leftValue!!::class.simpleName} and ${rightValue!!::class.simpleName}, must be numbers or strings")

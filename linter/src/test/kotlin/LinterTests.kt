@@ -106,7 +106,7 @@ class LinterTests {
 
     @Test
     fun testReadInputCallInvalid() {
-        val input = "readInput(6 + 6);"
+        val input = "let input: string = readInput(\"Enter\" + \"something\");"
         val tokens = Lexer(input, "1.1")
         val asts = Parser(tokens, "1.1")
         val rules = LinterRulesV2("camel-case", false, false)
@@ -114,7 +114,7 @@ class LinterTests {
         linter.lint(asts)
         assertEquals(1, linter.getErrors().size)
         assertEquals(
-            "readInput() statements must receive a literal or identifier, not an expression. At Line 1, symbol 1, got BINARY_EXPRESSION.",
+            "readInput() statements must receive a literal or identifier, not an expression. At Line 1, symbol 21, got BINARY_EXPRESSION.",
             linter.getErrors()[0].getMessage()
         )
         println(linter.getErrors())
