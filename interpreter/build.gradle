@@ -7,3 +7,8 @@ dependencies {
     implementation project(':lexer')
     implementation project(':parser')
 }
+
+test {
+    environment "BEST_FOOTBALL_CLUB", "San Lorenzo"
+    useJUnit()
+}

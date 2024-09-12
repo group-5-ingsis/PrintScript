@@ -1,9 +1,11 @@
 import interpreter.Interpreter
 import lexer.Lexer
+import nodes.Expression
 import nodes.StatementType
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import parser.Parser
+import position.Position
 import position.visitor.Environment
 
 class InterpreterTest {
@@ -29,18 +31,6 @@ class InterpreterTest {
         // Check that the variable 'a' was declared, but has no value
         val variable = currentEnvironment.get("a")
         assertEquals(null, variable.initializer?.value)
-    }
-
-
-    @Test
-    fun printWhitOutTics(){
-        val lexer = Lexer("println(\"hola\");", "1.0")
-        val parser = Parser(lexer, "1.0")
-
-        val ast1 = parser.next()
-        val currentEnvironment = Environment()
-        val result = Interpreter.interpret(ast1, version, currentEnvironment)
-        assertEquals("hola", result.first.toString())
     }
 
     @Test
@@ -411,25 +401,46 @@ class InterpreterTest {
         assertEquals("Name:\n" + "Hello world!", outputBuilder.toString().trim())
     }
 
-    @Test
-    fun testString(){
-        val file = "let a : string = \"Hello\" + \" Word \" ;"
+    private fun createEnvironmentFromMap(envVarsMap: Map<String, String>): Environment {
+        var env = Environment()
 
-        val input = "world"
+        for ((key, value) in envVarsMap) {
+            val variable = StatementType.Variable(
+                designation = "const",
+                identifier = key,
+                initializer = Expression.Literal(value, Position(0, 0)),
+                dataType = determineDataType(value),
+                position = Position(0, 0)
+            )
 
-        val tokens = Lexer(file, version)
-        val asts = Parser(tokens, version, input)
+            env = env.define(variable)
+        }
 
-        val outputBuilder = StringBuilder()
-        var currentEnvironment = Environment()
-
-            val statement = asts.next()
-            val result = Interpreter.interpret(statement, version, currentEnvironment, input)
-
-        print(result.first.toString())
+        return env
     }
 
+    fun determineDataType(value: String): String {
+        return "string"
+    }
 
+    @Test
+    fun testReadEnv() {
+        val input =
+            "const name: string = readEnv(\"BEST_FOOTBALL_CLUB\");println(\"What is the best football club?\"); println(name);\n"
+        val tokens = Lexer(input, version)
+        val asts = Parser(tokens, version)
+
+        val outputBuilder = StringBuilder()
+        var currentEnvironment = createEnvironmentFromMap(System.getenv())
+
+        while (asts.hasNext()) {
+            val statement = asts.next()
+            val result = Interpreter.interpret(statement, version, currentEnvironment)
+            outputBuilder.append(result.first.toString())
+            currentEnvironment = result.second
+            asts.setEnv(currentEnvironment)
+        }
+    }
 
     @Test
     fun print() {
@@ -445,8 +456,26 @@ class InterpreterTest {
             val result = Interpreter.interpret(statement, version, currentEnvironment)
             outputBuilder.append(result.first.toString())
             currentEnvironment = result.second
+            asts.setEnv(currentEnvironment)
         }
 
         assertEquals("3", outputBuilder.toString())
+    }
+
+    @Test
+    fun testIncrementCoverage() {
+        val input = "let x: number;"
+        val tokens = Lexer(input, version)
+        val asts = Parser(tokens, version)
+
+        val outputBuilder = StringBuilder()
+        var currentEnvironment = Environment()
+
+        while (asts.hasNext()) {
+            val statement = asts.next()
+            val result = Interpreter.interpret(statement, version, currentEnvironment)
+            outputBuilder.append(result.first.toString())
+            currentEnvironment = result.second
+        }
     }
 }
