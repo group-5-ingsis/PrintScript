@@ -90,6 +90,11 @@ class PrintValidator : Validator<StatementType.Print> {
                 where = null,
                 message = null
             )
+            is Expression.Binary -> ValidationResult(
+                isInvalid = false,
+                where = null,
+                message = null
+            )
             else -> ValidationResult(
                 isInvalid = true,
                 where = null,

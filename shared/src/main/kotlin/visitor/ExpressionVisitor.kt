@@ -225,8 +225,9 @@ class ExpressionVisitor(val readInput: String? = null) {
     }
 
     private fun visitReadInput(expr: Expression.ReadInput, env: Environment): VisitorResultExpressions {
-        val input = readInput ?: throw IllegalArgumentException("No input provided and readInput is required.")
-        return Pair(input, env)
+        val input = readInput
+        println(input)
+        return Pair(input.toString().trim(), env)
     }
 
     private fun visitReadEnv(expr: Expression.ReadEnv, env: Environment): VisitorResultExpressions {
