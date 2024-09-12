@@ -67,8 +67,13 @@ sealed class Expression {
         }
     }
 
-    class ReadInput(override val position: Position, override val value: Grouping) : Expression() {
+    class ReadInput(
+        override val position: Position,
+        override val value: Grouping,
+        val message: String
+    ) : Expression() {
         override val expressionType: String = "READ_INPUT"
+
         override fun accept(visitor: Visitor) {
             return visitor.visitReadInput(this)
         }
