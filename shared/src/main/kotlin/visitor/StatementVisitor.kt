@@ -34,7 +34,9 @@ class StatementVisitor {
         if (value.initializer?.value !is Boolean) {
             throw IllegalArgumentException("Invalid value for if statement: $value" + "in " + statement.position.toString() + " expected boolean")
         }
-        return if (value.initializer.value is Boolean) {
+        val initializer: Expression = value.initializer
+        val boolean = initializer.value
+        return if (boolean == true) {
             statement.thenBranch.acceptVisitor(this, newEnvironment, newStringBuilder)
         } else {
             statement.elseBranch?.acceptVisitor(this, newEnvironment, newStringBuilder) ?: Pair(newStringBuilder, newEnvironment)

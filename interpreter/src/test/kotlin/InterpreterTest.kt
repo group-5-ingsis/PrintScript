@@ -350,4 +350,30 @@ class InterpreterTest {
             currentEnvironment = result.second
         }
     }
+
+    @Test
+    fun testIfElse() {
+        val input = """
+    const booleanValue: boolean = false;
+    if(booleanValue) {
+        println("if statement is not working correctly");
+    }
+    println("outside of conditional");
+        """.trimIndent()
+
+        val tokens = Lexer(input, version)
+        val asts = Parser(tokens, version)
+
+        val outputBuilder = StringBuilder()
+        var currentEnvironment = Environment()
+
+        while (asts.hasNext()) {
+            val statement = asts.next()
+            val result = Interpreter.interpret(statement, version, currentEnvironment)
+            outputBuilder.append(result.first.toString())
+            currentEnvironment = result.second
+        }
+
+        assertEquals("outside of conditional", outputBuilder.toString().trim())
+    }
 }
