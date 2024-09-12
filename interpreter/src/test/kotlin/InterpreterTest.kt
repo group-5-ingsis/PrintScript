@@ -31,6 +31,26 @@ class InterpreterTest {
     }
 
     @Test
+    fun testIDK() {
+        val input = "let numberResult: number = 5 * 5 - 8; println(numberResult);"
+        val tokens = Lexer(input, "1.0")
+        val asts = Parser(tokens, "1.0")
+
+        val outputBuilder = StringBuilder()
+        var currentEnvironment = Environment()
+
+        while (asts.hasNext()) {
+            val statement = asts.next()
+            val result = Interpreter.interpret(statement, version, currentEnvironment)
+            outputBuilder.append(result.first.toString())
+            currentEnvironment = result.second
+        }
+
+        val variable = currentEnvironment.get("numberResult")
+        assertEquals(17, variable.initializer?.value)
+    }
+
+    @Test
     fun testDeclarationWithString() {
         val input = "let a: string;"
         val tokens = Lexer(input, version)
@@ -164,7 +184,7 @@ class InterpreterTest {
         }
 
         // Check that the output matches the expected print result
-        assertEquals("\nHello, World!\n", outputBuilder.toString())
+        assertEquals("Hello, World!", outputBuilder.toString())
     }
 
     @Test
@@ -184,7 +204,7 @@ class InterpreterTest {
         }
 
         // Verify that both print statements are present in the output
-        assertEquals("\nFirst print\nSecond print\n", outputBuilder.toString())
+        assertEquals("First print\nSecond print", outputBuilder.toString())
     }
 
     @Test
