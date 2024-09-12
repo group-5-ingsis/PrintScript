@@ -434,6 +434,7 @@ class InterpreterTest {
         var currentEnvironment = createEnvironmentFromMap(System.getenv())
 
         while (asts.hasNext()) {
+            asts.setEnv(currentEnvironment)
             val statement = asts.next()
             val result = Interpreter.interpret(statement, version, currentEnvironment)
             outputBuilder.append(result.first.toString())

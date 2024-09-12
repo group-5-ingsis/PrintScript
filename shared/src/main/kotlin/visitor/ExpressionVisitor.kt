@@ -235,9 +235,18 @@ class ExpressionVisitor(val readInput: String? = null) {
 
         val value = key.expression.value
 
-        val envValue = env.get(value.toString())
+        val name = removeSurroundingQuotes(value.toString())
+        val envValue = env.get(name).initializer
 
         return Pair(envValue, env)
+    }
+
+    private fun removeSurroundingQuotes(str: String): String {
+        return if (str.length >= 2 && str.startsWith("\"") && str.endsWith("\"")) {
+            str.substring(1, str.length - 1).trim()
+        } else {
+            str.trim()
+        }
     }
 
     private fun visitIdentifierExp(exp: Expression.IdentifierExpression, environment: Environment): VisitorResultExpressions {
