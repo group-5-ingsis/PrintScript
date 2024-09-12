@@ -227,7 +227,7 @@ class InterpreterTest {
 
     @Test
     fun testPrintExpressionAndVariable() {
-        val input = "let a: number = 42; println(a); println(50);"
+        val input = "let a: number = 42; println(a); println(a + 8);"
         val tokens = Lexer(input, version)
         val asts = Parser(tokens, version)
 
@@ -383,7 +383,7 @@ class InterpreterTest {
         val input = "world"
 
         val tokens = Lexer(file, version)
-        val asts = Parser(tokens, version, input)
+        val asts = Parser(tokens, version)
 
         val outputBuilder = StringBuilder()
         var currentEnvironment = Environment()
@@ -399,21 +399,21 @@ class InterpreterTest {
     }
 
     @Test
-    fun testPrintStringConcat() {
-        val input = "let numberResult: string = 'hello' + 5 + 'pp'; println(numberResult);"
-        val tokens = Lexer(input, "1.0")
-        val asts = Parser(tokens, "1.0")
+    fun readEnv() {
+        val input = "const name: string = readEnv(\"BEST_FOOTBALL_CLUB\");println(\"What is the best football club?\");println(name);"
+        val tokens = Lexer(input, version)
+        val asts = Parser(tokens, version)
 
         val outputBuilder = StringBuilder()
         var currentEnvironment = Environment()
 
         while (asts.hasNext()) {
             val statement = asts.next()
-            val result = Interpreter.interpret(statement, version, currentEnvironment)
+            val result = Interpreter.interpret(statement, version, currentEnvironment, input)
             outputBuilder.append(result.first.toString())
             currentEnvironment = result.second
         }
 
-        assertEquals("17", outputBuilder.toString().trim())
+        assertEquals("What is the best football club?\n San Lorenzo", outputBuilder.toString().trim())
     }
 }
