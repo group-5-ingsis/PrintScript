@@ -51,7 +51,8 @@ class PrimaryV1_1() : ExpressionParser {
             tokenMng.advance()
             val expressionEvaluator = ExpressionType.makeExpressionEvaluatorV1_1()
             val expr = expressionEvaluator.parse(tokenMng.getTokens())
-            return Pair(expr.first, Expression.ReadInput(position, expr.second as Expression.Grouping))
+            val message = "Default message"
+            return Pair(expr.first, Expression.ReadInput(position, expr.second as Expression.Grouping, message))
         } else if (tokenMng.nextTokenMatchesExpectedType("READ_ENV")) {
             tokenMng.advance()
             val expressionEvaluator = ExpressionType.makeExpressionEvaluatorV1_1()

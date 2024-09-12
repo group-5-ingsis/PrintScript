@@ -125,7 +125,7 @@ class ExpressionVisitor(val readInput: String? = null) {
             ">" -> {
                 val result = when {
                     leftValue is Int && rightValue is Int -> leftValue > rightValue
-                    leftValue is Number && rightValue is Number -> (leftValue as Number).toDouble() > (rightValue as Number).toDouble()
+                    leftValue is Number && rightValue is Number -> leftValue.toDouble() > rightValue.toDouble()
                     leftValue is String && rightValue is String -> leftValue > rightValue
                     else -> throw IllegalArgumentException("Unsupported types for GREATER THAN operation: ${leftValue!!::class.simpleName} and ${rightValue!!::class.simpleName}")
                 }
@@ -134,7 +134,7 @@ class ExpressionVisitor(val readInput: String? = null) {
             ">=" -> {
                 val result = when {
                     leftValue is Int && rightValue is Int -> leftValue >= rightValue
-                    leftValue is Number && rightValue is Number -> (leftValue as Number).toDouble() >= (rightValue as Number).toDouble()
+                    leftValue is Number && rightValue is Number -> leftValue.toDouble() >= rightValue.toDouble()
                     leftValue is String && rightValue is String -> leftValue >= rightValue
                     else -> throw IllegalArgumentException("Unsupported types for GREATER THAN OR EQUAL operation: ${leftValue!!::class.simpleName} and ${rightValue!!::class.simpleName}")
                 }
@@ -143,7 +143,7 @@ class ExpressionVisitor(val readInput: String? = null) {
             "<" -> {
                 val result = when {
                     leftValue is Int && rightValue is Int -> leftValue < rightValue
-                    leftValue is Number && rightValue is Number -> (leftValue as Number).toDouble() < (rightValue as Number).toDouble()
+                    leftValue is Number && rightValue is Number -> leftValue.toDouble() < rightValue.toDouble()
                     leftValue is String && rightValue is String -> leftValue < rightValue
                     else -> throw IllegalArgumentException("Unsupported types for LESS THAN operation: ${leftValue!!::class.simpleName} and ${rightValue!!::class.simpleName}")
                 }
@@ -152,7 +152,7 @@ class ExpressionVisitor(val readInput: String? = null) {
             "<=" -> {
                 val result = when {
                     leftValue is Int && rightValue is Int -> leftValue <= rightValue
-                    leftValue is Number && rightValue is Number -> (leftValue as Number).toDouble() <= (rightValue as Number).toDouble()
+                    leftValue is Number && rightValue is Number -> leftValue.toDouble() <= rightValue.toDouble()
                     leftValue is String && rightValue is String -> leftValue <= rightValue
                     else -> throw IllegalArgumentException("Unsupported types for LESS THAN OR EQUAL operation: ${leftValue!!::class.simpleName} and ${rightValue!!::class.simpleName}")
                 }
@@ -161,7 +161,7 @@ class ExpressionVisitor(val readInput: String? = null) {
             "==" -> {
                 val result = when {
                     leftValue is Int && rightValue is Int -> leftValue == rightValue
-                    leftValue is Number && rightValue is Number -> (leftValue as Number).toDouble() == (rightValue as Number).toDouble()
+                    leftValue is Number && rightValue is Number -> leftValue.toDouble() == rightValue.toDouble()
                     leftValue is String && rightValue is String -> leftValue == rightValue
                     else -> throw IllegalArgumentException("Unsupported types for EQUAL operation: ${leftValue!!::class.simpleName} and ${rightValue!!::class.simpleName}")
                 }
@@ -170,7 +170,7 @@ class ExpressionVisitor(val readInput: String? = null) {
             "!=" -> {
                 val result = when {
                     leftValue is Int && rightValue is Int -> leftValue != rightValue
-                    leftValue is Number && rightValue is Number -> (leftValue as Number).toDouble() != (rightValue as Number).toDouble()
+                    leftValue is Number && rightValue is Number -> leftValue.toDouble() != rightValue.toDouble()
                     leftValue is String && rightValue is String -> leftValue != rightValue
                     else -> throw IllegalArgumentException("Unsupported types for NOT EQUAL operation: ${leftValue!!::class.simpleName} and ${rightValue!!::class.simpleName}")
                 }
