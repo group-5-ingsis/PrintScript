@@ -87,11 +87,19 @@ class StatementVisitor {
         }
     }
 
-    private fun visitPrintStm(statement: StatementType.Print, environment: Environment, stringBuilder: StringBuilder): statementVisitorResult {
-        // Evaluate the expression to get the value to print
+    private fun visitPrintStm(
+        statement: StatementType.Print,
+        environment: Environment,
+        stringBuilder: StringBuilder
+    ): statementVisitorResult {
         val value = statement.value
         val newValue = evaluateExpression(value, environment)
-        val printTarget = newValue.first
+        var printTarget = newValue.first
+
+        if (printTarget is StatementType.Variable) {
+            val initializer = printTarget.initializer
+            printTarget = initializer?.value
+        }
 
         val trimmedPrintTarget = printTarget.toString().trim().removeSurrounding("\"", "\"")
 

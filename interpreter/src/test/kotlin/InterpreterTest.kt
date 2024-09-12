@@ -31,7 +31,7 @@ class InterpreterTest {
     }
 
     @Test
-    fun testIDK() {
+    fun testPrintOperation() {
         val input = "let numberResult: number = 5 * 5 - 8; println(numberResult);"
         val tokens = Lexer(input, "1.0")
         val asts = Parser(tokens, "1.0")
@@ -46,8 +46,7 @@ class InterpreterTest {
             currentEnvironment = result.second
         }
 
-        val variable = currentEnvironment.get("numberResult")
-        assertEquals(17, variable.initializer?.value)
+        assertEquals("17", outputBuilder.toString().trim())
     }
 
     @Test
