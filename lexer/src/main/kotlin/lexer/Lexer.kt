@@ -7,7 +7,8 @@ import java.io.InputStream
 import java.io.InputStreamReader
 
 class Lexer(reader: BufferedReader, version: String = "1.1") : Iterator<Token> {
-    private val linesIterator = reader.lineSequence().iterator()
+    private val lines = reader.lineSequence().toList()
+    private val linesIterator = lines.iterator()
     private var currentLine: String = ""
     private var lineIterator = currentLine.iterator()
     private var currentRow = 0
@@ -16,6 +17,11 @@ class Lexer(reader: BufferedReader, version: String = "1.1") : Iterator<Token> {
 
     private var state = LexerState()
     private val tokenGenerator = TokenGenerator(version)
+    private var progressCallback: ((Int) -> Unit)? = null
+
+    // Total number of lines
+    private val totalLines = lines.size
+    private var processedLines = 0
 
     constructor(input: String, version: String = "1.1") : this(BufferedReader(input.reader()), version)
 
@@ -39,6 +45,9 @@ class Lexer(reader: BufferedReader, version: String = "1.1") : Iterator<Token> {
                     lineIterator = currentLine.iterator()
                     currentRow++
                     currentIndex = 0 // Reset index for new line
+                    processedLines++
+                    // Report progress
+                    progressCallback?.invoke((processedLines * 100) / totalLines)
                     state = state.copy(buffer = StringBuilder())
                     continue
                 } else if (state.buffer.isNotEmpty()) {
@@ -102,5 +111,9 @@ class Lexer(reader: BufferedReader, version: String = "1.1") : Iterator<Token> {
         val token = tokenGenerator.generateToken(value, currentRow, symbolIndex)
         state = state.copy(buffer = StringBuilder(), currentIndex = symbolIndex)
         return token
+    }
+
+    fun setProgressCallback(callback: (Int) -> Unit) {
+        this.progressCallback = callback
     }
 }

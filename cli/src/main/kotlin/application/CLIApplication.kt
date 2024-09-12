@@ -70,7 +70,7 @@ class CLIApplication : Application() {
             val commandText = inputField.text
             val result = CommandLineInterface.execute(commandText)
             outputArea.appendText("Command: $commandText\nResult: $result\n\n")
-            outputArea.requestLayout() // Ensures the layout updates
+            outputArea.requestLayout()
             inputField.clear()
             updateRecentCommands(commandText)
             recentCommandsListView.items.clear()
