@@ -25,18 +25,28 @@ class StatementVisitor {
         return Pair(stB, env)
     }
 
-    private fun visitIfStm(statement: StatementType.IfStatement, environment: Environment, stringBuilder: StringBuilder): statementVisitorResult {
+    private fun visitIfStm(
+        statement: StatementType.IfStatement,
+        environment: Environment,
+        stringBuilder: StringBuilder
+    ): statementVisitorResult {
         val (value, newEnvironment) = evaluateExpression(statement.condition, environment)
-        if (value !is StatementType.Variable) {
-            throw Error("Expression is not a variable")
-        }
+
         val newStringBuilder = StringBuilder(stringBuilder.toString())
-        if (value.initializer?.value !is Boolean) {
-            throw IllegalArgumentException("Invalid value for if statement: $value" + "in " + statement.position.toString() + " expected boolean")
+
+        val booleanValue = when (value) {
+            is StatementType.Variable -> {
+                val initializer = value.initializer ?: throw IllegalArgumentException("Variable has no initializer")
+                if (initializer.value !is Boolean) {
+                    throw IllegalArgumentException("Invalid value for if statement: $value" + " in " + statement.position.toString() + ", expected boolean")
+                }
+                initializer.value
+            }
+            is Boolean -> value
+            else -> throw IllegalArgumentException("Invalid expression for if statement: $value" + " in " + statement.position.toString() + ", expected boolean or variable")
         }
-        val initializer: Expression = value.initializer
-        val boolean = initializer.value
-        return if (boolean == true) {
+
+        return if (booleanValue == true) {
             statement.thenBranch.acceptVisitor(this, newEnvironment, newStringBuilder)
         } else {
             statement.elseBranch?.acceptVisitor(this, newEnvironment, newStringBuilder) ?: Pair(newStringBuilder, newEnvironment)
