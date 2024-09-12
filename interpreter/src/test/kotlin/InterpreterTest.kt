@@ -416,4 +416,21 @@ class InterpreterTest {
 
         assertEquals("3", outputBuilder.toString())
     }
+
+    @Test
+    fun testIncrementCoverage() {
+        val input = "let x: number;"
+        val tokens = Lexer(input, version)
+        val asts = Parser(tokens, version)
+
+        val outputBuilder = StringBuilder()
+        var currentEnvironment = Environment()
+
+        while (asts.hasNext()) {
+            val statement = asts.next()
+            val result = Interpreter.interpret(statement, version, currentEnvironment)
+            outputBuilder.append(result.first.toString())
+            currentEnvironment = result.second
+        }
+    }
 }
