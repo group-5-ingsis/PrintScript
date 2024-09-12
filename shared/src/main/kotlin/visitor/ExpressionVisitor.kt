@@ -235,7 +235,7 @@ class ExpressionVisitor(val readInput: String? = null) {
         val value = key.expression.value
 
         val name = removeSurroundingQuotes(value.toString())
-        val envValue = env.get(name).initializer
+        val envValue = env.get(name).initializer?.value
 
         return Pair(envValue, env)
     }
