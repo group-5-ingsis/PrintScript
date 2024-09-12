@@ -74,7 +74,7 @@ class ParserV1_1Tester {
 
     @Test
     fun testIfWithVariableDeclaration() {
-        val lexer = Lexer("let a: Boolean = true; if (a) { let queso: Number = 5; println(queso); }", "1.1")
+        val lexer = Lexer("let a: boolean = true; if (a) { let queso: number = 5; println(queso); }", "1.1")
         val parser = Parser(lexer, "1.1")
 
         // Parse the first statement, which should be the variable declaration 'a'
@@ -84,7 +84,7 @@ class ParserV1_1Tester {
             designation = "let",
             identifier = "a",
             initializer = Expression.Literal(true, Position(1, 18)),
-            dataType = "Boolean",
+            dataType = "boolean",
             position = Position(1, 4)
         )
 
@@ -105,7 +105,7 @@ class ParserV1_1Tester {
             designation = "let",
             identifier = "queso",
             initializer = Expression.Literal(5, Position(1, 53)),
-            dataType = "Number",
+            dataType = "number",
             position = Position(1, 37)
         )
 

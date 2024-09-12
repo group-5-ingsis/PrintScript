@@ -13,8 +13,7 @@ class Environment(
     val enclosing: Environment? = null, // Previous environment
     initialValues: HashMap<String, StatementType.Variable> = HashMap() // Initial values
 ) {
-    // Map that stores the variables, where the key is the variable name and the value is a pair
-    // containing the declaration ("const" or "let") and the variable's value.
+
     private val values: HashMap<String, StatementType.Variable> = HashMap(initialValues) // Initializes the values map
 
     /**
@@ -61,16 +60,13 @@ class Environment(
     fun get(name: String): StatementType.Variable {
         val result = values[name]
         if (result == null) {
+            if (enclosing != null) return enclosing.get(name)
             throw Error("Undefined variable: $name")
         } else {
             return result
         }
-//        if (values.containsKey(name)) {
-//            return values[name]?.second
-//        }
-//        if (enclosing != null) return enclosing.get(name)
-//
-//        throw Error("Undefined variable '$name'.")
+
+
     }
 
     fun assign(name: String, value: Any?): Environment {
@@ -116,31 +112,6 @@ class Environment(
         }
     }
 
-    /**
-     * Creates and returns a deep copy of the current environment.
-     *
-     * @return A new Environment instance that is a deep copy of the current environment.
-     */
-//    private fun getDeepCopyFromEnvironment(): HashMap<String, StatementType.Variable> {
-//        val deepCopiedValues = HashMap<String, StatementType.Variable>()
-//
-//        for ((key, value) in values) {
-//            val (declaration, originalValue) = value
-//
-//            // Create a deep copy of the value if necessary
-//            val copiedValue = when (originalValue) {
-//                is String -> originalValue // Strings are immutable, no need to deep copy
-//                is Number -> originalValue // Numbers are immutable, no need to deep copy
-//                is List<*> -> ArrayList(originalValue) // Example for a deep copy of a list
-//                is Map<*, *> -> HashMap(originalValue as Map<*, *>) // Example for a deep copy of a map
-//                else -> originalValue // For other types, just use the original value
-//            }
-//
-//            deepCopiedValues[key] = Pair(declaration, copiedValue)
-//        }
-//
-//        return deepCopiedValues
-//    }
 
     private fun alternativeCopy(): HashMap<String, StatementType.Variable> {
         return HashMap(values)
