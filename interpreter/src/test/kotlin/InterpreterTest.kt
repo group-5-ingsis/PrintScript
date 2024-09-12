@@ -50,6 +50,25 @@ class InterpreterTest {
     }
 
     @Test
+    fun testStringAndNumberConcat() {
+        val input = "let someNumber: number = 1; let someString: string = \"hello world \";\n println(someString + someNumber);\n"
+        val tokens = Lexer(input, version)
+        val asts = Parser(tokens, version)
+
+        val outputBuilder = StringBuilder()
+        var currentEnvironment = Environment()
+
+        while (asts.hasNext()) {
+            val statement = asts.next()
+            val result = Interpreter.interpret(statement, version, currentEnvironment)
+            outputBuilder.append(result.first.toString())
+            currentEnvironment = result.second
+        }
+
+        assertEquals("hello world 1", outputBuilder.toString().trim())
+    }
+
+    @Test
     fun testDeclarationWithString() {
         val input = "let a: string;"
         val tokens = Lexer(input, version)
