@@ -230,8 +230,15 @@ class ExpressionVisitor(val readInput: String? = null) {
     }
 
     private fun visitReadEnv(expr: Expression.ReadEnv, env: Environment): VisitorResultExpressions {
-        TODO("Inplement read env")
-        return Pair(0, env)
+        val key = expr.value
+
+        val value = env.get(key.toString())
+
+        val stringBuilder = StringBuilder().apply {
+            append(value)
+        }
+
+        return Pair(stringBuilder, env)
     }
 
     private fun visitIdentifierExp(exp: Expression.IdentifierExpression, environment: Environment): VisitorResultExpressions {
