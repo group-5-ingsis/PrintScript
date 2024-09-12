@@ -8,7 +8,7 @@ class SemanticValidator(private val readInput: String?) {
         mutableMapOf(
             "VARIABLE_STATEMENT" to VariableStatementValidator(readInput) as Validator<StatementType>,
             "PRINT" to PrintValidator() as Validator<StatementType>,
-            "STATEMENT_EXPRESSION" to StatementExpressionValidator() as Validator<StatementType>
+            "STATEMENT_EXPRESSION" to StatementExpressionValidator(readInput) as Validator<StatementType>
         )
 
     fun validateSemantics(node: StatementType, varTable: Environment): ValidationResult {

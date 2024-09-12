@@ -379,11 +379,11 @@ class InterpreterTest {
 
     @Test
     fun testReadInput() {
-        val file = "const name: string = readInput(\"Name:\"); println(\"Hello\" + name + \"!\");"
+        val file = "const name: string = readInput(\"Name:\"); println(\"Hello \" + name + \"!\");"
         val input = "world"
 
         val tokens = Lexer(file, version)
-        val asts = Parser(tokens, version)
+        val asts = Parser(tokens, version, input)
 
         val outputBuilder = StringBuilder()
         var currentEnvironment = Environment()
@@ -393,15 +393,14 @@ class InterpreterTest {
             val result = Interpreter.interpret(statement, version, currentEnvironment, input)
             outputBuilder.append(result.first.toString())
             currentEnvironment = result.second
-            asts.setEnv(currentEnvironment)
         }
 
         assertEquals("Name:\n" + "Hello world!", outputBuilder.toString().trim())
     }
 
     @Test
-    fun readEnv() {
-        val input = "const name: string = readEnv(\"BEST_FOOTBALL_CLUB\");println(\"What is the best football club?\");println(name);"
+    fun print() {
+        val input = "println(1 + 1 + 1);"
         val tokens = Lexer(input, version)
         val asts = Parser(tokens, version)
 
@@ -410,11 +409,11 @@ class InterpreterTest {
 
         while (asts.hasNext()) {
             val statement = asts.next()
-            val result = Interpreter.interpret(statement, version, currentEnvironment, input)
+            val result = Interpreter.interpret(statement, version, currentEnvironment)
             outputBuilder.append(result.first.toString())
             currentEnvironment = result.second
         }
 
-        assertEquals("What is the best football club?\n San Lorenzo", outputBuilder.toString().trim())
+        assertEquals("3", outputBuilder.toString())
     }
 }

@@ -6,7 +6,7 @@ import nodes.StatementType
 import position.visitor.Environment
 import position.visitor.ExpressionVisitor
 
-class StatementExpressionValidator : Validator<StatementType.StatementExpression> {
+class StatementExpressionValidator(private val input: String?) : Validator<StatementType.StatementExpression> {
 
     override fun validate(node: StatementType.StatementExpression, scope: Environment): ValidationResult {
         return when (val exp: Expression = node.value) {
@@ -29,7 +29,7 @@ class StatementExpressionValidator : Validator<StatementType.StatementExpression
         val valueExpression = exp.value
         /* null check for getting the value is made on Environment. */
         val variableInfo = scope.get(identifier)
-        val actualValue = valueExpression.acceptVisitor(ExpressionVisitor("asd"), scope)
+        val actualValue = valueExpression.acceptVisitor(ExpressionVisitor(input), scope)
         val actualType = getTypeInString(actualValue.first)
 
         if (!assignedTypeMatchesDeclaredType(actualType, variableInfo.dataType)) {
