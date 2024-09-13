@@ -6,7 +6,11 @@ import parser.syntactic.SyntacticParser
 import position.visitor.Environment
 import token.Token
 
-class Parser(private val lexer: Iterator<Token>, private val version: String = "1.1", private val readInput: String? = null) : Iterator<StatementType> {
+class Parser(
+    private val lexer: Iterator<Token>,
+    private val version: String = "1.1",
+    private var readInput: String? = null
+) : Iterator<StatementType> {
     private var env = Environment()
     private val momentList: ArrayDeque<Token> = ArrayDeque()
 
@@ -17,8 +21,13 @@ class Parser(private val lexer: Iterator<Token>, private val version: String = "
     fun setEnv(env: Environment) {
         this.env = env
     }
+
     fun getEnv(): Environment {
         return env
+    }
+
+    fun setInput(input: String) {
+        readInput = input
     }
 
     override fun next(): StatementType {
