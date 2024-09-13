@@ -393,17 +393,7 @@ class InterpreterTest {
 
         while (asts.hasNext()) {
             val statement = asts.next()
-            println()
-            if (statement is StatementType.Variable && statement.initializer!!.expressionType == "READ_INPUT") {
-                val value = statement.initializer!!.value
-                if (value is Expression.Grouping) {
-                    outputBuilder.append(value.expression.value)
-                    outputBuilder.append("\n")
-                }
-            }
-            val result = Interpreter.interpret(statement, version, currentEnvironment, input)
-            outputBuilder.append(result.first.toString())
-            currentEnvironment = result.second
+            print(statement)
         }
 
         assertEquals("Name:\n" + "Hello world!", outputBuilder.toString().trim())
