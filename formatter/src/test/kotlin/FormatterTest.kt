@@ -10,6 +10,8 @@ class FormatterTest {
 
     private lateinit var exampleRules: FormattingRules
 
+    val version = "1.1"
+
     @BeforeTest
     fun setUp() {
         val yamlMapper = YAMLMapper()
@@ -24,8 +26,6 @@ class FormatterTest {
     @Test
     fun testSimpleAssignation() {
         val input = "let a:        number = 2;"
-        val version = "1.0"
-
         val tokens = Lexer(input, version)
         val astNodes = Parser(tokens, version)
         val result = Formatter.format(astNodes, exampleRules, version)
@@ -38,8 +38,6 @@ class FormatterTest {
     @Test
     fun testAssignationWithBinarySum() {
         val input = "let  a: number = 2      +  2;"
-        val version = "1.0"
-
         val tokens = Lexer(input, version)
         val astNodes = Parser(tokens, version)
         val result = Formatter.format(astNodes, exampleRules, version)
@@ -52,8 +50,6 @@ class FormatterTest {
     @Test
     fun testAssignationWithTripleSum() {
         val input = "let  a: number = 2      +  2+2*4;"
-        val version = "1.0"
-
         val tokens = Lexer(input, version)
         val astNodes = Parser(tokens, version)
         val result = Formatter.format(astNodes, exampleRules, version)
@@ -66,8 +62,6 @@ class FormatterTest {
     @Test
     fun testAssignationWithComplexOperation() {
         val input = "let  a: number = (2      +  2)+ 2*4;"
-        val version = "1.0"
-
         val tokens = Lexer(input, version)
         val astNodes = Parser(tokens, version)
         val result = Formatter.format(astNodes, exampleRules, version)
@@ -80,8 +74,6 @@ class FormatterTest {
     @Test
     fun testPrintLnFormatting() {
         val input = "let a: number = 2; println(a);"
-        val version = "1.0"
-
         val tokens = Lexer(input, version)
         val astNodes = Parser(tokens, version)
         val result = Formatter.format(astNodes, exampleRules, version)
@@ -93,13 +85,10 @@ class FormatterTest {
     @Test
     fun testIfStatementFormatting() {
         val input = "let c : boolean = true; if (c) { let b: number = 3; }"
-        val version = "1.1"
-
         val tokens = Lexer(input, version)
         val astNodes = Parser(tokens, version)
         val result = Formatter.format(astNodes, exampleRules, version)
 
-        // Assuming the indent is set to 4 spaces in the rules
         val expected = """
         let c: boolean = true;
         if (c) {
@@ -113,8 +102,6 @@ class FormatterTest {
     @Test
     fun testIfStatementWithElseFormatting() {
         val input = "let c : boolean = true; if (c) { let b: number = 3; } else { let a: number = 4;};"
-        val version = "1.1"
-
         val tokens = Lexer(input, version)
         val astNodes = Parser(tokens, version)
         val result = Formatter.format(astNodes, exampleRules, version)
@@ -134,9 +121,6 @@ class FormatterTest {
     @Test
     fun testDoubleIfStatementFormatting() {
         val input = "let c : boolean = true; if (c) { if (c) {let a: number = 2;} };"
-
-        val version = "1.1"
-
         val tokens = Lexer(input, version)
         val astNodes = Parser(tokens, version)
         val result = Formatter.format(astNodes, exampleRules, version)
@@ -148,6 +132,38 @@ class FormatterTest {
         }
     }
         """.trimIndent()
+
+        assertEquals(expected, result)
+    }
+
+    @Test
+    fun testEnforceSpaceSurroundingOperations() {
+        val input = "let result: number = 5+4*3/2;"
+        val tokens = Lexer(input, version)
+        val astNodes = Parser(tokens, version)
+        val result = Formatter.format(astNodes, exampleRules, version)
+
+        val expected = "let result: number = 5 + 4 * 3 / 2;"
+        assertEquals(expected, result)
+    }
+
+    @Test
+    fun test0lineBreaksAfterPrintln() {
+        val input = "let something:string = \"a really cool thing\";\n" +
+            "println(something);\n" +
+            "\n" +
+            "\n" +
+            "\n" +
+            "\n" +
+            "println(\"in the way she moves\");"
+
+        val expected = "let something:string = \"a really cool thing\";\n" +
+            "println(something);\n" +
+            "println(\"in the way she moves\");"
+
+        val tokens = Lexer(input, version)
+        val astNodes = Parser(tokens, version)
+        val result = Formatter.format(astNodes, exampleRules, version)
 
         assertEquals(expected, result)
     }
