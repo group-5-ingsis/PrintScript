@@ -83,6 +83,11 @@ class LinterVisitor(private val linterRules: LinterRules) : Visitor {
             }
         }
         linterResult = LinterResult(true, "No errors found at $position")
+        if (statement.initializer != null) {
+            if (statement.initializer!!.expressionType == "READ_INPUT") {
+                statement.initializer!!.accept(this)
+            }
+        }
     }
 
     override fun visitBlockStm(statement: StatementType.BlockStatement) {

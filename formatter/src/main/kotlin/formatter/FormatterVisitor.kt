@@ -131,6 +131,12 @@ class FormatterVisitor(private val rules: FormattingRules) : Visitor {
 
     override fun visitLiteral(expression: Expression.Literal) {
         val value = expression.value
+
+        if (value is String) {
+            output.append("\"$value\"")
+            return
+        }
+
         output.append(value)
     }
 

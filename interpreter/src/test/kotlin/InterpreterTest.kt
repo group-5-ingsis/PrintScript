@@ -54,7 +54,7 @@ class InterpreterTest {
 
     @Test
     fun testStringAndNumberConcat() {
-        val input = "let someNumber: number = 1; let someString: string = \"hello world  \";\n println(someString + someNumber);\n"
+        val input = "let someNumber: number = 1; let someString: string = \"hello world \";\n println(someString + someNumber);\n"
         val tokens = Lexer(input, version)
         val asts = Parser(tokens, version)
 
@@ -424,7 +424,9 @@ class InterpreterTest {
     @Test
     fun testReadEnv() {
         val input =
-            "const name: string = readEnv(\"BEST_FOOTBALL_CLUB\");println(\"What is the best football club?\"); println(name);\n"
+            "const name: string = readEnv(\"BEST_FOOTBALL_CLUB\"); " +
+                "println(\"What is the best football club?\"); " +
+                "println(name);\n"
         val tokens = Lexer(input, version)
         val asts = Parser(tokens, version)
 
@@ -435,10 +437,38 @@ class InterpreterTest {
             asts.setEnv(currentEnvironment)
             val statement = asts.next()
             val result = Interpreter.interpret(statement, version, currentEnvironment)
-            outputBuilder.append(result.first.toString())
+            val first = result.first
+            outputBuilder.append(first.toString())
             currentEnvironment = result.second
             asts.setEnv(currentEnvironment)
         }
+
+        assertEquals("What is the best football club?\n" + "San Lorenzo", outputBuilder.toString().trim())
+    }
+
+    @Test
+    fun testReadEnvHelloWorld() {
+        val input =
+            "const name: string = readEnv(\"NAME\"); " +
+                "println(\"Hello \" + name + 22);\n"
+
+        val tokens = Lexer(input, version)
+        val asts = Parser(tokens, version)
+
+        val outputBuilder = StringBuilder()
+        var currentEnvironment = createEnvironmentFromMap(System.getenv())
+
+        while (asts.hasNext()) {
+            asts.setEnv(currentEnvironment)
+            val statement = asts.next()
+            val result = Interpreter.interpret(statement, version, currentEnvironment)
+            val first = result.first
+            outputBuilder.append(first.toString())
+            currentEnvironment = result.second
+            asts.setEnv(currentEnvironment)
+        }
+
+        assertEquals("Hello WORLD22", outputBuilder.toString().trim())
     }
 
     @Test
