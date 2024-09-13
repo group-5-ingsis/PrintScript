@@ -22,7 +22,7 @@ class Factor(private val parseInferiorFunction: ExpressionParser) : ExpressionPa
             val position = tokenMng.getPosition()
             tokenMng.advance()
 
-            val (remainingTokens2, rightExpression) = parseInferiorFunction.parse(tokenMng.getTokens())
+            val (remainingTokens2, rightExpression) = this.parse(tokenMng.getTokens())
             remainingTokens = remainingTokens2
             expression = Expression.Binary(expression, tokenOperator, rightExpression, position)
         }

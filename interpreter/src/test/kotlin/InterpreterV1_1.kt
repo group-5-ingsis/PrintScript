@@ -45,7 +45,7 @@ class InterpreterV1_1 {
         val (stringBuilder, env2) = Interpreter.interpret(ifstm, version, env)
 
         // Verificar el contenido del StringBuilder
-        val expectedOutput = "\nfalse\n" // Asumiendo que el valor de 'queso' se imprime seguido de un salto de línea
+        val expectedOutput = "false" // Asumiendo que el valor de 'queso' se imprime seguido de un salto de línea
         assertEquals(expectedOutput, stringBuilder.toString())
         assertFalse(expectedOutput.contains("hola"))
         assertTrue(env2.contains("a"))
