@@ -82,7 +82,8 @@ class Parser(
         val listMng = listOf(
             "No tokens to get position from.",
             "Find unknown expression at line: 0 and at index: 0",
-            "No tokens to parse"
+            "No tokens to parse",
+            "Expect this type: RIGHT_BRACE in Line 0, symbol 0"
         )
 
         return e.message in listMng

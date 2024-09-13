@@ -79,6 +79,27 @@ class ParserV1_1Tester {
     }
 
     @Test
+    fun testIfInsideIf(){
+        // Test for if (false) { print(42) } else { print(0) }
+        val lexer = Lexer("if (true) { let a: boolean = true; if (a) {println(\" Hola! \"); }  } else { println(0); }", "1.1")
+        val parser = Parser(lexer, "1.1")
+
+        val ast = parser.next()
+
+
+    }
+    @Test
+    fun testAndReturn (){
+        // Test for if (false) { print(42) } else { print(0) }
+        val lexer = Lexer("let b : string  = \"hola \" ; print(\" b \" + \" Buenos dias! \"); if (true) { \n let a: boolean = true; \n if (a) {println(\" Hola! \"); }  } \n  else { println(0); }", "1.1")
+        val parser = Parser(lexer, "1.1")
+
+        val ast = parser.next()
+
+
+    }
+
+    @Test
     fun testIfWithVariableDeclaration() {
         val lexer = Lexer("let a: boolean = true; if (a) { let queso: number = 5; println(queso); }", "1.1")
         val parser = Parser(lexer, "1.1")

@@ -76,6 +76,21 @@ class ParserTester {
         assertEquals(expectedBinaryOperation.right, actualBinaryOperation.right)
     }
 
+
+
+    @Test
+    fun mathOperation(){
+        val lexer = Lexer("let a: number = 5 + 4 * 3 / 2;", "1.0")
+        val parser = Parser(lexer, "1.0")
+
+        val ast1 = parser.next()
+
+
+
+
+
+    }
+
     @Test
     fun testBuildDeclarationAST() {
         val lexer = Lexer("let a: number;", "1.0")
