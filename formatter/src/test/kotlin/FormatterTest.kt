@@ -100,6 +100,18 @@ class FormatterTest {
     }
 
     @Test
+    fun testSingleSpaceSeparationPrintln() {
+        val input = "println(2);"
+        val expected = "println ( 2 );"
+
+        val tokens = Lexer(input, version)
+        val astNodes = Parser(tokens, version)
+        val result = Formatter.format(astNodes, exampleRules, version)
+
+        assertEquals(expected, result)
+    }
+
+    @Test
     fun testIfStatementWithElseFormatting() {
         val input = "let c : boolean = true; if (c) { let b: number = 3; } else { let a: number = 4;};"
         val tokens = Lexer(input, version)
@@ -167,4 +179,27 @@ class FormatterTest {
 
         assertEquals(expected, result)
     }
+
+    @Test
+    fun testBraceBelowLine() {
+        val input = "let something: boolean = true;\n" +
+            "if (something)\n" +
+            "{\n" +
+            "    println(\"Entered if\");\n" +
+            "}"
+
+        val expected = "let something: boolean = true;\n" +
+            "if (something)\n" +
+            "{\n" +
+            "  println(\"Entered if\");\n" +
+            "}"
+        val tokens = Lexer(input, version)
+        val astNodes = Parser(tokens, version)
+        val result = Formatter.format(astNodes, exampleRules, version)
+
+        assertEquals(expected, result)
+    }
+
+    @Test
+    fun testBraceSameLine() {}
 }

@@ -20,8 +20,16 @@ class FormatterVisitor(private val rules: FormattingRules) : Visitor {
         repeat(rules.newlineBeforePrintln) {
             output.append("\n")
         }
+
         val value = statement.value
-        output.append("println")
+
+        val singleSpaceSeparation = rules.singleSpaceSeparation
+        if (singleSpaceSeparation) {
+            output.append("println ")
+        } else {
+            output.append("println")
+        }
+
         value.accept(this)
         output.append(";\n")
     }
@@ -69,7 +77,14 @@ class FormatterVisitor(private val rules: FormattingRules) : Visitor {
         condition.accept(this)
         output.append(") ")
 
-        output.append("{\n")
+        val sameBraceLine = rules.ifBraceSameLine
+        if (sameBraceLine) {
+            output.append("{")
+        } else {
+            output.append("\n")
+            appendIndent()
+            output.append("{\n")
+        }
 
         currentIndent += rules.blockIndentation
         val thenBranch = statement.thenBranch
@@ -123,10 +138,21 @@ class FormatterVisitor(private val rules: FormattingRules) : Visitor {
     }
 
     override fun visitGrouping(expression: Expression.Grouping) {
-        output.append("(")
+        val singleSpaceSeparation = rules.singleSpaceSeparation
+        if (singleSpaceSeparation) {
+            output.append("( ")
+        } else {
+            output.append("(")
+        }
+
         val insideExpression = expression.expression
         insideExpression.accept(this)
-        output.append(")")
+
+        if (singleSpaceSeparation) {
+            output.append(" )")
+        } else {
+            output.append(")")
+        }
     }
 
     override fun visitLiteral(expression: Expression.Literal) {
