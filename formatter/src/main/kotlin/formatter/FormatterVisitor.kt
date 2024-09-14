@@ -17,10 +17,6 @@ class FormatterVisitor(private val rules: FormattingRules) : Visitor {
     }
 
     override fun visitPrintStm(statement: StatementType.Print) {
-        repeat(rules.newlineBeforePrintln) {
-            output.append("\n")
-        }
-
         val value = statement.value
 
         val singleSpaceSeparation = rules.singleSpaceSeparation
@@ -32,6 +28,10 @@ class FormatterVisitor(private val rules: FormattingRules) : Visitor {
 
         value.accept(this)
         output.append(";\n")
+
+        repeat(rules.newlineAfterPrintln) {
+            output.append("\n")
+        }
     }
 
     override fun visitExpressionStm(statement: StatementType.StatementExpression) {

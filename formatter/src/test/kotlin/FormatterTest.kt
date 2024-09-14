@@ -160,17 +160,15 @@ class FormatterTest {
     }
 
     @Test
-    fun test0lineBreaksAfterPrintln() {
+    fun test2lineBreaksAfterPrintln() {
         val input = "let something:string = \"a really cool thing\";\n" +
             "println(something);\n" +
-            "\n" +
-            "\n" +
-            "\n" +
-            "\n" +
             "println(\"in the way she moves\");"
 
         val expected = "let something:string = \"a really cool thing\";\n" +
             "println(something);\n" +
+            "\n" +
+            "\n" +
             "println(\"in the way she moves\");"
 
         val tokens = Lexer(input, version)
