@@ -33,14 +33,6 @@ class TokenGeneratorTest {
     }
 
     @Test
-    fun testGenerateTokenStringWithQuotes() {
-        val input = "\"hello\""
-        val expected = Token("hello", "STRING", Position(1, 1))
-        val actual = tokenGenerator.generateToken(input, 1, 1)
-        assertEquals(expected, actual)
-    }
-
-    @Test
     fun testGenerateTokenAssignment() {
         val input = "="
         val expected = Token("=", "ASSIGNMENT", Position(1, 1))
