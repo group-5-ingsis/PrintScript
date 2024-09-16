@@ -1,6 +1,4 @@
 package parser.syntactic.statements
-
-import nodes.DataTypeManager
 import nodes.Expression
 import nodes.StatementType
 import parser.syntactic.TokenManager
@@ -23,7 +21,6 @@ class LetDeclarationParser(private val expressionEvaluator: ExpressionType) : St
             val (remainingTokens, exp) = expressionEvaluator.parse(manager.getTokens())
             initializer = exp
             manager = TokenManager(remainingTokens)
-            DataTypeManager.checkDataTypeIsOkWithExpression(initializer, dataType)
         }
 
         manager.consumeTokenValue(";")

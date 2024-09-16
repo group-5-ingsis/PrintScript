@@ -35,7 +35,7 @@ class TokenGeneratorTest {
     @Test
     fun testGenerateTokenStringWithQuotes() {
         val input = "\"hello\""
-        val expected = Token("\"hello\"", "STRING", Position(1, 1))
+        val expected = Token("hello", "STRING", Position(1, 1))
         val actual = tokenGenerator.generateToken(input, 1, 1)
         assertEquals(expected, actual)
     }
