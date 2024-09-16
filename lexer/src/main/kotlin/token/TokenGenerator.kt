@@ -3,6 +3,7 @@ package token
 import position.Position
 
 class TokenGenerator(private val version: String = "1.1") {
+
     fun generateToken(
         value: String,
         row: Int,
@@ -27,7 +28,7 @@ class TokenGenerator(private val version: String = "1.1") {
     }
 
     private fun getTypeFromValue(value: String): String {
-        val typesMap = TypesMapGenerator.getTypesMap(version)
+        val typesMap = TokenTypesMapGenerator.getTypesMap(version)
 
         for ((pattern, type) in typesMap) {
             val patternInMap = Regex(pattern)

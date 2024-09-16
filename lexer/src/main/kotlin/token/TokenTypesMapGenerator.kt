@@ -3,7 +3,7 @@ package token
 import java.io.BufferedReader
 import java.io.InputStreamReader
 
-object TypesMapGenerator {
+object TokenTypesMapGenerator {
     fun getTypesMap(version: String): Map<String, String> {
         return when (version) {
             "1.0" -> getVersionTypesMap("1.0")

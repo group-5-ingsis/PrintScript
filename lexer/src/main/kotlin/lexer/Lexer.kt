@@ -1,6 +1,7 @@
-
 package lexer
 
+import lexer.LexerUtils.isQuote
+import lexer.LexerUtils.isSeparator
 import token.Token
 import token.TokenGenerator
 import java.io.BufferedReader
@@ -19,89 +20,108 @@ class Lexer(reader: BufferedReader, version: String = "1.1") : Iterator<Token> {
     private val tokenGenerator = TokenGenerator(version)
 
     constructor(input: String, version: String = "1.1") : this(BufferedReader(input.reader()), version)
-
     constructor(inputStream: InputStream, version: String = "1.1") : this(BufferedReader(InputStreamReader(inputStream)), version)
 
     override fun hasNext(): Boolean {
-        return state.nextToken != null || (linesIterator.hasNext() || lineIterator.hasNext() || state.buffer.isNotEmpty())
+        return state.nextToken != null || linesIterator.hasNext() || lineIterator.hasNext() || state.buffer.isNotEmpty()
     }
 
     override fun next(): Token {
-        if (state.nextToken != null) {
-            val token = state.nextToken
+        state.nextToken?.let {
             state = state.copy(nextToken = null)
-            return token ?: throw NoSuchElementException("No more tokens")
+            return it
         }
 
         while (true) {
             if (!lineIterator.hasNext()) {
-                if (linesIterator.hasNext()) {
-                    currentLine = linesIterator.next()
-                    lineIterator = currentLine.iterator()
-                    currentRow++
-                    currentIndex = 0 // Reset index for new line
-                    state = state.copy(buffer = StringBuilder())
-                    continue
-                } else if (state.buffer.isNotEmpty()) {
-                    return generateTokenFromBuffer(state.buffer)
-                } else {
-                    throw NoSuchElementException("No more tokens")
+                if (!readNextLine()) {
+                    return if (state.buffer.isNotEmpty()) {
+                        val token = tokenGenerator.generateToken(state.buffer, currentRow, currentIndex - state.buffer.length)
+                        resetBuffer()
+                        return token
+                    } else {
+                        throw NoSuchElementException("No more tokens")
+                    }
                 }
+                continue
             }
 
             val currentChar = lineIterator.next()
             currentIndex++
 
-            if (currentChar == '\n') {
-                currentRow++
-                state = state.copy(buffer = state.buffer)
-                continue
+            when {
+                currentChar == '\n' -> handleNewLine()
+                currentChar.isQuote() -> return handleQuotedLiteral(currentChar)
+                currentChar.isWhitespace() -> return handleWhitespace()
+                currentChar.isSeparator(separators) -> return handleSeparator(currentChar)
+                else -> accumulateBuffer(currentChar)
             }
-
-            if (currentChar == '\'' || currentChar == '\"') {
-                val startQuote = currentChar
-                val newBuffer = StringBuilder(state.buffer).append(currentChar)
-                while (lineIterator.hasNext()) {
-                    val nextChar = lineIterator.next()
-                    currentIndex++
-                    newBuffer.append(nextChar)
-                    if (nextChar == startQuote) {
-                        break
-                    }
-                }
-                return generateTokenFromBuffer(newBuffer)
-            }
-
-            if (currentChar.isWhitespace() || separators.contains(currentChar)) {
-                if (state.buffer.isNotEmpty()) {
-                    val token = generateTokenFromBuffer(state.buffer)
-                    state = state.copy(
-                        nextToken = if (!currentChar.isWhitespace()) {
-                            tokenGenerator.generateToken(currentChar.toString(), currentRow, currentIndex - 1)
-                        } else {
-                            null
-                        }
-                    )
-                    return token
-                }
-
-                if (!currentChar.isWhitespace()) {
-                    // return tokenGenerator.generateToken(currentChar.toString(), currentRow, currentIndex - 1)
-                    return tokenGenerator.generateToken(currentChar.toString(), currentRow, currentIndex)
-                }
-                continue
-            }
-
-            val newBuffer = StringBuilder(state.buffer).append(currentChar)
-            state = state.copy(buffer = newBuffer)
         }
     }
 
-    private fun generateTokenFromBuffer(buffer: StringBuilder): Token {
-        val value = buffer.toString()
-        val symbolIndex = currentIndex - value.length
-        val token = tokenGenerator.generateToken(value, currentRow, symbolIndex)
-        state = state.copy(buffer = StringBuilder(), currentIndex = symbolIndex)
+    private fun readNextLine(): Boolean {
+        return if (linesIterator.hasNext()) {
+            currentLine = linesIterator.next()
+            lineIterator = currentLine.iterator()
+            currentRow++
+            currentIndex = 0
+            resetBuffer()
+            true
+        } else {
+            false
+        }
+    }
+
+    private fun handleNewLine() {
+        currentRow++
+    }
+
+    private fun handleQuotedLiteral(startQuote: Char): Token {
+        val newBuffer = StringBuilder(state.buffer).append(startQuote)
+        while (lineIterator.hasNext()) {
+            val nextChar = lineIterator.next()
+            currentIndex++
+            newBuffer.append(nextChar)
+            if (nextChar == startQuote) {
+                break
+            }
+        }
+        val token = tokenGenerator.generateToken(newBuffer.toString(), currentRow, currentIndex - newBuffer.length)
+        resetBuffer()
         return token
+    }
+
+    private fun handleWhitespace(): Token {
+        if (state.buffer.isNotEmpty()) {
+            val token = tokenGenerator.generateToken(state.buffer, currentRow, currentIndex - state.buffer.length)
+            resetBuffer()
+            return token
+        }
+        return next()
+    }
+
+    private fun handleSeparator(currentChar: Char): Token {
+        if (state.buffer.isNotEmpty()) {
+            val token = tokenGenerator.generateToken(state.buffer, currentRow, currentIndex - state.buffer.length)
+            state = state.copy(
+                nextToken = handleSeparator(currentChar, currentRow, currentIndex - 1)
+            )
+            resetBuffer()
+            return token
+        }
+
+        return handleSeparator(currentChar, currentRow, currentIndex)
+    }
+
+    private fun accumulateBuffer(currentChar: Char) {
+        state = state.copy(buffer = state.buffer + currentChar)
+    }
+
+    private fun resetBuffer() {
+        state = state.copy(buffer = "")
+    }
+
+    fun handleSeparator(currentChar: Char, row: Int, index: Int): Token {
+        return tokenGenerator.generateToken(currentChar.toString(), row, index)
     }
 }
