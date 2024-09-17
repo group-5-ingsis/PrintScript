@@ -11,12 +11,13 @@ object Interpreter {
         statement: StatementType,
         version: String = "1.1",
         scope: Environment,
-        readInput: String? = null
+        readInput: String? = null,
+        stringBuilder: StringBuilder = StringBuilder()
     ): statementVisitorResult {
-        val sb = StringBuilder()
+
 
         val nodeVisitor = StatementVisitor(readInput)
-        val result = statement.acceptVisitor(nodeVisitor, scope, sb)
+        val result = statement.acceptVisitor(nodeVisitor, scope, stringBuilder)
 
         val printOutput = result.first
         val newScope = result.second
