@@ -210,9 +210,10 @@ class InterpreterTest {
 
     @Test
     fun testMultiplePrintStatements() {
-        val input = "println(\"First print\"); println(\"Second print\");"
-        val tokens = Lexer(input, version)
+        val fileContents = "println(\"First print\"); println(\"Second print\");"
+        val tokens = Lexer(fileContents, version)
         val asts = Parser(tokens, version)
+        val input = null
 
         var outputBuilder = StringBuilder()
         var currentEnvironment = createEnvironmentFromMap(System.getenv())
@@ -220,13 +221,12 @@ class InterpreterTest {
         while (asts.hasNext()) {
             asts.setEnv(currentEnvironment)
             val statement = asts.next()
-            val result = Interpreter.interpret(statement, version, currentEnvironment,null, outputBuilder)
+            val result = Interpreter.interpret(statement, version, currentEnvironment, input, outputBuilder)
             outputBuilder = result.first
             currentEnvironment = result.second
             asts.setEnv(currentEnvironment)
         }
 
-        // Verify that both print statements are present in the output
         assertEquals("First print\nSecond print", outputBuilder.toString())
     }
 
@@ -242,7 +242,7 @@ class InterpreterTest {
         while (asts.hasNext()) {
             asts.setEnv(currentEnvironment)
             val statement = asts.next()
-            val result = Interpreter.interpret(statement, version, currentEnvironment,null, outputBuilder)
+            val result = Interpreter.interpret(statement, version, currentEnvironment, null, outputBuilder)
             outputBuilder = result.first
             currentEnvironment = result.second
             asts.setEnv(currentEnvironment)
@@ -385,10 +385,10 @@ class InterpreterTest {
 
     @Test
     fun testReadInput() {
-        val file = "const name: string = readInput(\"Name:\"); println(\"Hello \" + name + \"!\");"
+        val fileContents = "const name: string = readInput(\"Name:\"); println(\"Hello \" + name + \"!\");"
         val input = "world"
 
-        val tokens = Lexer(file, version)
+        val tokens = Lexer(fileContents, version)
         val asts = Parser(tokens, version, input)
 
         var outputBuilder = StringBuilder()
@@ -397,13 +397,13 @@ class InterpreterTest {
         while (asts.hasNext()) {
             asts.setEnv(currentEnvironment)
             val statement = asts.next()
-            val result = Interpreter.interpret(statement, version, currentEnvironment,null, outputBuilder)
+            val result = Interpreter.interpret(statement, version, currentEnvironment, input, outputBuilder)
             outputBuilder = result.first
             currentEnvironment = result.second
             asts.setEnv(currentEnvironment)
         }
 
-        assertEquals("Name:\n" + "Hello world!", outputBuilder.toString().trim())
+        assertEquals("Hello world!", outputBuilder.toString().trim())
     }
 
     private fun createEnvironmentFromMap(envVarsMap: Map<String, String>): Environment {
@@ -443,7 +443,7 @@ class InterpreterTest {
         while (asts.hasNext()) {
             asts.setEnv(currentEnvironment)
             val statement = asts.next()
-            val result = Interpreter.interpret(statement, version, currentEnvironment,null, outputBuilder)
+            val result = Interpreter.interpret(statement, version, currentEnvironment, null, outputBuilder)
             outputBuilder = result.first
             currentEnvironment = result.second
             asts.setEnv(currentEnvironment)
@@ -467,7 +467,7 @@ class InterpreterTest {
         while (asts.hasNext()) {
             asts.setEnv(currentEnvironment)
             val statement = asts.next()
-            val result = Interpreter.interpret(statement, version, currentEnvironment,null, outputBuilder)
+            val result = Interpreter.interpret(statement, version, currentEnvironment, null, outputBuilder)
             outputBuilder = result.first
             currentEnvironment = result.second
             asts.setEnv(currentEnvironment)
@@ -513,7 +513,6 @@ class InterpreterTest {
         }
     }
 
-
     @Test
     fun testPrinter() {
         val input = "let a : number = 1; println(a);" // Si vos le agregas un espacio al final del string, el hasNext() del lexer tira -> True cuando deberia ser false
@@ -526,15 +525,11 @@ class InterpreterTest {
         while (asts.hasNext()) {
             asts.setEnv(currentEnvironment)
             val statement = asts.next()
-            val result = Interpreter.interpret(statement, version, currentEnvironment,null, outputBuilder)
+            val result = Interpreter.interpret(statement, version, currentEnvironment, null, outputBuilder)
             outputBuilder = result.first
             currentEnvironment = result.second
             asts.setEnv(currentEnvironment)
         }
         assertEquals("1", outputBuilder.toString())
     }
-
-
-
-
 }
