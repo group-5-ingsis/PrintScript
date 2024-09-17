@@ -28,7 +28,6 @@ class ConstDeclarationParser(private val expressionEvaluator: ExpressionType) : 
         initializer = exp
         manager = TokenManager(remainingTokens)
 
-
         manager.consumeTokenValue(";")
 
         return Pair(manager.getTokens(), StatementType.Variable("const", identifier.value, initializer, dataType, position))

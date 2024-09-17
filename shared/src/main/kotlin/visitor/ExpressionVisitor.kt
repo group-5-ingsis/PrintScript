@@ -186,7 +186,7 @@ class ExpressionVisitor(val readInput: String? = null) {
         val expressionName = exp.name
         val name = scope.get(expressionName)
 
-        if (name.initializer != null){
+        if (name.initializer != null) {
             val value = evaluateExpression(name.initializer, scope)
             return Pair(value.first, value.second)
         }
