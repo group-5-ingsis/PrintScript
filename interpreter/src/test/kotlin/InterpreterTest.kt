@@ -443,7 +443,7 @@ class InterpreterTest {
             asts.setEnv(currentEnvironment)
         }
 
-        assertEquals("What is the best football club?\n" + "San Lorenzo", outputBuilder.toString().trim())
+        assertEquals("What is the best football club?\n" + "San Lorenzo", outputBuilder.toString())
     }
 
     @Test
@@ -507,4 +507,26 @@ class InterpreterTest {
             currentEnvironment = result.second
         }
     }
+
+
+    @Test
+    fun testPrinter() {
+        val input = "let a : number = 1; println(a); "
+        val tokens = Lexer(input, version)
+        val asts = Parser(tokens, version)
+
+        val outputBuilder = StringBuilder()
+        var currentEnvironment = Environment()
+
+        while (asts.hasNext()) {
+            val statement = asts.next()
+            val result = Interpreter.interpret(statement, version, currentEnvironment)
+            outputBuilder.append(result.first.toString())
+            currentEnvironment = result.second
+        }
+    }
+
+
+
+
 }

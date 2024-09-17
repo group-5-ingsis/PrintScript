@@ -115,7 +115,11 @@ class StatementVisitor(val readInput: String? = null) {
 
         val trimmedPrintTarget = printTarget.toString().trim().removeSurrounding("\"", "\"")
 
-        stringBuilder.append(trimmedPrintTarget)
+        if (stringBuilder.toString() == ""){
+            return Pair(StringBuilder(trimmedPrintTarget), environment)
+        }
+
+        stringBuilder.append("\n" + trimmedPrintTarget)
 
         return Pair(stringBuilder, environment)
     }
