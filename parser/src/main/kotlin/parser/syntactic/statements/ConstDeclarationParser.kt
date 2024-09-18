@@ -1,7 +1,6 @@
 package parser.syntactic.statements
 
 import exception.SemanticErrorException
-import nodes.DataTypeManager
 import nodes.Expression
 import nodes.StatementType
 import parser.syntactic.TokenManager
@@ -28,7 +27,6 @@ class ConstDeclarationParser(private val expressionEvaluator: ExpressionType) : 
         val (remainingTokens, exp) = expressionEvaluator.parse(manager.getTokens())
         initializer = exp
         manager = TokenManager(remainingTokens)
-        DataTypeManager.checkDataTypeIsOkWithExpression(initializer, dataType)
 
         manager.consumeTokenValue(";")
 

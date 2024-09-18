@@ -17,11 +17,10 @@ object Main {
         Application.launch(CLIApplication::class.java, *args)
     }
 }
+
 class CLIApplication : Application() {
     private val versions = listOf("1.0", "1.1")
     private val recentCommands = mutableListOf<String>()
-
-    // ProgressBar
     private val progressBar = ProgressBar(0.0) // Initially at 0% progress
 
     override fun start(primaryStage: Stage) {
@@ -31,7 +30,7 @@ class CLIApplication : Application() {
 
         val outputArea = TextArea()
         outputArea.isEditable = false
-        outputArea.prefHeight = 300.0
+        outputArea.prefHeight = 300.0 // Increased height for the output area
 
         val executeButton = Button("Execute")
 
@@ -54,7 +53,9 @@ class CLIApplication : Application() {
         val availableFilesListView = ListView<String>()
         val recentCommandsListView = ListView<String>()
         val yamlFilesListView = ListView<String>()
-        recentCommandsListView.prefHeight = 100.0
+        recentCommandsListView.prefHeight = 100.0 // Reduced height for the recent commands list
+
+        // Increased height for available files and YAML files list views
         availableFilesListView.prefHeight = 200.0
         yamlFilesListView.prefHeight = 200.0
 
@@ -65,43 +66,82 @@ class CLIApplication : Application() {
         recentCommandsListView.items.addAll(recentCommands)
         yamlFilesListView.items.addAll(getYamlFiles(initialVersion))
 
-        // ProgressBar settings
-        progressBar.prefWidth = 400.0 // Set the width of the progress bar
-        progressBar.progress = 0.0 // Start with 0 progress
-
         // Actions
         executeButton.setOnAction {
             val commandText = inputField.text
-
-            // Start the progress bar
-            progressBar.progress = 0.1 // Initial progress indicator
-            outputArea.appendText("Executing command...\n")
-
-            // Simulate progress update (you can tie this to actual command execution)
             val result = CommandLineInterface.execute(commandText)
             outputArea.appendText("Command: $commandText\nResult: $result\n\n")
-
-            // Update the progress bar when the task is done
-            progressBar.progress = 1.0 // Complete
-
+            outputArea.requestLayout()
             inputField.clear()
             updateRecentCommands(commandText)
             recentCommandsListView.items.clear()
             recentCommandsListView.items.addAll(recentCommands)
         }
 
+        commandComboBox.setOnAction {
+            val selectedCommand = commandComboBox.value
+            val selectedFile = availableFilesListView.selectionModel.selectedItem
+            val selectedVersion = versionComboBox.value
+            if (selectedCommand != null && selectedFile != null && selectedVersion != null) {
+                inputField.text = "$selectedCommand $selectedFile $selectedVersion"
+            }
+        }
+
+        versionComboBox.setOnAction {
+            val selectedVersion = versionComboBox.value
+            if (selectedVersion != null) {
+                val availableFiles = getAvailableFiles(selectedVersion)
+                availableFilesListView.items.clear()
+                availableFilesListView.items.addAll(availableFiles)
+
+                // Also update YAML files list
+                yamlFilesListView.items.clear()
+                yamlFilesListView.items.addAll(getYamlFiles(selectedVersion))
+            }
+        }
+
+        availableFilesListView.setOnMouseClicked { event ->
+            if (event.clickCount == 2) {
+                val selectedFile = availableFilesListView.selectionModel.selectedItem
+                val selectedCommand = commandComboBox.value
+                val selectedVersion = versionComboBox.value
+                if (selectedFile != null && selectedCommand != null && selectedVersion != null) {
+                    inputField.text = "$selectedCommand $selectedFile $selectedVersion"
+                }
+            }
+        }
+
+        yamlFilesListView.setOnMouseClicked { event ->
+            if (event.clickCount == 2) {
+                val selectedYamlFile = yamlFilesListView.selectionModel.selectedItem
+                if (selectedYamlFile != null) {
+                    inputField.text = "${inputField.text} $selectedYamlFile"
+                }
+            }
+        }
+
+        recentCommandsListView.setOnMouseClicked { event ->
+            if (event.clickCount == 2) {
+                val selectedCommand = recentCommandsListView.selectionModel.selectedItem
+                if (selectedCommand != null) {
+                    inputField.text = selectedCommand
+                }
+            }
+        }
+
         // Layout using BorderPane and HBox for side-by-side ListViews
         val filesHBox = HBox(10.0, availableFilesListView, yamlFilesListView)
         val leftSide = VBox(10.0, commandLabel, commandComboBox, versionLabel, versionComboBox, fileLabel, filesHBox)
         val rightSide = VBox(10.0, recentCommandsLabel, recentCommandsListView)
-        val bottomSide = VBox(10.0, inputField, executeButton, progressBar, outputArea) // Add the progressBar to the layout
+        val bottomSide = VBox(10.0, inputField, executeButton, outputArea)
 
         val layout = BorderPane()
         layout.left = leftSide
         layout.right = rightSide
         layout.bottom = bottomSide
 
-        val scene = Scene(layout, 1000.0, 600.0)
+        val scene = Scene(layout, 1000.0, 600.0) // Increased size for better layout management
+
         primaryStage.title = "Command Line Interface"
         primaryStage.scene = scene
         primaryStage.show()
@@ -119,6 +159,7 @@ class CLIApplication : Application() {
     private fun getAvailableFiles(version: String): List<String> {
         val resourceDirectory = "ps/$version"
         val fileNames = mutableListOf<String>()
+
         val resource = FileReader::class.java.classLoader.getResource(resourceDirectory)
         if (resource != null) {
             val resourceURI = resource.toURI()
@@ -128,15 +169,18 @@ class CLIApplication : Application() {
                     fileNames.addAll(directory.listFiles { _, name -> name.endsWith(".ps") }?.map { it.name } ?: emptyList())
                 }
             } else {
+                // Handle case for resources inside JAR (if needed)
                 throw UnsupportedOperationException("Listing files inside JARs is not supported in this example.")
             }
         }
+
         return fileNames
     }
 
     private fun getYamlFiles(version: String): List<String> {
         val resourceDirectory = "ps/$version"
         val yamlFiles = mutableListOf<String>()
+
         val resource = FileReader::class.java.classLoader.getResource(resourceDirectory)
         if (resource != null) {
             val resourceURI = resource.toURI()
@@ -146,9 +190,11 @@ class CLIApplication : Application() {
                     yamlFiles.addAll(directory.listFiles { _, name -> name.endsWith(".yaml") }?.map { it.name } ?: emptyList())
                 }
             } else {
+                // Handle case for resources inside JAR (if needed)
                 throw UnsupportedOperationException("Listing files inside JARs is not supported in this example.")
             }
         }
+
         return yamlFiles
     }
 }

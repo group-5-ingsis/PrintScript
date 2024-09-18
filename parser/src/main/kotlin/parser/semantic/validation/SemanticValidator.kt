@@ -4,11 +4,11 @@ import nodes.StatementType
 import position.visitor.Environment
 
 class SemanticValidator(private val readInput: String?) {
-    private val validatorsForTypes: Map<String, Validator<StatementType>> =
-        mutableMapOf(
-            "VARIABLE_STATEMENT" to VariableStatementValidator(readInput) as Validator<StatementType>,
-            "PRINT" to PrintValidator() as Validator<StatementType>,
-            "STATEMENT_EXPRESSION" to StatementExpressionValidator(readInput) as Validator<StatementType>
+    private val validatorsForTypes: Map<String, Validator<out StatementType>> =
+        mapOf(
+            "VARIABLE_STATEMENT" to VariableStatementValidator(readInput),
+            "PRINT" to PrintValidator(),
+            "STATEMENT_EXPRESSION" to StatementExpressionValidator(readInput)
         )
 
     fun validateSemantics(node: StatementType, varTable: Environment): ValidationResult {

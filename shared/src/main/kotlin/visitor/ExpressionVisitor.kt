@@ -185,6 +185,12 @@ class ExpressionVisitor(val readInput: String? = null) {
     private fun visitVariableExp(exp: Expression.Variable, scope: Environment): VisitorResultExpressions {
         val expressionName = exp.name
         val name = scope.get(expressionName)
+
+        if (name.initializer != null) {
+            val value = evaluateExpression(name.initializer, scope)
+            return Pair(value.first, value.second)
+        }
+
         return Pair(name, scope)
     }
 

@@ -9,32 +9,53 @@ import parser.Parser
 import rules.LinterRules
 import rules.LinterRulesV1
 import rules.LinterRulesV2
+import kotlin.math.roundToInt
 
 class AnalyzeCommand(private val file: String, private val version: String, private val rulesFile: String) : Command {
     private val fileContent = FileReader.getFileContents(file, version)
     private val rulesFileString = FileReader.getFileContents(rulesFile, version)
+    private var progress: Int = 0 // To track progress
 
     override fun execute(): String {
         val toReturn = StringBuilder()
 
-        val tokens = Lexer(fileContent, version)
+        val totalSteps = 3 // We have 3 main steps: Tokenizing, Parsing, and Linting
+        var currentStep = 0
 
-        val asts = Parser(tokens, version)
+        try {
+            // Step 1: Tokenizing
+            val tokens = Lexer(fileContent, version)
+            progress = (1.0 / totalSteps * 100).roundToInt()
+            reportProgress(progress)
 
-        val linter = Linter(getLinterRules(rulesFileString, version))
+            // Step 2: Parsing
+            val asts = Parser(tokens, version)
+            progress = (2.0 / totalSteps * 100).roundToInt()
+            reportProgress(progress)
 
-        val linterResult = linter.lint(asts)
+            // Step 3: Linting
+            val linter = Linter(getLinterRules(rulesFileString, version))
+            val linterResult = linter.lint(asts)
+            progress = 100
+            reportProgress(progress)
 
-        if (linterResult.isValid()) {
-            return "OK: No linting errors found"
+            if (linterResult.isValid()) {
+                return "OK: No linting errors found"
+            }
+
+            toReturn.append("Linting errors found:\n")
+            linter.getErrors().forEach {
+                toReturn.append("${it.getMessage()}\n")
+            }
+
+            return toReturn.toString()
+        } catch (e: Exception) {
+            return "Error during analysis: ${e.message}"
         }
+    }
 
-        toReturn.append("Linting errors found:\n")
-        linter.getErrors().forEach {
-            toReturn.append("${it.getMessage()}\n")
-        }
-
-        return toReturn.toString()
+    override fun getProgress(): Int {
+        return progress
     }
 
     private fun getLinterRules(rulesFile: String, version: String): LinterRules {
@@ -63,5 +84,9 @@ class AnalyzeCommand(private val file: String, private val version: String, priv
     private fun jsonToMap(jsonString: String): Map<String, Any> {
         val mapper = jacksonObjectMapper()
         return mapper.readValue(jsonString)
+    }
+
+    private fun reportProgress(progress: Int) {
+        println("Progress: $progress%")
     }
 }

@@ -106,16 +106,15 @@ class StatementVisitor(val readInput: String? = null) {
     ): statementVisitorResult {
         val value = statement.value
         val newValue = evaluateExpression(value, environment)
-        var printTarget = newValue.first
-
-        if (printTarget is StatementType.Variable) {
-            val initializer = printTarget.initializer
-            printTarget = initializer?.value
-        }
+        val printTarget = newValue.first
 
         val trimmedPrintTarget = printTarget.toString().trim().removeSurrounding("\"", "\"") + "\n"
 
-        stringBuilder.append(trimmedPrintTarget)
+        if (stringBuilder.toString() == "") {
+            return Pair(StringBuilder(trimmedPrintTarget), environment)
+        }
+
+        stringBuilder.append("\n" + trimmedPrintTarget)
 
         return Pair(stringBuilder, environment)
     }

@@ -1,7 +1,8 @@
 package parser.semantic.validation
 
+import nodes.StatementType
 import position.visitor.Environment
 
 interface Validator<T> {
-    fun validate(node: T, scope: Environment): ValidationResult
+    fun validate(node: StatementType, scope: Environment): ValidationResult
 }

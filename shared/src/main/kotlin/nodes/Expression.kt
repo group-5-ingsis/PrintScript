@@ -32,7 +32,13 @@ sealed class Expression {
         }
     }
 
-    data class Binary(val left: Expression, val operator: String, val right: Expression, override val position: Position, override val value: Any? = null) : Expression() {
+    data class Binary(
+        val left: Expression,
+        val operator: String,
+        val right: Expression,
+        override val position: Position,
+        override val value: Any? = null
+    ) : Expression() {
         override val expressionType: String = "BINARY_EXPRESSION"
         override fun accept(visitor: Visitor) {
             return visitor.visitBinary(this)

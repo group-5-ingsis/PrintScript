@@ -64,11 +64,5 @@ sealed class StatementType {
         override fun accept(visitor: Visitor) {
             return visitor.visitVariableStm(this)
         }
-
-        init {
-            DataTypeManager.checkDataType(dataType)
-            DataTypeManager.checkVariableDec(designation)
-            DataTypeManager.checkVariableName(identifier)
-        }
     }
 }

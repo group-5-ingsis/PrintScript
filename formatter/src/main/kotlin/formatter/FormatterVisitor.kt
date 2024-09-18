@@ -6,7 +6,10 @@ import position.visitor.Visitor
 import rules.FormattingRules
 import rules.RuleApplier
 
-class FormatterVisitor(private val rules: FormattingRules) : Visitor {
+class FormatterVisitor(
+    private val rules: FormattingRules,
+    private val version: String
+) : Visitor {
 
     private val output = StringBuilder()
     private val ruleApplier = RuleApplier(rules)
@@ -17,13 +20,10 @@ class FormatterVisitor(private val rules: FormattingRules) : Visitor {
     }
 
     override fun visitPrintStm(statement: StatementType.Print) {
-        repeat(rules.newlineBeforePrintln) {
-            output.append("\n")
-        }
-        val value = statement.value
-        output.append("println")
-        value.accept(this)
+        appendPrintKeyword()
+        statement.value.accept(this)
         output.append(";\n")
+        appendNewlines(rules.newlineAfterPrintln)
     }
 
     override fun visitExpressionStm(statement: StatementType.StatementExpression) {
@@ -31,107 +31,136 @@ class FormatterVisitor(private val rules: FormattingRules) : Visitor {
     }
 
     override fun visitVariableStm(statement: StatementType.Variable) {
-        val variableKind = statement.designation
-        val identifier = statement.identifier
-        val dataType = statement.dataType
-
-        val spaceForColons = ruleApplier.applySpaceForColon()
-        val spacesAroundAssignment = ruleApplier.applySpacesAroundAssignment()
-
-        output.append("$variableKind $identifier")
-        output.append("$spaceForColons$dataType")
-        output.append(spacesAroundAssignment)
-
-        statement.initializer?.accept(this)
-
+        appendVariableDeclaration(statement)
+        appendVariableInitializer(statement.initializer)
         output.append(";\n")
     }
 
-    private fun appendIndent() {
-        repeat(currentIndent) {
-            output.append(" ")
-        }
+    private fun appendVariableInitializer(initializer: Expression?) {
+        initializer?.accept(this)
     }
 
     override fun visitBlockStm(statement: StatementType.BlockStatement) {
-        statement.listStm.forEach {
+        if (version >= "1.1") {
+            processBlockStatements(statement.listStm)
+            finalizeBlockIndentation()
+        }
+    }
+
+    private fun processBlockStatements(statements: List<StatementType>) {
+        statements.forEach {
             appendIndent()
             it.accept(this)
         }
+    }
+
+    private fun finalizeBlockIndentation() {
         currentIndent -= rules.blockIndentation
         appendIndent()
     }
 
     override fun visitIfStm(statement: StatementType.IfStatement) {
+        handleIfCondition(statement.condition)
+        handleThenBranch(statement.thenBranch)
+        handleElseBranch(statement.elseBranch)
+    }
+
+    private fun handleIfCondition(condition: Expression) {
         appendIndent()
         output.append("if (")
-        val condition = statement.condition
         condition.accept(this)
-        output.append(") ")
+        output.append(")")
+        appendBracesForCondition()
+    }
 
-        output.append("{\n")
-
+    private fun appendBracesForCondition() {
+        if (rules.ifBraceSameLine) {
+            output.append(" {\n")
+        } else {
+            output.append("\n")
+            appendIndent()
+            output.append("{\n")
+        }
         currentIndent += rules.blockIndentation
-        val thenBranch = statement.thenBranch
+    }
+
+    private fun handleThenBranch(thenBranch: StatementType) {
         thenBranch.accept(this)
         currentIndent -= rules.blockIndentation
-
         appendIndent()
         output.append("}")
+    }
 
-        val elseBranch = statement.elseBranch
+    private fun handleElseBranch(elseBranch: StatementType?) {
         elseBranch?.let {
             output.append(" else ")
-
-            if (it is StatementType.BlockStatement) {
-                output.append("{\n")
-                currentIndent += rules.blockIndentation
-                appendIndent()
-                currentIndent += rules.blockIndentation
-                it.accept(this)
-                currentIndent -= rules.blockIndentation
-                appendIndent()
-                output.append("}")
-            } else {
-                output.append("{\n")
-                currentIndent += rules.blockIndentation
-                it.accept(this)
-                currentIndent -= rules.blockIndentation
-                appendIndent()
-                output.append("}")
-            }
+            appendBracesForBranch(it)
         }
     }
 
+    private fun appendBracesForBranch(branch: StatementType) {
+        output.append("{\n")
+        currentIndent += rules.blockIndentation
+        appendIndent()
+        branch.accept(this)
+        currentIndent -= rules.blockIndentation
+        appendIndent()
+        output.append("}")
+    }
+
+    private fun appendPrintKeyword() {
+        val spaceSeparator = if (rules.singleSpaceSeparation) " " else ""
+        output.append("println$spaceSeparator")
+    }
+
+    private fun appendNewlines(count: Int) {
+        repeat(count) { output.append("\n") }
+    }
+
+    private fun appendVariableDeclaration(statement: StatementType.Variable) {
+        val variableKind = statement.designation
+        val identifier = statement.identifier
+        val dataType = statement.dataType
+        val spaceForColons = ruleApplier.applySpaceForColon()
+        val spacesAroundAssignment = ruleApplier.applySpacesAroundAssignment()
+        output.append("$variableKind $identifier$spaceForColons$dataType$spacesAroundAssignment")
+    }
+
     override fun visitVariable(expression: Expression.Variable) {
-        val name = expression.name
-        output.append(name)
+        output.append(expression.name)
     }
 
     override fun visitAssign(expression: Expression.Assign) {
-        val spaceAroundAssignment = if (rules.spaceAroundAssignment) " " else ""
-        output.append("${expression.name}$spaceAroundAssignment=$spaceAroundAssignment")
+        appendAssignment(expression)
         expression.value.accept(this)
         output.append(";")
     }
 
+    private fun appendAssignment(expression: Expression.Assign) {
+        val spaceAroundAssignment = if (rules.spaceAroundAssignment) " " else ""
+        output.append("${expression.name}$spaceAroundAssignment=$spaceAroundAssignment")
+    }
+
     override fun visitBinary(expression: Expression.Binary) {
         expression.left.accept(this)
-        val spaceAroundOperator = if (rules.spaceAroundAssignment) " " else ""
-        output.append("$spaceAroundOperator${expression.operator}$spaceAroundOperator")
+        appendBinaryOperator(expression)
         expression.right.accept(this)
     }
 
+    private fun appendBinaryOperator(expression: Expression.Binary) {
+        val spaceAroundOperator = if (rules.spaceAroundAssignment) " " else ""
+        output.append("$spaceAroundOperator${expression.operator}$spaceAroundOperator")
+    }
+
     override fun visitGrouping(expression: Expression.Grouping) {
-        output.append("(")
-        val insideExpression = expression.expression
-        insideExpression.accept(this)
-        output.append(")")
+        val spaceSeparator = if (rules.singleSpaceSeparation) " " else ""
+        output.append("($spaceSeparator")
+        expression.expression.accept(this)
+        output.append("$spaceSeparator)")
     }
 
     override fun visitLiteral(expression: Expression.Literal) {
-        val value = expression.value
-        output.append(value)
+        output.append(if (expression.value is String) "\"${expression.value}\"" else expression.value)
     }
 
     override fun visitUnary(expression: Expression.Unary) {
@@ -141,5 +170,9 @@ class FormatterVisitor(private val rules: FormattingRules) : Visitor {
 
     override fun visitIdentifier(expression: Expression.IdentifierExpression) {
         output.append(expression.name)
+    }
+
+    private fun appendIndent() {
+        repeat(currentIndent) { output.append(" ") }
     }
 }

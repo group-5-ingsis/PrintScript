@@ -6,7 +6,14 @@ import position.visitor.ExpressionVisitor
 
 class VariableStatementValidator(private val readInput: String?) : Validator<StatementType.Variable> {
 
-    override fun validate(node: StatementType.Variable, scope: Environment): ValidationResult {
+    override fun validate(node: StatementType, scope: Environment): ValidationResult {
+        if (node !is StatementType.Variable) {
+            return ValidationResult(
+                true,
+                null,
+                "Invalid statement type '${node::class.simpleName}' for variable statement"
+            )
+        }
         val assignDeclaration = isAssignDeclaration(node)
         if (assignDeclaration) {
             return validateAssignDeclaration(node, scope)

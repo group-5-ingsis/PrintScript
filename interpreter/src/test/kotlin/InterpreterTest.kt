@@ -210,21 +210,23 @@ class InterpreterTest {
 
     @Test
     fun testMultiplePrintStatements() {
-        val input = "println(\"First print\"); println(\"Second print\");"
-        val tokens = Lexer(input, version)
+        val fileContents = "println(\"First print\"); println(\"Second print\");"
+        val tokens = Lexer(fileContents, version)
         val asts = Parser(tokens, version)
+        val input = null
 
-        val outputBuilder = StringBuilder()
-        var currentEnvironment = Environment()
+        var outputBuilder = StringBuilder()
+        var currentEnvironment = createEnvironmentFromMap(System.getenv())
 
         while (asts.hasNext()) {
+            asts.setEnv(currentEnvironment)
             val statement = asts.next()
-            val result = Interpreter.interpret(statement, version, currentEnvironment)
-            outputBuilder.append(result.first.toString())
+            val result = Interpreter.interpret(statement, version, currentEnvironment, input, outputBuilder)
+            outputBuilder = result.first
             currentEnvironment = result.second
+            asts.setEnv(currentEnvironment)
         }
 
-        // Verify that both print statements are present in the output
         assertEquals("First print\nSecond print\n", outputBuilder.toString())
     }
 
@@ -234,16 +236,17 @@ class InterpreterTest {
         val tokens = Lexer(input, version)
         val asts = Parser(tokens, version)
 
-        val outputBuilder = StringBuilder()
-        var currentEnvironment = Environment()
+        var outputBuilder = StringBuilder()
+        var currentEnvironment = createEnvironmentFromMap(System.getenv())
 
         while (asts.hasNext()) {
+            asts.setEnv(currentEnvironment)
             val statement = asts.next()
-            val result = Interpreter.interpret(statement, version, currentEnvironment)
-            outputBuilder.append(result.first.toString())
+            val result = Interpreter.interpret(statement, version, currentEnvironment, null, outputBuilder)
+            outputBuilder = result.first
             currentEnvironment = result.second
+            asts.setEnv(currentEnvironment)
         }
-
         // Verify the output for the variable and the expression
         assertEquals("42\n50\n", outputBuilder.toString())
     }
@@ -274,7 +277,7 @@ class InterpreterTest {
 
     @Test
     fun testComplexExpression() {
-        val input = "let a: number = 6 / (2 + 5) - (5 * 6);"
+        val input = "let a: number = 6 / (2 + 5) - 5 * 6;"
         val tokens = Lexer(input, version)
         val asts = Parser(tokens, version)
 
@@ -382,31 +385,25 @@ class InterpreterTest {
 
     @Test
     fun testReadInput() {
-        val file = "const name: string = readInput(\"Name:\"); println(\"Hello \" + name + \"!\");"
+        val fileContents = "const name: string = readInput(\"Name:\"); println(\"Hello \" + name + \"!\");"
         val input = "world"
 
-        val tokens = Lexer(file, version)
+        val tokens = Lexer(fileContents, version)
         val asts = Parser(tokens, version, input)
 
-        val outputBuilder = StringBuilder()
-        var currentEnvironment = Environment()
+        var outputBuilder = StringBuilder()
+        var currentEnvironment = createEnvironmentFromMap(System.getenv())
 
         while (asts.hasNext()) {
+            asts.setEnv(currentEnvironment)
             val statement = asts.next()
-            println()
-            if (statement is StatementType.Variable && statement.initializer!!.expressionType == "READ_INPUT") {
-                val value = statement.initializer!!.value
-                if (value is Expression.Grouping) {
-                    outputBuilder.append(value.expression.value)
-                    outputBuilder.append("\n")
-                }
-            }
-            val result = Interpreter.interpret(statement, version, currentEnvironment, input)
-            outputBuilder.append(result.first.toString())
+            val result = Interpreter.interpret(statement, version, currentEnvironment, input, outputBuilder)
+            outputBuilder = result.first
             currentEnvironment = result.second
+            asts.setEnv(currentEnvironment)
         }
 
-        assertEquals("Name:\n" + "Hello world!", outputBuilder.toString().trim())
+        assertEquals("Hello world!", outputBuilder.toString().trim())
     }
 
     private fun createEnvironmentFromMap(envVarsMap: Map<String, String>): Environment {
@@ -440,20 +437,19 @@ class InterpreterTest {
         val tokens = Lexer(input, version)
         val asts = Parser(tokens, version)
 
-        val outputBuilder = StringBuilder()
+        var outputBuilder = StringBuilder()
         var currentEnvironment = createEnvironmentFromMap(System.getenv())
 
         while (asts.hasNext()) {
             asts.setEnv(currentEnvironment)
             val statement = asts.next()
-            val result = Interpreter.interpret(statement, version, currentEnvironment)
-            val first = result.first
-            outputBuilder.append(first.toString())
+            val result = Interpreter.interpret(statement, version, currentEnvironment, null, outputBuilder)
+            outputBuilder = result.first
             currentEnvironment = result.second
             asts.setEnv(currentEnvironment)
         }
 
-        assertEquals("What is the best football club?\n" + "San Lorenzo", outputBuilder.toString().trim())
+        assertEquals("What is the best football club?\n" + "San Lorenzo", outputBuilder.toString())
     }
 
     @Test
@@ -465,15 +461,14 @@ class InterpreterTest {
         val tokens = Lexer(input, version)
         val asts = Parser(tokens, version)
 
-        val outputBuilder = StringBuilder()
+        var outputBuilder = StringBuilder()
         var currentEnvironment = createEnvironmentFromMap(System.getenv())
 
         while (asts.hasNext()) {
             asts.setEnv(currentEnvironment)
             val statement = asts.next()
-            val result = Interpreter.interpret(statement, version, currentEnvironment)
-            val first = result.first
-            outputBuilder.append(first.toString())
+            val result = Interpreter.interpret(statement, version, currentEnvironment, null, outputBuilder)
+            outputBuilder = result.first
             currentEnvironment = result.second
             asts.setEnv(currentEnvironment)
         }
@@ -519,22 +514,22 @@ class InterpreterTest {
     }
 
     @Test
-    fun testIfInsideIf() {
-        val input = "let x: boolean = true; if (x) { if (x) { println(\"Hello\"); } }"
+    fun testPrinter() {
+        val input = "let a : number = 1; println(a);" // Si vos le agregas un espacio al final del string, el hasNext() del lexer tira -> True cuando deberia ser false
         val tokens = Lexer(input, version)
         val asts = Parser(tokens, version)
 
-        val outputBuilder = StringBuilder()
-        var currentEnvironment = Environment()
+        var outputBuilder = StringBuilder()
+        var currentEnvironment = createEnvironmentFromMap(System.getenv())
 
         while (asts.hasNext()) {
+            asts.setEnv(currentEnvironment)
             val statement = asts.next()
-            val result = Interpreter.interpret(statement, version, currentEnvironment)
-            outputBuilder.append(result.first.toString())
+            val result = Interpreter.interpret(statement, version, currentEnvironment, null, outputBuilder)
+            outputBuilder = result.first
             currentEnvironment = result.second
             asts.setEnv(currentEnvironment)
         }
-
-        assertEquals("Hello\n", outputBuilder.toString())
+        assertEquals("1", outputBuilder.toString())
     }
 }

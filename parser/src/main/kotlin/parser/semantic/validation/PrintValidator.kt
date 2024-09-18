@@ -6,7 +6,15 @@ import position.visitor.Environment
 
 class PrintValidator : Validator<StatementType.Print> {
 
-    override fun validate(node: StatementType.Print, scope: Environment): ValidationResult {
+    override fun validate(node: StatementType, scope: Environment): ValidationResult {
+        if (node !is StatementType.Print) {
+            return ValidationResult(
+                isInvalid = true,
+                where = null,
+                message = "Invalid statement type '${node::class.simpleName}' for print statement"
+            )
+        }
+
         val groupingExpression = node.value
         val innerExpression = groupingExpression.expression
 

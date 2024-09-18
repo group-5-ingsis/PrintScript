@@ -8,7 +8,15 @@ import position.visitor.ExpressionVisitor
 
 class StatementExpressionValidator(private val input: String?) : Validator<StatementType.StatementExpression> {
 
-    override fun validate(node: StatementType.StatementExpression, scope: Environment): ValidationResult {
+    override fun validate(node: StatementType, scope: Environment): ValidationResult {
+        if (node !is StatementType.StatementExpression) {
+            return ValidationResult(
+                isInvalid = true,
+                where = null,
+                message = "Invalid statement type '${node::class.simpleName}' for statement expression"
+            )
+        }
+
         return when (val exp: Expression = node.value) {
             is Expression.Assign -> {
                 handleAssign(exp, scope, node)
