@@ -7,12 +7,12 @@ import java.nio.file.Paths
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-open class BracesFormattingTest {
+class BracesFormattingTest {
 
-    protected lateinit var testRules: FormattingRules
-    protected val version = "1.1"
+    lateinit var testRules: FormattingRules
+    val version = "1.1"
 
-    protected fun formatCode(input: String): String {
+    fun formatCode(input: String): String {
         val tokens = Lexer(input, version)
         val astNodes = Parser(tokens, version)
         return Formatter.format(astNodes, testRules, version)
@@ -50,7 +50,7 @@ open class BracesFormattingTest {
         testRules = yamlMapper.readValue(file, FormattingRules::class.java)
 
         val input = "let something: boolean = true;\nif (something){\nprintln(\"Entered if\");\n}"
-        val expected = "let something: boolean = true;\nif (something) {\n  println(\"Entered if\");\n}"
+        val expected = "let something: boolean = true;\nif (something) {\n    println(\"Entered if\");\n}"
         val result = formatCode(input)
         assertEquals(expected, result)
     }

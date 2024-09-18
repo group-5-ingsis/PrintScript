@@ -79,7 +79,7 @@ class FormatterVisitor(private val rules: FormattingRules) : Visitor {
 
         val sameBraceLine = rules.ifBraceSameLine
         if (sameBraceLine) {
-            output.append(" {")
+            output.append(" {\n")
         } else {
             output.append("\n")
             appendIndent()
