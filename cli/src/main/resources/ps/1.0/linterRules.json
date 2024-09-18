@@ -1,4 +1,4 @@
 {
   "identifierNamingConvention": "off",
-  "printlnExpressionAllowed": true
+  "printlnExpressionAllowed": false
 }

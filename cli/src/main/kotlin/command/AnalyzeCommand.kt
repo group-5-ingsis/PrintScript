@@ -13,8 +13,7 @@ import rules.LinterRulesV1
 import rules.LinterRulesV2
 import kotlin.math.roundToInt
 
-class AnalyzeCommand(private val file: String, private val version: String, private val rulesFile: String) : Command {
-    private val fileContent = FileReader.getFileContents(file, version)
+class AnalyzeCommand(private val file: String, private val version: String, rulesFile: String) : Command {
     private val rulesFileString = FileReader.getFileContents(rulesFile, version)
     private var progress: Int = 0
 
@@ -26,13 +25,14 @@ class AnalyzeCommand(private val file: String, private val version: String, priv
         var lastProcessedPosition = Position(0, 0)
 
         try {
-            val tokens = Lexer(fileContent)
-            val astNodes = Parser(tokens)
+            val tokens = Lexer(fileContent, version)
+            val astNodes = Parser(tokens, version)
+
+            Linter.clearResults()
 
             while (astNodes.hasNext()) {
                 val statement = astNodes.next()
-                val lintResult = Linter(getLinterRules(rulesFile, version)).lint(statement)
-                outputBuilder.append(formattedNode)
+                Linter.lint(statement, getLinterRules(rulesFileString, version))
 
                 val endPosition = statement.position
 
@@ -49,7 +49,14 @@ class AnalyzeCommand(private val file: String, private val version: String, priv
                 reportProgress(progress)
             }
 
-            val formattedResult = outputBuilder.toString()
+            return if (Linter.getErrors().isEmpty()) {
+                "No problems found"
+            } else {
+                val errorMessages = Linter.getErrors().mapIndexed { index, error ->
+                    "Error ${index + 1}:\n${error.getMessage()}"
+                }
+                errorMessages.joinToString(separator = "\n\n")
+            }
         } catch (e: Exception) {
             return "Error during analysis: ${e.message}"
         }
