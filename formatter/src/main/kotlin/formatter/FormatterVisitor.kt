@@ -75,11 +75,11 @@ class FormatterVisitor(private val rules: FormattingRules) : Visitor {
         output.append("if (")
         val condition = statement.condition
         condition.accept(this)
-        output.append(") ")
+        output.append(")")
 
         val sameBraceLine = rules.ifBraceSameLine
         if (sameBraceLine) {
-            output.append("{")
+            output.append(" {")
         } else {
             output.append("\n")
             appendIndent()
