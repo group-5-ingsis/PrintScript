@@ -49,8 +49,8 @@ class ParserTester {
 
         val ast1 = parser.next()
 
-        val expectedLeftString = Expression.Literal("'Hello'", Position(1, 16))
-        val expectedRightString = Expression.Literal("'World'", Position(1, 26))
+        val expectedLeftString = Expression.Literal("Hello", Position(1, 16))
+        val expectedRightString = Expression.Literal("World", Position(1, 26))
         val expectedBinaryOperation = Expression.Binary(
             expectedLeftString,
             "+",

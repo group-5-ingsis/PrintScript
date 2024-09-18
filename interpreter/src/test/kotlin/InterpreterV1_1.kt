@@ -23,7 +23,7 @@ class InterpreterV1_1 {
         val (_, env) = Interpreter.interpret(ast1, version, Environment())
         val (stringBuilder, env2) = Interpreter.interpret(ifstm, version, env)
 
-        val expectedOutput = "5" // Asumiendo que el valor de 'queso' se imprime seguido de un salto de línea
+        val expectedOutput = "5\n" // Asumiendo que el valor de 'queso' se imprime seguido de un salto de línea
         assertEquals(expectedOutput, stringBuilder.toString())
         assertFalse(stringBuilder.toString().contains("hola"))
         assertTrue(env2.contains("a"))
@@ -45,11 +45,11 @@ class InterpreterV1_1 {
         val (stringBuilder, env2) = Interpreter.interpret(ifstm, version, env)
 
         // Verificar el contenido del StringBuilder
-        val expectedOutput = "\nfalse\n" // Asumiendo que el valor de 'queso' se imprime seguido de un salto de línea
+        val expectedOutput = "false\n" // Asumiendo que el valor de 'queso' se imprime seguido de un salto de línea
         assertEquals(expectedOutput, stringBuilder.toString())
         assertFalse(expectedOutput.contains("hola"))
         assertTrue(env2.contains("a"))
-        assertEquals(env2.get("a"), false)
+        assertEquals(env2.get("a").initializer?.value, false)
         assertFalse(env2.contains("arbol"))
     }
 }

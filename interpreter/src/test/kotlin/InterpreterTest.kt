@@ -205,7 +205,7 @@ class InterpreterTest {
         }
 
         // Check that the output matches the expected print result
-        assertEquals("Hello, World!", outputBuilder.toString())
+        assertEquals("Hello, World!\n", outputBuilder.toString())
     }
 
     @Test
@@ -225,7 +225,7 @@ class InterpreterTest {
         }
 
         // Verify that both print statements are present in the output
-        assertEquals("First print\nSecond print", outputBuilder.toString())
+        assertEquals("First print\nSecond print\n", outputBuilder.toString())
     }
 
     @Test
@@ -245,7 +245,7 @@ class InterpreterTest {
         }
 
         // Verify the output for the variable and the expression
-        assertEquals("\n42\n50\n", outputBuilder.toString())
+        assertEquals("42\n50\n", outputBuilder.toString())
     }
 
     @Test
@@ -498,7 +498,7 @@ class InterpreterTest {
             asts.setEnv(currentEnvironment)
         }
 
-        assertEquals("3", outputBuilder.toString())
+        assertEquals("3\n", outputBuilder.toString())
     }
 
     @Test
@@ -516,5 +516,25 @@ class InterpreterTest {
             outputBuilder.append(result.first.toString())
             currentEnvironment = result.second
         }
+    }
+
+    @Test
+    fun testIfInsideIf() {
+        val input = "let x: boolean = true; if (x) { if (x) { println(\"Hello\"); } }"
+        val tokens = Lexer(input, version)
+        val asts = Parser(tokens, version)
+
+        val outputBuilder = StringBuilder()
+        var currentEnvironment = Environment()
+
+        while (asts.hasNext()) {
+            val statement = asts.next()
+            val result = Interpreter.interpret(statement, version, currentEnvironment)
+            outputBuilder.append(result.first.toString())
+            currentEnvironment = result.second
+            asts.setEnv(currentEnvironment)
+        }
+
+        assertEquals("Hello\n", outputBuilder.toString())
     }
 }
