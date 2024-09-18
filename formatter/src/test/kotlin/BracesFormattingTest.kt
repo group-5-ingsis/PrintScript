@@ -15,7 +15,13 @@ class BracesFormattingTest {
     fun formatCode(input: String): String {
         val tokens = Lexer(input, version)
         val astNodes = Parser(tokens, version)
-        return Formatter.format(astNodes, testRules, version)
+        val formattedOutput = StringBuilder()
+        while (astNodes.hasNext()) {
+            val statement = astNodes.next()
+            val formattedNode = Formatter.format(statement, testRules, version)
+            formattedOutput.append(formattedNode)
+        }
+        return formattedOutput.toString()
     }
 
     @Test
