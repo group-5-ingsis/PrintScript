@@ -2,7 +2,7 @@ package cli
 
 import position.Position
 
-object ProgressFetcher {
+object ProgressTracker {
 
     fun calculateProcessedCharacters(
         fileContent: String,

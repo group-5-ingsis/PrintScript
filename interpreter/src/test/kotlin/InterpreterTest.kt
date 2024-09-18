@@ -7,7 +7,6 @@ import org.junit.Test
 import parser.Parser
 import position.Position
 
-
 class InterpreterTest {
 
     val version = "1.1"
@@ -111,8 +110,7 @@ class InterpreterTest {
         // Check that the variable 'a' has the expected value
         val variable = currentEnvironment.getValue("a")
 
-
-         assertEquals("Hello World", variable)
+        assertEquals("Hello World", variable)
     }
 
     @Test
@@ -156,8 +154,7 @@ class InterpreterTest {
         // Check that the variable 'a' has the expected concatenated value
         val variable = currentEnvironment.getValue("a")
 
-
-         assertEquals("Hello World", variable)
+        assertEquals("Hello World", variable)
     }
 
     @Test

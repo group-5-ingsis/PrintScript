@@ -1,61 +1,87 @@
-// package command
-//
-// import interpreter.Interpreter
-// import lexer.Lexer
-// import parser.Parser
-// import position.visitor.Environment
-// import java.io.BufferedReader
-// import java.io.FileReader as JavaFileReader
-//
-// class ExecuteCommand(
-//    private val file: String,
-//    private val version: String,
-//    private val progressCallback: (Int) -> Unit
-// ) : Command {
-//
-//    override fun execute(): String {
-//        val (fileContent, totalCharacters) = readFileWithProgress(file)
-//
-//        return try {
-//            val tokens = Lexer(fileContent, version)
-//            val asts = Parser(tokens, version)
-//
-//            val outputBuilder = StringBuilder()
-//            var currentEnvironment = Environment()
-//            var charactersRead = 0
-//
-//            while (asts.hasNext()) {
-//                val statement = asts.next()
-//                val result = Interpreter.interpret(statement, version, currentEnvironment)
-//                outputBuilder.append(result.first.toString())
-//                currentEnvironment = result.second
-//
-//                charactersRead += result.first.toString().length
-//                val progress = (charactersRead.toDouble() / totalCharacters * 100).toInt()
-//                progressCallback(progress)
-//            }
-//
-//            progressCallback(100)
-//            "${outputBuilder}\nFinished executing $file"
-//        } catch (e: Exception) {
-//            "Execution Error: ${e.message}"
-//        }
-//    }
-//
-//    private fun readFileWithProgress(file: String): Pair<String, Int> {
-//        val fileReader = JavaFileReader(file)
-//        val bufferedReader = BufferedReader(fileReader)
-//        val fileContent = StringBuilder()
-//        var totalCharacters = 0
-//        var charsRead: Int
-//        val buffer = CharArray(1024)
-//
-//        while (bufferedReader.read(buffer).also { charsRead = it } != -1) {
-//            fileContent.append(buffer, 0, charsRead)
-//            totalCharacters += charsRead
-//        }
-//        bufferedReader.close()
-//
-//        return Pair(fileContent.toString(), totalCharacters)
-//    }
-// }
+package command
+
+import Environment
+import cli.FileReader
+import cli.ProgressTracker
+import interpreter.Interpreter
+import lexer.Lexer
+import nodes.Expression
+import nodes.StatementType
+import parser.Parser
+import position.Position
+import kotlin.math.roundToInt
+
+class ExecuteCommand(
+    private val file: String,
+    private val version: String
+) : Command {
+
+    private var progress: Int = 0
+
+    override fun execute(): String {
+        val fileContent = FileReader.getFileContents(file, version)
+        val totalCharacters = fileContent.length
+
+        var processedCharacters = 0
+        var lastProcessedPosition = Position(0, 0)
+        val outputBuilder = StringBuilder()
+
+        return try {
+            val tokens = Lexer(fileContent, version)
+            val asts = Parser(tokens, version)
+
+            var currentEnvironment = createEnvironmentFromMap(System.getenv())
+
+            while (asts.hasNext()) {
+                val statement = asts.next()
+                val result = Interpreter.interpret(statement, version, currentEnvironment)
+                outputBuilder.append(result.first.toString())
+
+                val endPosition = statement.position
+
+                currentEnvironment = result.second
+                processedCharacters += ProgressTracker.calculateProcessedCharacters(fileContent, lastProcessedPosition, endPosition)
+                lastProcessedPosition = endPosition
+
+                progress = (processedCharacters.toDouble() / totalCharacters * 100).roundToInt()
+                reportProgress(progress)
+            }
+
+            if (processedCharacters < totalCharacters) {
+                processedCharacters = totalCharacters
+                progress = 100
+                reportProgress(progress)
+            }
+
+            "${outputBuilder}\nFinished executing $file"
+        } catch (e: Exception) {
+            "Execution Error: ${e.message}"
+        }
+    }
+
+    private fun reportProgress(progress: Int) {
+        println("Progress: $progress%")
+    }
+
+    override fun getProgress(): Int {
+        return progress
+    }
+
+    private fun createEnvironmentFromMap(envVarsMap: Map<String, String>): Environment {
+        var env = Environment()
+
+        for ((key, value) in envVarsMap) {
+            val variable = StatementType.Variable(
+                designation = "const",
+                identifier = key,
+                initializer = Expression.Literal(value, Position(0, 0)),
+                dataType = "string",
+                position = Position(0, 0)
+            )
+
+            env = env.define(variable)
+        }
+
+        return env
+    }
+}

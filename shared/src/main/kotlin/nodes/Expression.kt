@@ -10,7 +10,6 @@ sealed class Expression {
     abstract val expressionType: String
     abstract val position: Position
 
-
     abstract fun acceptVisitor(visitor: ExpressionVisitor, environment: Environment): VisitorResultExpressions
 
     abstract fun accept(visitor: Visitor)
@@ -41,7 +40,7 @@ sealed class Expression {
         val left: Expression,
         val operator: String,
         val right: Expression,
-        override val position: Position,
+        override val position: Position
     ) : Expression() {
         override val expressionType: String = "BINARY_EXPRESSION"
         override fun acceptVisitor(visitor: ExpressionVisitor, environment: Environment): VisitorResultExpressions {

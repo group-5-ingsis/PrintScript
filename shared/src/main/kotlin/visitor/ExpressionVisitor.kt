@@ -2,21 +2,20 @@ package position.visitor
 
 import Environment
 import nodes.Expression
-import nodes.StatementType
 
 class ExpressionVisitor(val readInput: String? = null) {
 
-     fun evaluateExpression(expr: Expression, environment: Environment): VisitorResultExpressions {
+    fun evaluateExpression(expr: Expression, environment: Environment): VisitorResultExpressions {
         return expr.acceptVisitor(this, environment)
     }
 
-     fun visitLiteralExp(exp: Expression.Literal, environment: Environment): VisitorResultExpressions {
+    fun visitLiteralExp(exp: Expression.Literal, environment: Environment): VisitorResultExpressions {
         return Pair(exp.value, environment)
     }
-     fun visitGroupExp(exp: Expression.Grouping, environment: Environment): VisitorResultExpressions {
+    fun visitGroupExp(exp: Expression.Grouping, environment: Environment): VisitorResultExpressions {
         return evaluateExpression(exp.expression, environment)
     }
-     fun visitUnaryExpr(exp: Expression.Unary, environment: Environment): Pair<Any?, Environment> {
+    fun visitUnaryExpr(exp: Expression.Unary, environment: Environment): Pair<Any?, Environment> {
         val rightObject = evaluateExpression(exp.right, environment)
         return when (exp.operator) {
             "-" -> {
@@ -31,20 +30,18 @@ class ExpressionVisitor(val readInput: String? = null) {
         }
     }
 
-     fun visitBinaryExpr(exp: Expression.Binary, scope: Environment): Pair<Any?, Environment> {
+    fun visitBinaryExpr(exp: Expression.Binary, scope: Environment): Pair<Any?, Environment> {
         val (left, leftScope) = evaluateExpression(exp.left, scope)
         val (right, rigthScope) = evaluateExpression(exp.right, leftScope)
 
-         return when {
-             (left is Number && right is Number) -> solveNumberAndNumber(left, right, exp.operator) to rigthScope
-             (left is String && right is String) -> solveStringAndString(left, right, exp.operator) to rigthScope
-             (left is String && right is Number) -> solveStringAndNumber(left, right, exp.operator) to rigthScope
-             (left is Number && right is String) -> solveNumberAndString(left, right, exp.operator) to rigthScope
-             else -> throw IllegalArgumentException("Unsupported operand types: ${left!!::class} and ${right!!::class}")
-         }
-
+        return when {
+            (left is Number && right is Number) -> solveNumberAndNumber(left, right, exp.operator) to rigthScope
+            (left is String && right is String) -> solveStringAndString(left, right, exp.operator) to rigthScope
+            (left is String && right is Number) -> solveStringAndNumber(left, right, exp.operator) to rigthScope
+            (left is Number && right is String) -> solveNumberAndString(left, right, exp.operator) to rigthScope
+            else -> throw IllegalArgumentException("Unsupported operand types: ${left!!::class} and ${right!!::class}")
+        }
     }
-
 
     fun solveStringAndString(left: String, right: String, operator: String): String {
         return when (operator) {
@@ -80,30 +77,29 @@ class ExpressionVisitor(val readInput: String? = null) {
         }
     }
 
-     fun visitVariableExp(exp: Expression.Variable, scope: Environment): VisitorResultExpressions {
+    fun visitVariableExp(exp: Expression.Variable, scope: Environment): VisitorResultExpressions {
         val expressionName = exp.name
         val name = scope.getValue(expressionName)
 
         return Pair(name, scope)
     }
 
-     fun visitAssignExpr(exp: Expression.Assign, scope: Environment): VisitorResultExpressions {
+    fun visitAssignExpr(exp: Expression.Assign, scope: Environment): VisitorResultExpressions {
         val (value, newScope) = evaluateExpression(exp.value, scope)
         val newScope2 = newScope.assign(exp.name, exp.value)
         return Pair(value, newScope2)
     }
 
-
-     fun visitReadInput(expr: Expression.ReadInput, env: Environment): VisitorResultExpressions {
+    fun visitReadInput(expr: Expression.ReadInput, env: Environment): VisitorResultExpressions {
         val input = readInput
         return Pair(input.toString().trim(), env)
     }
 
-     fun visitReadEnv(expr: Expression.ReadEnv, env: Environment): VisitorResultExpressions {
+    fun visitReadEnv(expr: Expression.ReadEnv, env: Environment): VisitorResultExpressions {
         val key = expr.value
 
         val result = evaluateExpression(key.expression, env)
-         val value = result.first
+        val value = result.first
 
         val name = removeSurroundingQuotes(value.toString())
         val envValue = result.second.getValue(name)
@@ -119,7 +115,7 @@ class ExpressionVisitor(val readInput: String? = null) {
         }
     }
 
-     fun visitIdentifierExp(exp: Expression.IdentifierExpression, environment: Environment): VisitorResultExpressions {
+    fun visitIdentifierExp(exp: Expression.IdentifierExpression, environment: Environment): VisitorResultExpressions {
         return Pair(exp, environment)
     }
 
@@ -144,5 +140,4 @@ class ExpressionVisitor(val readInput: String? = null) {
             else -> throw IllegalArgumentException("Unsupported type: $value")
         }
     }
-
 }

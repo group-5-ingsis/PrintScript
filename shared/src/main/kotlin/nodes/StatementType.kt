@@ -51,7 +51,7 @@ sealed class StatementType {
             environment: Environment,
             sb: StringBuilder
         ): statementVisitorResult {
-           return visitor.visitPrintStm(this, environment, sb)
+            return visitor.visitPrintStm(this, environment, sb)
         }
 
         override fun accept(visitor: Visitor) {
@@ -72,7 +72,6 @@ sealed class StatementType {
         override fun accept(visitor: Visitor) {
             return visitor.visitExpressionStm(this)
         }
-
     }
 
     /**

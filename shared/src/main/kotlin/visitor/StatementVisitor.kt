@@ -8,12 +8,12 @@ typealias statementVisitorResult = Pair<StringBuilder, Environment>
 
 class StatementVisitor(val readInput: String? = null) {
 
-     fun evaluateExpression(expr: Expression, scope: Environment): VisitorResultExpressions {
+    fun evaluateExpression(expr: Expression, scope: Environment): VisitorResultExpressions {
         val visitor = ExpressionVisitor(readInput)
         return expr.acceptVisitor(visitor, scope)
     }
 
-     fun visitBlockStm(statement: StatementType.BlockStatement, environment: Environment, stringBuilder: StringBuilder): statementVisitorResult {
+    fun visitBlockStm(statement: StatementType.BlockStatement, environment: Environment, stringBuilder: StringBuilder): statementVisitorResult {
         var newEnvironment = Environment(enclosing = environment)
         var stB = StringBuilder(stringBuilder.toString())
         statement.listStm.forEach {
@@ -26,7 +26,7 @@ class StatementVisitor(val readInput: String? = null) {
         return Pair(stB, env)
     }
 
-     fun visitIfStm(
+    fun visitIfStm(
         statement: StatementType.IfStatement,
         environment: Environment,
         stringBuilder: StringBuilder
@@ -47,8 +47,7 @@ class StatementVisitor(val readInput: String? = null) {
         }
     }
 
-
-     fun visitPrintStm(
+    fun visitPrintStm(
         statement: StatementType.Print,
         environment: Environment,
         stringBuilder: StringBuilder
@@ -68,12 +67,12 @@ class StatementVisitor(val readInput: String? = null) {
         return Pair(stringBuilder, environment)
     }
 
-     fun visitExpressionStm(statement: StatementType.StatementExpression, environment: Environment, stringBuilder: StringBuilder): statementVisitorResult {
+    fun visitExpressionStm(statement: StatementType.StatementExpression, environment: Environment, stringBuilder: StringBuilder): statementVisitorResult {
         val newEnvironment = evaluateExpression(statement.value, environment).second
         return Pair(stringBuilder, newEnvironment)
     }
 
-     fun visitVariableStm(statement: StatementType.Variable, environment: Environment, stringBuilder: StringBuilder): statementVisitorResult {
+    fun visitVariableStm(statement: StatementType.Variable, environment: Environment, stringBuilder: StringBuilder): statementVisitorResult {
         val newEnvironment = if (statement.initializer != null) {
             val (newValue, env) = evaluateExpression(statement.initializer, environment)
             val initializer = Expression.Literal(newValue, statement.position)

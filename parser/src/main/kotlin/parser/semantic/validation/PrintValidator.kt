@@ -4,7 +4,6 @@ import Environment
 import nodes.Expression
 import nodes.StatementType
 
-
 class PrintValidator : Validator<StatementType.Print> {
 
     override fun validate(node: StatementType, scope: Environment): ValidationResult {

@@ -2,7 +2,7 @@ package command
 
 import cli.FileReader
 import cli.FileWriter
-import cli.ProgressFetcher
+import cli.ProgressTracker
 import formatter.Formatter
 import lexer.Lexer
 import parser.Parser
@@ -36,7 +36,7 @@ class FormatCommand(
 
                 val endPosition = statement.position
 
-                processedCharacters += ProgressFetcher.calculateProcessedCharacters(fileContent, lastProcessedPosition, endPosition)
+                processedCharacters += ProgressTracker.calculateProcessedCharacters(fileContent, lastProcessedPosition, endPosition)
                 lastProcessedPosition = endPosition
 
                 progress = (processedCharacters.toDouble() / totalCharacters * 100).roundToInt()

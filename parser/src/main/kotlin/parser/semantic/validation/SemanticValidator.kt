@@ -3,7 +3,6 @@ package parser.semantic.validation
 import Environment
 import nodes.StatementType
 
-
 class SemanticValidator(private val readInput: String?) {
     private val validatorsForTypes: Map<String, Validator<out StatementType>> =
         mapOf(

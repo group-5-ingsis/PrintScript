@@ -2,7 +2,6 @@ package interpreter
 
 import Environment
 import nodes.StatementType
-
 import position.visitor.StatementVisitor
 import position.visitor.statementVisitorResult
 
