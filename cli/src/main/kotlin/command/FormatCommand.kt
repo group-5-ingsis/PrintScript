@@ -37,10 +37,16 @@ class FormatCommand(
                 val endPosition = statement.position
 
                 processedCharacters += ProgressFetcher.calculateProcessedCharacters(fileContent, lastProcessedPosition, endPosition)
-
                 lastProcessedPosition = endPosition
 
                 progress = (processedCharacters.toDouble() / totalCharacters * 100).roundToInt()
+                reportProgress(progress)
+            }
+
+            if (processedCharacters < totalCharacters) {
+                processedCharacters = totalCharacters
+                progress = 100
+                reportProgress(progress)
             }
 
             val formattedResult = outputBuilder.toString()
@@ -50,6 +56,10 @@ class FormatCommand(
         } catch (e: Exception) {
             return "Formatting Error: ${e.message}"
         }
+    }
+
+    private fun reportProgress(progress: Int) {
+        println("Progress: $progress%")
     }
 
     override fun getProgress(): Int {

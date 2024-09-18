@@ -23,8 +23,7 @@ object CommandLineInterface {
         val builder = commandBuilders[operation] ?: return "Unknown command: $command"
 
         val cmd = builder.build(file, arguments, version)
-        var result = cmd.execute()
-        println("Progress: ${cmd.getProgress()}%")
+        val result = cmd.execute()
 
         return result
     }

@@ -18,30 +18,15 @@ object ProgressFetcher {
         val endPositionIndex = endPosition.symbolIndex
 
         if (lastLine == endPositionLine) {
-            val line = lines[lastLine]
-            if (lastSymbolIndex <= line.length && endPositionIndex <= line.length) {
-                processedChars = line
-                    .substring(lastSymbolIndex, endPositionIndex)
-                    .count { !it.isWhitespace() }
-            }
+            processedChars = endPositionIndex - lastSymbolIndex
         } else {
-            val lastLineContent = lines[lastLine]
-            if (lastSymbolIndex <= lastLineContent.length) {
-                processedChars += lastLineContent
-                    .substring(lastSymbolIndex)
-                    .count { !it.isWhitespace() }
-            }
+            processedChars += lines[lastLine].length - lastSymbolIndex
 
             for (lineIndex in (lastLine + 1) until endPositionLine) {
-                processedChars += lines[lineIndex].count { !it.isWhitespace() }
+                processedChars += lines[lineIndex].length
             }
 
-            val endLineContent = lines[endPositionLine]
-            if (endPositionIndex <= endLineContent.length) {
-                processedChars += endLineContent
-                    .substring(0, endPositionIndex)
-                    .count { !it.isWhitespace() }
-            }
+            processedChars += endPositionIndex
         }
 
         return processedChars
