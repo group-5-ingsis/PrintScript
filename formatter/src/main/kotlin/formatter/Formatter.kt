@@ -5,16 +5,13 @@ import rules.FormattingRules
 
 object Formatter {
 
-    fun format(parser: Iterator<StatementType>, rules: FormattingRules, version: String = "1.1"): String {
-        val output = StringBuilder()
+    val formattedResult = StringBuilder()
 
-        while (parser.hasNext()) {
-            val astNode = parser.next()
-            val formattingVisitor = FormatterVisitor(rules)
-            astNode.accept(formattingVisitor)
-            output.append(formattingVisitor.getFormattedOutput())
-        }
-
-        return output.toString()
+    fun format(statement: StatementType, rules: FormattingRules, version: String = "1.1"): String {
+        val visitor = FormatterVisitor(rules, version)
+        statement.accept(visitor)
+        val formattedOutput = visitor.getFormattedOutput()
+        formattedResult.append(formattedOutput)
+        return formattedResult.toString()
     }
 }
