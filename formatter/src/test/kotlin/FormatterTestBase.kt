@@ -8,7 +8,7 @@ import kotlin.test.BeforeTest
 
 abstract class FormatterTestBase {
 
-    protected lateinit var exampleRules: FormattingRules
+    protected lateinit var testRules: FormattingRules
     protected val version = "1.1"
 
     @BeforeTest
@@ -17,12 +17,18 @@ abstract class FormatterTestBase {
         val resource = this::class.java.getResource("/rules/testRules.yaml")
             ?: throw IllegalArgumentException("File not found!")
         val file = Paths.get(resource.toURI()).toFile()
-        exampleRules = yamlMapper.readValue(file, FormattingRules::class.java)
+        testRules = yamlMapper.readValue(file, FormattingRules::class.java)
     }
 
-    protected fun formatCode(input: String): String {
+    fun formatCode(input: String): String {
         val tokens = Lexer(input, version)
         val astNodes = Parser(tokens, version)
-        return Formatter.format(astNodes, exampleRules, version)
+        val formattedOutput = StringBuilder()
+        while (astNodes.hasNext()) {
+            val statement = astNodes.next()
+            val formattedNode = Formatter.format(statement, testRules, version)
+            formattedOutput.append(formattedNode)
+        }
+        return formattedOutput.toString()
     }
 }

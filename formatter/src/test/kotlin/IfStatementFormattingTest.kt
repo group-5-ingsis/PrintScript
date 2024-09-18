@@ -18,14 +18,14 @@ class IfStatementFormattingTest : FormatterTestBase() {
 
     @Test
     fun testIfStatementWithElseFormatting() {
-        val input = "let c: boolean = true; if (c) { let b: number = 3; } else { let a: number = 4; };"
+        val input = "let c: boolean = true; if (c) { let b: number = 3; } else { let a: number = 4; }"
         val expected = """
-        let c: boolean = true;
-        if (c) {
-            let b: number = 3;
-        } else {
-            let a: number = 4;
-        }
+    let c: boolean = true;
+    if (c) {
+        let b: number = 3;
+    } else {
+        let a: number = 4;
+    }
         """.trimIndent()
         val result = formatCode(input)
         assertEquals(expected, result)
@@ -33,10 +33,11 @@ class IfStatementFormattingTest : FormatterTestBase() {
 
     @Test
     fun testDoubleIfStatementFormatting() {
-        val input = "let c: boolean = true; if (c) { if (c) {let a: number = 2;} };"
+        val input = "let c: boolean = true; if (c) { if (c) { let a: number = 2; } }"
         val expected = """
-        if (true) {
-            if (true) {
+        let c: boolean = true;
+        if (c) {
+            if (c) {
                 let a: number = 2;
             }
         }
