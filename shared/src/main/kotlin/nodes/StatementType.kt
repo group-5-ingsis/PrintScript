@@ -1,7 +1,7 @@
 package nodes
 
+import Environment
 import position.Position
-import position.visitor.Environment
 import position.visitor.StatementVisitor
 import position.visitor.Visitor
 import position.visitor.statementVisitorResult
@@ -13,26 +13,47 @@ sealed class StatementType {
 
     class BlockStatement(override val position: Position, val listStm: List<StatementType>) : StatementType() {
         override val statementType: String = "BLOCK_STATEMENT"
+        override fun acceptVisitor(
+            visitor: StatementVisitor,
+            environment: Environment,
+            sb: StringBuilder
+        ): statementVisitorResult {
+            return visitor.visitBlockStm(this, environment, sb)
+        }
+
         override fun accept(visitor: Visitor) {
             return visitor.visitBlockStm(this)
         }
     }
     class IfStatement(override val position: Position, val condition: Expression, val thenBranch: StatementType, val elseBranch: StatementType?) : StatementType() {
         override val statementType: String = "IF_STATEMENT"
+        override fun acceptVisitor(
+            visitor: StatementVisitor,
+            environment: Environment,
+            sb: StringBuilder
+        ): statementVisitorResult {
+            return visitor.visitIfStm(this, environment, sb)
+        }
+
         override fun accept(visitor: Visitor) {
             return visitor.visitIfStm(this)
         }
     }
 
-    fun acceptVisitor(visitor: StatementVisitor, environment: Environment, sb: StringBuilder): statementVisitorResult {
-        val func = visitor.getVisitorFunctionForStatement(statementType)
-        return func(this, environment, sb)
-    }
+    abstract fun acceptVisitor(visitor: StatementVisitor, environment: Environment, sb: StringBuilder): statementVisitorResult
 
     abstract fun accept(visitor: Visitor)
 
     class Print(val value: Expression.Grouping, override val position: Position) : StatementType() {
         override val statementType: String = "PRINT"
+        override fun acceptVisitor(
+            visitor: StatementVisitor,
+            environment: Environment,
+            sb: StringBuilder
+        ): statementVisitorResult {
+           return visitor.visitPrintStm(this, environment, sb)
+        }
+
         override fun accept(visitor: Visitor) {
             return visitor.visitPrintStm(this)
         }
@@ -40,9 +61,18 @@ sealed class StatementType {
 
     class StatementExpression(val value: Expression, override val position: Position) : StatementType() {
         override val statementType: String = "STATEMENT_EXPRESSION"
+        override fun acceptVisitor(
+            visitor: StatementVisitor,
+            environment: Environment,
+            sb: StringBuilder
+        ): statementVisitorResult {
+            return visitor.visitExpressionStm(this, environment, sb)
+        }
+
         override fun accept(visitor: Visitor) {
             return visitor.visitExpressionStm(this)
         }
+
     }
 
     /**
@@ -61,6 +91,14 @@ sealed class StatementType {
         override val position: Position
     ) : StatementType() {
         override val statementType: String = "VARIABLE_STATEMENT"
+        override fun acceptVisitor(
+            visitor: StatementVisitor,
+            environment: Environment,
+            sb: StringBuilder
+        ): statementVisitorResult {
+            return visitor.visitVariableStm(this, environment, sb)
+        }
+
         override fun accept(visitor: Visitor) {
             return visitor.visitVariableStm(this)
         }

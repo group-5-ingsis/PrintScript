@@ -1,125 +1,86 @@
-package position.visitor
-
 import nodes.Expression
 import nodes.StatementType
+import position.visitor.ExpressionVisitor
 
-/**
- * The Environment class represents an execution environment where variables can be defined and accessed.
- * Variables are stored in a map that associates the variable name with a pair containing the declaration
- * and the variable's value.
- */
 
 class Environment(
-    val enclosing: Environment? = null, // Previous environment
-    initialValues: HashMap<String, StatementType.Variable> = HashMap() // Initial values
+
+    val enclosing: Environment? = null,
+    val values: List<StatementType.Variable> = listOf()
+
 ) {
 
-    private val values: HashMap<String, StatementType.Variable> = HashMap(initialValues) // Initializes the values map
 
-    /**
-     * Primary constructor: Initializes the environment with an empty HashMap and no parent environment.
-     */
-    constructor() : this(null, HashMap())
 
-    /**
-     * Secondary constructor: Initializes the environment with an existing HashMap and an optional parent environment.
-     *
-     * @param initialValues The initial values for the environment.
-     * @param parentEnvironment The parent environment to inherit from.
-     */
-    constructor(initialValues: HashMap<String, StatementType.Variable>, parentEnvironment: Environment? = null) : this(parentEnvironment, initialValues)
-
-    /**
-     * Defines a new variable in the environment.
-     *
-     * @param name The name of the variable to be defined.
-     * @param value The value associated with the variable.
-     * @param declaration Specifies whether the variable is a constant ("const") or a regular variable ("let").
-     * @throws IllegalArgumentException If `declaration` is "const" and `value` is `null`.
-     */
+    // Define a new variable in the environment
     fun define(variable: StatementType.Variable): Environment {
-        val newEnvironment = alternativeCopy()
+        val NewValues = copyAndAdd(variable)
 
-        if (variable.designation == "const" && variable.initializer == null) {
-            throw IllegalArgumentException(
-                "variable '${variable.identifier}' with modifier 'const' cannot be declared."
-            )
-        }
-        newEnvironment[variable.identifier] = variable
-        if (enclosing == null) return Environment(newEnvironment)
-        return Environment(enclosing.getCopy(), newEnvironment)
+        return Environment(enclosing, NewValues)
     }
 
-    /**
-     * Retrieves the value of a variable in the environment.
-     *
-     * @param name The name of the variable whose value is to be retrieved.
-     * @return The value of the variable if it exists.
-     * @throws Error If the variable has not been defined in the environment.
-     */
+    // Retrieve the variable's value by name
     fun get(name: String): StatementType.Variable {
-        val result = values[name]
-        if (result == null) {
-            if (enclosing != null) return enclosing.get(name)
-            throw Error("Undefined variable: $name")
-        } else {
-            return result
-        }
+
+        val result = values.find { it.identifier == name }
+
+        return result ?: enclosing?.get(name) ?: throw Error("Undefined variable: $name")
     }
 
-    fun assign(name: String, value: Any?): Environment {
-        if (values.containsKey(name)) {
-            val newScope = alternativeCopy()
-            val valueStored: StatementType.Variable? = newScope[name]
-
-            checkDontReAssignToConst(valueStored, name)
-
-            val keyWord = valueStored?.designation ?: throw Error("keyWord for assignation cannot be null")
-            newScope[name] = StatementType.Variable(
-                designation = keyWord,
-                identifier = valueStored.identifier,
-                initializer = Expression.Literal(value, valueStored.position),
-                dataType = valueStored.dataType,
-                position = valueStored.position
-            )
-            return Environment(newScope)
+    fun getValue(name: String): Any? {
+        val variable = get(name)
+        if (variable.initializer == null) {
+            throw Error("Variable $name is not initialized. at : ${variable.position}")
         }
-        if (enclosing != null) return Environment(values, enclosing.assign(name, value))
+        return variable.initializer.acceptVisitor(ExpressionVisitor(), this).first
+
+    }
+
+
+
+    // Assign a new value to a variable
+    fun assign(name: String, value: Expression): Environment {
+        val variable = values.find { it.identifier == name }
+
+        if (variable != null) {
+                val newValues = copyAndReplace(StatementType.Variable(variable.designation, variable.identifier, value, variable.dataType, variable.position))
+                return Environment(enclosing, newValues)
+        }
+        if (enclosing != null) {
+            return Environment(enclosing.assign(name, value), values)
+        }
 
         throw Error("Cannot perform assignation on undefined variable '$name'.")
+
     }
 
-    fun getTypeForValue(value: Any?): String {
-        return when (value) {
-            Int -> "number"
-            Float -> "number"
-            String -> "string"
-            Boolean -> "boolean"
-            else -> "undefined"
-        }
+    // Method to get the value of a variable using the ExpressionVisitor
+    fun getValue(variableName: String, visitor: ExpressionVisitor): Any? {
+        val variable = get(variableName)
+        return variable.initializer?.let { visitor.evaluateExpression(it, this).first }
     }
 
-    private fun assignationMatchesDeclaredType(value: Any?, valueStored: StatementType.Variable?): Boolean {
-        val actualType = getTypeForValue(value)
-        return valueStored?.dataType == actualType
-    }
 
-    private fun checkDontReAssignToConst(value: StatementType.Variable?, name: String) {
-        if (value?.designation == "const") {
-            throw Exception("Cannot assign variable '$name' to a const.")
-        }
-    }
-
-    private fun alternativeCopy(): HashMap<String, StatementType.Variable> {
-        return HashMap(values)
-    }
-
-    fun getCopy(): Environment {
-        if (enclosing == null) return Environment(alternativeCopy())
-        return Environment(alternativeCopy(), enclosing.getCopy())
-    }
-
+    // Method to check if the environment contains a variable
     fun contains(varName: String): Boolean {
-        return values.containsKey(varName)
+        return values.any { it.identifier == varName }
     }
+
+
+    fun copyAndAdd(variable: StatementType.Variable): List<StatementType.Variable> {
+        val newList = values.toMutableList()
+        newList.add(variable)
+        return newList
+    }
+
+    fun copyAndReplace(newVariable: StatementType.Variable): List<StatementType.Variable> {
+        return values.map {
+            if (it.identifier == newVariable.identifier) {
+                newVariable
+            } else {
+                it
+            }
+        }
+    }
+
 }
