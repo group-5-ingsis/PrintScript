@@ -2,6 +2,7 @@ package command
 
 import cli.FileReader
 import cli.FileWriter
+import cli.ProgressFetcher
 import formatter.Formatter
 import lexer.Lexer
 import parser.Parser
@@ -35,12 +36,11 @@ class FormatCommand(
 
                 val endPosition = statement.position
 
-                processedCharacters += calculateProcessedCharacters(fileContent, lastProcessedPosition, endPosition)
+                processedCharacters += ProgressFetcher.calculateProcessedCharacters(fileContent, lastProcessedPosition, endPosition)
 
                 lastProcessedPosition = endPosition
 
                 progress = (processedCharacters.toDouble() / totalCharacters * 100).roundToInt()
-                reportProgress(progress)
             }
 
             val formattedResult = outputBuilder.toString()
@@ -52,35 +52,7 @@ class FormatCommand(
         }
     }
 
-    private fun calculateProcessedCharacters(
-        fileContent: String,
-        lastProcessedPosition: Position,
-        endPosition: Position
-    ): Int {
-        val lines = fileContent.lines()
-
-        var processedChars = 0
-
-        val lastLine = lastProcessedPosition.line
-        val endPositionLine = endPosition.line
-        val lastSymbolIndex = lastProcessedPosition.symbolIndex
-        val endPositionIndex = endPosition.symbolIndex
-
-        if (lastLine == endPositionLine) {
-            processedChars = endPositionIndex - lastSymbolIndex
-        } else {
-            val length = lines[lastLine].length
-            processedChars += length
-        }
-
-        return processedChars
-    }
-
     override fun getProgress(): Int {
         return progress
-    }
-
-    private fun reportProgress(progress: Int) {
-        println("Formatting Progress: $progress%")
     }
 }

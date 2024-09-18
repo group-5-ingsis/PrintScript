@@ -22,7 +22,7 @@ class CommandLineInterfaceTest {
     fun `test correct File Formatting`() {
         val command = "format HelloWorld.ps 1.0 rules.yaml"
         val result = CommandLineInterface.execute(command)
-        assertEquals(result, "File formatted successfully")
+        assertEquals("File formatted successfully", result)
     }
 
     @Test
