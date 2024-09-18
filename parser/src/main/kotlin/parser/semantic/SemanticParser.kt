@@ -1,10 +1,11 @@
 package parser.semantic
 
+import Environment
 import exception.SemanticErrorException
 import nodes.StatementType
 import parser.semantic.validation.SemanticValidator
 import parser.semantic.validation.ValidationResult
-import position.visitor.Environment
+
 import position.visitor.StatementVisitor
 import java.lang.StringBuilder
 

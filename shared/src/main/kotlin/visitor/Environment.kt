@@ -10,8 +10,6 @@ class Environment(
 
 ) {
 
-
-
     // Define a new variable in the environment
     fun define(variable: StatementType.Variable): Environment {
         val NewValues = copyAndAdd(variable)
@@ -30,7 +28,7 @@ class Environment(
     fun getValue(name: String): Any? {
         val variable = get(name)
         if (variable.initializer == null) {
-            throw Error("Variable $name is not initialized. at : ${variable.position}")
+            return null
         }
         return variable.initializer.acceptVisitor(ExpressionVisitor(), this).first
 

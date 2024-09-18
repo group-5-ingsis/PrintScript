@@ -6,7 +6,7 @@ import org.junit.Assert.assertEquals
 import org.junit.Test
 import parser.Parser
 import position.Position
-import position.visitor.Environment
+
 
 class InterpreterTest {
 
@@ -29,8 +29,8 @@ class InterpreterTest {
         }
 
         // Check that the variable 'a' was declared, but has no value
-        val variable = currentEnvironment.get("a")
-        assertEquals(null, variable.initializer?.value)
+        val variable = currentEnvironment.getValue("a")
+        assertEquals(null, variable)
     }
 
     @Test
@@ -88,8 +88,8 @@ class InterpreterTest {
         }
 
         // Check that the variable 'a' was declared, but has no value
-        val variable = currentEnvironment.get("a")
-        assertEquals(null, variable.initializer?.value)
+        val variable = currentEnvironment.getValue("a")
+        assertEquals(null, variable)
     }
 
     @Test
@@ -109,11 +109,10 @@ class InterpreterTest {
         }
 
         // Check that the variable 'a' has the expected value
-        val variable = currentEnvironment.get("a")
-        val initializer = variable.initializer
-        val actual = initializer?.value
+        val variable = currentEnvironment.getValue("a")
 
-        // assertEquals("Hello World", actual)
+
+         assertEquals("Hello World", variable)
     }
 
     @Test
@@ -133,16 +132,14 @@ class InterpreterTest {
         }
 
         // Check that the variable 'a' has the expected value
-        val variable = currentEnvironment.get("a")
-        val initializer = variable.initializer
-        val actual = initializer?.value
+        val variable = currentEnvironment.getValue("a")
 
-        assertEquals(14, actual)
+        assertEquals(14, variable)
     }
 
     @Test
     fun testBinaryOperationString() {
-        val input = "let a: string = 'Hello' + 'World';"
+        val input = "let a: string = 'Hello' + ' World';"
         val tokens = Lexer(input, version)
         val asts = Parser(tokens, version)
 
@@ -157,11 +154,10 @@ class InterpreterTest {
         }
 
         // Check that the variable 'a' has the expected concatenated value
-        val variable = currentEnvironment.get("a")
-        val initializer = variable.initializer
-        val actual = initializer?.value
+        val variable = currentEnvironment.getValue("a")
 
-        // assertEquals('\Hello''World', actual)
+
+         assertEquals("Hello World", variable)
     }
 
     @Test
@@ -181,11 +177,9 @@ class InterpreterTest {
         }
 
         // Check that the variable 'c' has the expected value
-        val variable = currentEnvironment.get("c")
-        val initializer = variable.initializer
-        val actual = initializer?.value
+        val variable = currentEnvironment.getValue("c")
 
-        assertEquals(18, actual)
+        assertEquals(18, variable)
     }
 
     @Test
@@ -268,11 +262,9 @@ class InterpreterTest {
         }
 
         // Check that the variable 'a' has the expected value
-        val variable = currentEnvironment.get("a")
-        val initializer = variable.initializer
-        val actual = initializer?.value
+        val variable = currentEnvironment.getValue("a")
 
-        assertEquals(3, actual)
+        assertEquals(3, variable)
     }
 
     @Test
@@ -292,11 +284,9 @@ class InterpreterTest {
         }
 
         // Check that the variable 'a' has the expected value
-        val variable = currentEnvironment.get("a")
-        val initializer = variable.initializer
-        val actual = initializer?.value
+        val variable = currentEnvironment.getValue("a")
 
-        assertEquals(-30, actual)
+        assertEquals(-30, variable)
     }
 
     @Test
@@ -316,11 +306,9 @@ class InterpreterTest {
         }
 
         // Check that the variable 'b' has the expected value
-        val variable = currentEnvironment.get("b")
-        val initializer = variable.initializer
-        val actual = initializer?.value
+        val variable = currentEnvironment.getValue("b")
 
-        assertEquals(8, actual)
+        assertEquals(8, variable)
     }
 
     @Test
@@ -511,6 +499,8 @@ class InterpreterTest {
             outputBuilder.append(result.first.toString())
             currentEnvironment = result.second
         }
+
+        assertEquals(null, currentEnvironment.getValue("x"))
     }
 
     @Test
@@ -531,5 +521,6 @@ class InterpreterTest {
             asts.setEnv(currentEnvironment)
         }
         assertEquals("1", outputBuilder.toString())
+        assertEquals(1, currentEnvironment.getValue("a"))
     }
 }

@@ -1,7 +1,8 @@
 package parser.semantic.validation
 
+import Environment
 import nodes.StatementType
-import position.visitor.Environment
+
 import position.visitor.ExpressionVisitor
 
 class VariableStatementValidator(private val readInput: String?) : Validator<StatementType.Variable> {
@@ -18,14 +19,6 @@ class VariableStatementValidator(private val readInput: String?) : Validator<Sta
         if (assignDeclaration) {
             return validateAssignDeclaration(node, scope)
         }
-
-//        if (scope.get(node.identifier) != null) {
-//            return ValidationResult(
-//                true,
-//                node,
-//                "Variable ${node.identifier} has already been declared."
-//            )
-//        }
 
         return validateDeclaration(node)
     }
