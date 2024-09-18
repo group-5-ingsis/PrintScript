@@ -8,7 +8,7 @@ object CommandLineInterface {
 
     private fun initializeCommandBuilders(): Map<String, CommandBuilder> {
         return mapOf(
-//            "validate" to ValidationCommandBuilder(),
+            "validate" to ValidationCommandBuilder(),
             "execute" to ExecuteCommandBuilder(),
             "format" to FormattingCommandBuilder(),
             "analyze" to AnalyzeCommandBuilder()
