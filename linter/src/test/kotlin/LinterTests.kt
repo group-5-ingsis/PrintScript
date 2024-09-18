@@ -15,14 +15,21 @@ class LinterTests {
         val tokens = Lexer(input, "1.0")
         val asts = Parser(tokens, "1.0")
         val rules = LinterRulesV1("camel-case", false)
-        val linter = Linter(rules)
-        linter.lint(asts)
-        assertEquals(1, linter.getErrors().size)
+
+        Linter.clearResults()
+
+        while (asts.hasNext()) {
+            val statement = asts.next()
+            Linter.lint(statement, rules)
+        }
+
+        val linterResults = Linter.getErrors()
+        val numOfErrors = linterResults.size
+        assertEquals(1, numOfErrors)
         assertEquals(
             "println() statements must receive a literal or identifier, not an expression. At Line 1, symbol 7, got BINARY_EXPRESSION.",
-            linter.getErrors()[0].getMessage()
+            linterResults[0].getMessage()
         )
-        println(linter.getErrors())
     }
 
     @Test
@@ -31,21 +38,32 @@ class LinterTests {
         val tokens = Lexer(input, "1.0")
         val asts = Parser(tokens, "1.0")
         val rules = LinterRulesV1("camel-case", true)
-        val linter = Linter(rules)
-        linter.lint(asts)
-        assertEquals(0, linter.getErrors().size)
+
+        Linter.clearResults()
+
+        while (asts.hasNext()) {
+            val statement = asts.next()
+            Linter.lint(statement, rules)
+        }
+
+        assertEquals(0, Linter.getErrors().size)
     }
 
     @Test
     fun testPrintlnCallValidWithIdentifier() {
-        val input = "let a : string = 'hello' ;println(a);"
+        val input = "let a : string = 'hello'; println(a);"
         val tokens = Lexer(input, "1.0")
         val asts = Parser(tokens, "1.0")
         val rules = LinterRulesV1("camel-case", false)
-        val linter = Linter(rules)
-        linter.lint(asts)
-        println(linter.getErrors())
-        assertEquals(0, linter.getErrors().size)
+
+        Linter.clearResults()
+
+        while (asts.hasNext()) {
+            val statement = asts.next()
+            Linter.lint(statement, rules)
+        }
+
+        assertEquals(0, Linter.getErrors().size)
     }
 
     @Test
@@ -54,10 +72,15 @@ class LinterTests {
         val tokens = Lexer(input, "1.0")
         val asts = Parser(tokens, "1.0")
         val rules = LinterRulesV1("off", false)
-        val linter = Linter(rules)
-        linter.lint(asts)
-        println(linter.getErrors())
-        assertEquals(0, linter.getErrors().size)
+
+        Linter.clearResults()
+
+        while (asts.hasNext()) {
+            val statement = asts.next()
+            Linter.lint(statement, rules)
+        }
+
+        assertEquals(0, Linter.getErrors().size)
     }
 
     @Test
@@ -66,13 +89,18 @@ class LinterTests {
         val tokens = Lexer(input, "1.0")
         val asts = Parser(tokens, "1.0")
         val rules = LinterRulesV1("snake-case", false)
-        val linter = Linter(rules)
-        linter.lint(asts)
-        println(linter.getErrors())
-        assertEquals(1, linter.getErrors().size)
+
+        Linter.clearResults()
+
+        while (asts.hasNext()) {
+            val statement = asts.next()
+            Linter.lint(statement, rules)
+        }
+
+        assertEquals(1, Linter.getErrors().size)
         assertEquals(
             "Variable names must be in snake_case at Line 1, symbol 5, got aA.",
-            linter.getErrors()[0].getMessage()
+            Linter.getErrors()[0].getMessage()
         )
     }
 
@@ -82,13 +110,18 @@ class LinterTests {
         val tokens = Lexer(input, "1.0")
         val asts = Parser(tokens, "1.0")
         val rules = LinterRulesV1("camel-case", false)
-        val linter = Linter(rules)
-        linter.lint(asts)
-        println(linter.getErrors())
-        assertEquals(1, linter.getErrors().size)
+
+        Linter.clearResults()
+
+        while (asts.hasNext()) {
+            val statement = asts.next()
+            Linter.lint(statement, rules)
+        }
+
+        assertEquals(1, Linter.getErrors().size)
         assertEquals(
             "Variable names must be in camelCase at Line 1, symbol 32, got a_b.",
-            linter.getErrors()[0].getMessage()
+            Linter.getErrors()[0].getMessage()
         )
     }
 
@@ -98,10 +131,15 @@ class LinterTests {
         val tokens = Lexer(input, "1.1")
         val asts = Parser(tokens, "1.1")
         val rules = LinterRulesV2("camel-case", false)
-        val linter = Linter(rules)
-        linter.lint(asts)
-        println(linter.getErrors())
-        assertEquals(1, linter.getErrors().size)
+
+        Linter.clearResults()
+
+        while (asts.hasNext()) {
+            val statement = asts.next()
+            Linter.lint(statement, rules)
+        }
+
+        assertEquals(1, Linter.getErrors().size)
     }
 
     @Test
@@ -110,14 +148,19 @@ class LinterTests {
         val tokens = Lexer(input, "1.1")
         val asts = Parser(tokens, "1.1")
         val rules = LinterRulesV2("camel-case", false, false)
-        val linter = Linter(rules)
-        linter.lint(asts)
-        assertEquals(1, linter.getErrors().size)
+
+        Linter.clearResults()
+
+        while (asts.hasNext()) {
+            val statement = asts.next()
+            Linter.lint(statement, rules)
+        }
+
+        assertEquals(1, Linter.getErrors().size)
         assertEquals(
             "readInput() statements must receive a literal or identifier, not an expression. At Line 1, symbol 21, got BINARY_EXPRESSION.",
-            linter.getErrors()[0].getMessage()
+            Linter.getErrors()[0].getMessage()
         )
-        println(linter.getErrors())
     }
 
     @Test
@@ -126,9 +169,14 @@ class LinterTests {
         val tokens = Lexer(input, "1.1")
         val asts = Parser(tokens, "1.1")
         val rules = LinterRulesV2("camel-case", false, true)
-        val linter = Linter(rules)
-        linter.lint(asts)
-        assertEquals(0, linter.getErrors().size)
-        println(linter.getErrors())
+
+        Linter.clearResults()
+
+        while (asts.hasNext()) {
+            val statement = asts.next()
+            Linter.lint(statement, rules)
+        }
+
+        assertEquals(0, Linter.getErrors().size)
     }
 }
