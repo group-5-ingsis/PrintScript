@@ -5,6 +5,7 @@ import cli.FileWriter
 import formatter.Formatter
 import lexer.Lexer
 import parser.Parser
+import position.Position
 import kotlin.math.roundToInt
 
 class FormatCommand(
@@ -20,6 +21,7 @@ class FormatCommand(
         val totalCharacters = fileContent.length
 
         var processedCharacters = 0
+        var lastProcessedPosition = Position(0, 0)
         val outputBuilder = StringBuilder()
 
         try {
@@ -31,7 +33,12 @@ class FormatCommand(
                 val formattedNode = Formatter.format(statement, formattingRules, version)
                 outputBuilder.append(formattedNode)
 
-                processedCharacters = calculateProcessedCharacters(fileContent, processedCharacters, statement)
+                val endPosition = statement.position
+
+                processedCharacters += calculateProcessedCharacters(fileContent, lastProcessedPosition, endPosition)
+
+                lastProcessedPosition = endPosition
+
                 progress = (processedCharacters.toDouble() / totalCharacters * 100).roundToInt()
                 reportProgress(progress)
             }
@@ -45,8 +52,28 @@ class FormatCommand(
         }
     }
 
-    private fun calculateProcessedCharacters(fileContent: String, processedCharacters: Int, statement: Any): Int {
-        return processedCharacters
+    private fun calculateProcessedCharacters(
+        fileContent: String,
+        lastProcessedPosition: Position,
+        endPosition: Position
+    ): Int {
+        val lines = fileContent.lines()
+
+        var processedChars = 0
+
+        val lastLine = lastProcessedPosition.line
+        val endPositionLine = endPosition.line
+        val lastSymbolIndex = lastProcessedPosition.symbolIndex
+        val endPositionIndex = endPosition.symbolIndex
+
+        if (lastLine == endPositionLine) {
+            processedChars = endPositionIndex - lastSymbolIndex
+        } else {
+            val length = lines[lastLine].length
+            processedChars += length
+        }
+
+        return processedChars
     }
 
     override fun getProgress(): Int {
