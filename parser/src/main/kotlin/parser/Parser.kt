@@ -1,9 +1,9 @@
 package parser
 
+import Environment
 import nodes.StatementType
 import parser.semantic.SemanticParser
 import parser.syntactic.SyntacticParser
-import position.visitor.Environment
 import token.Token
 
 class Parser(

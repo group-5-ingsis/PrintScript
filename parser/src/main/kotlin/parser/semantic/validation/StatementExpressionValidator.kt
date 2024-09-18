@@ -1,9 +1,9 @@
 package parser.semantic.validation
 
+import Environment
 import exception.SemanticErrorException
 import nodes.Expression
 import nodes.StatementType
-import position.visitor.Environment
 import position.visitor.ExpressionVisitor
 
 class StatementExpressionValidator(private val input: String?) : Validator<StatementType.StatementExpression> {
