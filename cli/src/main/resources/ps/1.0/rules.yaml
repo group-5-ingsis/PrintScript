@@ -1,4 +1,7 @@
 spaceBeforeColon: false
 spaceAfterColon: true
 spaceAroundAssignment: true
-newlineBeforePrintln: 2
+newlineAfterPrintln: 2
+blockIndentation: 4
+ifBraceSameLine: true
+singleSpaceSeparation: true

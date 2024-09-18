@@ -7,8 +7,8 @@ object CommandLineInterface {
 
     private fun initializeCommandBuilders(): Map<String, CommandBuilder> {
         return mapOf(
-            "validate" to ValidationCommandBuilder(),
-            "execute" to ExecuteCommandBuilder(),
+//            "validate" to ValidationCommandBuilder(),
+//            "execute" to ExecuteCommandBuilder(),
             "format" to FormattingCommandBuilder(),
             "analyze" to AnalyzeCommandBuilder()
         )
@@ -23,7 +23,9 @@ object CommandLineInterface {
         val builder = commandBuilders[operation] ?: return "Unknown command: $command"
 
         val cmd = builder.build(file, arguments, version)
+        var result = cmd.execute()
+        println("Progress: ${cmd.getProgress()}%")
 
-        return cmd.execute()
+        return result
     }
 }
