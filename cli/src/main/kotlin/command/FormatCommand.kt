@@ -7,19 +7,16 @@ import formatter.Formatter
 import lexer.Lexer
 import parser.Parser
 import position.Position
-import kotlin.math.roundToInt
 
 class FormatCommand(
     private val file: String,
     private val version: String,
     private val rulesFile: String
 ) : Command {
-    private var progress: Int = 0
-
     override fun execute(): String {
         val fileContent = FileReader.getFileContents(file, version)
         val formattingRules = FileReader.getFormattingRules(rulesFile, version)
-        val totalCharacters = fileContent.length
+        val totalCharacters = fileContent.length - 1
 
         var processedCharacters = 0
         var lastProcessedPosition = Position(0, 0)
@@ -39,14 +36,11 @@ class FormatCommand(
                 processedCharacters += ProgressTracker.calculateProcessedCharacters(fileContent, lastProcessedPosition, endPosition)
                 lastProcessedPosition = endPosition
 
-                progress = (processedCharacters.toDouble() / totalCharacters * 100).roundToInt()
-                reportProgress(progress)
+                ProgressTracker.updateProgress(processedCharacters, totalCharacters)
             }
 
             if (processedCharacters < totalCharacters) {
-                processedCharacters = totalCharacters
-                progress = 100
-                reportProgress(progress)
+                ProgressTracker.updateProgress(totalCharacters, totalCharacters)
             }
 
             val formattedResult = outputBuilder.toString()
@@ -58,11 +52,7 @@ class FormatCommand(
         }
     }
 
-    private fun reportProgress(progress: Int) {
-        println("Progress: $progress%")
-    }
-
     override fun getProgress(): Int {
-        return progress
+        return ProgressTracker.getProgress()
     }
 }

@@ -8,7 +8,7 @@ class CommandLineInterfaceTest {
     fun `test correct File Validation`() {
         val command = "validate HelloWorld.ps 1.0"
         val result = CommandLineInterface.execute(command)
-        assertEquals(result, "File Validated")
+        assertEquals(result, "File Validated! (No Errors found)")
     }
 
     @Test
@@ -29,13 +29,13 @@ class CommandLineInterfaceTest {
     fun `test failing File Validagion`() {
         val command = "validate WrongFile.ps 1.0"
         val result = CommandLineInterface.execute(command)
-        assertEquals("Validation error: Invalid procedure: Declared type NUMBER does not match assigned type STRING", result)
+        assertEquals("Validation error: Invalid procedure: Type mismatch: Expected 'number' but found 'string' in variable 'hello'.", result)
     }
 
     @Test
     fun `test correct File Analisis`() {
         val command = "analyze HelloWorld.ps 1.0 linterRules.json"
         val result = CommandLineInterface.execute(command)
-        assertEquals("OK: No linting errors found", result)
+        assertEquals("No problems found", result)
     }
 }

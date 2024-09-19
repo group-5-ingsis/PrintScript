@@ -49,3 +49,5 @@ object CommandLineInterface {
         }
     }
 }
+
+// format HelloWorld.ps 1.0 rules.yaml
