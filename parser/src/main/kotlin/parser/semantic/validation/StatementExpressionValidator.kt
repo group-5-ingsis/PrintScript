@@ -34,6 +34,12 @@ class StatementExpressionValidator(private val input: String?) : Validator<State
         val actualValue = valueExpression.acceptVisitor(ExpressionVisitor(input), scope)
         val actualType = getTypeInString(actualValue.first)
 
+        if (variableInfo.designation == "const") {
+            throw SemanticErrorException(
+                "Variable '$identifier' with modifier 'CONST' does not support assignation. "
+            )
+        }
+
         if (!assignedTypeMatchesDeclaredType(actualType, variableInfo.dataType)) {
             throw SemanticErrorException(
                 "Declared value '${variableInfo.dataType}' of variable '${variableInfo.identifier}' does not match assigned type '$actualType'."
