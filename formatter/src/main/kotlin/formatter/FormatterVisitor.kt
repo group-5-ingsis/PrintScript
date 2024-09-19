@@ -101,6 +101,7 @@ class FormatterVisitor(
             appendIndent()
             output.append("}\n")
         }
+        output.append("\n")
     }
 
     private fun appendPrintKeyword() {

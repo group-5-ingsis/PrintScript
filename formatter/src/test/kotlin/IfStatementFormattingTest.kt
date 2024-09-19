@@ -11,6 +11,7 @@ class IfStatementFormattingTest : FormatterTestBase() {
         if (c) {
             let b: number = 3;
         }
+        
         """.trimIndent()
         val result = formatCode(input)
         assertEquals(expected, result)
@@ -26,6 +27,7 @@ class IfStatementFormattingTest : FormatterTestBase() {
     } else {
         let a: number = 4;
     }
+    
     
         """.trimIndent()
         val result = formatCode(input)
