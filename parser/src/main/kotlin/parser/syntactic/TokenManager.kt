@@ -22,10 +22,7 @@ class TokenManager(tokens: List<Token>) {
     }
 
     fun isType(value: String): Boolean {
-        if (tokenQueue.isEmpty()) {
-            return false
-        }
-        return peek().type == value
+        return tokenQueue.isNotEmpty() && peek().type == value
     }
 
     /**
@@ -57,18 +54,12 @@ class TokenManager(tokens: List<Token>) {
      * Checks if there are more tokens in the queue.
      * @return True if there are more tokens, false otherwise.
      */
-    fun hasMoreTokens(): Boolean {
-        return tokenQueue.isNotEmpty()
-    }
 
     /**
      * Checks if the next token in the queue matches the specified value.
      * @param value The expected token value.
      * @return True if the next token matches the value, false otherwise.
      */
-    fun checkNextTokenValue(value: String): Boolean {
-        return peek().value == value
-    }
 
     /**
      * Checks if the next token in the queue matches the specified type.
