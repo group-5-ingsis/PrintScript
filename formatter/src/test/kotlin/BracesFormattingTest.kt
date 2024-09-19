@@ -41,7 +41,7 @@ class BracesFormattingTest {
             "if (something)\n" +
             "{\n" +
             "    println(\"Entered if\");\n" +
-            "}"
+            "}\n"
 
         val result = formatCode(input)
         assertEquals(expected, result)
@@ -56,7 +56,7 @@ class BracesFormattingTest {
         testRules = yamlMapper.readValue(file, FormattingRules::class.java)
 
         val input = "let something: boolean = true;\nif (something){\nprintln(\"Entered if\");\n}"
-        val expected = "let something: boolean = true;\nif (something) {\n    println(\"Entered if\");\n}"
+        val expected = "let something: boolean = true;\nif (something) {\n    println(\"Entered if\");\n}\n"
         val result = formatCode(input)
         assertEquals(expected, result)
     }
