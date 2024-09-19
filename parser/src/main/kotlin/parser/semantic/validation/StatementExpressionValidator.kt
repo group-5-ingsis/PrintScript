@@ -31,14 +31,14 @@ class StatementExpressionValidator(private val input: String?) : Validator<State
         val valueExpression = exp.value
         /* null check for getting the value is made on Environment. */
         val variableInfo = scope.get(identifier)
-        if (variableInfo.designation == "const"){
-            throw SemanticErrorException("Cannot assign value to constant variable '${variableInfo.identifier}'" + "at: " + "${node.position}")
-        }
         val actualValue = valueExpression.acceptVisitor(ExpressionVisitor(input), scope)
         val actualType = getTypeInString(actualValue.first)
 
-
-
+        if (variableInfo.designation == "const") {
+            throw SemanticErrorException(
+                "Variable '$identifier' with modifier 'CONST' does not support assignation. "
+            )
+        }
 
         if (!assignedTypeMatchesDeclaredType(actualType, variableInfo.dataType)) {
             throw SemanticErrorException(

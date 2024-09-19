@@ -104,38 +104,31 @@ class LinterVisitor(private val linterRules: LinterRules) : Visitor {
     }
 
     override fun visitVariable(expression: Expression.Variable) {
-        val position = expression.position
-        linterResult = LinterResult(true, "No errors found at $position")
+        linterResult = LinterResult(true, "No errors found at ${expression.position}")
     }
 
     override fun visitAssign(expression: Expression.Assign) {
-        val position = expression.position
-        linterResult = LinterResult(true, "No errors found at $position")
+        linterResult = LinterResult(true, "No errors found at ${expression.position}")
     }
 
     override fun visitBinary(expression: Expression.Binary) {
-        val position = expression.position
-        linterResult = LinterResult(true, "No errors found at $position")
+        linterResult = LinterResult(true, "No errors found at ${expression.position}")
     }
 
     override fun visitGrouping(expression: Expression.Grouping) {
-        val position = expression.position
-        linterResult = LinterResult(true, "No errors found at $position")
+        linterResult = LinterResult(true, "No errors found at ${expression.position}")
     }
 
     override fun visitLiteral(expression: Expression.Literal) {
-        val position = expression.position
-        linterResult = LinterResult(true, "No errors found at $position")
+        linterResult = LinterResult(true, "No errors found at ${expression.position}")
     }
 
     override fun visitUnary(expression: Expression.Unary) {
-        val position = expression.position
-        linterResult = LinterResult(true, "No errors found at $position")
+        linterResult = LinterResult(true, "No errors found at ${expression.position}")
     }
 
     override fun visitIdentifier(expression: Expression.IdentifierExpression) {
-        val position = expression.position
-        linterResult = LinterResult(true, "No errors found at $position")
+        linterResult = LinterResult(true, "No errors found at ${expression.position}")
     }
 
     override fun visitReadInput(readInput: Expression.ReadInput) {
@@ -146,7 +139,6 @@ class LinterVisitor(private val linterRules: LinterRules) : Visitor {
     }
 
     override fun visitReadEnv(readEnv: Expression.ReadEnv) {
-        val position = readEnv.position
-        linterResult = LinterResult(true, "No errors found at $position")
+        linterResult = LinterResult(true, "No errors found at ${readEnv.position}")
     }
 }
