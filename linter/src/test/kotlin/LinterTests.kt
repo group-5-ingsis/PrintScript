@@ -11,7 +11,11 @@ class LinterTests {
 
     @Test
     fun testPrintlnCallInvalid() {
-        val input = "println(6 + 6);"
+        val input = "let a : string = 'hello'; " +
+            "let b : string = a + 'world';" +
+            "let n: number;" +
+            "n = 9;" +
+            "println(6 + 6);"
         val tokens = Lexer(input, "1.0")
         val asts = Parser(tokens, "1.0")
         val rules = LinterRulesV1("camel-case", false)
@@ -27,7 +31,7 @@ class LinterTests {
         val numOfErrors = linterResults.size
         assertEquals(1, numOfErrors)
         assertEquals(
-            "println() statements must receive a literal or identifier, not an expression. At Line 1, symbol 7, got BINARY_EXPRESSION.",
+            "println() statements must receive a literal or identifier, not an expression. At Line 1, symbol 82, got BINARY_EXPRESSION.",
             linterResults[0].getMessage()
         )
     }
@@ -84,7 +88,7 @@ class LinterTests {
     }
 
     @Test
-    fun testDeclarationSnake_Case() {
+    fun testDeclarationSnake_CaseInvalid() {
         val input = "let aA : string = 'hello'; let a_b : string = 'hello';"
         val tokens = Lexer(input, "1.0")
         val asts = Parser(tokens, "1.0")
@@ -105,7 +109,41 @@ class LinterTests {
     }
 
     @Test
-    fun testDeclarationCamelCase() {
+    fun testDeclarationSnake_CaseValid() {
+        val input = "let a_b : string = 'hello';"
+        val tokens = Lexer(input, "1.0")
+        val asts = Parser(tokens, "1.0")
+        val rules = LinterRulesV1("snake-case", true)
+
+        Linter.clearResults()
+
+        while (asts.hasNext()) {
+            val statement = asts.next()
+            Linter.lint(statement, rules)
+        }
+
+        assertEquals(0, Linter.getErrors().size)
+    }
+
+    @Test
+    fun testDeclarationCamelCaseValid() {
+        val input = "let aA : string = 'hello';"
+        val tokens = Lexer(input, "1.0")
+        val asts = Parser(tokens, "1.0")
+        val rules = LinterRulesV1("camel-case", true)
+
+        Linter.clearResults()
+
+        while (asts.hasNext()) {
+            val statement = asts.next()
+            Linter.lint(statement, rules)
+        }
+
+        assertEquals(0, Linter.getErrors().size)
+    }
+
+    @Test
+    fun testDeclarationCamelCaseInvalid() {
         val input = "let aA : string = 'hello'; let a_b : string = 'hello';"
         val tokens = Lexer(input, "1.0")
         val asts = Parser(tokens, "1.0")
@@ -165,7 +203,7 @@ class LinterTests {
 
     @Test
     fun testReadInputCallValid() {
-        val input = "readInput(6 + 6);"
+        val input = "let salame: string = 'hola'; readInput(6 + 6); readEnv('salame');"
         val tokens = Lexer(input, "1.1")
         val asts = Parser(tokens, "1.1")
         val rules = LinterRulesV2("camel-case", false, true)
