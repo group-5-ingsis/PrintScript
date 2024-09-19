@@ -108,7 +108,7 @@ class StatementVisitor(val readInput: String? = null) {
         val newValue = evaluateExpression(value, environment)
         val printTarget = newValue.first
 
-        val trimmedPrintTarget = printTarget.toString().trim().removeSurrounding("\"", "\"") + "\n"
+        val trimmedPrintTarget = printTarget.toString().trim().removeSurrounding("\"", "\"")
 
         if (stringBuilder.toString() == "") {
             return Pair(StringBuilder(trimmedPrintTarget), environment)
