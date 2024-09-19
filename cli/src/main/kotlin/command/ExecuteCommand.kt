@@ -40,6 +40,7 @@ class ExecuteCommand(
                 currentEnv = updatedEnv
 
                 val processedChars = ProgressTracker.calculateProcessedCharacters(fileContent, lastPosition, endPosition)
+
                 ProgressTracker.updateProgress(processedChars, totalChars)
                 progressPercentage = ProgressTracker.getProgress()
 
