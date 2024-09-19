@@ -19,16 +19,16 @@ class ExecuteCommand(
 
     override fun execute(): String {
         val fileContent = FileReader.getFileContents(filePath, version)
-        val totalChars = fileContent.length
-
-        var lastPosition = Position(0, 0)
-        val output = StringBuilder()
 
         return try {
-            val tokens = Lexer(fileContent, version)
-            val astNodes = Parser(tokens, version)
-
+            val lexer = Lexer(fileContent, version)
+            val astNodes = Parser(lexer, version)
             var currentEnv = createEnvironment(System.getenv())
+
+            val totalChars = fileContent.length
+            var lastProcessedChars = 0
+
+            val output = StringBuilder()
 
             while (astNodes.hasNext()) {
                 astNodes.setEnv(currentEnv)
@@ -36,20 +36,17 @@ class ExecuteCommand(
                 val (outputFragment, updatedEnv) = processStatement(version, statement, astNodes, currentEnv)
                 output.append(outputFragment)
 
-                val endPosition = statement.position
                 currentEnv = updatedEnv
 
-                val processedChars = ProgressTracker.calculateProcessedCharacters(fileContent, lastPosition, endPosition)
+                val processedChars = lexer.getProcessedCharacters()
 
                 ProgressTracker.updateProgress(processedChars, totalChars)
-                progressPercentage = ProgressTracker.getProgress()
 
-                lastPosition = endPosition
+                lastProcessedChars = processedChars
             }
 
             if (fileContent.isNotEmpty()) {
                 ProgressTracker.updateProgress(totalChars, totalChars)
-                progressPercentage = ProgressTracker.getProgress()
             }
 
             "$output\nFinished executing $filePath"

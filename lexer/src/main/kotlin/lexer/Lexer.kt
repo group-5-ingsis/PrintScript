@@ -7,7 +7,6 @@ import token.TokenGenerator
 import java.io.BufferedReader
 import java.io.InputStream
 import java.io.InputStreamReader
-import kotlin.math.roundToInt
 
 class Lexer(reader: BufferedReader, version: String = "1.1") : Iterator<Token> {
     private val linesIterator = reader.lineSequence().iterator()
@@ -20,7 +19,6 @@ class Lexer(reader: BufferedReader, version: String = "1.1") : Iterator<Token> {
     private var state = LexerState()
     private val tokenGenerator = TokenGenerator(version)
 
-    private var totalCharacters = 0
     private var processedCharacters = 0
 
     constructor(input: String, version: String = "1.1") : this(BufferedReader(input.reader()), version)
@@ -42,7 +40,6 @@ class Lexer(reader: BufferedReader, version: String = "1.1") : Iterator<Token> {
                     return if (state.buffer.isNotEmpty()) {
                         val token = tokenGenerator.generateToken(state.buffer, currentRow, currentIndex - state.buffer.length)
                         resetBuffer()
-                        updateProgress() // Update progress after processing the token
                         return token
                     } else {
                         throw NoSuchElementException("No more tokens")
@@ -59,17 +56,14 @@ class Lexer(reader: BufferedReader, version: String = "1.1") : Iterator<Token> {
                 currentChar == '\n' -> handleNewLine()
                 currentChar.isQuote() -> {
                     val token = handleQuotedLiteral(currentChar)
-                    updateProgress()
                     return token
                 }
                 currentChar.isWhitespace() -> {
                     val token = handleWhitespace()
-                    updateProgress()
                     return token
                 }
                 currentChar.isSeparator(separators) -> {
                     val token = handleSeparator(currentChar)
-                    updateProgress()
                     return token
                 }
                 else -> accumulateBuffer(currentChar)
@@ -143,10 +137,7 @@ class Lexer(reader: BufferedReader, version: String = "1.1") : Iterator<Token> {
         return tokenGenerator.generateToken(currentChar.toString(), row, index)
     }
 
-    private fun updateProgress() {
-        if (totalCharacters > 0) {
-            val progress = (processedCharacters.toDouble() / totalCharacters * 100).roundToInt()
-            println("Progress: $progress%")
-        }
+    fun getProcessedCharacters(): Int {
+        return processedCharacters
     }
 }
