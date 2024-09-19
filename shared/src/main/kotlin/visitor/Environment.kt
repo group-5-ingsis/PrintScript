@@ -25,10 +25,13 @@ class Environment(
 
     fun getValue(name: String): Any? {
         val variable = get(name)
-        if (variable.initializer == null) {
+        val initializer = variable.initializer
+        if (initializer == null) {
             return null
         }
-        return variable.initializer.acceptVisitor(ExpressionVisitor(), this).first
+        val expressionVisitor = ExpressionVisitor()
+        val result = initializer.acceptVisitor(expressionVisitor, this)
+        return result.first
     }
 
     // Assign a new value to a variable

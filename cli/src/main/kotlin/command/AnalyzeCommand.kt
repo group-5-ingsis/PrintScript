@@ -7,7 +7,6 @@ import com.fasterxml.jackson.module.kotlin.readValue
 import lexer.Lexer
 import linter.Linter
 import parser.Parser
-import position.Position
 import rules.LinterRules
 import rules.LinterRulesV1
 import rules.LinterRulesV2
@@ -18,34 +17,29 @@ class AnalyzeCommand(private val file: String, private val version: String, rule
 
     override fun execute(): String {
         val fileContent = FileReader.getFileContents(file, version)
-        val totalCharacters = fileContent.length
-
-        var lastProcessedPosition = Position(0, 0)
 
         try {
-            val tokens = Lexer(fileContent, version)
-            val astNodes = Parser(tokens, version)
+            val lexer = Lexer(fileContent, version)
+            val astNodes = Parser(lexer, version)
+
+            val totalChars = fileContent.length
+            var lastProcessedChars = 0
 
             Linter.clearResults()
-            var processedCharacters = 0
 
             while (astNodes.hasNext()) {
                 val statement = astNodes.next()
                 Linter.lint(statement, getLinterRules(rulesFileString, version))
 
-                val endPosition = statement.position
+                val processedChars = lexer.getProcessedCharacters()
 
-                processedCharacters += ProgressTracker.calculateProcessedCharacters(fileContent, lastProcessedPosition, endPosition)
-                lastProcessedPosition = endPosition
+                ProgressTracker.updateProgress(processedChars, totalChars)
 
-                ProgressTracker.updateProgress(processedCharacters, totalCharacters)
-                progress = ProgressTracker.getProgress()
+                lastProcessedChars = processedChars
             }
 
-            if (processedCharacters < totalCharacters) {
-                processedCharacters = totalCharacters
-                ProgressTracker.updateProgress(processedCharacters, totalCharacters)
-                progress = ProgressTracker.getProgress()
+            if (fileContent.isNotEmpty()) {
+                ProgressTracker.updateProgress(totalChars, totalChars)
             }
 
             return if (Linter.getErrors().isEmpty()) {

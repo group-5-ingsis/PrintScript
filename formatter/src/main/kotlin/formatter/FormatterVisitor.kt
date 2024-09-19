@@ -42,7 +42,8 @@ class FormatterVisitor(
 
     override fun visitBlockStm(statement: StatementType.BlockStatement) {
         if (version >= "1.1") {
-            processBlockStatements(statement.listStm)
+            val statements = statement.listStm
+            processBlockStatements(statements)
             finalizeBlockIndentation()
         }
     }
@@ -66,7 +67,6 @@ class FormatterVisitor(
     }
 
     private fun handleIfCondition(condition: Expression) {
-        appendIndent()
         output.append("if (")
         condition.accept(this)
         output.append(")")
@@ -93,19 +93,15 @@ class FormatterVisitor(
 
     private fun handleElseBranch(elseBranch: StatementType?) {
         elseBranch?.let {
-            output.append(" else ")
-            appendBracesForBranch(it)
+            output.append(" else")
+            appendBracesForCondition()
+            currentIndent += rules.blockIndentation
+            elseBranch.accept(this)
+            currentIndent -= rules.blockIndentation
+            appendIndent()
+            output.append("}\n")
         }
-    }
-
-    private fun appendBracesForBranch(branch: StatementType) {
-        output.append("{\n")
-        currentIndent += rules.blockIndentation
-        appendIndent()
-        branch.accept(this)
-        currentIndent -= rules.blockIndentation
-        appendIndent()
-        output.append("}")
+        output.append("\n")
     }
 
     private fun appendPrintKeyword() {

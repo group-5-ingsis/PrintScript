@@ -382,6 +382,11 @@ class InterpreterTest {
         while (asts.hasNext()) {
             asts.setEnv(currentEnvironment)
             val statement = asts.next()
+            if (statement is StatementType.Variable) {
+                if (statement.initializer is Expression.ReadInput) {
+                    print((statement.initializer as Expression.ReadInput).value.expression)
+                }
+            }
             val result = Interpreter.interpret(statement, version, currentEnvironment, input, outputBuilder)
             outputBuilder = result.first
             currentEnvironment = result.second

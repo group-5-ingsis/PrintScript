@@ -6,41 +6,41 @@ import cli.ProgressTracker
 import formatter.Formatter
 import lexer.Lexer
 import parser.Parser
-import position.Position
 
 class FormatCommand(
     private val file: String,
     private val version: String,
     private val rulesFile: String
 ) : Command {
+
+    private var progressPercentage: Int = 0
+
     override fun execute(): String {
         val fileContent = FileReader.getFileContents(file, version)
         val formattingRules = FileReader.getFormattingRules(rulesFile, version)
-        val totalCharacters = fileContent.length - 1
-
-        var processedCharacters = 0
-        var lastProcessedPosition = Position(0, 0)
         val outputBuilder = StringBuilder()
 
         try {
             val tokens = Lexer(fileContent)
             val astNodes = Parser(tokens)
 
+            val totalChars = fileContent.length
+            var lastProcessedChars = 0
+
             while (astNodes.hasNext()) {
                 val statement = astNodes.next()
                 val formattedNode = Formatter.format(statement, formattingRules, version)
                 outputBuilder.append(formattedNode)
 
-                val endPosition = statement.position
+                val processedChars = tokens.getProcessedCharacters()
 
-                processedCharacters += ProgressTracker.calculateProcessedCharacters(fileContent, lastProcessedPosition, endPosition)
-                lastProcessedPosition = endPosition
+                ProgressTracker.updateProgress(processedChars, totalChars)
 
-                ProgressTracker.updateProgress(processedCharacters, totalCharacters)
+                lastProcessedChars = processedChars
             }
 
-            if (processedCharacters < totalCharacters) {
-                ProgressTracker.updateProgress(totalCharacters, totalCharacters)
+            if (fileContent.isNotEmpty()) {
+                ProgressTracker.updateProgress(totalChars, totalChars)
             }
 
             val formattedResult = outputBuilder.toString()
@@ -53,6 +53,6 @@ class FormatCommand(
     }
 
     override fun getProgress(): Int {
-        return ProgressTracker.getProgress()
+        return progressPercentage
     }
 }

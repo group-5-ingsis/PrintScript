@@ -1,0 +1,76 @@
+@startuml
+
+package cli {
+  object CommandLineInterface
+  class AnalyzeCommand
+  class ExecuteCommand
+  class FormatCommand
+  class ValidationCommand
+  interface Command
+  object CommandParser
+  object FileReader
+  object FileWriter
+  interface Builder
+}
+
+CommandLineInterface ----> FileReader
+CommandLineInterface ----> FileWriter
+CommandLineInterface ----> Builder
+
+package lexer {
+  class Lexer
+  class LexerState
+}
+
+lexer --> shared
+
+package parser {
+  class Parser
+  class SyntacticParser
+  class SemanticParser
+  class TokenManager
+  interface StatementParser
+  interface ExpressionParser
+  interface SemanticValidator
+}
+
+parser ----> shared
+
+package shared {
+  class Expression
+  class StatementType
+  class ExpressionVisitor
+  class StatementVisitor
+  class Environment
+  class Position
+  interface Visitor
+}
+
+package interpreter {
+  object Interpreter
+}
+
+interpreter ----> parser
+interpreter ----> shared
+
+package formatter {
+  object Formatter
+  class FormatterVisitor
+  class FormattingRules
+  class RuleApplier
+}
+
+formatter ----> parser
+formatter ----> shared
+
+package linter {
+  object Linter
+  class LinterResult
+  class LinterVisitor
+  interface LinterRules
+}
+
+linter ----> parser
+linter ----> shared
+
+@enduml

@@ -19,6 +19,8 @@ class Lexer(reader: BufferedReader, version: String = "1.1") : Iterator<Token> {
     private var state = LexerState()
     private val tokenGenerator = TokenGenerator(version)
 
+    private var processedCharacters = 0
+
     constructor(input: String, version: String = "1.1") : this(BufferedReader(input.reader()), version)
     constructor(inputStream: InputStream, version: String = "1.1") : this(BufferedReader(InputStreamReader(inputStream)), version)
 
@@ -48,12 +50,22 @@ class Lexer(reader: BufferedReader, version: String = "1.1") : Iterator<Token> {
 
             val currentChar = lineIterator.next()
             currentIndex++
+            processedCharacters++
 
             when {
                 currentChar == '\n' -> handleNewLine()
-                currentChar.isQuote() -> return handleQuotedLiteral(currentChar)
-                currentChar.isWhitespace() -> return handleWhitespace()
-                currentChar.isSeparator(separators) -> return handleSeparator(currentChar)
+                currentChar.isQuote() -> {
+                    val token = handleQuotedLiteral(currentChar)
+                    return token
+                }
+                currentChar.isWhitespace() -> {
+                    val token = handleWhitespace()
+                    return token
+                }
+                currentChar.isSeparator(separators) -> {
+                    val token = handleSeparator(currentChar)
+                    return token
+                }
                 else -> accumulateBuffer(currentChar)
             }
         }
@@ -123,5 +135,9 @@ class Lexer(reader: BufferedReader, version: String = "1.1") : Iterator<Token> {
 
     fun handleSeparator(currentChar: Char, row: Int, index: Int): Token {
         return tokenGenerator.generateToken(currentChar.toString(), row, index)
+    }
+
+    fun getProcessedCharacters(): Int {
+        return processedCharacters
     }
 }
