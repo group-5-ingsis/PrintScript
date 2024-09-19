@@ -22,3 +22,10 @@ koverReport {
         }
     }
 }
+
+test {
+    environment "SECRET_KEY", 123
+    environment "BEST_FOOTBALL_CLUB", "San Lorenzo"
+    environment "TRUE", true
+    useJUnit()
+}
