@@ -31,7 +31,8 @@ class VariableStatementValidator(private val readInput: String?) : Validator<Sta
                 "Variable '${node.identifier}' has no value assigned."
             )
 
-        val initializerValue = value.acceptVisitor(ExpressionVisitor(readInput), varTable)
+        val expressionVisitor = ExpressionVisitor(readInput)
+        val initializerValue = value.acceptVisitor(expressionVisitor, varTable)
 
         val actualType = when (initializerValue.first) {
             is String -> "string"
@@ -68,6 +69,13 @@ class VariableStatementValidator(private val readInput: String?) : Validator<Sta
     }
 
     private fun isAssignDeclaration(node: StatementType.Variable): Boolean {
-        return node.initializer != null
+        val initializer = node.initializer
+        if (initializer?.expressionType == "READ_ENV") {
+        }
+
+        return initializer != null
+    }
+
+    fun isReadEnv(node: StatementType): Boolean {
     }
 }
