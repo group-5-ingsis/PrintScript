@@ -11,48 +11,60 @@ object ProgressTracker {
         lastProcessedPosition: Position,
         endPosition: Position
     ): Int {
-        val lines = fileContent.lines()
+        val lines = fileContent.split("\n")
         val lastLineIndex = lastProcessedPosition.line
-        val endLineIndex = endPosition.line
-
         var processedChars = 0
 
-        if (lastLineIndex == endLineIndex) {
-            processedChars = countCharactersInWords(
-                lastProcessedPosition.symbolIndex,
-                endPosition.symbolIndex,
-                lines[lastLineIndex]
-            )
-        } else {
-            processedChars += countCharactersInWords(
-                lastProcessedPosition.symbolIndex,
-                Int.MAX_VALUE,
-                lines[lastLineIndex]
-            )
-        }
+        val startSymbolIndex = lastProcessedPosition.symbolIndex
+        val endSymbolIndex = endPosition.symbolIndex
+        val line = lines[lastLineIndex]
+        processedChars += countCharactersInSegment(
+            startSymbolIndex,
+            endSymbolIndex,
+            line
+        )
 
         return processedChars
     }
 
-    private fun countCharactersInWords(
+    private fun countCharactersInSegment(
         startSymbolIndex: Int,
         endSymbolIndex: Int,
         line: String
     ): Int {
-        val words = line.split("\\s+".toRegex())
+        val segments = line.split(";")
         var charCount = 0
 
-        var startWordIndex = startSymbolIndex
-        var endWordIndex = endSymbolIndex
+        val startSegmentIndex = findSegmentIndex(startSymbolIndex, segments)
+        val endSegmentIndex = findSegmentIndex(endSymbolIndex, segments)
 
-        if (startWordIndex > 0) startWordIndex--
+        if (startSegmentIndex == -1 || endSegmentIndex == -1) return 0
 
-        for (i in startWordIndex.coerceAtMost(words.size - 1)..endWordIndex.coerceAtMost(words.size - 1)) {
-            charCount += words[i].length
-            if (i < endWordIndex && i < words.size - 1) charCount += 1
+        if (startSegmentIndex == endSegmentIndex) {
+            charCount += segments[startSegmentIndex].substring(startSymbolIndex).length
+        } else {
+            charCount += segments[startSegmentIndex].substring(startSymbolIndex).length
+            charCount += segments[endSegmentIndex].substring(0, endSymbolIndex).length
+
+            for (i in (startSegmentIndex + 1) until endSegmentIndex) {
+                charCount += segments[i].length
+            }
         }
 
         return charCount
+    }
+
+    private fun findSegmentIndex(symbolIndex: Int, segments: List<String>): Int {
+        var index = 0
+        var count = 0
+
+        while (index < segments.size) {
+            count += segments[index].length + 1 // Include space for the semicolon
+            if (count > symbolIndex) return index
+            index++
+        }
+
+        return -1
     }
 
     fun updateProgress(processedCharacters: Int, totalCharacters: Int) {
