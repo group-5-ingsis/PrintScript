@@ -93,19 +93,14 @@ class FormatterVisitor(
 
     private fun handleElseBranch(elseBranch: StatementType?) {
         elseBranch?.let {
-            output.append(" else ")
-            appendBracesForBranch(it)
+            output.append(" else")
+            appendBracesForCondition()
+            currentIndent += rules.blockIndentation
+            elseBranch.accept(this)
+            currentIndent -= rules.blockIndentation
+            appendIndent()
+            output.append("}")
         }
-    }
-
-    private fun appendBracesForBranch(branch: StatementType) {
-        output.append("{\n")
-        currentIndent += rules.blockIndentation
-        appendIndent()
-        branch.accept(this)
-        currentIndent -= rules.blockIndentation
-        appendIndent()
-        output.append("}")
     }
 
     private fun appendPrintKeyword() {

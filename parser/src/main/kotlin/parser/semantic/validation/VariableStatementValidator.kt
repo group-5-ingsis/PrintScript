@@ -75,7 +75,4 @@ class VariableStatementValidator(private val readInput: String?) : Validator<Sta
 
         return initializer != null
     }
-
-    fun isReadEnv(node: StatementType): Boolean {
-    }
 }
