@@ -32,7 +32,7 @@ class ExecuteCommand(
 
             while (asts.hasNext()) {
                 val statement = asts.next()
-                val result = Interpreter.interpret(statement, version, currentEnvironment)
+                val result = getStringBuilderEnvironmentPair(version, statement, asts, currentEnvironment)
                 outputBuilder.append(result.first.toString())
 
                 val endPosition = statement.position
@@ -76,5 +76,39 @@ class ExecuteCommand(
         }
 
         return env
+    }
+
+    private fun getStringBuilderEnvironmentPair(
+        version: String,
+        statement: StatementType,
+        asts: Parser,
+        currentEnvironment: Environment
+    ): Pair<StringBuilder, Environment> {
+        var result: Pair<StringBuilder, Environment> = Pair(StringBuilder(), currentEnvironment)
+
+        if (statement is StatementType.Variable) {
+            val initializer = statement.initializer
+            if (initializer is Expression.ReadInput) {
+                val value = initializer.value
+                if (value is Expression.Grouping) {
+                    val expression = value.expression
+                    if (expression is Expression.Literal) {
+                        val message = expression.value
+                        print(message)
+                        val input: String = readln()
+                        asts.setInput(input)
+                        result = Interpreter.interpret(statement, version, currentEnvironment, input)
+                    }
+                } else {
+                    result = Interpreter.interpret(statement, version, currentEnvironment, null)
+                }
+            } else {
+                result = Interpreter.interpret(statement, version, currentEnvironment, null)
+            }
+        } else {
+            result = Interpreter.interpret(statement, version, currentEnvironment, null)
+        }
+
+        return result
     }
 }
