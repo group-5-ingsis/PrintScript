@@ -1,5 +1,6 @@
 package parser
 
+import Environment
 import lexer.Lexer
 import nodes.Expression
 import nodes.StatementType
@@ -7,7 +8,6 @@ import org.junit.Assert.assertEquals
 import org.junit.Assert.assertThrows
 import org.junit.Test
 import position.Position
-import position.visitor.Environment
 import token.Token
 import kotlin.test.assertFalse
 import kotlin.test.assertNotNull

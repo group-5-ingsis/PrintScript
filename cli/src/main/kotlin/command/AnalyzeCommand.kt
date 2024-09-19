@@ -1,54 +1,61 @@
 package command
 
 import cli.FileReader
+import cli.ProgressTracker
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import lexer.Lexer
 import linter.Linter
 import parser.Parser
+import position.Position
 import rules.LinterRules
 import rules.LinterRulesV1
 import rules.LinterRulesV2
-import kotlin.math.roundToInt
 
-class AnalyzeCommand(private val file: String, private val version: String, private val rulesFile: String) : Command {
-    private val fileContent = FileReader.getFileContents(file, version)
+class AnalyzeCommand(private val file: String, private val version: String, rulesFile: String) : Command {
     private val rulesFileString = FileReader.getFileContents(rulesFile, version)
-    private var progress: Int = 0 // To track progress
+    private var progress: Int = 0
 
     override fun execute(): String {
-        val toReturn = StringBuilder()
+        val fileContent = FileReader.getFileContents(file, version)
+        val totalCharacters = fileContent.length
 
-        val totalSteps = 3 // We have 3 main steps: Tokenizing, Parsing, and Linting
-        var currentStep = 0
+        var lastProcessedPosition = Position(0, 0)
 
         try {
-            // Step 1: Tokenizing
             val tokens = Lexer(fileContent, version)
-            progress = (1.0 / totalSteps * 100).roundToInt()
-            reportProgress(progress)
+            val astNodes = Parser(tokens, version)
 
-            // Step 2: Parsing
-            val asts = Parser(tokens, version)
-            progress = (2.0 / totalSteps * 100).roundToInt()
-            reportProgress(progress)
+            Linter.clearResults()
+            var processedCharacters = 0
 
-            // Step 3: Linting
-            val linter = Linter(getLinterRules(rulesFileString, version))
-            val linterResult = linter.lint(asts)
-            progress = 100
-            reportProgress(progress)
+            while (astNodes.hasNext()) {
+                val statement = astNodes.next()
+                Linter.lint(statement, getLinterRules(rulesFileString, version))
 
-            if (linterResult.isValid()) {
-                return "OK: No linting errors found"
+                val endPosition = statement.position
+
+                processedCharacters += ProgressTracker.calculateProcessedCharacters(fileContent, lastProcessedPosition, endPosition)
+                lastProcessedPosition = endPosition
+
+                ProgressTracker.updateProgress(processedCharacters, totalCharacters)
+                progress = ProgressTracker.getProgress()
             }
 
-            toReturn.append("Linting errors found:\n")
-            linter.getErrors().forEach {
-                toReturn.append("${it.getMessage()}\n")
+            if (processedCharacters < totalCharacters) {
+                processedCharacters = totalCharacters
+                ProgressTracker.updateProgress(processedCharacters, totalCharacters)
+                progress = ProgressTracker.getProgress()
             }
 
-            return toReturn.toString()
+            return if (Linter.getErrors().isEmpty()) {
+                "No problems found"
+            } else {
+                val errorMessages = Linter.getErrors().mapIndexed { index, error ->
+                    "Error ${index + 1}:\n${error.getMessage()}"
+                }
+                errorMessages.joinToString(separator = "\n\n")
+            }
         } catch (e: Exception) {
             return "Error during analysis: ${e.message}"
         }
@@ -84,9 +91,5 @@ class AnalyzeCommand(private val file: String, private val version: String, priv
     private fun jsonToMap(jsonString: String): Map<String, Any> {
         val mapper = jacksonObjectMapper()
         return mapper.readValue(jsonString)
-    }
-
-    private fun reportProgress(progress: Int) {
-        println("Progress: $progress%")
     }
 }

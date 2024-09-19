@@ -2,24 +2,24 @@ package command
 
 import cli.FileReader
 import cli.FileWriter
+import cli.ProgressTracker
 import formatter.Formatter
 import lexer.Lexer
 import parser.Parser
-import kotlin.math.roundToInt
+import position.Position
 
 class FormatCommand(
     private val file: String,
     private val version: String,
     private val rulesFile: String
 ) : Command {
-    private var progress: Int = 0
-
     override fun execute(): String {
         val fileContent = FileReader.getFileContents(file, version)
         val formattingRules = FileReader.getFormattingRules(rulesFile, version)
-        val totalCharacters = fileContent.length
+        val totalCharacters = fileContent.length - 1
 
         var processedCharacters = 0
+        var lastProcessedPosition = Position(0, 0)
         val outputBuilder = StringBuilder()
 
         try {
@@ -31,9 +31,16 @@ class FormatCommand(
                 val formattedNode = Formatter.format(statement, formattingRules, version)
                 outputBuilder.append(formattedNode)
 
-                processedCharacters = calculateProcessedCharacters(fileContent, processedCharacters, statement)
-                progress = (processedCharacters.toDouble() / totalCharacters * 100).roundToInt()
-                reportProgress(progress)
+                val endPosition = statement.position
+
+                processedCharacters += ProgressTracker.calculateProcessedCharacters(fileContent, lastProcessedPosition, endPosition)
+                lastProcessedPosition = endPosition
+
+                ProgressTracker.updateProgress(processedCharacters, totalCharacters)
+            }
+
+            if (processedCharacters < totalCharacters) {
+                ProgressTracker.updateProgress(totalCharacters, totalCharacters)
             }
 
             val formattedResult = outputBuilder.toString()
@@ -45,15 +52,7 @@ class FormatCommand(
         }
     }
 
-    private fun calculateProcessedCharacters(fileContent: String, processedCharacters: Int, statement: Any): Int {
-        return processedCharacters
-    }
-
     override fun getProgress(): Int {
-        return progress
-    }
-
-    private fun reportProgress(progress: Int) {
-        println("Formatting Progress: $progress%")
+        return ProgressTracker.getProgress()
     }
 }

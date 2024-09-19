@@ -5,7 +5,7 @@ import java.io.OutputStream
 
 object FileWriter {
     fun writeToFile(fileName: String, version: String, content: String) {
-        val fileLocation = FileReader.getFileLocation(fileName, version)
+        val fileLocation = getFileLocation(fileName, version)
         val file = File(fileLocation)
 
         try {
@@ -17,5 +17,10 @@ object FileWriter {
         } catch (e: Exception) {
             throw Exception("Error writing to file: ${e.message}")
         }
+    }
+
+    private fun getFileLocation(file: String, version: String): String {
+        val baseDirectory = "cli/src/main/resources/ps/$version/"
+        return "$baseDirectory$file"
     }
 }
