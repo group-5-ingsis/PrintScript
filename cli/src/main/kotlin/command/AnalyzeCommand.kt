@@ -11,7 +11,6 @@ import position.Position
 import rules.LinterRules
 import rules.LinterRulesV1
 import rules.LinterRulesV2
-import kotlin.math.roundToInt
 
 class AnalyzeCommand(private val file: String, private val version: String, rulesFile: String) : Command {
     private val rulesFileString = FileReader.getFileContents(rulesFile, version)
@@ -21,7 +20,6 @@ class AnalyzeCommand(private val file: String, private val version: String, rule
         val fileContent = FileReader.getFileContents(file, version)
         val totalCharacters = fileContent.length
 
-        var processedCharacters = 0
         var lastProcessedPosition = Position(0, 0)
 
         try {
@@ -29,6 +27,7 @@ class AnalyzeCommand(private val file: String, private val version: String, rule
             val astNodes = Parser(tokens, version)
 
             Linter.clearResults()
+            var processedCharacters = 0
 
             while (astNodes.hasNext()) {
                 val statement = astNodes.next()
@@ -39,14 +38,14 @@ class AnalyzeCommand(private val file: String, private val version: String, rule
                 processedCharacters += ProgressTracker.calculateProcessedCharacters(fileContent, lastProcessedPosition, endPosition)
                 lastProcessedPosition = endPosition
 
-                progress = (processedCharacters.toDouble() / totalCharacters * 100).roundToInt()
-                reportProgress(progress)
+                ProgressTracker.updateProgress(processedCharacters, totalCharacters)
+                progress = ProgressTracker.getProgress()
             }
 
             if (processedCharacters < totalCharacters) {
                 processedCharacters = totalCharacters
-                progress = 100
-                reportProgress(progress)
+                ProgressTracker.updateProgress(processedCharacters, totalCharacters)
+                progress = ProgressTracker.getProgress()
             }
 
             return if (Linter.getErrors().isEmpty()) {
@@ -92,9 +91,5 @@ class AnalyzeCommand(private val file: String, private val version: String, rule
     private fun jsonToMap(jsonString: String): Map<String, Any> {
         val mapper = jacksonObjectMapper()
         return mapper.readValue(jsonString)
-    }
-
-    private fun reportProgress(progress: Int) {
-        println("Progress: $progress%")
     }
 }

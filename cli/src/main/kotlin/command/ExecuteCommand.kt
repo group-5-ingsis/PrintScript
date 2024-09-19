@@ -9,7 +9,6 @@ import nodes.Expression
 import nodes.StatementType
 import parser.Parser
 import position.Position
-import kotlin.math.roundToInt
 
 class ExecuteCommand(
     private val file: String,
@@ -22,7 +21,6 @@ class ExecuteCommand(
         val fileContent = FileReader.getFileContents(file, version)
         val totalCharacters = fileContent.length
 
-        var processedCharacters = 0
         var lastProcessedPosition = Position(0, 0)
         val outputBuilder = StringBuilder()
 
@@ -40,27 +38,22 @@ class ExecuteCommand(
                 val endPosition = statement.position
 
                 currentEnvironment = result.second
-                processedCharacters += ProgressTracker.calculateProcessedCharacters(fileContent, lastProcessedPosition, endPosition)
-                lastProcessedPosition = endPosition
+                val processedCharacters = ProgressTracker.calculateProcessedCharacters(fileContent, lastProcessedPosition, endPosition)
+                ProgressTracker.updateProgress(processedCharacters, totalCharacters)
+                progress = ProgressTracker.getProgress()
 
-                progress = (processedCharacters.toDouble() / totalCharacters * 100).roundToInt()
-                reportProgress(progress)
+                lastProcessedPosition = endPosition
             }
 
-            if (processedCharacters < totalCharacters) {
-                processedCharacters = totalCharacters
-                progress = 100
-                reportProgress(progress)
+            if (fileContent.isNotEmpty()) {
+                ProgressTracker.updateProgress(totalCharacters, totalCharacters)
+                progress = ProgressTracker.getProgress()
             }
 
             "${outputBuilder}\nFinished executing $file"
         } catch (e: Exception) {
             "Execution Error: ${e.message}"
         }
-    }
-
-    private fun reportProgress(progress: Int) {
-        println("Progress: $progress%")
     }
 
     override fun getProgress(): Int {

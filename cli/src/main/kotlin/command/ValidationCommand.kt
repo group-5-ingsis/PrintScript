@@ -1,4 +1,3 @@
- 
 package command
 
 import cli.FileReader
@@ -6,16 +5,14 @@ import cli.ProgressTracker
 import lexer.Lexer
 import parser.Parser
 import position.Position
-import kotlin.math.roundToInt
 
 class ValidationCommand(private val file: String, private val version: String) : Command {
     private var progress: Int = 0
 
     override fun execute(): String {
         val fileContent = FileReader.getFileContents(file, version)
-
         val totalCharacters = fileContent.length
-        var processedCharacters = 0
+
         var lastProcessedPosition = Position(0, 0)
 
         return try {
@@ -26,27 +23,22 @@ class ValidationCommand(private val file: String, private val version: String) :
                 val statement = astNodes.next()
                 val endPosition = statement.position
 
-                processedCharacters += ProgressTracker.calculateProcessedCharacters(fileContent, lastProcessedPosition, endPosition)
-                lastProcessedPosition = endPosition
+                val processedCharacters = ProgressTracker.calculateProcessedCharacters(fileContent, lastProcessedPosition, endPosition)
+                ProgressTracker.updateProgress(processedCharacters, totalCharacters)
+                progress = ProgressTracker.getProgress()
 
-                progress = (processedCharacters.toDouble() / totalCharacters * 100).roundToInt()
-                reportProgress(progress)
+                lastProcessedPosition = endPosition
             }
 
-            if (processedCharacters < totalCharacters) {
-                processedCharacters = totalCharacters
-                progress = 100
-                reportProgress(progress)
+            if (totalCharacters > 0) {
+                ProgressTracker.updateProgress(totalCharacters, totalCharacters)
+                progress = ProgressTracker.getProgress()
             }
 
             "File Validated! (No Errors found)"
         } catch (e: Exception) {
             "Validation error: ${e.message}"
         }
-    }
-
-    private fun reportProgress(progress: Int) {
-        println("Progress: $progress%")
     }
 
     override fun getProgress(): Int {
