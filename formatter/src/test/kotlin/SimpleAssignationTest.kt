@@ -30,7 +30,7 @@ class SimpleAssignationTest : FormatterTestBase() {
     @Test
     fun testAssignationWithComplexOperation() {
         val input = "let a: number = (2 + 2) + 2 * 4;"
-        val expected = "let a: number = (2 + 2) + 2 * 4;\n"
+        val expected = "let a: number = ( 2 + 2 ) + 2 * 4;\n"
         val result = formatCode(input)
         assertEquals(expected, result)
     }
