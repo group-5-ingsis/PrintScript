@@ -42,7 +42,8 @@ class FormatterVisitor(
 
     override fun visitBlockStm(statement: StatementType.BlockStatement) {
         if (version >= "1.1") {
-            processBlockStatements(statement.listStm)
+            val statements = statement.listStm
+            processBlockStatements(statements)
             finalizeBlockIndentation()
         }
     }
@@ -66,7 +67,6 @@ class FormatterVisitor(
     }
 
     private fun handleIfCondition(condition: Expression) {
-        appendIndent()
         output.append("if (")
         condition.accept(this)
         output.append(")")
@@ -99,7 +99,7 @@ class FormatterVisitor(
             elseBranch.accept(this)
             currentIndent -= rules.blockIndentation
             appendIndent()
-            output.append("}")
+            output.append("}\n")
         }
     }
 
