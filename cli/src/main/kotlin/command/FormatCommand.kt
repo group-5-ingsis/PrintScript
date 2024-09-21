@@ -13,8 +13,6 @@ class FormatCommand(
     private val rulesFile: String
 ) : Command {
 
-    private var progressPercentage: Int = 0
-
     override fun execute(): String {
         val fileContent = FileReader.getFileContents(file, version)
         val formattingRules = FileReader.getFormattingRules(rulesFile, version)
@@ -50,9 +48,5 @@ class FormatCommand(
         } catch (e: Exception) {
             return "Formatting Error: ${e.message}"
         }
-    }
-
-    override fun getProgress(): Int {
-        return progressPercentage
     }
 }

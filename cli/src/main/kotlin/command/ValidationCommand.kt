@@ -6,7 +6,6 @@ import lexer.Lexer
 import parser.Parser
 
 class ValidationCommand(private val file: String, private val version: String) : Command {
-    private var progress: Int = 0
 
     override fun execute(): String {
         val fileContent = FileReader.getFileContents(file, version)
@@ -34,9 +33,5 @@ class ValidationCommand(private val file: String, private val version: String) :
         } catch (e: Exception) {
             "Validation error: ${e.message}"
         }
-    }
-
-    override fun getProgress(): Int {
-        return progress
     }
 }

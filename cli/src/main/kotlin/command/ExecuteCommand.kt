@@ -15,8 +15,6 @@ class ExecuteCommand(
     private val version: String
 ) : Command {
 
-    private var progressPercentage: Int = 0
-
     override fun execute(): String {
         val fileContent = FileReader.getFileContents(filePath, version)
 
@@ -53,10 +51,6 @@ class ExecuteCommand(
         } catch (e: Exception) {
             "Execution Error: ${e.message}"
         }
-    }
-
-    override fun getProgress(): Int {
-        return progressPercentage
     }
 
     private fun createEnvironment(envVars: Map<String, String>): Environment {

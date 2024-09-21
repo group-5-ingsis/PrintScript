@@ -13,7 +13,6 @@ import rules.LinterRulesV2
 
 class AnalyzeCommand(private val file: String, private val version: String, rulesFile: String) : Command {
     private val rulesFileString = FileReader.getFileContents(rulesFile, version)
-    private var progress: Int = 0
 
     override fun execute(): String {
         val fileContent = FileReader.getFileContents(file, version)
@@ -53,10 +52,6 @@ class AnalyzeCommand(private val file: String, private val version: String, rule
         } catch (e: Exception) {
             return "Error during analysis: ${e.message}"
         }
-    }
-
-    override fun getProgress(): Int {
-        return progress
     }
 
     private fun getLinterRules(rulesFile: String, version: String): LinterRules {
