@@ -6,46 +6,52 @@ import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import lexer.Lexer
 import linter.Linter
+import linter.LinterResult
 import parser.Parser
 import rules.LinterRules
 import rules.LinterRulesV1
 import rules.LinterRulesV2
 
-class AnalyzeCommand(private val file: String, private val version: String, rulesFile: String) : Command {
-    private val rulesFileString = FileReader.getFileContents(rulesFile, version)
+class AnalyzeCommand(private val file: String, private val version: String, private val rulesFile: String) : Command {
 
     override fun execute(): String {
         val fileContent = FileReader.getFileContents(file, version)
+        val rules = FileReader.getFileContents(rulesFile, version)
+
+        val errorList = mutableListOf<LinterResult>()
 
         try {
             val lexer = Lexer(fileContent, version)
             val astNodes = Parser(lexer, version)
 
             val totalChars = fileContent.length
-            var lastProcessedChars = 0
-
-            Linter.clearResults()
+            var processedChars = 0
 
             while (astNodes.hasNext()) {
                 val statement = astNodes.next()
-                Linter.lint(statement, getLinterRules(rulesFileString, version))
 
-                val processedChars = lexer.getProcessedCharacters()
+                val lintResult = Linter.lint(statement, getLinterRules(rules, version))
 
+                if (!lintResult.isValid()) {
+                    errorList.add(lintResult)
+                }
+
+                val lexerProcessedChars = lexer.getProcessedCharacters()
                 ProgressTracker.updateProgress(processedChars, totalChars)
 
-                lastProcessedChars = processedChars
+                processedChars = lexerProcessedChars
             }
 
             if (fileContent.isNotEmpty()) {
                 ProgressTracker.updateProgress(totalChars, totalChars)
             }
 
-            return if (Linter.getErrors().isEmpty()) {
+            val noErrors = errorList.isEmpty()
+            return if (noErrors) {
                 "No problems found"
             } else {
-                val errorMessages = Linter.getErrors().mapIndexed { index, error ->
-                    "Error ${index + 1}:\n${error.getMessage()}"
+                val errorMessages = errorList.mapIndexed { index, error ->
+                    "Error ${index + 1}:\n${error.message}"
                 }
                 errorMessages.joinToString(separator = "\n\n")
             }
