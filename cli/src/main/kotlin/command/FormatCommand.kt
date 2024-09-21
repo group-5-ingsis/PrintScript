@@ -1,8 +1,8 @@
 package command
 
-import cli.FileReader
-import cli.FileWriter
-import cli.ProgressTracker
+import cli.utils.FileReader
+import cli.utils.FileWriter
+import cli.utils.ProgressTracker
 import formatter.Formatter
 import lexer.Lexer
 import parser.Parser

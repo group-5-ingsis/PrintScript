@@ -1,5 +1,6 @@
-package builder
+package builder.command
 
+import builder.CommandBuilder
 import command.Command
 import command.ExecuteCommand
 

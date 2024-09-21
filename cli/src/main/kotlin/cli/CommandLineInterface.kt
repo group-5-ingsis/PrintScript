@@ -1,6 +1,7 @@
 package cli
 
 import builder.*
+import cli.utils.CommandParser
 
 object CommandLineInterface {
     private val commandBuilders: Map<String, CommandBuilder> = CommandBuilderInitializer.getValidBuilders()

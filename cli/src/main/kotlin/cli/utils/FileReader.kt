@@ -1,4 +1,4 @@
-package cli
+package cli.utils
 
 import com.fasterxml.jackson.dataformat.yaml.YAMLMapper
 import rules.FormattingRules

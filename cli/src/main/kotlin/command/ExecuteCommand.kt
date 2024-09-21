@@ -1,8 +1,8 @@
 package command
 
 import Environment
-import cli.FileReader
-import cli.ProgressTracker
+import cli.utils.FileReader
+import cli.utils.ProgressTracker
 import interpreter.Interpreter
 import lexer.Lexer
 import nodes.Expression

@@ -1,7 +1,7 @@
 package command
 
-import cli.FileReader
-import cli.ProgressTracker
+import cli.utils.FileReader
+import cli.utils.ProgressTracker
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import lexer.Lexer

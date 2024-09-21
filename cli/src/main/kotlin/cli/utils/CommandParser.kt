@@ -1,4 +1,4 @@
-package cli
+package cli.utils
 
 object CommandParser {
     fun getOperation(command: String): String {
