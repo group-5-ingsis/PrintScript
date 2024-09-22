@@ -20,7 +20,7 @@ class Parser(
 
     fun setEnv(env: Environment): Environment {
         this.env = env
-        return getEnv()
+        return env
     }
 
     fun getEnv(): Environment {
@@ -47,7 +47,8 @@ class Parser(
                 ifChecker()
 
                 if (tokens.isEmpty()) {
-                    env = SemanticParser.validate(stm, env, readInput)
+                    val newEnv = SemanticParser.validate(stm, env, readInput)
+                    env = setEnv(newEnv)
                     return stm
                 }
 

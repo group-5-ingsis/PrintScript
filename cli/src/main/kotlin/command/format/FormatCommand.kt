@@ -51,6 +51,7 @@ class FormatCommand(
             outputEmitter = outputEmitter.append(formattedStatement)
 
             processedChars = ProgressTracker.updateProgress(lexer, processedChars, totalChars)
+            currentEnv = astNodes.getEnv()
         }
 
         processedChars = ProgressTracker.updateProgress(lexer, totalChars, totalChars)
