@@ -8,21 +8,18 @@ import nodes.Expression
 import nodes.StatementType
 import parser.Parser
 import utils.EnvironmentCreator
-import utils.FileReader
 import utils.ProgressTracker
 
 class ExecuteCommand(
-    private val filePath: String,
+    private val fileContent: String,
     private val version: String
 ) : Command {
 
     override fun execute(): String {
-        val fileContent = FileReader.getFileContents(filePath, version)
         return try {
             val lexer = Lexer(fileContent, version)
             val astNodes = Parser(lexer, version)
-            val result = executeFile(astNodes, lexer, fileContent)
-            "$result\nFinished executing $filePath"
+            return executeFile(astNodes, lexer, fileContent)
         } catch (e: Exception) {
             "Execution Error: ${e.message}"
         }

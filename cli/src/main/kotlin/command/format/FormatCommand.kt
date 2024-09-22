@@ -4,6 +4,8 @@ import command.Command
 import formatter.Formatter
 import lexer.Lexer
 import parser.Parser
+import rules.FormattingRules
+import utils.EnvironmentCreator
 import utils.FileReader
 import utils.FileWriter
 import utils.ProgressTracker
@@ -11,43 +13,46 @@ import utils.ProgressTracker
 class FormatCommand(
     private val file: String,
     private val version: String,
-    private val rulesFile: String
+    private val formattingRules: FormattingRules
 ) : Command {
 
     override fun execute(): String {
-        val fileContent = FileReader.getFileContents(file, version)
-        val formattingRules = FileReader.getFormattingRules(rulesFile, version)
-        val outputBuilder = StringBuilder()
-
-        try {
+        return try {
+            val fileContent = FileReader.getFileContents(file, version)
             val tokens = Lexer(fileContent)
             val astNodes = Parser(tokens)
 
-            val totalChars = fileContent.length
-            var lastProcessedChars = 0
+            val formattedResult = formatFile(astNodes, tokens, formattingRules, fileContent)
+            val formattedFile = FileWriter.writeToFile(file, version, formattedResult)
 
-            while (astNodes.hasNext()) {
-                val statement = astNodes.next()
-                val formattedNode = Formatter.format(statement, formattingRules, version)
-                outputBuilder.append(formattedNode)
-
-                val processedChars = tokens.getProcessedCharacters()
-
-                ProgressTracker.updateProgress(processedChars, totalChars)
-
-                lastProcessedChars = processedChars
-            }
-
-            if (fileContent.isNotEmpty()) {
-                ProgressTracker.updateProgress(totalChars, totalChars)
-            }
-
-            val formattedResult = outputBuilder.toString()
-            FileWriter.writeToFile(file, version, formattedResult)
-
-            return "File formatted successfully"
+            return "${formattedFile.name} formatted successfully"
         } catch (e: Exception) {
-            return "Formatting Error: ${e.message}"
+            "Formatting Error: ${e.message}"
         }
+    }
+
+    private fun formatFile(
+        astNodes: Parser,
+        lexer: Lexer,
+        formattingRules: FormattingRules,
+        fileContent: String
+    ): String {
+        val totalChars = fileContent.length
+        var processedChars = 0
+        var outputEmitter = StringBuilder()
+
+        var currentEnv = EnvironmentCreator.create(System.getenv())
+
+        while (astNodes.hasNext()) {
+            currentEnv = astNodes.setEnv(currentEnv)
+            val statement = astNodes.next()
+            val formattedStatement = Formatter.format(statement, formattingRules, version)
+
+            outputEmitter = outputEmitter.append(formattedStatement)
+
+            processedChars = ProgressTracker.updateProgress(lexer, processedChars, totalChars)
+        }
+
+        return outputEmitter.toString()
     }
 }
