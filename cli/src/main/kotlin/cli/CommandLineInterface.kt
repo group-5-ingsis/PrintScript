@@ -27,9 +27,9 @@ object CommandLineInterface {
     private fun getValidBuilders(): Map<String, CommandBuilder> {
         return mapOf(
             "validate" to ValidationCommandBuilder(),
-            "command/execute" to ExecuteCommandBuilder(),
+            "execute" to ExecuteCommandBuilder(),
             "format" to FormatCommandBuilder(),
-            "command/analyze" to AnalyzeCommandBuilder()
+            "analyze" to AnalyzeCommandBuilder()
         )
     }
 }

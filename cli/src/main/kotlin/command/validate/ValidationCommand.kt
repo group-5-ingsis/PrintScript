@@ -31,5 +31,7 @@ class ValidationCommand(private val file: String, private val version: String) :
             astNodes.next()
             processedChars = ProgressTracker.updateProgress(lexer, processedChars, totalChars)
         }
+
+        processedChars = ProgressTracker.updateProgress(lexer, totalChars, totalChars)
     }
 }

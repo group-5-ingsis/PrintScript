@@ -46,7 +46,10 @@ class ExecuteCommand(
             processedChars = ProgressTracker.updateProgress(lexer, processedChars, totalChars)
         }
 
-        return outputEmitter.toString()
+        processedChars = ProgressTracker.updateProgress(lexer, totalChars, totalChars)
+
+        val printResult = outputEmitter.toString()
+        return "$printResult\nFile Executed!"
     }
 
     private fun processStatement(

@@ -28,7 +28,7 @@ class AnalyzeCommand(
 
     private fun analyzeFile(
         astNodes: Parser,
-        tokens: Lexer,
+        lexer: Lexer,
         linterRules: LinterRules
     ): String {
         val totalChars = fileContent.length
@@ -47,8 +47,10 @@ class AnalyzeCommand(
                 errorList = errorList + lintResult
             }
 
-            processedChars = ProgressTracker.updateProgress(tokens, processedChars, totalChars)
+            processedChars = ProgressTracker.updateProgress(lexer, processedChars, totalChars)
         }
+
+        processedChars = ProgressTracker.updateProgress(lexer, totalChars, totalChars)
 
         return lintingResult(errorList)
     }
