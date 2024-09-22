@@ -1,9 +1,8 @@
-package builder.command
+package command.format
 
-import builder.CommandBuilder
-import cli.utils.FileReader
 import command.Command
-import command.FormatCommand
+import command.CommandBuilder
+import utils.FileReader
 
 class FormattingCommandBuilder : CommandBuilder {
     override fun build(fileContent: String, arguments: List<String>, version: String): Command {

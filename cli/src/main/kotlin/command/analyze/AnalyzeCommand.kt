@@ -1,12 +1,13 @@
-package command
+package command.analyze
 
-import cli.utils.EnvironmentCreator
-import cli.utils.ProgressTracker
+import command.Command
 import lexer.Lexer
 import linter.Linter
 import linter.LinterResult
 import parser.Parser
 import rules.LinterRules
+import utils.EnvironmentCreator
+import utils.ProgressTracker
 
 class AnalyzeCommand(
     private val fileContent: String,

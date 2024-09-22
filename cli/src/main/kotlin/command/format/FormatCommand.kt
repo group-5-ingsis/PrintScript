@@ -1,11 +1,12 @@
-package command
+package command.format
 
-import cli.utils.FileReader
-import cli.utils.FileWriter
-import cli.utils.ProgressTracker
+import command.Command
 import formatter.Formatter
 import lexer.Lexer
 import parser.Parser
+import utils.FileReader
+import utils.FileWriter
+import utils.ProgressTracker
 
 class FormatCommand(
     private val file: String,

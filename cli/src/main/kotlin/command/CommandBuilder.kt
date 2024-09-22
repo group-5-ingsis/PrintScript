@@ -1,6 +1,4 @@
-package builder
-
-import command.Command
+package command
 
 interface CommandBuilder {
     fun build(

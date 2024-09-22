@@ -1,9 +1,8 @@
-package builder.command
+package command.analyze
 
-import builder.CommandBuilder
-import cli.utils.FileReader
-import command.AnalyzeCommand
 import command.Command
+import command.CommandBuilder
+import utils.FileReader
 
 class AnalyzeCommandBuilder : CommandBuilder {
     override fun build(fileContent: String, arguments: List<String>, version: String): Command {

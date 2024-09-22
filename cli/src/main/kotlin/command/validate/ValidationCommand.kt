@@ -1,9 +1,10 @@
-package command
+package command.validate
 
-import cli.utils.FileReader
-import cli.utils.ProgressTracker
+import command.Command
 import lexer.Lexer
 import parser.Parser
+import utils.FileReader
+import utils.ProgressTracker
 
 class ValidationCommand(private val file: String, private val version: String) : Command {
 

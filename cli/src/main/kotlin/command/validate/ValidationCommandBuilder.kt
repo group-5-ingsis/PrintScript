@@ -1,8 +1,7 @@
-package builder.command
+package command.validate
 
-import builder.CommandBuilder
 import command.Command
-import command.ValidationCommand
+import command.CommandBuilder
 
 class ValidationCommandBuilder : CommandBuilder {
     override fun build(

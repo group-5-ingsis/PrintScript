@@ -1,14 +1,15 @@
-package command
+package command.execute
 
 import Environment
-import cli.utils.EnvironmentCreator
-import cli.utils.FileReader
-import cli.utils.ProgressTracker
+import command.Command
 import interpreter.Interpreter
 import lexer.Lexer
 import nodes.Expression
 import nodes.StatementType
 import parser.Parser
+import utils.EnvironmentCreator
+import utils.FileReader
+import utils.ProgressTracker
 
 class ExecuteCommand(
     private val filePath: String,

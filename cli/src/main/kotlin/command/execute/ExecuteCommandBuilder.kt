@@ -1,8 +1,7 @@
-package builder.command
+package command.execute
 
-import builder.CommandBuilder
 import command.Command
-import command.ExecuteCommand
+import command.CommandBuilder
 
 class ExecuteCommandBuilder : CommandBuilder {
     override fun build(
