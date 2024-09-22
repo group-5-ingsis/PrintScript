@@ -27,7 +27,8 @@ class FormatterVisitor(
     }
 
     override fun visitExpressionStm(statement: StatementType.StatementExpression) {
-        statement.value.accept(this)
+        val expression = statement.value
+        expression.accept(this)
     }
 
     override fun visitVariableStm(statement: StatementType.Variable) {
@@ -129,7 +130,7 @@ class FormatterVisitor(
     override fun visitAssign(expression: Expression.Assign) {
         appendAssignment(expression)
         expression.value.accept(this)
-        output.append(";")
+        output.append(";\n")
     }
 
     private fun appendAssignment(expression: Expression.Assign) {

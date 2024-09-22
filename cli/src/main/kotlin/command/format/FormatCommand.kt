@@ -56,6 +56,6 @@ class FormatCommand(
 
         processedChars = ProgressTracker.updateProgress(lexer, totalChars, totalChars)
 
-        return outputEmitter.toString()
+        return outputEmitter.toString().trim()
     }
 }
