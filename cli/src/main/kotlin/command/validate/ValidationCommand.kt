@@ -11,28 +11,25 @@ class ValidationCommand(private val file: String, private val version: String) :
     override fun execute(): String {
         val fileContent = FileReader.getFileContents(file, version)
         val totalChars = fileContent.length
-        var lastProcessedChars = 0
 
         return try {
             val tokens = Lexer(fileContent)
             val astNodes = Parser(tokens)
 
-            while (astNodes.hasNext()) {
-                astNodes.next()
-                val processedChars = tokens.getProcessedCharacters()
-
-                ProgressTracker.updateProgress(processedChars, totalChars)
-
-                lastProcessedChars = processedChars
-            }
-
-            if (fileContent.isNotEmpty()) {
-                ProgressTracker.updateProgress(totalChars, totalChars)
-            }
+            validateNodes(astNodes, tokens, totalChars)
 
             "File Validated! (No Errors found)"
         } catch (e: Exception) {
             "Validation error: ${e.message}"
+        }
+    }
+
+    private fun validateNodes(astNodes: Parser, lexer: Lexer, totalChars: Int) {
+        var processedChars = 0
+
+        while (astNodes.hasNext()) {
+            astNodes.next()
+            processedChars = ProgressTracker.updateProgress(lexer, processedChars, totalChars)
         }
     }
 }
