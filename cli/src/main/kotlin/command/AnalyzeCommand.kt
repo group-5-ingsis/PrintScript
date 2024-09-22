@@ -33,7 +33,7 @@ class AnalyzeCommand(
         val totalChars = fileContent.length
         var processedChars = 0
 
-        val errorList = mutableListOf<LinterResult>()
+        var errorList: List<LinterResult> = emptyList()
 
         var currentEnv = EnvironmentCreator.create(System.getenv())
 
@@ -43,7 +43,7 @@ class AnalyzeCommand(
             val lintResult = Linter.lint(statement, linterRules, version)
 
             if (!lintResult.isValid()) {
-                errorList.add(lintResult)
+                errorList = errorList + lintResult
             }
 
             processedChars = ProgressTracker.updateProgress(tokens, processedChars, totalChars)
@@ -52,7 +52,7 @@ class AnalyzeCommand(
         return lintingResult(errorList)
     }
 
-    private fun lintingResult(errorList: MutableList<LinterResult>): String {
+    private fun lintingResult(errorList: List<LinterResult>): String {
         return if (errorList.isEmpty()) {
             "No problems found"
         } else {

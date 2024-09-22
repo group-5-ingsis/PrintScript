@@ -34,21 +34,21 @@ class ExecuteCommand(
     ): String {
         val totalChars = fileContent.length
         var processedChars = 0
-        val output = StringBuilder()
+        var outputEmitter = StringBuilder()
 
         var currentEnv = EnvironmentCreator.create(System.getenv())
 
         while (astNodes.hasNext()) {
             currentEnv = astNodes.setEnv(currentEnv)
             val statement = astNodes.next()
-            val (outputFragment, updatedEnv) = processStatement(version, statement, astNodes, currentEnv)
-            output.append(outputFragment)
+            val (output, updatedEnv) = processStatement(version, statement, astNodes, currentEnv)
+            outputEmitter = outputEmitter.append(output)
             currentEnv = updatedEnv
 
             processedChars = ProgressTracker.updateProgress(lexer, processedChars, totalChars)
         }
 
-        return output.toString()
+        return outputEmitter.toString()
     }
 
     private fun processStatement(
