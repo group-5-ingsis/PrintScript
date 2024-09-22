@@ -1,5 +1,6 @@
 package command
 
+import cli.utils.EnvironmentCreator
 import cli.utils.ProgressTracker
 import lexer.Lexer
 import linter.Linter
@@ -34,7 +35,10 @@ class AnalyzeCommand(
 
         val errorList = mutableListOf<LinterResult>()
 
+        var currentEnv = EnvironmentCreator.create(System.getenv())
+
         while (astNodes.hasNext()) {
+            currentEnv = astNodes.setEnv(currentEnv)
             val statement = astNodes.next()
             val lintResult = Linter.lint(statement, linterRules, version)
 

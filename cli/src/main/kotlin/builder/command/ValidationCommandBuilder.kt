@@ -6,10 +6,10 @@ import command.ValidationCommand
 
 class ValidationCommandBuilder : CommandBuilder {
     override fun build(
-        file: String,
+        fileContent: String,
         arguments: List<String>,
         version: String
     ): Command {
-        return ValidationCommand(file, version)
+        return ValidationCommand(fileContent, version)
     }
 }

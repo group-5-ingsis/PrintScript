@@ -18,8 +18,9 @@ class Parser(
         return lexer.hasNext()
     }
 
-    fun setEnv(env: Environment) {
+    fun setEnv(env: Environment): Environment {
         this.env = env
+        return getEnv()
     }
 
     fun getEnv(): Environment {

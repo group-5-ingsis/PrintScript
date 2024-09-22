@@ -6,10 +6,10 @@ import command.ExecuteCommand
 
 class ExecuteCommandBuilder : CommandBuilder {
     override fun build(
-        file: String,
+        fileContent: String,
         arguments: List<String>,
         version: String
     ): Command {
-        return ExecuteCommand(file, version)
+        return ExecuteCommand(fileContent, version)
     }
 }
