@@ -2,8 +2,6 @@ package linter
 
 import lexer.Lexer
 import parser.Parser
-import rules.LinterRulesV1
-import rules.LinterRulesV2
 import kotlin.test.Test
 import kotlin.test.assertEquals
 

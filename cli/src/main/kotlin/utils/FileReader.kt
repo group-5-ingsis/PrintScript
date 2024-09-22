@@ -5,8 +5,6 @@ import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import rules.FormattingRules
 import rules.LinterRules
-import rules.LinterRulesV1
-import rules.LinterRulesV2
 import java.io.InputStream
 
 object FileReader {
@@ -46,26 +44,23 @@ object FileReader {
     }
 
     fun getLinterRules(rulesFile: String, version: String): LinterRules {
-        lateinit var linterRules: LinterRules
-        when (version) {
-            "1.0" -> {
-                val rulesMap = jsonToMap(rulesFile)
-                linterRules = LinterRulesV1(
-                    identifierNamingConvention = rulesMap["identifierNamingConvention"] as String,
-                    printlnExpressionAllowed = rulesMap["printlnExpressionAllowed"] as Boolean
-                )
-            }
-            "1.1" -> {
-                val rulesMap = jsonToMap(rulesFile)
-                linterRules = LinterRulesV2(
-                    identifierNamingConvention = rulesMap["identifierNamingConvention"] as String,
-                    printlnExpressionAllowed = rulesMap["printlnExpressionAllowed"] as Boolean,
-                    readInputExpressionAllowed = rulesMap["readInputExpressionAllowed"] as Boolean
-                )
-            }
-            else -> throw IllegalArgumentException("Unsupported version: $version")
+        val rulesMap = jsonToMap(rulesFile)
+
+        val identifierNamingConvention = rulesMap["identifierNamingConvention"] as? String ?: "off"
+        val printlnExpressionAllowed = rulesMap["printlnExpressionAllowed"] as? Boolean != false
+
+        val readInputExpressionAllowed = if (version >= "1.1") {
+            rulesMap["readInputExpressionAllowed"] as? Boolean
+        } else {
+            null
         }
-        return linterRules
+
+        return LinterRules(
+            version = version,
+            identifierNamingConvention = identifierNamingConvention,
+            printlnExpressionAllowed = printlnExpressionAllowed,
+            readInputExpressionAllowed = readInputExpressionAllowed
+        )
     }
 
     private fun jsonToMap(jsonString: String): Map<String, Any> {
