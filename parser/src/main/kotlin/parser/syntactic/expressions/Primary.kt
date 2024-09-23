@@ -3,11 +3,12 @@ package parser.syntactic.expressions
 import exception.UnknownExpressionException
 import nodes.Expression
 import parser.syntactic.TokenManager
+import position.nodes.Type
 import token.Token
 
 class PrimaryV1_1() : ExpressionParser {
 
-    override fun parse(tokens: List<Token>): ParseResult {
+    override fun parse(tokens: List<Token>, parsedShouldBeOfType: Type): ParseResult {
         val tokenMng = TokenManager(tokens)
 
         fun getNextLiteral(): Any {
@@ -47,12 +48,7 @@ class PrimaryV1_1() : ExpressionParser {
         } else if (tokenMng.nextTokenMatchesExpectedType("IDENTIFIER")) {
             val idem = tokenMng.advance().value
             return Pair(tokenMng.getTokens(), Expression.Variable(idem, position))
-        } else if (tokenMng.nextTokenMatchesExpectedType("READ_INPUT")) {
-            tokenMng.advance()
-            val expressionEvaluator = ExpressionType.makeExpressionEvaluatorV1_1()
-            val expr = expressionEvaluator.parse(tokenMng.getTokens())
-            val message = "Default message"
-            return Pair(expr.first, Expression.ReadInput(position, expr.second as Expression.Grouping, message))
+
         } else if (tokenMng.nextTokenMatchesExpectedType("READ_ENV")) {
             tokenMng.advance()
             val expressionEvaluator = ExpressionType.makeExpressionEvaluatorV1_1()
