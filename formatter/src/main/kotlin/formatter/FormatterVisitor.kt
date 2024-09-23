@@ -2,9 +2,9 @@ package formatter
 
 import nodes.Expression
 import nodes.StatementType
-import visitor.Visitor
 import rules.FormattingRules
 import rules.RuleApplier
+import visitor.Visitor
 
 class FormatterVisitor(
     private val rules: FormattingRules,

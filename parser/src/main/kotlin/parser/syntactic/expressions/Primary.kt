@@ -39,12 +39,12 @@ class Primary(val version: String) : ExpressionParser {
             return tokenMng.getTokens() to Expression.Literal(nextLiteral, position)
         }
 
-         fun parseReadInput(): ParseResult {
-             tokenMng.advance()
-             val result = Primary("1.1").parse(tokenMng.getTokens())
-             val tokenMng2 = TokenManager(result.first)
-             val grouping = result.second as Expression.Grouping
-             return Pair(tokenMng2.getTokens(), Expression.ReadInput(tokenMng.getPosition(), grouping, parsedShouldBeOfType))
+        fun parseReadInput(): ParseResult {
+            tokenMng.advance()
+            val result = Primary("1.1").parse(tokenMng.getTokens())
+            val tokenMng2 = TokenManager(result.first)
+            val grouping = result.second as Expression.Grouping
+            return Pair(tokenMng2.getTokens(), Expression.ReadInput(tokenMng.getPosition(), grouping, parsedShouldBeOfType))
         }
 
         fun parseGrouping(): ParseResult {

@@ -3,7 +3,6 @@ package parser.syntactic.statements
 import ExpressionType
 import nodes.StatementType
 import parser.syntactic.TokenManager
-
 import token.Token
 
 class ExpressionStatementParser(private val expressionEvaluator: ExpressionType) : StatementParser {

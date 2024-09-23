@@ -4,9 +4,9 @@ import environment.Environment
 import nodes.StatementType
 import parser.semantic.SemanticParser
 import parser.syntactic.SyntacticParser
+import token.Token
 import visitor.InputProvider
 import visitor.PrintScriptInputProvider
-import token.Token
 
 class Parser(
     private val lexer: Iterator<Token>,

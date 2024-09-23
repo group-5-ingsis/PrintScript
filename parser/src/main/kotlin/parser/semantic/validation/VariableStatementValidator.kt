@@ -3,8 +3,8 @@ package parser.semantic.validation
 import environment.Environment
 import nodes.Expression
 import nodes.StatementType
-import visitor.InputProvider
 import visitor.ExpressionVisitor
+import visitor.InputProvider
 
 class VariableStatementValidator(private val inputProvider: InputProvider) : Validator<StatementType.Variable> {
 

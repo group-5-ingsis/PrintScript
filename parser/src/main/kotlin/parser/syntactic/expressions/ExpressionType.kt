@@ -1,14 +1,12 @@
-import parser.syntactic.TokenManager
+
 import parser.syntactic.expressions.*
 import position.nodes.Type
 import token.Token
 
-class ExpressionType(private val parseInferiorFunction: ExpressionParser, val version: String = "1.1")  {
+class ExpressionType(private val parseInferiorFunction: ExpressionParser, val version: String = "1.1") {
 
     fun parse(tokens: List<Token>, parsedShouldBeOfType: Type = Type.ANY): ParseResult {
-
         return parseInferiorFunction.parse(tokens, parsedShouldBeOfType)
-
     }
 
     companion object {

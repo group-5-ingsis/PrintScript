@@ -4,8 +4,8 @@ import environment.Environment
 import exception.SemanticErrorException
 import nodes.Expression
 import nodes.StatementType
-import visitor.InputProvider
 import visitor.ExpressionVisitor
+import visitor.InputProvider
 
 class StatementExpressionValidator(private val inputProvider: InputProvider) : Validator<StatementType.StatementExpression> {
 
