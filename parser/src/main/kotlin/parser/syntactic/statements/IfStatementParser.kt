@@ -1,8 +1,8 @@
 package parser.syntactic.statements
 
+import ExpressionType
 import nodes.StatementType
 import parser.syntactic.TokenManager
-import parser.syntactic.expressions.ExpressionType
 import position.nodes.Type
 import token.Token
 

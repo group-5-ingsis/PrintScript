@@ -1,7 +1,7 @@
 package nodes
 
 import environment.Environment
-import position.visitor.Visitor
+import visitor.Visitor
 import token.Position
 import visitor.StatementVisitor
 import visitor.statementVisitorResult

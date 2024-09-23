@@ -1,4 +1,6 @@
-package position.visitor
+package visitor
+
+import visitor.InputProvider
 
 class PrintScriptInputProvider(private val inputMap: Map<String, String> = emptyMap()) : InputProvider {
     override fun input(name: String?): String {

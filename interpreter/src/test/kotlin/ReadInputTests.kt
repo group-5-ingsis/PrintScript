@@ -1,4 +1,5 @@
 
+import environment.Environment
 import interpreter.Interpreter
 import lexer.Lexer
 import nodes.Expression
@@ -7,11 +8,11 @@ import org.junit.Assert.assertEquals
 import org.junit.Assert.assertThrows
 import org.junit.Test
 import parser.Parser
-import position.Position
-import position.visitor.PrintScriptInputProvider
+import token.Position
+import visitor.PrintScriptInputProvider
 
 class ReadInputTests {
-    val version = "1.1"
+    private val version = "1.1"
 
     @Test
     fun testReadInput() {
@@ -186,6 +187,7 @@ class ReadInputTests {
     fun testReadInputWithInlineMathOperations() {
         val fileContents = """
         const result: number = readInput("Enter the first number:") + readInput("Enter the second number:");
+        println("Result: " + result);
         """.trimIndent()
 
         val inputs = mapOf(

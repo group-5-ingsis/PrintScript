@@ -3,12 +3,13 @@ package parser.syntactic.expressions
 import exception.InvalidSyntaxException
 import nodes.Expression
 import parser.syntactic.TokenManager
+import position.nodes.Type
 import token.Token
 
 class Assigment(private val parseInferiorFunction: ExpressionParser) : ExpressionParser {
 
-    override fun parse(tokens: List<Token>): ParseResult {
-        val (remainingTokens, expression) = parseInferiorFunction.parse(tokens)
+    override fun parse(tokens: List<Token>, parsedShouldBeOfType: Type): ParseResult {
+        val (remainingTokens, expression) = parseInferiorFunction.parse(tokens, parsedShouldBeOfType)
 
         val tokenManager = TokenManager(remainingTokens)
 
@@ -21,7 +22,7 @@ class Assigment(private val parseInferiorFunction: ExpressionParser) : Expressio
                 // use case example ->  newPoint(x + 2, 0).y = 3;
                 // this should be a Variable:  newPoint(x + 2, 0).y
 
-                val (newTokens, exp) = parseInferiorFunction.parse(tokenManager.getTokens())
+                val (newTokens, exp) = parseInferiorFunction.parse(tokenManager.getTokens(), parsedShouldBeOfType)
 
                 return Pair(newTokens, Expression.Assign(expression.name, exp, position))
             }

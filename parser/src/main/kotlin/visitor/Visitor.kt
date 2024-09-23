@@ -1,4 +1,4 @@
-package position.visitor
+package visitor
 
 interface Visitor {
     fun visitPrintStm(statement: nodes.StatementType.Print)

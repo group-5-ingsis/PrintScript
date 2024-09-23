@@ -2,8 +2,8 @@ package interpreter
 
 import environment.Environment
 import nodes.StatementType
-import position.visitor.InputProvider
-import position.visitor.PrintScriptInputProvider
+import visitor.InputProvider
+import visitor.PrintScriptInputProvider
 import visitor.StatementVisitor
 import visitor.statementVisitorResult
 

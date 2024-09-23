@@ -4,8 +4,8 @@ import environment.Environment
 import nodes.StatementType
 import parser.semantic.SemanticParser
 import parser.syntactic.SyntacticParser
-import position.visitor.InputProvider
-import position.visitor.PrintScriptInputProvider
+import visitor.InputProvider
+import visitor.PrintScriptInputProvider
 import token.Token
 
 class Parser(

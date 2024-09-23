@@ -1,6 +1,6 @@
      * DIFFERENT KINDS OF EXPRESSIONS
      *
-     *   expression     → assigment | READ_INPUT ;
+     *   expression     → assigment
      *   readInput      → READ_INPUT "(" expression ")" ;
      *   assigment      → IDENTIFIER "=" assignment
      *                | comparison ;
@@ -10,8 +10,10 @@
      *   unary          → ( "!" | "-" ) unary
      *   | primary ;
      *   primary        → NUMBER | STRING | "true" | "false" | "null"
-     *   | "(" expression ")" | IDENTIFIER | READ_ENV;
-     *
+     *   | "(" expression ")" | IDENTIFIER | READ_ENV | READ_INPUT ;
+
+     *   READ_ENV       → READ_ENV "(" STRING ")"
+     *   READ_INPUT     → READ_INPUT "(" expression ")"
 
      * DIFFERENT KINDS OF STATEMENTS:
      *

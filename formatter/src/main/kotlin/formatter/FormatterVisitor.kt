@@ -2,7 +2,7 @@ package formatter
 
 import nodes.Expression
 import nodes.StatementType
-import position.visitor.Visitor
+import visitor.Visitor
 import rules.FormattingRules
 import rules.RuleApplier
 

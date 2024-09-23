@@ -2,7 +2,7 @@ package parser.semantic.validation
 
 import environment.Environment
 import nodes.StatementType
-import position.visitor.InputProvider
+import visitor.InputProvider
 
 class SemanticValidator(private val inputProvider: InputProvider) {
     private val validatorsForTypes: Map<String, Validator<out StatementType>> =

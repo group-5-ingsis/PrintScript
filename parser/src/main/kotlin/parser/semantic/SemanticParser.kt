@@ -5,7 +5,7 @@ import exception.SemanticErrorException
 import nodes.StatementType
 import parser.semantic.validation.SemanticValidator
 import parser.semantic.validation.ValidationResult
-import position.visitor.InputProvider
+import visitor.InputProvider
 import visitor.StatementVisitor
 import java.lang.StringBuilder
 
