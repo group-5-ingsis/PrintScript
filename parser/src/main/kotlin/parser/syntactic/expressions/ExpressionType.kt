@@ -10,7 +10,7 @@ class ExpressionType(private val parseInferiorFunction: ExpressionParser) : Expr
 
     companion object {
         fun makeExpressionEvaluator(): ExpressionType {
-            return ExpressionType(Assigment(Comparison(Term(Factor(Unary(Primary()))))))
+            return ExpressionType(Assigment(Term(Factor(Unary(Primary())))))
         }
     }
 }

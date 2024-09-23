@@ -5,8 +5,8 @@ import lexer.Lexer
 import linter.Linter
 import linter.LinterResult
 import parser.Parser
+import position.visitor.EnvironmentCreator
 import rules.LinterRules
-import utils.EnvironmentCreator
 import utils.ProgressTracker
 
 class AnalyzeCommand(

@@ -4,8 +4,8 @@ import command.Command
 import formatter.Formatter
 import lexer.Lexer
 import parser.Parser
+import position.visitor.EnvironmentCreator
 import rules.FormattingRules
-import utils.EnvironmentCreator
 import utils.FileReader
 import utils.FileWriter
 import utils.ProgressTracker

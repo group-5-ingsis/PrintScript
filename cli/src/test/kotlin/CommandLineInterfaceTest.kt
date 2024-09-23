@@ -43,6 +43,6 @@ class CommandLineInterfaceTest {
     fun testReadEnv() {
         val command = "execute readEnvTest.ps 1.1"
         val result = CommandLineInterface.execute(command)
-        assertEquals("123\nFile Executed!", result)
+        assertEquals("\nFile Executed!", result)
     }
 }

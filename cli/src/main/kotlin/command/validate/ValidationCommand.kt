@@ -3,7 +3,7 @@ package command.validate
 import command.Command
 import lexer.Lexer
 import parser.Parser
-import utils.EnvironmentCreator
+import position.visitor.EnvironmentCreator
 import utils.FileReader
 import utils.ProgressTracker
 

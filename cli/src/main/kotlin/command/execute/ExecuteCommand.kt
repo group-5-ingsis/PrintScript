@@ -7,7 +7,7 @@ import lexer.Lexer
 import nodes.Expression
 import nodes.StatementType
 import parser.Parser
-import utils.EnvironmentCreator
+import position.visitor.EnvironmentCreator
 import utils.ProgressTracker
 
 class ExecuteCommand(
