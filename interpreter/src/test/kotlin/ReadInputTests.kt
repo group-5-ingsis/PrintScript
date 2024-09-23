@@ -29,10 +29,10 @@ class ReadInputTests {
         val ast1 = asts.next()
         val ast2 = asts.next()
 
-        val result1 = Interpreter.interpret(ast1, version, currentEnvironment, outputBuilder, inputProvider)
+        val result1 = Interpreter.interpret(ast1, version, currentEnvironment, inputProvider)
         currentEnvironment = result1.second
         outputBuilder = result1.first
-        val result2 = Interpreter.interpret(ast2, version, currentEnvironment, outputBuilder, inputProvider)
+        val result2 = Interpreter.interpret(ast2, version, currentEnvironment, inputProvider)
         currentEnvironment = result2.second
         outputBuilder = result2.first
 
@@ -57,7 +57,7 @@ class ReadInputTests {
 
         while (asts.hasNext()) {
             val ast = asts.next()
-            val result = Interpreter.interpret(ast, version, currentEnvironment, outputBuilder, inputProvider)
+            val result = Interpreter.interpret(ast, version, currentEnvironment, inputProvider)
             currentEnvironment = result.second
             outputBuilder = result.first
         }
@@ -79,7 +79,7 @@ class ReadInputTests {
 
         val exception = assertThrows(IllegalArgumentException::class.java) {
             val ast = asts.next()
-            Interpreter.interpret(ast, version, currentEnvironment, outputBuilder, inputProvider)
+            Interpreter.interpret(ast, version, currentEnvironment, inputProvider)
         }
         println(exception)
     }
@@ -104,7 +104,7 @@ class ReadInputTests {
 
         while (asts.hasNext()) {
             val ast = asts.next()
-            val result = Interpreter.interpret(ast, version, currentEnvironment, outputBuilder, inputProvider)
+            val result = Interpreter.interpret(ast, version, currentEnvironment, inputProvider)
             currentEnvironment = result.second
             outputBuilder = result.first
         }
@@ -126,7 +126,7 @@ class ReadInputTests {
 
         val exception = assertThrows(IllegalArgumentException::class.java) {
             val ast = asts.next()
-            Interpreter.interpret(ast, version, currentEnvironment, outputBuilder, inputProvider)
+            Interpreter.interpret(ast, version, currentEnvironment, inputProvider)
         }
     }
 
@@ -153,7 +153,7 @@ class ReadInputTests {
 
         while (asts.hasNext()) {
             val ast = asts.next()
-            val result = Interpreter.interpret(ast, version, currentEnvironment, outputBuilder, inputProvider)
+            val result = Interpreter.interpret(ast, version, currentEnvironment, inputProvider)
             currentEnvironment = result.second
             outputBuilder = result.first
         }
@@ -175,7 +175,7 @@ class ReadInputTests {
 
         while (asts.hasNext()) {
             val ast = asts.next()
-            val result = Interpreter.interpret(ast, version, currentEnvironment, outputBuilder, inputProvider)
+            val result = Interpreter.interpret(ast, version, currentEnvironment, inputProvider)
             currentEnvironment = result.second
             outputBuilder = result.first
         }
@@ -204,7 +204,7 @@ class ReadInputTests {
 
         while (asts.hasNext()) {
             val ast = asts.next()
-            val result = Interpreter.interpret(ast, version, currentEnvironment, outputBuilder, inputProvider)
+            val result = Interpreter.interpret(ast, version, currentEnvironment, inputProvider)
             currentEnvironment = result.second
             outputBuilder = result.first
         }
