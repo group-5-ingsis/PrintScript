@@ -1,4 +1,4 @@
-package position
+package token
 
 data class Position(
     val line: Int,

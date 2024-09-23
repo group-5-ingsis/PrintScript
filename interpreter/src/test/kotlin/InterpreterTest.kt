@@ -1,3 +1,4 @@
+import environment.Environment
 import interpreter.Interpreter
 import lexer.Lexer
 import nodes.Expression
@@ -5,7 +6,7 @@ import nodes.StatementType
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import parser.Parser
-import position.Position
+import token.Position
 
 class InterpreterTest {
 

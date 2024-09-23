@@ -1,7 +1,8 @@
-package position.visitor
+package visitor
 
-import Environment
+import environment.Environment
 import nodes.Expression
+import position.visitor.VisitorResultExpressions
 
 class ExpressionVisitor(val readInput: String? = null) {
 

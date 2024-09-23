@@ -1,10 +1,11 @@
-package position.visitor
+package visitor
 
-import Environment
+import environment.Environment
 import nodes.Expression
 import nodes.StatementType
+import position.visitor.VisitorResultExpressions
 
-typealias statementVisitorResult = Pair<StringBuilder, Environment>
+typealias statementVisitorResult = Pair<StringBuilder, environment.Environment>
 
 class StatementVisitor(val readInput: String? = null) {
 

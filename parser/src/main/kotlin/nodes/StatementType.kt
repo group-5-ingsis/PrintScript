@@ -1,10 +1,10 @@
 package nodes
 
-import Environment
-import position.Position
-import position.visitor.StatementVisitor
+import environment.Environment
 import position.visitor.Visitor
-import position.visitor.statementVisitorResult
+import token.Position
+import visitor.StatementVisitor
+import visitor.statementVisitorResult
 
 sealed class StatementType {
 
@@ -80,7 +80,7 @@ sealed class StatementType {
      * @param identifier the name of the variable
      * @param initializer the expression assigned to the identifier, if its just declaration, its null
      * @param dataType the type declarative of the variable
-     * @param designation is const, let, etc, how is declarative
+     * @param designation is const, let, etc., how is declarative
      */
     class Variable(
         val designation: String,

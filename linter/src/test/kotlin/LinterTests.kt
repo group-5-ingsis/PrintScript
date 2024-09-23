@@ -1,8 +1,8 @@
 package linter
 
+import environment.EnvironmentCreator
 import lexer.Lexer
 import parser.Parser
-import position.visitor.EnvironmentCreator
 import rules.LinterRules
 import kotlin.test.Test
 import kotlin.test.assertEquals

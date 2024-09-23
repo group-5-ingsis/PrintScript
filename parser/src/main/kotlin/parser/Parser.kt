@@ -1,6 +1,6 @@
 package parser
 
-import Environment
+import environment.Environment
 import nodes.StatementType
 import parser.semantic.SemanticParser
 import parser.syntactic.SyntacticParser

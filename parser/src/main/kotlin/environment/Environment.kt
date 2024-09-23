@@ -1,6 +1,8 @@
+package environment
+
 import nodes.Expression
 import nodes.StatementType
-import position.visitor.ExpressionVisitor
+import visitor.ExpressionVisitor
 
 class Environment(
 

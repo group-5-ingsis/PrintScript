@@ -1,9 +1,9 @@
 package command.validate
 
 import command.Command
+import environment.EnvironmentCreator
 import lexer.Lexer
 import parser.Parser
-import position.visitor.EnvironmentCreator
 import utils.FileReader
 import utils.ProgressTracker
 

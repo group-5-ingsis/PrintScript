@@ -1,9 +1,8 @@
-package position.visitor
+package environment
 
-import Environment
 import nodes.Expression
 import nodes.StatementType
-import position.Position
+import token.Position
 
 object EnvironmentCreator {
 

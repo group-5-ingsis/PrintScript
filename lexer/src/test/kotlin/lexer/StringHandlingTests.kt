@@ -1,7 +1,7 @@
 package lexer
 
 import org.junit.Assert.assertEquals
-import position.Position
+import token.Position
 import token.Token
 import kotlin.test.Test
 

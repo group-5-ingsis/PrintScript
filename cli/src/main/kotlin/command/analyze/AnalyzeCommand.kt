@@ -1,11 +1,11 @@
 package command.analyze
 
 import command.Command
+import environment.EnvironmentCreator
 import lexer.Lexer
 import linter.Linter
 import linter.LinterResult
 import parser.Parser
-import position.visitor.EnvironmentCreator
 import rules.LinterRules
 import utils.ProgressTracker
 

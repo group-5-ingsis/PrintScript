@@ -1,10 +1,10 @@
 package command.format
 
 import command.Command
+import environment.EnvironmentCreator
 import formatter.Formatter
 import lexer.Lexer
 import parser.Parser
-import position.visitor.EnvironmentCreator
 import rules.FormattingRules
 import utils.FileReader
 import utils.FileWriter

@@ -1,7 +1,7 @@
 package parser.syntactic
 
-import exceptions.InvalidSyntaxException
-import position.Position
+import exception.InvalidSyntaxException
+import token.Position
 import token.Token
 import java.util.*
 

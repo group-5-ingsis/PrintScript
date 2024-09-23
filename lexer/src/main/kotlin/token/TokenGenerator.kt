@@ -1,7 +1,5 @@
 package token
 
-import position.Position
-
 class TokenGenerator(private val version: String = "1.1") {
 
     fun generateToken(

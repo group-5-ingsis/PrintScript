@@ -1,13 +1,3 @@
 plugins {
     id 'printScript.common'
 }
-
-test {
-    minHeapSize = "5m" // initial heap size
-    maxHeapSize = "7m" // maximum heap size
-}
-
-
-dependencies {
-    implementation project(':shared')
-}

@@ -1,13 +1,13 @@
 package command.execute
 
-import Environment
 import command.Command
+import environment.Environment
+import environment.EnvironmentCreator
 import interpreter.Interpreter
 import lexer.Lexer
 import nodes.Expression
 import nodes.StatementType
 import parser.Parser
-import position.visitor.EnvironmentCreator
 import utils.ProgressTracker
 
 class ExecuteCommand(

@@ -1,9 +1,9 @@
 package interpreter
 
-import Environment
+import environment.Environment
 import nodes.StatementType
-import position.visitor.StatementVisitor
-import position.visitor.statementVisitorResult
+import visitor.StatementVisitor
+import visitor.statementVisitorResult
 
 object Interpreter {
 
