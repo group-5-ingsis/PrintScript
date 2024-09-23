@@ -4,23 +4,8 @@ import parser.syntactic.TokenManager
 import parser.syntactic.expressions.ExpressionType
 import token.Token
 
-/**
- * A generic statement parser that uses a list of statement types and their corresponding parsers to determine how to parse tokens.
- *
- * @property nextStatementsList A list of pairs where each pair contains:
- *  - `String`: The expected type of statement as a string (e.g., "DECLARATION", "ASSIGNATION").
- *  - `StatementParser`: The parser that should be used if the token matches the expected statement type.
- */
 class GenericStatementParser(private val nextStatementsList: List<Pair<String, StatementParser>>) : StatementParser {
 
-    /**
-     * Parses a list of tokens and determines which type of statement it represents,
-     * then delegates the parsing to the appropriate `StatementParser` based on the next token.
-     *
-     * @param tokens The list of tokens to be parsed.
-     * @return A `ParseStatementResult` object containing the result of the parsing process.
-     * @throws NoSuchElementException if the token list is empty and no match is found.
-     */
     override fun parse(tokens: List<Token>): ParseStatementResult {
         val manager = TokenManager(tokens)
 
@@ -39,8 +24,8 @@ class GenericStatementParser(private val nextStatementsList: List<Pair<String, S
 
     companion object {
 
-        val expresionEvaluatorV_1 = ExpressionType.makeExpressionEvaluatorV1_0()
-        val expresionEvaluatorV_1_1 = ExpressionType.makeExpressionEvaluatorV1_1()
+        val expressionEvaluatorV_1 = ExpressionType.makeExpressionEvaluator()
+        val expressionEvaluatorV_1_1 = ExpressionType.makeExpressionEvaluator()
 
         fun makeStatementParser(version: String): StatementParser {
             return when (version) {
@@ -50,18 +35,17 @@ class GenericStatementParser(private val nextStatementsList: List<Pair<String, S
             }
         }
 
-        // Cambiar a que cada version use differentes Parsers
         private fun createV1Parser(): StatementParser {
             val statement = GenericStatementParser(
                 listOf(
-                    Pair("PRINT", PrintStatementParser(expresionEvaluatorV_1)),
-                    Pair("", ExpressionStatementParser(expresionEvaluatorV_1))
+                    Pair("PRINT", PrintStatementParser(expressionEvaluatorV_1)),
+                    Pair("", ExpressionStatementParser(expressionEvaluatorV_1))
                 )
             )
 
             val declarationAssignationStatement = GenericStatementParser(
                 listOf(
-                    Pair("DECLARATION_KEYWORD", LetDeclarationParser(expresionEvaluatorV_1)),
+                    Pair("DECLARATION_KEYWORD", LetDeclarationParser(expressionEvaluatorV_1)),
                     Pair("", statement)
                 )
             )
@@ -72,17 +56,17 @@ class GenericStatementParser(private val nextStatementsList: List<Pair<String, S
         private fun createV1_1Parser(): StatementParser {
             val statement = GenericStatementParser(
                 listOf(
-                    Pair("PRINT", PrintStatementParser(expresionEvaluatorV_1_1)),
-                    Pair("IF", IfStatementParser(expresionEvaluatorV_1_1, ::createV1_1Parser)),
+                    Pair("PRINT", PrintStatementParser(expressionEvaluatorV_1_1)),
+                    Pair("IF", IfStatementParser(expressionEvaluatorV_1_1, ::createV1_1Parser)),
                     Pair("LEFT_BRACE", BlockStatementParser(::createV1_1Parser)),
-                    Pair("", ExpressionStatementParser(expresionEvaluatorV_1_1))
+                    Pair("", ExpressionStatementParser(expressionEvaluatorV_1_1))
                 )
             )
 
             val declarationAssignationStatement = GenericStatementParser(
                 listOf(
-                    Pair("LET", LetDeclarationParser(expresionEvaluatorV_1_1)), // Changed keyword for version 1.1
-                    Pair("CONST", ConstDeclarationParser(expresionEvaluatorV_1_1)),
+                    Pair("LET", LetDeclarationParser(expressionEvaluatorV_1_1)),
+                    Pair("CONST", ConstDeclarationParser(expressionEvaluatorV_1_1)),
                     Pair("", statement)
                 )
             )

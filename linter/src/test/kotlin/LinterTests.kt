@@ -1,9 +1,9 @@
 package linter
 
+import environment.EnvironmentCreator
 import lexer.Lexer
 import parser.Parser
-import rules.LinterRulesV1
-import rules.LinterRulesV2
+import rules.LinterRules
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -16,205 +16,317 @@ class LinterTests {
             "let n: number;" +
             "n = 9;" +
             "println(6 + 6);"
-        val tokens = Lexer(input, "1.0")
-        val asts = Parser(tokens, "1.0")
-        val rules = LinterRulesV1("camel-case", false)
 
-        Linter.clearResults()
+        val version = "1.0"
+        val tokens = Lexer(input, version)
+        val asts = Parser(tokens, version)
+        val rules = LinterRules(version, "camel-case", false)
+
+        var errorList: List<LinterResult> = emptyList()
+
+        var currentEnv = EnvironmentCreator.create(System.getenv())
 
         while (asts.hasNext()) {
+            currentEnv = asts.setEnv(currentEnv)
             val statement = asts.next()
-            Linter.lint(statement, rules)
+            val lintResult = Linter.lint(statement, rules, version)
+
+            if (!lintResult.isValid()) {
+                errorList = errorList + lintResult
+            }
+
+            currentEnv = asts.getEnv()
         }
 
-        val linterResults = Linter.getErrors()
-        val numOfErrors = linterResults.size
+        val numOfErrors = errorList.size
         assertEquals(1, numOfErrors)
         assertEquals(
-            "println() statements must receive a literal or identifier, not an expression. At Line 1, symbol 82, got BINARY_EXPRESSION.",
-            linterResults[0].getMessage()
+            "Errors found:\n" + "println() statements must receive a literal or identifier, not an expression. At Line 1, symbol 82, got BINARY_EXPRESSION.",
+            errorList[0].message
         )
     }
 
     @Test
     fun testPrintlnCallValid() {
         val input = "println(6 + 6);"
-        val tokens = Lexer(input, "1.0")
-        val asts = Parser(tokens, "1.0")
-        val rules = LinterRulesV1("camel-case", true)
+        val version = "1.0"
+        val tokens = Lexer(input, version)
+        val asts = Parser(tokens, version)
+        val rules = LinterRules(version, "camel-case", true)
 
-        Linter.clearResults()
+        var errorList: List<LinterResult> = emptyList()
+
+        var currentEnv = EnvironmentCreator.create(System.getenv())
 
         while (asts.hasNext()) {
+            currentEnv = asts.setEnv(currentEnv)
             val statement = asts.next()
-            Linter.lint(statement, rules)
+            val lintResult = Linter.lint(statement, rules, version)
+
+            if (!lintResult.isValid()) {
+                errorList = errorList + lintResult
+            }
+
+            currentEnv = asts.getEnv()
         }
 
-        assertEquals(0, Linter.getErrors().size)
+        assertEquals(0, errorList.size)
     }
 
     @Test
     fun testPrintlnCallValidWithIdentifier() {
         val input = "let a : string = 'hello'; println(a);"
-        val tokens = Lexer(input, "1.0")
-        val asts = Parser(tokens, "1.0")
-        val rules = LinterRulesV1("camel-case", false)
+        val version = "1.0"
+        val tokens = Lexer(input, version)
+        val asts = Parser(tokens, version)
+        val rules = LinterRules(version, "camel-case", false)
 
-        Linter.clearResults()
+        var errorList: List<LinterResult> = emptyList()
+
+        var currentEnv = EnvironmentCreator.create(System.getenv())
 
         while (asts.hasNext()) {
+            currentEnv = asts.setEnv(currentEnv)
             val statement = asts.next()
-            Linter.lint(statement, rules)
+            val lintResult = Linter.lint(statement, rules, version)
+
+            if (!lintResult.isValid()) {
+                errorList = errorList + lintResult
+            }
+
+            currentEnv = asts.getEnv()
         }
 
-        assertEquals(0, Linter.getErrors().size)
+        assertEquals(0, errorList.size)
     }
 
     @Test
     fun testDeclarationOffValid() {
         val input = "let aA : string = 'hello'; let a_b : string = 'hello';"
-        val tokens = Lexer(input, "1.0")
-        val asts = Parser(tokens, "1.0")
-        val rules = LinterRulesV1("off", false)
+        val version = "1.0"
+        val tokens = Lexer(input, version)
+        val asts = Parser(tokens, version)
+        val rules = LinterRules(version, "off", false)
 
-        Linter.clearResults()
+        var errorList: List<LinterResult> = emptyList()
+
+        var currentEnv = EnvironmentCreator.create(System.getenv())
 
         while (asts.hasNext()) {
+            currentEnv = asts.setEnv(currentEnv)
             val statement = asts.next()
-            Linter.lint(statement, rules)
+            val lintResult = Linter.lint(statement, rules, version)
+
+            if (!lintResult.isValid()) {
+                errorList = errorList + lintResult
+            }
+
+            currentEnv = asts.getEnv()
         }
 
-        assertEquals(0, Linter.getErrors().size)
+        assertEquals(0, errorList.size)
     }
 
     @Test
     fun testDeclarationSnake_CaseInvalid() {
         val input = "let aA : string = 'hello'; let a_b : string = 'hello';"
-        val tokens = Lexer(input, "1.0")
-        val asts = Parser(tokens, "1.0")
-        val rules = LinterRulesV1("snake-case", false)
+        val version = "1.0"
+        val tokens = Lexer(input, version)
+        val asts = Parser(tokens, version)
+        val rules = LinterRules(version, "snake-case", false)
 
-        Linter.clearResults()
+        var errorList: List<LinterResult> = emptyList()
+
+        var currentEnv = EnvironmentCreator.create(System.getenv())
 
         while (asts.hasNext()) {
+            currentEnv = asts.setEnv(currentEnv)
             val statement = asts.next()
-            Linter.lint(statement, rules)
+            val lintResult = Linter.lint(statement, rules, version)
+
+            if (!lintResult.isValid()) {
+                errorList = errorList + lintResult
+            }
+
+            currentEnv = asts.getEnv()
         }
 
-        assertEquals(1, Linter.getErrors().size)
+        assertEquals(1, errorList.size)
         assertEquals(
-            "Variable names must be in snake_case at Line 1, symbol 5, got aA.",
-            Linter.getErrors()[0].getMessage()
+            "Errors found:\n" + "Variable names must be in snake_case at Line 1, symbol 5, got aA.",
+            errorList[0].message
         )
     }
 
     @Test
     fun testDeclarationSnake_CaseValid() {
         val input = "let a_b : string = 'hello';"
-        val tokens = Lexer(input, "1.0")
-        val asts = Parser(tokens, "1.0")
-        val rules = LinterRulesV1("snake-case", true)
+        val version = "1.0"
+        val tokens = Lexer(input, version)
+        val asts = Parser(tokens, version)
+        val rules = LinterRules(version, "snake-case", true)
 
-        Linter.clearResults()
+        var errorList: List<LinterResult> = emptyList()
+
+        var currentEnv = EnvironmentCreator.create(System.getenv())
 
         while (asts.hasNext()) {
+            currentEnv = asts.setEnv(currentEnv)
             val statement = asts.next()
-            Linter.lint(statement, rules)
+            val lintResult = Linter.lint(statement, rules, version)
+
+            if (!lintResult.isValid()) {
+                errorList = errorList + lintResult
+            }
+
+            currentEnv = asts.getEnv()
         }
 
-        assertEquals(0, Linter.getErrors().size)
+        assertEquals(0, errorList.size)
     }
 
     @Test
     fun testDeclarationCamelCaseValid() {
         val input = "let aA : string = 'hello';"
-        val tokens = Lexer(input, "1.0")
-        val asts = Parser(tokens, "1.0")
-        val rules = LinterRulesV1("camel-case", true)
+        val version = "1.0"
+        val tokens = Lexer(input, version)
+        val asts = Parser(tokens, version)
+        val rules = LinterRules(version, "camel-case", true)
 
-        Linter.clearResults()
+        var errorList: List<LinterResult> = emptyList()
+
+        var currentEnv = EnvironmentCreator.create(System.getenv())
 
         while (asts.hasNext()) {
+            currentEnv = asts.setEnv(currentEnv)
             val statement = asts.next()
-            Linter.lint(statement, rules)
+            val lintResult = Linter.lint(statement, rules, version)
+
+            if (!lintResult.isValid()) {
+                errorList = errorList + lintResult
+            }
+
+            currentEnv = asts.getEnv()
         }
 
-        assertEquals(0, Linter.getErrors().size)
+        assertEquals(0, errorList.size)
     }
 
     @Test
     fun testDeclarationCamelCaseInvalid() {
         val input = "let aA : string = 'hello'; let a_b : string = 'hello';"
-        val tokens = Lexer(input, "1.0")
-        val asts = Parser(tokens, "1.0")
-        val rules = LinterRulesV1("camel-case", false)
+        val version = "1.0"
+        val tokens = Lexer(input, version)
+        val asts = Parser(tokens, version)
+        val rules = LinterRules(version, "camel-case", false)
 
-        Linter.clearResults()
+        var errorList: List<LinterResult> = emptyList()
+
+        var currentEnv = EnvironmentCreator.create(System.getenv())
 
         while (asts.hasNext()) {
+            currentEnv = asts.setEnv(currentEnv)
             val statement = asts.next()
-            Linter.lint(statement, rules)
+            val lintResult = Linter.lint(statement, rules, version)
+
+            if (!lintResult.isValid()) {
+                errorList = errorList + lintResult
+            }
+
+            currentEnv = asts.getEnv()
         }
 
-        assertEquals(1, Linter.getErrors().size)
+        assertEquals(1, errorList.size)
         assertEquals(
-            "Variable names must be in camelCase at Line 1, symbol 32, got a_b.",
-            Linter.getErrors()[0].getMessage()
+            "Errors found:\n" +
+                "Variable names must be in camelCase at Line 1, symbol 32, got a_b.",
+            errorList[0].message
         )
     }
 
     @Test
     fun testBlocks() {
         val input = "let a : boolean = true; if (a) { let c : string = 'hello'; } else { let a_b : string = 'bye'; };"
-        val tokens = Lexer(input, "1.1")
-        val asts = Parser(tokens, "1.1")
-        val rules = LinterRulesV2("camel-case", false)
+        val version = "1.1"
+        val tokens = Lexer(input, version)
+        val asts = Parser(tokens, version)
+        val rules = LinterRules(version, "camel-case", false)
 
-        Linter.clearResults()
+        var errorList: List<LinterResult> = emptyList()
+
+        var currentEnv = EnvironmentCreator.create(System.getenv())
 
         while (asts.hasNext()) {
+            currentEnv = asts.setEnv(currentEnv)
             val statement = asts.next()
-            Linter.lint(statement, rules)
+            val lintResult = Linter.lint(statement, rules, version)
+
+            if (!lintResult.isValid()) {
+                errorList = errorList + lintResult
+            }
+
+            currentEnv = asts.getEnv()
         }
 
-        assertEquals(1, Linter.getErrors().size)
+        assertEquals(1, errorList.size)
     }
 
     @Test
     fun testReadInputCallInvalid() {
         val input = "let input: string = readInput(\"Enter\" + \"something\");"
-        val tokens = Lexer(input, "1.1")
-        val asts = Parser(tokens, "1.1")
-        val rules = LinterRulesV2("camel-case", false, false)
+        val version = "1.1"
+        val tokens = Lexer(input, version)
+        val asts = Parser(tokens, version)
+        val rules = LinterRules(version, "camel-case", false, false)
 
-        Linter.clearResults()
+        var errorList: List<LinterResult> = emptyList()
+
+        var currentEnv = EnvironmentCreator.create(System.getenv())
 
         while (asts.hasNext()) {
+            currentEnv = asts.setEnv(currentEnv)
             val statement = asts.next()
-            Linter.lint(statement, rules)
+            val lintResult = Linter.lint(statement, rules, version)
+
+            if (!lintResult.isValid()) {
+                errorList = errorList + lintResult
+            }
+
+            currentEnv = asts.getEnv()
         }
 
-        assertEquals(1, Linter.getErrors().size)
+        assertEquals(1, errorList.size)
         assertEquals(
-            "readInput() statements must receive a literal or identifier, not an expression. At Line 1, symbol 21, got BINARY_EXPRESSION.",
-            Linter.getErrors()[0].getMessage()
+            "Errors found:\n" +
+                "readInput() statements must receive a literal or identifier, not an expression. At Line 1, symbol 21, got BINARY_EXPRESSION.",
+            errorList[0].message
         )
     }
 
     @Test
     fun testReadInputCallValid() {
         val input = "let salame: string = 'hola'; readInput(6 + 6); readEnv('salame');"
-        val tokens = Lexer(input, "1.1")
-        val asts = Parser(tokens, "1.1")
-        val rules = LinterRulesV2("camel-case", false, true)
+        val version = "1.1"
+        val tokens = Lexer(input, version)
+        val asts = Parser(tokens, version)
+        val rules = LinterRules(version, "camel-case", false, true)
 
-        Linter.clearResults()
+        var errorList: List<LinterResult> = emptyList()
+
+        var currentEnv = EnvironmentCreator.create(System.getenv())
 
         while (asts.hasNext()) {
+            currentEnv = asts.setEnv(currentEnv)
             val statement = asts.next()
-            Linter.lint(statement, rules)
+            val lintResult = Linter.lint(statement, rules, version)
+
+            if (!lintResult.isValid()) {
+                errorList = errorList + lintResult
+            }
+
+            currentEnv = asts.getEnv()
         }
 
-        assertEquals(0, Linter.getErrors().size)
+        assertEquals(0, errorList.size)
     }
 }

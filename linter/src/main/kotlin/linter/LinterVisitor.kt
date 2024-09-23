@@ -2,9 +2,9 @@ package linter
 
 import nodes.Expression
 import nodes.StatementType
-import position.Position
 import position.visitor.Visitor
 import rules.LinterRules
+import token.Position
 
 class LinterVisitor(private val linterRules: LinterRules) : Visitor {
 

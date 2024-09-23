@@ -32,3 +32,27 @@
      * printStmt      → "print" expression ";" ;
      * varDecl        → "let" IDENTIFIER VARIABLE_TYPE ( "=" expression )? ";" ;
      *
+
+
+
+Generic Parser Notes:
+-----
+
+    /**
+     * A generic statement parser that uses a list of statement types and their corresponding parsers to determine how to parse tokens.
+     *
+     * @property nextStatementsList A list of pairs where each pair contains:
+     *  - `String`: The expected type of statement as a string (e.g., "DECLARATION", "ASSIGNATION").
+     *  - `StatementParser`: The parser that should be used if the token matches the expected statement type.
+     */
+
+
+     /**
+      * Parses a list of tokens and determines which type of statement it represents,
+      * then delegates the parsing to the appropriate `StatementParser` based on the next token.
+      *
+      * @param tokens The list of tokens to be parsed.
+      * @return A `ParseStatementResult` object containing the result of the parsing process.
+      * @throws NoSuchElementException if the token list is empty and no match is found.
+      */
+     override fun parse(tokens: List<Token>): ParseStatementResult {

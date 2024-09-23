@@ -1,3 +1,4 @@
+import environment.Environment
 import interpreter.Interpreter
 import lexer.Lexer
 import nodes.Expression
@@ -5,7 +6,7 @@ import nodes.StatementType
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import parser.Parser
-import position.Position
+import token.Position
 
 class InterpreterTest {
 
@@ -367,8 +368,6 @@ class InterpreterTest {
         assertEquals("outside of conditional", outputBuilder.toString().trim())
     }
 
-
-
     private fun createEnvironmentFromMap(envVarsMap: Map<String, String>): Environment {
         var env = Environment()
 
@@ -386,7 +385,6 @@ class InterpreterTest {
 
         return env
     }
-
 
     @Test
     fun testReadEnv() {
@@ -427,7 +425,7 @@ class InterpreterTest {
         while (asts.hasNext()) {
             asts.setEnv(currentEnvironment)
             val statement = asts.next()
-            val result = Interpreter.interpret(statement, version, currentEnvironment,  outputBuilder)
+            val result = Interpreter.interpret(statement, version, currentEnvironment, outputBuilder)
             outputBuilder = result.first
             currentEnvironment = result.second
             asts.setEnv(currentEnvironment)

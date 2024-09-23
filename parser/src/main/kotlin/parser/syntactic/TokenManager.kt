@@ -1,7 +1,7 @@
 package parser.syntactic
 
-import exceptions.InvalidSyntaxException
-import position.Position
+import exception.InvalidSyntaxException
+import token.Position
 import token.Token
 import java.util.*
 
@@ -32,7 +32,7 @@ class TokenManager(tokens: List<Token>) {
      */
     fun advance(): Token {
         if (tokenQueue.isEmpty()) {
-            return lastToken as Token
+            return lastToken
         }
         lastToken = tokenQueue.peek()
         return tokenQueue.poll() ?: throw NoSuchElementException("No more tokens to consume.")

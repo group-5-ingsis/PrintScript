@@ -1,6 +1,6 @@
 package parser
 
-import Environment
+import environment.Environment
 import nodes.StatementType
 import parser.semantic.SemanticParser
 import parser.syntactic.SyntacticParser
@@ -20,15 +20,14 @@ class Parser(
         return lexer.hasNext()
     }
 
-    fun setEnv(env: Environment) {
+    fun setEnv(env: Environment): Environment {
         this.env = env
+        return env
     }
 
     fun getEnv(): Environment {
         return env
     }
-
-
 
     override fun next(): StatementType {
         val mutableListTokensForParse: MutableList<Token> = mutableListOf()
@@ -42,9 +41,11 @@ class Parser(
             }
 
             try {
-                val (stm, tokens) = SyntacticParser.parse(mutableListTokensForParse, version)
+                val (stm, _) = SyntacticParser.parse(mutableListTokensForParse, version)
                 ifChecker()
+
                 env = SemanticParser.validate(stm, env, readInput)
+
                 return stm
             } catch (e: Exception) {
                 if (!lexer.hasNext()) {

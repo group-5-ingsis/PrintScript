@@ -5,70 +5,64 @@ import nodes.Expression
 import parser.syntactic.TokenManager
 import token.Token
 
-class Primary(val version: String) : ExpressionParser {
+class Primary : ExpressionParser {
 
     override fun parse(tokens: List<Token>): ParseResult {
         val tokenMng = TokenManager(tokens)
 
         fun getNextLiteral(): Any {
-            // Only works for strings and numbers
+            // Handles strings and numbers
             val next = tokenMng.advance()
-            return if (next.type == "STRING") {
-                next.value
-            } else {
-                if (next.value.contains('.')) {
-                    next.value.toDouble()
-                } else {
-                    next.value.toInt()
+            return when (next.type) {
+                "STRING" -> next.value
+                else -> {
+                    if (next.value.contains('.')) {
+                        next.value.toDouble()
+                    } else {
+                        next.value.toInt()
+                    }
                 }
             }
         }
 
         val position = tokenMng.getPosition()
-        if (version == "1.1") {
 
-            if (tokenMng.nextTokenMatchesExpectedType("BOOLEAN")) {
+        return when {
+            tokenMng.nextTokenMatchesExpectedType("BOOLEAN") -> {
                 val token = tokenMng.advance()
-                return Pair(tokenMng.getTokens(), Expression.Literal(token.value.toBoolean(), position))
-            } else if (tokenMng.nextTokenMatchesExpectedType("READ_ENV")) {
+                Pair(tokenMng.getTokens(), Expression.Literal(token.value.toBoolean(), position))
+            }
+            tokenMng.nextTokenMatchesExpectedType("NULL") -> {
                 tokenMng.advance()
-                val expressionEvaluator = ExpressionType.makeExpressionEvaluatorV1_1()
+                Pair(tokenMng.getTokens(), Expression.Literal(null, position))
+            }
+            tokenMng.checkTokensAreFromSomeTypes(listOf("NUMBER", "STRING")) -> {
+                val nextLiteral = getNextLiteral()
+                Pair(tokenMng.getTokens(), Expression.Literal(nextLiteral, position))
+            }
+            tokenMng.peek().value == "(" -> {
+                tokenMng.advance()
+                val expressionEvaluator = ExpressionType.makeExpressionEvaluator()
                 val expr = expressionEvaluator.parse(tokenMng.getTokens())
-                return Pair(expr.first, Expression.ReadEnv(position, expr.second as Expression.Grouping))
-            } else if (tokenMng.isType("READ_INPUT")) {
-                val expressionEvaluator = ExpressionType.makeExpressionEvaluatorV1_1()
-
+                val newTK = TokenManager(expr.first)
+                newTK.consumeTokenValue(")")
+                Pair(newTK.getTokens(), Expression.Grouping(expr.second, position))
+            }
+            tokenMng.nextTokenMatchesExpectedType("IDENTIFIER") -> {
+                val idem = tokenMng.advance().value
+                Pair(tokenMng.getTokens(), Expression.Variable(idem, position))
+            }
+            tokenMng.nextTokenMatchesExpectedType("READ_INPUT") -> {
+                val expressionEvaluator = ExpressionType.makeExpressionEvaluator()
                 return expressionEvaluator.parse(tokenMng.getTokens())
             }
-
-        }
-
-
-        if (tokenMng.nextTokenMatchesExpectedType("NULL")) {
-            tokenMng.advance()
-            return Pair(tokenMng.getTokens(), Expression.Literal(null, position))
-        } else if (tokenMng.checkTokensAreFromSomeTypes(listOf("NUMBER", "STRING"))) {
-            val nextLiteral = getNextLiteral()
-            return Pair(tokenMng.getTokens(), Expression.Literal(nextLiteral, position))
-        } else if (tokenMng.peek().value == "(") {
-            tokenMng.advance()
-
-            val expressionEvaluator = if (version == "1.1") {
-                ExpressionType.makeExpressionEvaluatorV1_1()
-            } else {
-                ExpressionType.makeExpressionEvaluatorV1_0()
+            tokenMng.nextTokenMatchesExpectedType("READ_ENV") -> {
+                tokenMng.advance()
+                val expressionEvaluator = ExpressionType.makeExpressionEvaluator()
+                val expr = expressionEvaluator.parse(tokenMng.getTokens())
+                Pair(expr.first, Expression.ReadEnv(position, expr.second as Expression.Grouping))
             }
-
-            val expr = expressionEvaluator.parse(tokenMng.getTokens())
-            val newTK = TokenManager(expr.first)
-            newTK.consumeTokenValue(")")
-            return Pair(newTK.getTokens(), Expression.Grouping(expr.second, position))
-        } else if (tokenMng.nextTokenMatchesExpectedType("IDENTIFIER")) {
-            val idem = tokenMng.advance().value
-            return Pair(tokenMng.getTokens(), Expression.Variable(idem, position))
-
+            else -> throw UnknownExpressionException(tokenMng.peek())
         }
-
-        throw UnknownExpressionException(tokenMng.peek())
     }
 }

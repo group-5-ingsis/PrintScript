@@ -1,19 +1,14 @@
 package cli
 
-import builder.*
-import java.util.Scanner
+import command.CommandBuilder
+import command.analyze.AnalyzeCommandBuilder
+import command.execute.ExecuteCommandBuilder
+import command.format.FormatCommandBuilder
+import command.validate.ValidationCommandBuilder
+import utils.CommandParser
 
 object CommandLineInterface {
-    private val commandBuilders: Map<String, CommandBuilder> = initializeCommandBuilders()
-
-    private fun initializeCommandBuilders(): Map<String, CommandBuilder> {
-        return mapOf(
-            "validate" to ValidationCommandBuilder(),
-            "execute" to ExecuteCommandBuilder(),
-            "format" to FormattingCommandBuilder(),
-            "analyze" to AnalyzeCommandBuilder()
-        )
-    }
+    private val commandBuilders: Map<String, CommandBuilder> = getValidBuilders()
 
     fun execute(command: String): String {
         val file = CommandParser.getFile(command)
@@ -21,33 +16,20 @@ object CommandLineInterface {
         val version = CommandParser.getVersion(command)
         val arguments = CommandParser.getArguments(command)
 
-        val builder = commandBuilders[operation] ?: return "Unknown command: $command"
+        val commandBuilder = commandBuilders[operation] ?: return "Unknown command: $command"
 
-        val cmd = builder.build(file, arguments, version)
-        val result = cmd.execute()
+        val command = commandBuilder.build(file, arguments, version)
+        val result = command.execute()
 
         return result
     }
 
-    @JvmStatic
-    fun main(args: Array<String>) {
-        val scanner = Scanner(System.`in`)
-        println("Welcome to the Command Line Interface. Type your commands below:")
-        println("Format: | mainCommand | file | version | rules(if needed) |")
-
-        while (true) {
-            print("> ")
-            val input = scanner.nextLine().trim()
-
-            if (input.equals("exit", ignoreCase = true)) {
-                println("Exiting...")
-                break
-            }
-
-            val result = execute(input)
-            println(result)
-        }
+    private fun getValidBuilders(): Map<String, CommandBuilder> {
+        return mapOf(
+            "validate" to ValidationCommandBuilder(),
+            "execute" to ExecuteCommandBuilder(),
+            "format" to FormatCommandBuilder(),
+            "analyze" to AnalyzeCommandBuilder()
+        )
     }
 }
-
-// format HelloWorld.ps 1.0 rules.yaml

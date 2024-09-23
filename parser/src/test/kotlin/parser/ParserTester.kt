@@ -1,10 +1,10 @@
 package parser
 
-import exceptions.InvalidSyntaxException
+import exception.InvalidSyntaxException
 import lexer.Lexer
 import nodes.Expression
 import nodes.StatementType
-import position.Position
+import token.Position
 import kotlin.test.*
 
 class ParserTester {

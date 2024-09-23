@@ -8,28 +8,21 @@ class CommandLineInterfaceTest {
     fun `test correct File Validation`() {
         val command = "validate HelloWorld.ps 1.0"
         val result = CommandLineInterface.execute(command)
-        assertEquals(result, "File Validated! (No Errors found)")
+        assertEquals("File Validated! (No Errors found)", result)
     }
 
     @Test
     fun `test correct File Execution`() {
         val command = "execute HelloWorld.ps 1.0"
         val result = CommandLineInterface.execute(command)
-        assertEquals(result, "\nFinished executing HelloWorld.ps")
+        assertEquals("4\nFile Executed!", result)
     }
 
     @Test
     fun `test correct File Formatting`() {
         val command = "format HelloWorld.ps 1.0 rules.yaml"
         val result = CommandLineInterface.execute(command)
-        assertEquals("File formatted successfully", result)
-    }
-
-    @Test
-    fun `test failing File Validagion`() {
-        val command = "validate WrongFile.ps 1.0"
-        val result = CommandLineInterface.execute(command)
-        assertEquals("Validation error: Invalid procedure: Type mismatch: Expected 'number' but found 'string' in variable 'hello'.", result)
+        assertEquals("HelloWorld.ps formatted successfully", result)
     }
 
     @Test
@@ -40,9 +33,16 @@ class CommandLineInterfaceTest {
     }
 
     @Test
+    fun `test failing File Validagion`() {
+        val command = "validate WrongFile.ps 1.0"
+        val result = CommandLineInterface.execute(command)
+        assertEquals("Validation error: Invalid procedure: Type mismatch: Expected 'number' but found 'string' in variable 'hello'.", result)
+    }
+
+    @Test
     fun testReadEnv() {
         val command = "execute readEnvTest.ps 1.1"
         val result = CommandLineInterface.execute(command)
-        assertEquals("\nFinished executing readEnvTest.ps", result)
+        assertEquals("\nFile Executed!", result)
     }
 }

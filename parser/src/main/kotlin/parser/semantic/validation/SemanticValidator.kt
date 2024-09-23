@@ -1,6 +1,6 @@
 package parser.semantic.validation
 
-import Environment
+import environment.Environment
 import nodes.StatementType
 import position.visitor.InputProvider
 

@@ -1,6 +1,6 @@
 package parser
 
-import exceptions.InvalidSyntaxException
+import exception.InvalidSyntaxException
 import lexer.Lexer
 import org.junit.Test
 import kotlin.test.assertFailsWith

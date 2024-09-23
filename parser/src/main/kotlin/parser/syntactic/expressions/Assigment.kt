@@ -1,6 +1,6 @@
 package parser.syntactic.expressions
 
-import exceptions.InvalidSyntaxException
+import exception.InvalidSyntaxException
 import nodes.Expression
 import parser.syntactic.TokenManager
 import token.Token

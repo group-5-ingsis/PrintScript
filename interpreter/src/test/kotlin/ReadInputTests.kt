@@ -1,4 +1,4 @@
-import exception.SemanticErrorException
+
 import interpreter.Interpreter
 import lexer.Lexer
 import nodes.Expression
@@ -8,12 +8,10 @@ import org.junit.Assert.assertThrows
 import org.junit.Test
 import parser.Parser
 import position.Position
-import position.visitor.InputProvider
 import position.visitor.PrintScriptInputProvider
 
 class ReadInputTests {
     val version = "1.1"
-
 
     @Test
     fun testReadInput() {
@@ -29,8 +27,6 @@ class ReadInputTests {
 
         val ast1 = asts.next()
         val ast2 = asts.next()
-
-
 
         val result1 = Interpreter.interpret(ast1, version, currentEnvironment, outputBuilder, inputProvider)
         currentEnvironment = result1.second
@@ -48,7 +44,7 @@ class ReadInputTests {
         const firstName: string = readInput("First Name:");
         const lastName: string = readInput("Last Name:");
         println("Welcome " + firstName + " " + lastName + "!");
-    """.trimIndent()
+        """.trimIndent()
         val inputs = mapOf("First Name:" to "John", "Last Name:" to "Doe")
 
         val tokens = Lexer(fileContents, version)
@@ -68,7 +64,6 @@ class ReadInputTests {
         assertEquals("Welcome John Doe!", outputBuilder.toString())
     }
 
-
     @Test
     fun testReadInputTypeMismatch() {
         val fileContents = "const age: number = readInput(\"Age:\"); println(age);"
@@ -80,8 +75,6 @@ class ReadInputTests {
 
         var outputBuilder = StringBuilder()
         var currentEnvironment = createEnvironmentFromMap(System.getenv())
-
-
 
         val exception = assertThrows(IllegalArgumentException::class.java) {
             val ast = asts.next()
@@ -98,7 +91,7 @@ class ReadInputTests {
         } else {
             println("Cancelled");
         }
-    """.trimIndent()
+        """.trimIndent()
         val input = "true"
 
         val tokens = Lexer(fileContents, version)
@@ -117,6 +110,7 @@ class ReadInputTests {
 
         assertEquals("Proceeding...", outputBuilder.toString())
     }
+
     @Test
     fun testInvalidAssignmentWithReadInput() {
         val fileContents = "const value: number = readInput(\"Enter a string:\");"
@@ -129,14 +123,11 @@ class ReadInputTests {
         var outputBuilder = StringBuilder()
         var currentEnvironment = createEnvironmentFromMap(System.getenv())
 
-
         val exception = assertThrows(IllegalArgumentException::class.java) {
             val ast = asts.next()
             Interpreter.interpret(ast, version, currentEnvironment, outputBuilder, inputProvider)
         }
     }
-
-
 
     @Test
     fun testReadInputWithDifferentDataTypes() {
@@ -145,7 +136,7 @@ class ReadInputTests {
         const numberVal: number = readInput("Enter number:");
         const booleanVal: string = readInput("Enter string again:");
         println(stringVal + "" + numberVal + " and " + booleanVal);
-    """.trimIndent()
+        """.trimIndent()
         val inputs = mapOf(
             "Enter string:" to "The next should be a number and a string: ",
             "Enter number:" to "42",
@@ -168,6 +159,7 @@ class ReadInputTests {
 
         assertEquals("The next should be a number and a string: 42 and true", outputBuilder.toString())
     }
+
     @Test
     fun testReadInputWithVeryLongInput() {
         val fileContents = "const longString: string = readInput(\"Long input:\"); println(longString);"
@@ -194,7 +186,7 @@ class ReadInputTests {
     fun testReadInputWithInlineMathOperations() {
         val fileContents = """
         const result: number = readInput("Enter the first number:") + readInput("Enter the second number:");
-    """.trimIndent()
+        """.trimIndent()
 
         val inputs = mapOf(
             "Enter the first number:" to "10",
@@ -215,7 +207,7 @@ class ReadInputTests {
             outputBuilder = result.first
         }
 
-        val expectedOutput = "Result: 15"  // Resultado esperado de la operación encadenada
+        val expectedOutput = "Result: 15" // Resultado esperado de la operación encadenada
 
         assertEquals(expectedOutput, outputBuilder.toString().trim())
     }

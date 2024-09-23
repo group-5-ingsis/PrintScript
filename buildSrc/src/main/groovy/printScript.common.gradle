@@ -13,10 +13,17 @@ repositories {
     mavenCentral()
 }
 
+java {
+    withJavadocJar()
+    withSourcesJar()
+}
+
 dependencies {
     testImplementation 'org.jetbrains.kotlin:kotlin-test'
     implementation "io.arrow-kt:arrow-core:1.2.4"
 }
+
+
 
 kotlin {
     jvmToolchain {
@@ -24,9 +31,6 @@ kotlin {
     }
 }
 
-ktlint {
-    disabledRules = ['no-wildcard-imports', 'max-line-length']
-}
 
 kover {
     useJacoco()
@@ -49,9 +53,9 @@ koverReport {
     }
 }
 
-java {
-    withJavadocJar()
-    withSourcesJar()
+
+ktlint {
+    disabledRules = ['no-wildcard-imports', 'max-line-length']
 }
 
 publishing {
@@ -72,3 +76,5 @@ publishing {
     }
 
 }
+
+

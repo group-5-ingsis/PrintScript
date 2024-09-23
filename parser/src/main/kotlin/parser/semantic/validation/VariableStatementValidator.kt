@@ -1,10 +1,10 @@
 package parser.semantic.validation
 
-import Environment
+import environment.Environment
 import nodes.Expression
 import nodes.StatementType
-import position.visitor.ExpressionVisitor
 import position.visitor.InputProvider
+import visitor.ExpressionVisitor
 
 class VariableStatementValidator(private val inputProvider: InputProvider) : Validator<StatementType.Variable> {
 
@@ -12,8 +12,6 @@ class VariableStatementValidator(private val inputProvider: InputProvider) : Val
         val expressionVisitor = ExpressionVisitor(inputProvider)
         return expression.acceptVisitor(expressionVisitor, scope)
     }
-
-
 
     override fun validate(node: StatementType, scope: Environment): ValidationResult {
         if (node !is StatementType.Variable) {
@@ -43,8 +41,6 @@ class VariableStatementValidator(private val inputProvider: InputProvider) : Val
         if (node.initializer?.expressionType == "READ_INPUT") {
             return validateReadInput(node, node.initializer as Expression.ReadInput)
         }
-
-
 
         val initializerValue = evaluateExpression(value, varTable)
 
@@ -101,6 +97,4 @@ class VariableStatementValidator(private val inputProvider: InputProvider) : Val
         val initializer = node.initializer
         return initializer != null
     }
-
-
 }

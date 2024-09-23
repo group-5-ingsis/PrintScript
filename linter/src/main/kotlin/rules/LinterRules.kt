@@ -1,9 +1,21 @@
 package rules
 
-// Marker Interface
-interface LinterRules {
-    fun getAsMap(): Map<String, Any>
-    fun getAsJson(): String {
-        return getAsMap().toString()
+data class LinterRules(
+    private val version: String,
+    private val identifierNamingConvention: String = "off",
+    private val printlnExpressionAllowed: Boolean = true,
+    private val readInputExpressionAllowed: Boolean? = null
+) {
+    fun getAsMap(): Map<String, Any> {
+        val rulesMap = mutableMapOf<String, Any>(
+            "identifierNamingConvention" to identifierNamingConvention,
+            "printlnExpressionAllowed" to printlnExpressionAllowed
+        )
+
+        if (version >= "1.1" && readInputExpressionAllowed != null) {
+            rulesMap["readInputExpressionAllowed"] = readInputExpressionAllowed
+        }
+
+        return rulesMap
     }
 }
