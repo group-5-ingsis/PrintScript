@@ -5,8 +5,9 @@ import exception.SemanticErrorException
 import nodes.Expression
 import nodes.StatementType
 import position.visitor.ExpressionVisitor
+import position.visitor.InputProvider
 
-class StatementExpressionValidator(private val input: String?) : Validator<StatementType.StatementExpression> {
+class StatementExpressionValidator(private val inputProvider: InputProvider) : Validator<StatementType.StatementExpression> {
 
     override fun validate(node: StatementType, scope: Environment): ValidationResult {
         if (node !is StatementType.StatementExpression) {
@@ -31,7 +32,7 @@ class StatementExpressionValidator(private val input: String?) : Validator<State
         val valueExpression = exp.value
         /* null check for getting the value is made on Environment. */
         val variableInfo = scope.get(identifier)
-        val actualValue = valueExpression.acceptVisitor(ExpressionVisitor(input), scope)
+        val actualValue = valueExpression.acceptVisitor(ExpressionVisitor(inputProvider), scope)
         val actualType = getTypeInString(actualValue.first)
 
         if (variableInfo.designation == "const") {

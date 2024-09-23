@@ -9,7 +9,7 @@ import position.Position
 
 class InterpreterTest {
 
-    val version = "1.1"
+    private val version = "1.1"
 
     @Test
     fun testDeclarationWithNumber() {
@@ -204,7 +204,6 @@ class InterpreterTest {
         val fileContents = "println(\"First print\"); println(\"Second print\");"
         val tokens = Lexer(fileContents, version)
         val asts = Parser(tokens, version)
-        val input = null
 
         var outputBuilder = StringBuilder()
         var currentEnvironment = createEnvironmentFromMap(System.getenv())
@@ -212,7 +211,7 @@ class InterpreterTest {
         while (asts.hasNext()) {
             asts.setEnv(currentEnvironment)
             val statement = asts.next()
-            val result = Interpreter.interpret(statement, version, currentEnvironment, input, outputBuilder)
+            val result = Interpreter.interpret(statement, version, currentEnvironment, outputBuilder)
             outputBuilder = result.first
             currentEnvironment = result.second
             asts.setEnv(currentEnvironment)
@@ -233,7 +232,7 @@ class InterpreterTest {
         while (asts.hasNext()) {
             asts.setEnv(currentEnvironment)
             val statement = asts.next()
-            val result = Interpreter.interpret(statement, version, currentEnvironment, null, outputBuilder)
+            val result = Interpreter.interpret(statement, version, currentEnvironment, outputBuilder)
             outputBuilder = result.first
             currentEnvironment = result.second
             asts.setEnv(currentEnvironment)
@@ -368,33 +367,7 @@ class InterpreterTest {
         assertEquals("outside of conditional", outputBuilder.toString().trim())
     }
 
-    @Test
-    fun testReadInput() {
-        val fileContents = "const name: string = readInput(\"Name:\"); println(\"Hello \" + name + \"!\");"
-        val input = "world"
 
-        val tokens = Lexer(fileContents, version)
-        val asts = Parser(tokens, version, input)
-
-        var outputBuilder = StringBuilder()
-        var currentEnvironment = createEnvironmentFromMap(System.getenv())
-
-        while (asts.hasNext()) {
-            asts.setEnv(currentEnvironment)
-            val statement = asts.next()
-            if (statement is StatementType.Variable) {
-                if (statement.initializer is Expression.ReadInput) {
-                    print((statement.initializer as Expression.ReadInput).value.expression)
-                }
-            }
-            val result = Interpreter.interpret(statement, version, currentEnvironment, input, outputBuilder)
-            outputBuilder = result.first
-            currentEnvironment = result.second
-            asts.setEnv(currentEnvironment)
-        }
-
-        assertEquals("Hello world!", outputBuilder.toString().trim())
-    }
 
     private fun createEnvironmentFromMap(envVarsMap: Map<String, String>): Environment {
         var env = Environment()
@@ -404,7 +377,7 @@ class InterpreterTest {
                 designation = "const",
                 identifier = key,
                 initializer = Expression.Literal(value, Position(0, 0)),
-                dataType = determineDataType(value),
+                dataType = "string",
                 position = Position(0, 0)
             )
 
@@ -414,9 +387,6 @@ class InterpreterTest {
         return env
     }
 
-    fun determineDataType(value: String): String {
-        return "string"
-    }
 
     @Test
     fun testReadEnv() {
@@ -433,7 +403,7 @@ class InterpreterTest {
         while (asts.hasNext()) {
             asts.setEnv(currentEnvironment)
             val statement = asts.next()
-            val result = Interpreter.interpret(statement, version, currentEnvironment, null, outputBuilder)
+            val result = Interpreter.interpret(statement, version, currentEnvironment, outputBuilder)
             outputBuilder = result.first
             currentEnvironment = result.second
             asts.setEnv(currentEnvironment)
@@ -457,7 +427,7 @@ class InterpreterTest {
         while (asts.hasNext()) {
             asts.setEnv(currentEnvironment)
             val statement = asts.next()
-            val result = Interpreter.interpret(statement, version, currentEnvironment, null, outputBuilder)
+            val result = Interpreter.interpret(statement, version, currentEnvironment,  outputBuilder)
             outputBuilder = result.first
             currentEnvironment = result.second
             asts.setEnv(currentEnvironment)
@@ -517,7 +487,7 @@ class InterpreterTest {
         while (asts.hasNext()) {
             asts.setEnv(currentEnvironment)
             val statement = asts.next()
-            val result = Interpreter.interpret(statement, version, currentEnvironment, null, outputBuilder)
+            val result = Interpreter.interpret(statement, version, currentEnvironment, outputBuilder)
             outputBuilder = result.first
             currentEnvironment = result.second
             asts.setEnv(currentEnvironment)

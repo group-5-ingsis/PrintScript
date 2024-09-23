@@ -1,10 +1,19 @@
 package parser.semantic.validation
 
 import Environment
+import nodes.Expression
 import nodes.StatementType
 import position.visitor.ExpressionVisitor
+import position.visitor.InputProvider
 
-class VariableStatementValidator(private val readInput: String?) : Validator<StatementType.Variable> {
+class VariableStatementValidator(private val inputProvider: InputProvider) : Validator<StatementType.Variable> {
+
+    private fun evaluateExpression(expression: Expression, scope: Environment): Pair<Any?, Environment> {
+        val expressionVisitor = ExpressionVisitor(inputProvider)
+        return expression.acceptVisitor(expressionVisitor, scope)
+    }
+
+
 
     override fun validate(node: StatementType, scope: Environment): ValidationResult {
         if (node !is StatementType.Variable) {
@@ -31,8 +40,13 @@ class VariableStatementValidator(private val readInput: String?) : Validator<Sta
                 "Variable '${node.identifier}' has no value assigned."
             )
 
-        val expressionVisitor = ExpressionVisitor(readInput)
-        val initializerValue = value.acceptVisitor(expressionVisitor, varTable)
+        if (node.initializer?.expressionType == "READ_INPUT") {
+            return validateReadInput(node, node.initializer as Expression.ReadInput)
+        }
+
+
+
+        val initializerValue = evaluateExpression(value, varTable)
 
         val actualType = when (initializerValue.first) {
             is String -> "string"
@@ -70,9 +84,67 @@ class VariableStatementValidator(private val readInput: String?) : Validator<Sta
 
     private fun isAssignDeclaration(node: StatementType.Variable): Boolean {
         val initializer = node.initializer
-        if (initializer?.expressionType == "READ_ENV") {
-        }
-
         return initializer != null
+    }
+
+    private fun validateReadInput(node: StatementType.Variable, readInput: Expression.ReadInput): ValidationResult {
+        val valueOfTheReadInput = evaluateExpression(readInput.value, Environment())
+
+        val actualType = convertToCorrespondingType(valueOfTheReadInput.first, node)
+
+
+        return when {
+            node.dataType == "boolean" && actualType is Boolean -> ValidationResult(false, null, null) // Éxito
+            node.dataType == "number" && actualType is Number -> ValidationResult(false, null, null) // Éxito
+            node.dataType == "string" -> ValidationResult(false, null, null) // Éxito
+            else -> ValidationResult(
+                true,
+                node,
+                "Type mismatch: Expected '${node.dataType}' but found '$actualType' in variable '${node.identifier}'."
+            )
+        }
+    }
+
+
+    private fun convertToCorrespondingType(valueOfTheReadInput: Any?, node: StatementType.Variable): Any? {
+        return when (node.dataType) {
+            "boolean" -> {
+                convertStringToBooleanIfApplicable(valueOfTheReadInput)
+            }
+            "number" -> {
+                convertStringToNumberIfApplicable(valueOfTheReadInput)
+            }
+            "string" -> {
+                valueOfTheReadInput.toString()
+            }
+            else -> {
+                return ValidationResult(
+                    true,
+                    node,
+                    "Type mismatch: Unsupported expected type '${node.dataType}'."
+                )
+            }
+        }
+    }
+
+    private fun convertStringToBooleanIfApplicable(value: Any?): Any? {
+        return when (value) {
+            is String -> when (value) {
+                "true" -> true
+                "false" -> false
+                else -> value // Si no es "true" o "false"
+            }
+            is Boolean -> value
+            else -> value
+        }
+    }
+
+
+    private fun convertStringToNumberIfApplicable(value: Any?): Any? {
+        return when (value) {
+            is String -> value.toDoubleOrNull() ?: value
+            is Number -> value
+            else -> value
+        }
     }
 }

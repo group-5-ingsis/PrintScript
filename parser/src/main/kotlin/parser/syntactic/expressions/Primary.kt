@@ -3,12 +3,11 @@ package parser.syntactic.expressions
 import exception.UnknownExpressionException
 import nodes.Expression
 import parser.syntactic.TokenManager
-import position.nodes.Type
 import token.Token
 
-class PrimaryV1_1() : ExpressionParser {
+class Primary(val version: String) : ExpressionParser {
 
-    override fun parse(tokens: List<Token>, parsedShouldBeOfType: Type): ParseResult {
+    override fun parse(tokens: List<Token>): ParseResult {
         val tokenMng = TokenManager(tokens)
 
         fun getNextLiteral(): Any {
@@ -26,11 +25,20 @@ class PrimaryV1_1() : ExpressionParser {
         }
 
         val position = tokenMng.getPosition()
+        if (version == "1.1") {
 
-        if (tokenMng.nextTokenMatchesExpectedType("BOOLEAN")) {
-            val token = tokenMng.advance()
-            return Pair(tokenMng.getTokens(), Expression.Literal(token.value.toBoolean(), position))
+            if (tokenMng.nextTokenMatchesExpectedType("BOOLEAN")) {
+                val token = tokenMng.advance()
+                return Pair(tokenMng.getTokens(), Expression.Literal(token.value.toBoolean(), position))
+            } else if (tokenMng.nextTokenMatchesExpectedType("READ_ENV")) {
+                tokenMng.advance()
+                val expressionEvaluator = ExpressionType.makeExpressionEvaluatorV1_1()
+                val expr = expressionEvaluator.parse(tokenMng.getTokens())
+                return Pair(expr.first, Expression.ReadEnv(position, expr.second as Expression.Grouping))
+            }
+
         }
+
 
         if (tokenMng.nextTokenMatchesExpectedType("NULL")) {
             tokenMng.advance()
@@ -49,11 +57,6 @@ class PrimaryV1_1() : ExpressionParser {
             val idem = tokenMng.advance().value
             return Pair(tokenMng.getTokens(), Expression.Variable(idem, position))
 
-        } else if (tokenMng.nextTokenMatchesExpectedType("READ_ENV")) {
-            tokenMng.advance()
-            val expressionEvaluator = ExpressionType.makeExpressionEvaluatorV1_1()
-            val expr = expressionEvaluator.parse(tokenMng.getTokens())
-            return Pair(expr.first, Expression.ReadEnv(position, expr.second as Expression.Grouping))
         }
 
         throw UnknownExpressionException(tokenMng.peek())

@@ -2,6 +2,7 @@ package nodes
 
 import Environment
 import position.Position
+import position.nodes.Type
 import position.visitor.ExpressionVisitor
 import position.visitor.Visitor
 import position.visitor.VisitorResultExpressions
@@ -99,7 +100,7 @@ sealed class Expression {
     class ReadInput(
         override val position: Position,
         val value: Grouping,
-        val message: String
+        val valueShouldBeOfType : Type
     ) : Expression() {
         override val expressionType: String = "READ_INPUT"
         override fun acceptVisitor(visitor: ExpressionVisitor, environment: Environment): VisitorResultExpressions {

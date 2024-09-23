@@ -28,20 +28,21 @@ class ExecuteCommand(
             val totalChars = fileContent.length
             var lastProcessedChars = 0
 
-            val output = StringBuilder()
+            var output = StringBuilder()
 
             while (astNodes.hasNext()) {
+                // Execute de code
                 astNodes.setEnv(currentEnv)
                 val statement = astNodes.next()
-                val (outputFragment, updatedEnv) = processStatement(version, statement, astNodes, currentEnv)
-                output.append(outputFragment)
+                val (outputFragment, updatedEnv) = Interpreter.interpret(statement, version, currentEnv, output)
 
+                // re-assign results of execution
+                output = outputFragment
                 currentEnv = updatedEnv
 
+                // update progress bar
                 val processedChars = lexer.getProcessedCharacters()
-
                 ProgressTracker.updateProgress(processedChars, totalChars)
-
                 lastProcessedChars = processedChars
             }
 
@@ -85,33 +86,5 @@ class ExecuteCommand(
         }
     }
 
-    private fun processStatement(
-        version: String,
-        statement: StatementType,
-        astNodes: Parser,
-        currentEnv: Environment
-    ): Pair<StringBuilder, Environment> {
-        var result = Pair(StringBuilder(), currentEnv)
 
-        if (statement is StatementType.Variable) {
-            val initializer = statement.initializer
-            if (initializer is Expression.ReadInput) {
-                val value = initializer.value
-                if (value.expression is Expression.Literal) {
-                    print((value.expression as Expression.Literal).value)
-                    val input = readln()
-                    astNodes.setInput(input)
-                    result = Interpreter.interpret(statement, version, currentEnv, input)
-                } else {
-                    result = Interpreter.interpret(statement, version, currentEnv, null)
-                }
-            } else {
-                result = Interpreter.interpret(statement, version, currentEnv, null)
-            }
-        } else {
-            result = Interpreter.interpret(statement, version, currentEnv, null)
-        }
-
-        return result
-    }
 }

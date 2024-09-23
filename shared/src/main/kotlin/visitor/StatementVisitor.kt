@@ -6,10 +6,10 @@ import nodes.StatementType
 
 typealias statementVisitorResult = Pair<StringBuilder, Environment>
 
-class StatementVisitor(val readInput: String? = null) {
+class StatementVisitor(private val inputProvider: InputProvider = PrintScriptInputProvider()) {
 
-    fun evaluateExpression(expr: Expression, scope: Environment): VisitorResultExpressions {
-        val visitor = ExpressionVisitor(readInput)
+    private fun evaluateExpression(expr: Expression, scope: Environment): VisitorResultExpressions {
+        val visitor = ExpressionVisitor(inputProvider)
         return expr.acceptVisitor(visitor, scope)
     }
 
