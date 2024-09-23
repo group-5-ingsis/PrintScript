@@ -3,6 +3,7 @@ package command.validate
 import command.Command
 import lexer.Lexer
 import parser.Parser
+import utils.EnvironmentCreator
 import utils.FileReader
 import utils.ProgressTracker
 
@@ -27,8 +28,12 @@ class ValidationCommand(private val file: String, private val version: String) :
     private fun validateNodes(astNodes: Parser, lexer: Lexer, totalChars: Int) {
         var processedChars = 0
 
+        var currentEnv = EnvironmentCreator.create(System.getenv())
+
         while (astNodes.hasNext()) {
+            currentEnv = astNodes.setEnv(currentEnv)
             astNodes.next()
+            currentEnv = astNodes.getEnv()
             processedChars = ProgressTracker.updateProgress(lexer, processedChars, totalChars)
         }
 

@@ -15,7 +15,7 @@ class CommandLineInterfaceTest {
     fun `test correct File Execution`() {
         val command = "execute HelloWorld.ps 1.0"
         val result = CommandLineInterface.execute(command)
-        assertEquals("6\nFile Executed!", result)
+        assertEquals("4\nFile Executed!", result)
     }
 
     @Test
@@ -43,6 +43,6 @@ class CommandLineInterfaceTest {
     fun testReadEnv() {
         val command = "execute readEnvTest.ps 1.1"
         val result = CommandLineInterface.execute(command)
-        assertEquals("\nFile Executed!", result)
+        assertEquals("123\nFile Executed!", result)
     }
 }

@@ -47,6 +47,8 @@ class AnalyzeCommand(
                 errorList = errorList + lintResult
             }
 
+            currentEnv = astNodes.getEnv()
+
             processedChars = ProgressTracker.updateProgress(lexer, processedChars, totalChars)
         }
 
