@@ -51,17 +51,6 @@ class TokenManager(tokens: List<Token>) {
     }
 
     /**
-     * Checks if there are more tokens in the queue.
-     * @return True if there are more tokens, false otherwise.
-     */
-
-    /**
-     * Checks if the next token in the queue matches the specified value.
-     * @param value The expected token value.
-     * @return True if the next token matches the value, false otherwise.
-     */
-
-    /**
      * Checks if the next token in the queue matches the specified type.
      * @param type The expected token type.
      * @return True if the next token matches the type, false otherwise.

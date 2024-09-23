@@ -99,12 +99,7 @@ class ExpressionVisitor(private val inputProvider: InputProvider = PrintScriptIn
 
         if (inputText !is String) throw IllegalArgumentException("Input Text must be a string in : " + expr.position.toString())
 
-        var input = inputProvider.input(inputText)
-
-        if (input == null){
-            println(inputText)
-            input = readln()
-        }
+        val input = inputProvider.input(inputText)
 
         val convertedInput: Any = convertInput(expr, input)
 

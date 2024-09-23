@@ -70,6 +70,21 @@ class VariableStatementValidator(private val inputProvider: InputProvider) : Val
         return ValidationResult(false, null, null)
     }
 
+    private fun validateReadInput(node: StatementType.Variable, readInput: Expression.ReadInput): ValidationResult {
+        val readInput = node.initializer as Expression.ReadInput
+        val shouldBeString = readInput.value.expression
+        val result = evaluateExpression(shouldBeString, Environment())
+
+        if (result.first is String) {
+            return ValidationResult(false, null, null)
+        }
+        return ValidationResult(
+            true,
+            node,
+            "Expected a string for readInput but got ${result.first} at: " + node.position.toString()
+        )
+    }
+
     private fun validateDeclaration(node: StatementType.Variable): ValidationResult {
         if (node.designation == "const" && node.initializer == null) {
             return ValidationResult(
@@ -87,68 +102,5 @@ class VariableStatementValidator(private val inputProvider: InputProvider) : Val
         return initializer != null
     }
 
-    private fun validateReadInput(node: StatementType.Variable, readInput: Expression.ReadInput): ValidationResult {
-        val valueOfTheReadInputInput = evaluateExpression(readInput.value, Environment())
-        val valueOfTheReadInput = getValueOfReadInput(node, readInput)
-        val actualType = convertToCorrespondingType(valueOfTheReadInputInput.first, node)
 
-
-        return when {
-            node.dataType == "boolean" && actualType is Boolean -> ValidationResult(false, null, null) // Éxito
-            node.dataType == "number" && actualType is Number -> ValidationResult(false, null, null) // Éxito
-            node.dataType == "string" -> ValidationResult(false, null, null) // Éxito
-            else -> ValidationResult(
-                true,
-                node,
-                "Type mismatch: Expected '${node.dataType}' but found '$actualType' in variable '${node.identifier}'."
-            )
-        }
-    }
-
-    private fun getValueOfReadInput(node: StatementType.Variable, readInput: Expression.ReadInput): Any {
-
-    }
-
-
-    private fun convertToCorrespondingType(valueOfTheReadInput: Any?, node: StatementType.Variable): Any? {
-        return when (node.dataType) {
-            "boolean" -> {
-                convertStringToBooleanIfApplicable(valueOfTheReadInput)
-            }
-            "number" -> {
-                convertStringToNumberIfApplicable(valueOfTheReadInput)
-            }
-            "string" -> {
-                valueOfTheReadInput.toString()
-            }
-            else -> {
-                return ValidationResult(
-                    true,
-                    node,
-                    "Type mismatch: Unsupported expected type '${node.dataType}'."
-                )
-            }
-        }
-    }
-
-    private fun convertStringToBooleanIfApplicable(value: Any?): Any? {
-        return when (value) {
-            is String -> when (value) {
-                "true" -> true
-                "false" -> false
-                else -> value // Si no es "true" o "false"
-            }
-            is Boolean -> value
-            else -> value
-        }
-    }
-
-
-    private fun convertStringToNumberIfApplicable(value: Any?): Any? {
-        return when (value) {
-            is String -> value.toDoubleOrNull() ?: value
-            is Number -> value
-            else -> value
-        }
-    }
 }

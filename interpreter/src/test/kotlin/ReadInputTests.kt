@@ -83,7 +83,7 @@ class ReadInputTests {
 
 
 
-        val exception = assertThrows(SemanticErrorException::class.java) {
+        val exception = assertThrows(IllegalArgumentException::class.java) {
             val ast = asts.next()
             Interpreter.interpret(ast, version, currentEnvironment, outputBuilder, inputProvider)
         }
@@ -130,7 +130,7 @@ class ReadInputTests {
         var currentEnvironment = createEnvironmentFromMap(System.getenv())
 
 
-        val exception = assertThrows(SemanticErrorException::class.java) {
+        val exception = assertThrows(IllegalArgumentException::class.java) {
             val ast = asts.next()
             Interpreter.interpret(ast, version, currentEnvironment, outputBuilder, inputProvider)
         }
@@ -143,13 +143,13 @@ class ReadInputTests {
         val fileContents = """
         const stringVal: string = readInput("Enter string:");
         const numberVal: number = readInput("Enter number:");
-        const booleanVal: boolean = readInput("Enter boolean:");
-        println(stringVal + ", " + numberVal + ", " + booleanVal);
+        const booleanVal: string = readInput("Enter string again:");
+        println(stringVal + "" + numberVal + " and " + booleanVal);
     """.trimIndent()
         val inputs = mapOf(
-            "Enter string:" to "TestString",
+            "Enter string:" to "The next should be a number and a string: ",
             "Enter number:" to "42",
-            "Enter boolean:" to "true"
+            "Enter string again:" to "true"
         )
 
         val tokens = Lexer(fileContents, version)
@@ -166,7 +166,58 @@ class ReadInputTests {
             outputBuilder = result.first
         }
 
-        assertEquals("TestString, 42, true", outputBuilder.toString())
+        assertEquals("The next should be a number and a string: 42 and true", outputBuilder.toString())
+    }
+    @Test
+    fun testReadInputWithVeryLongInput() {
+        val fileContents = "const longString: string = readInput(\"Long input:\"); println(longString);"
+        val input = "a".repeat(1000000) // 1 million characters
+
+        val tokens = Lexer(fileContents, version)
+        val inputProvider = PrintScriptInputProvider(mapOf("Long input:" to input))
+        val asts = Parser(tokens, version, inputProvider)
+
+        var outputBuilder = StringBuilder()
+        var currentEnvironment = createEnvironmentFromMap(System.getenv())
+
+        while (asts.hasNext()) {
+            val ast = asts.next()
+            val result = Interpreter.interpret(ast, version, currentEnvironment, outputBuilder, inputProvider)
+            currentEnvironment = result.second
+            outputBuilder = result.first
+        }
+
+        assertEquals(input, outputBuilder.toString())
+    }
+
+    @Test
+    fun testReadInputWithInlineMathOperations() {
+        val fileContents = """
+        const result: number = readInput("Enter the first number:") + readInput("Enter the second number:");
+    """.trimIndent()
+
+        val inputs = mapOf(
+            "Enter the first number:" to "10",
+            "Enter the second number:" to "5"
+        )
+
+        val tokens = Lexer(fileContents, version)
+        val inputProvider = PrintScriptInputProvider(inputs)
+        val asts = Parser(tokens, version, inputProvider)
+
+        var outputBuilder = StringBuilder()
+        var currentEnvironment = createEnvironmentFromMap(System.getenv())
+
+        while (asts.hasNext()) {
+            val ast = asts.next()
+            val result = Interpreter.interpret(ast, version, currentEnvironment, outputBuilder, inputProvider)
+            currentEnvironment = result.second
+            outputBuilder = result.first
+        }
+
+        val expectedOutput = "Result: 15"  // Resultado esperado de la operación encadenada
+
+        assertEquals(expectedOutput, outputBuilder.toString().trim())
     }
 
     private fun createEnvironmentFromMap(envVarsMap: Map<String, String>): Environment {

@@ -1,5 +1,5 @@
 package position.visitor
 
 interface InputProvider {
-    fun input(name: String?): String?
+    fun input(name: String?): String
 }

@@ -35,6 +35,10 @@ class Primary(val version: String) : ExpressionParser {
                 val expressionEvaluator = ExpressionType.makeExpressionEvaluatorV1_1()
                 val expr = expressionEvaluator.parse(tokenMng.getTokens())
                 return Pair(expr.first, Expression.ReadEnv(position, expr.second as Expression.Grouping))
+            } else if (tokenMng.isType("READ_INPUT")) {
+                val expressionEvaluator = ExpressionType.makeExpressionEvaluatorV1_1()
+
+                return expressionEvaluator.parse(tokenMng.getTokens())
             }
 
         }
@@ -48,7 +52,13 @@ class Primary(val version: String) : ExpressionParser {
             return Pair(tokenMng.getTokens(), Expression.Literal(nextLiteral, position))
         } else if (tokenMng.peek().value == "(") {
             tokenMng.advance()
-            val expressionEvaluator = ExpressionType.makeExpressionEvaluatorV1_1()
+
+            val expressionEvaluator = if (version == "1.1") {
+                ExpressionType.makeExpressionEvaluatorV1_1()
+            } else {
+                ExpressionType.makeExpressionEvaluatorV1_0()
+            }
+
             val expr = expressionEvaluator.parse(tokenMng.getTokens())
             val newTK = TokenManager(expr.first)
             newTK.consumeTokenValue(")")
