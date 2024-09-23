@@ -5,17 +5,17 @@ import exception.SemanticErrorException
 import nodes.Statement
 import parser.semantic.validation.SemanticValidator
 import parser.semantic.validation.ValidationResult
-import visitor.StatementVisitor
+import visitor.NodeVisitor
 import java.lang.StringBuilder
 
 object SemanticParser {
 
     @Throws(SemanticErrorException::class)
     fun validate(ast: Statement, environment: Environment, readInput: String?): Environment {
-        val statementVisitor = StatementVisitor(readInput)
+        val statementVisitor = NodeVisitor()
         val stringBuilder = StringBuilder()
 
-        val visitorResult = ast.acceptVisitor(statementVisitor, environment, stringBuilder)
+        val visitorResult = ast.accept(statementVisitor)
         val newEnvironment = visitorResult.second
         val result = runValidators(ast, newEnvironment, readInput)
         if (result.isInvalid) {

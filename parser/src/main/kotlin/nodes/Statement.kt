@@ -14,7 +14,7 @@ sealed class Statement {
         override val statementType: String = "BLOCK_STATEMENT"
 
         override fun <R> accept(visitor: Visitor<R>): R {
-            return visitor.visitBlockStm(this)
+            return visitor.visitBlock(this)
         }
     }
 

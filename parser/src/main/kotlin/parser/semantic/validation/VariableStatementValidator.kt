@@ -2,7 +2,7 @@ package parser.semantic.validation
 
 import environment.Environment
 import nodes.Statement
-import visitor.ExpressionVisitor
+import visitor.NodeVisitor
 
 class VariableStatementValidator(private val readInput: String?) : Validator<Statement.Variable> {
 
@@ -31,8 +31,8 @@ class VariableStatementValidator(private val readInput: String?) : Validator<Sta
                 "Variable '${node.identifier}' has no value assigned."
             )
 
-        val expressionVisitor = ExpressionVisitor(readInput)
-        val initializerValue = value.acceptVisitor(expressionVisitor, varTable)
+        val expressionVisitor = NodeVisitor()
+        val initializerValue = value.accept(expressionVisitor)
 
         val actualType = when (initializerValue.first) {
             is String -> "string"

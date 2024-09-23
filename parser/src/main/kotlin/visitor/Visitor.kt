@@ -5,10 +5,10 @@ import nodes.Statement
 
 interface Visitor<R> {
     fun visitExpression(statement: Statement.StatementExpression): R
-    fun visitVariable(statement: Statement.Variable): R
+    fun visitVariableStatement(statement: Statement.Variable): R
+    fun visitVariableExpression(expression: Expression.Variable): R
     fun visitBlock(statement: Statement.BlockStatement): R
     fun visitIf(statement: Statement.IfStatement): R
-    fun visitVariable(expression: Expression.Variable): R
     fun visitAssign(expression: Expression.Assign): R
     fun visitBinary(expression: Expression.Binary): R
     fun visitGrouping(expression: Expression.Grouping): R

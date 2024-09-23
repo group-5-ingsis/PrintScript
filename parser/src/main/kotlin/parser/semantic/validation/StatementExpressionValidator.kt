@@ -4,7 +4,7 @@ import environment.Environment
 import exception.SemanticErrorException
 import nodes.Expression
 import nodes.Statement
-import visitor.ExpressionVisitor
+import visitor.NodeVisitor
 
 class StatementExpressionValidator(private val input: String?) : Validator<Statement.StatementExpression> {
 
@@ -31,7 +31,7 @@ class StatementExpressionValidator(private val input: String?) : Validator<State
         val valueExpression = exp.value
         /* null check for getting the value is made on Environment. */
         val variableInfo = scope.get(identifier)
-        val actualValue = valueExpression.acceptVisitor(ExpressionVisitor(input), scope)
+        val actualValue = valueExpression.accept(NodeVisitor())
         val actualType = getTypeInString(actualValue.first)
 
         if (variableInfo.designation == "const") {

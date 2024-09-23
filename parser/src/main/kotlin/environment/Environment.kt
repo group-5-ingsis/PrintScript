@@ -2,7 +2,7 @@ package environment
 
 import nodes.Expression
 import nodes.Statement
-import visitor.ExpressionVisitor
+import visitor.NodeVisitor
 
 class Environment(
 
@@ -13,9 +13,9 @@ class Environment(
 
     // Define a new variable in the environment
     fun define(variable: Statement.Variable): Environment {
-        val NewValues = copyAndAdd(variable)
+        val newValues = copyAndAdd(variable)
 
-        return Environment(enclosing, NewValues)
+        return Environment(enclosing, newValues)
     }
 
     // Retrieve the variable's value by name
@@ -31,8 +31,8 @@ class Environment(
         if (initializer == null) {
             return null
         }
-        val expressionVisitor = ExpressionVisitor()
-        val result = initializer.acceptVisitor(expressionVisitor, this)
+        val expressionVisitor = NodeVisitor()
+        val result = initializer.accept(expressionVisitor)
         return result.first
     }
 
@@ -52,9 +52,9 @@ class Environment(
     }
 
     // Method to get the value of a variable using the ExpressionVisitor
-    fun getValue(variableName: String, visitor: ExpressionVisitor): Any? {
+    fun getValue(variableName: String, visitor: NodeVisitor): Any? {
         val variable = get(variableName)
-        return variable.initializer?.let { visitor.evaluateExpression(it, this).first }
+        return variable.initializer?.let { visitor.evaluateExpression(it).first }
     }
 
     // Method to check if the environment contains a variable

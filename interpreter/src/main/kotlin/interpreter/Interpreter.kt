@@ -2,7 +2,7 @@ package interpreter
 
 import environment.Environment
 import nodes.Statement
-import visitor.StatementVisitor
+import visitor.NodeVisitor
 import visitor.statementVisitorResult
 
 object Interpreter {
@@ -14,8 +14,8 @@ object Interpreter {
         readInput: String? = null,
         stringBuilder: StringBuilder = StringBuilder()
     ): statementVisitorResult {
-        val nodeVisitor = StatementVisitor(readInput)
-        val result = statement.acceptVisitor(nodeVisitor, scope, stringBuilder)
+        val nodeVisitor = NodeVisitor()
+        val result = statement.accept(nodeVisitor)
         val printOutput = result.first
         val newScope = result.second
         return Pair(printOutput, newScope)
