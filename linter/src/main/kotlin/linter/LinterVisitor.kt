@@ -1,10 +1,10 @@
 package linter
 
 import nodes.Expression
-import nodes.StatementType
-import position.visitor.Visitor
+import nodes.Statement
 import rules.LinterRules
 import token.Position
+import visitor.Visitor
 
 class LinterVisitor(private val linterRules: LinterRules) : Visitor {
 
@@ -23,7 +23,7 @@ class LinterVisitor(private val linterRules: LinterRules) : Visitor {
         return linterResult
     }
 
-    override fun visitPrintStm(statement: StatementType.Print) {
+    override fun visitPrintStm(statement: Statement.Print) {
         val expression = statement.value.expression
         val position = statement.position
         val expressionType = expression.expressionType
@@ -44,7 +44,7 @@ class LinterVisitor(private val linterRules: LinterRules) : Visitor {
         linterResult = LinterResult(true, "No errors found at $position")
     }
 
-    override fun visitExpressionStm(statement: StatementType.StatementExpression) {
+    override fun visitExpressionStm(statement: Statement.StatementExpression) {
         if (statement.value.expressionType == "READ_INPUT") {
             statement.value.accept(this)
         } else {
@@ -53,7 +53,7 @@ class LinterVisitor(private val linterRules: LinterRules) : Visitor {
         }
     }
 
-    override fun visitVariableStm(statement: StatementType.Variable) {
+    override fun visitVariableStm(statement: Statement.Variable) {
         val identifier: String = statement.identifier
         val position: Position = statement.position
         when (rulesMap["identifierNamingConvention"]) {
@@ -90,13 +90,13 @@ class LinterVisitor(private val linterRules: LinterRules) : Visitor {
         }
     }
 
-    override fun visitBlockStm(statement: StatementType.BlockStatement) {
+    override fun visitBlockStm(statement: Statement.BlockStatement) {
         statement.listStm.forEach() {
             it.accept(this)
         }
     }
 
-    override fun visitIfStm(statement: StatementType.IfStatement) {
+    override fun visitIfStm(statement: Statement.IfStatement) {
         statement.thenBranch.accept(this)
         if (statement.elseBranch != null) {
             statement.elseBranch!!.accept(this)

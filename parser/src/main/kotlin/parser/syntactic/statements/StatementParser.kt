@@ -1,8 +1,8 @@
 package parser.syntactic.statements
-import nodes.StatementType
+import nodes.Statement
 import token.Token
 
-typealias ParseStatementResult = Pair<List<Token>, StatementType>
+typealias ParseStatementResult = Pair<List<Token>, Statement>
 
 interface StatementParser {
 

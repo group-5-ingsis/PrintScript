@@ -1,6 +1,6 @@
 package parser.syntactic.statements
 
-import nodes.StatementType
+import nodes.Statement
 import parser.syntactic.TokenManager
 import token.Token
 
@@ -8,7 +8,7 @@ class BlockStatementParser(val declarationParser: () -> StatementParser) : State
     override fun parse(tokens: List<Token>): ParseStatementResult {
         val statementParser = declarationParser()
         val position = TokenManager(tokens).getPosition()
-        val statements = mutableListOf<StatementType>()
+        val statements = mutableListOf<Statement>()
         var manager = TokenManager(tokens)
 
         while (!manager.nextTokenMatchesExpectedType("RIGHT_BRACE") && manager.isNotTheEndOfTokens()) {
@@ -17,6 +17,6 @@ class BlockStatementParser(val declarationParser: () -> StatementParser) : State
             statements.add(statement)
         }
         manager.consumeTokenType("RIGHT_BRACE")
-        return Pair(manager.getTokens(), StatementType.BlockStatement(position, statements))
+        return Pair(manager.getTokens(), Statement.BlockStatement(position, statements))
     }
 }

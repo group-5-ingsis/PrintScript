@@ -1,18 +1,21 @@
-package position.visitor
+package visitor
 
-interface Visitor {
-    fun visitPrintStm(statement: nodes.StatementType.Print)
-    fun visitExpressionStm(statement: nodes.StatementType.StatementExpression)
-    fun visitVariableStm(statement: nodes.StatementType.Variable)
-    fun visitBlockStm(statement: nodes.StatementType.BlockStatement)
-    fun visitIfStm(statement: nodes.StatementType.IfStatement)
-    fun visitVariable(expression: nodes.Expression.Variable)
-    fun visitAssign(expression: nodes.Expression.Assign)
-    fun visitBinary(expression: nodes.Expression.Binary)
-    fun visitGrouping(expression: nodes.Expression.Grouping)
-    fun visitLiteral(expression: nodes.Expression.Literal)
-    fun visitUnary(expression: nodes.Expression.Unary)
-    fun visitIdentifier(expression: nodes.Expression.IdentifierExpression)
-    fun visitReadInput(readInput: nodes.Expression.ReadInput) {}
-    fun visitReadEnv(readEnv: nodes.Expression.ReadEnv) {}
+import nodes.Expression
+import nodes.Statement
+
+interface Visitor<R> {
+    fun visitExpression(statement: Statement.StatementExpression): R
+    fun visitVariable(statement: Statement.Variable): R
+    fun visitBlock(statement: Statement.BlockStatement): R
+    fun visitIf(statement: Statement.IfStatement): R
+    fun visitVariable(expression: Expression.Variable): R
+    fun visitAssign(expression: Expression.Assign): R
+    fun visitBinary(expression: Expression.Binary): R
+    fun visitGrouping(expression: Expression.Grouping): R
+    fun visitLiteral(expression: Expression.Literal): R
+    fun visitUnary(expression: Expression.Unary): R
+    fun visitIdentifier(expression: Expression.IdentifierExpression): R
+    fun visitPrint(statement: Statement.Print): R
+    fun visitReadInput(expression: Expression.ReadInput): R
+    fun visitReadEnv(expression: Expression.ReadEnv): R
 }

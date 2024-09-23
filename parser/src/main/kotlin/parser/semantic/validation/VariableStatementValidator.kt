@@ -1,13 +1,13 @@
 package parser.semantic.validation
 
 import environment.Environment
-import nodes.StatementType
+import nodes.Statement
 import visitor.ExpressionVisitor
 
-class VariableStatementValidator(private val readInput: String?) : Validator<StatementType.Variable> {
+class VariableStatementValidator(private val readInput: String?) : Validator<Statement.Variable> {
 
-    override fun validate(node: StatementType, scope: Environment): ValidationResult {
-        if (node !is StatementType.Variable) {
+    override fun validate(node: Statement, scope: Environment): ValidationResult {
+        if (node !is Statement.Variable) {
             return ValidationResult(
                 true,
                 null,
@@ -22,7 +22,7 @@ class VariableStatementValidator(private val readInput: String?) : Validator<Sta
         return validateDeclaration(node)
     }
 
-    private fun validateAssignDeclaration(node: StatementType.Variable, varTable: Environment): ValidationResult {
+    private fun validateAssignDeclaration(node: Statement.Variable, varTable: Environment): ValidationResult {
         val expectedType = node.dataType
         val value = node.initializer
             ?: return ValidationResult(
@@ -56,7 +56,7 @@ class VariableStatementValidator(private val readInput: String?) : Validator<Sta
         return ValidationResult(false, null, null)
     }
 
-    private fun validateDeclaration(node: StatementType.Variable): ValidationResult {
+    private fun validateDeclaration(node: Statement.Variable): ValidationResult {
         if (node.designation == "const" && node.initializer == null) {
             return ValidationResult(
                 true,
@@ -68,7 +68,7 @@ class VariableStatementValidator(private val readInput: String?) : Validator<Sta
         return ValidationResult(false, null, null)
     }
 
-    private fun isAssignDeclaration(node: StatementType.Variable): Boolean {
+    private fun isAssignDeclaration(node: Statement.Variable): Boolean {
         val initializer = node.initializer
         if (initializer?.expressionType == "READ_ENV") {
         }

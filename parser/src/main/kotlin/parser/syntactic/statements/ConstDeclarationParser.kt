@@ -2,7 +2,7 @@ package parser.syntactic.statements
 
 import exception.SemanticErrorException
 import nodes.Expression
-import nodes.StatementType
+import nodes.Statement
 import parser.syntactic.TokenManager
 import parser.syntactic.expressions.ExpressionType
 import token.Token
@@ -30,6 +30,6 @@ class ConstDeclarationParser(private val expressionEvaluator: ExpressionType) : 
 
         manager.consumeTokenValue(";")
 
-        return Pair(manager.getTokens(), StatementType.Variable("const", identifier.value, initializer, dataType, position))
+        return Pair(manager.getTokens(), Statement.Variable("const", identifier.value, initializer, dataType, position))
     }
 }

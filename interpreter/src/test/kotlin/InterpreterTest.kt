@@ -2,7 +2,7 @@ import environment.Environment
 import interpreter.Interpreter
 import lexer.Lexer
 import nodes.Expression
-import nodes.StatementType
+import nodes.Statement
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import parser.Parser
@@ -383,7 +383,7 @@ class InterpreterTest {
         while (asts.hasNext()) {
             asts.setEnv(currentEnvironment)
             val statement = asts.next()
-            if (statement is StatementType.Variable) {
+            if (statement is Statement.Variable) {
                 if (statement.initializer is Expression.ReadInput) {
                     print((statement.initializer as Expression.ReadInput).value.expression)
                 }
@@ -401,7 +401,7 @@ class InterpreterTest {
         var env = Environment()
 
         for ((key, value) in envVarsMap) {
-            val variable = StatementType.Variable(
+            val variable = Statement.Variable(
                 designation = "const",
                 identifier = key,
                 initializer = Expression.Literal(value, Position(0, 0)),

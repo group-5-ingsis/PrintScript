@@ -3,7 +3,7 @@ package parser
 import exception.InvalidSyntaxException
 import lexer.Lexer
 import nodes.Expression
-import nodes.StatementType
+import nodes.Statement
 import token.Position
 import kotlin.test.*
 
@@ -23,7 +23,7 @@ class ParserTester {
             Position(1, 20) // Adjusted for actual symbol index
         )
 
-        val expectedNode = StatementType.Variable(
+        val expectedNode = Statement.Variable(
             "let",
             "a",
             expectedAssignment,
@@ -31,7 +31,7 @@ class ParserTester {
             Position(1, 5) // Adjusted for actual symbol index
         )
 
-        val actualNode = ast1 as StatementType.Variable
+        val actualNode = ast1 as Statement.Variable
 
         assertEquals(expectedNode.identifier, actualNode.identifier)
         assertEquals(expectedNode.dataType, actualNode.dataType)
@@ -57,7 +57,7 @@ class ParserTester {
             expectedRightString,
             Position(1, 25)
         )
-        val expectedNode = StatementType.Variable(
+        val expectedNode = Statement.Variable(
             "let",
             "a",
             expectedBinaryOperation,
@@ -65,7 +65,7 @@ class ParserTester {
             Position(1, 1)
         )
 
-        val actualNode = ast1 as StatementType.Variable
+        val actualNode = ast1 as Statement.Variable
 
         assertEquals(expectedNode.identifier, actualNode.identifier)
         assertEquals(expectedNode.dataType, actualNode.dataType)
@@ -91,7 +91,7 @@ class ParserTester {
 
         val ast1 = parser.next()
 
-        val expectedNode = StatementType.Variable(
+        val expectedNode = Statement.Variable(
             "let",
             "a",
             null, // No initializer
@@ -99,7 +99,7 @@ class ParserTester {
             Position(1, 1)
         )
 
-        val actualNode = ast1 as StatementType.Variable
+        val actualNode = ast1 as Statement.Variable
 
         assertEquals(expectedNode.identifier, actualNode.identifier)
         assertEquals(expectedNode.dataType, actualNode.dataType)
@@ -112,7 +112,7 @@ class ParserTester {
         val lexer = Lexer("let x : number = 3; x = 4;", "1.0")
         val parser = Parser(lexer, "1.0")
 
-        val declaration = parser.next() as StatementType.Variable
+        val declaration = parser.next() as Statement.Variable
         assertEquals("x", declaration.identifier)
         assertEquals("number", declaration.dataType)
         assertNotNull(declaration.initializer)
@@ -121,7 +121,7 @@ class ParserTester {
         val initializer = declaration.initializer as Expression.Literal
         assertEquals(3, initializer.value)
 
-        val assignment = parser.next() as StatementType.StatementExpression
+        val assignment = parser.next() as Statement.StatementExpression
         val assignExpr = assignment.value as Expression.Assign
         assertEquals("x", assignExpr.name)
         assertEquals("ASSIGNMENT_EXPRESSION", assignExpr.expressionType)
@@ -148,7 +148,7 @@ class ParserTester {
         val lexer = Lexer("let a: number = 5 + 3 + 4 / (6 + 6); println(a);", "1.0")
         val parser = Parser(lexer, "1.0")
 
-        val firstStatement = parser.next() as StatementType.Variable
+        val firstStatement = parser.next() as Statement.Variable
         assertEquals("a", firstStatement.identifier)
         assertEquals("number", firstStatement.dataType)
         assertEquals("let", firstStatement.designation)
@@ -171,7 +171,7 @@ class ParserTester {
         assertEquals(6, (groupingBinary.right as Expression.Literal).value)
         assertEquals(6, (groupingBinary.left as Expression.Literal).value)
 
-        val secondStatement = parser.next() as StatementType.Print
+        val secondStatement = parser.next() as Statement.Print
         assertEquals("PRINT", secondStatement.statementType)
         assertEquals("a", (secondStatement.value.expression as Expression.Variable).name)
     }
