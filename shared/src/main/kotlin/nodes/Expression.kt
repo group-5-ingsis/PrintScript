@@ -106,7 +106,6 @@ sealed class Expression {
         override fun acceptVisitor(visitor: ExpressionVisitor, environment: Environment): VisitorResultExpressions {
             return visitor.visitReadInput(this, environment)
         }
-
         override fun accept(visitor: Visitor) {
             return visitor.visitReadInput(this)
         }

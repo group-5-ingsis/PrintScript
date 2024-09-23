@@ -117,6 +117,57 @@ class ReadInputTests {
 
         assertEquals("Proceeding...", outputBuilder.toString())
     }
+    @Test
+    fun testInvalidAssignmentWithReadInput() {
+        val fileContents = "const value: number = readInput(\"Enter a string:\");"
+        val input = "hello"
+
+        val tokens = Lexer(fileContents, version)
+        val inputProvider = PrintScriptInputProvider(mapOf("Enter a string:" to input))
+        val asts = Parser(tokens, version, inputProvider)
+
+        var outputBuilder = StringBuilder()
+        var currentEnvironment = createEnvironmentFromMap(System.getenv())
+
+
+        val exception = assertThrows(SemanticErrorException::class.java) {
+            val ast = asts.next()
+            Interpreter.interpret(ast, version, currentEnvironment, outputBuilder, inputProvider)
+        }
+    }
+
+
+
+    @Test
+    fun testReadInputWithDifferentDataTypes() {
+        val fileContents = """
+        const stringVal: string = readInput("Enter string:");
+        const numberVal: number = readInput("Enter number:");
+        const booleanVal: boolean = readInput("Enter boolean:");
+        println(stringVal + ", " + numberVal + ", " + booleanVal);
+    """.trimIndent()
+        val inputs = mapOf(
+            "Enter string:" to "TestString",
+            "Enter number:" to "42",
+            "Enter boolean:" to "true"
+        )
+
+        val tokens = Lexer(fileContents, version)
+        val inputProvider = PrintScriptInputProvider(inputs)
+        val asts = Parser(tokens, version, inputProvider)
+
+        var outputBuilder = StringBuilder()
+        var currentEnvironment = createEnvironmentFromMap(System.getenv())
+
+        while (asts.hasNext()) {
+            val ast = asts.next()
+            val result = Interpreter.interpret(ast, version, currentEnvironment, outputBuilder, inputProvider)
+            currentEnvironment = result.second
+            outputBuilder = result.first
+        }
+
+        assertEquals("TestString, 42, true", outputBuilder.toString())
+    }
 
     private fun createEnvironmentFromMap(envVarsMap: Map<String, String>): Environment {
         var env = Environment()

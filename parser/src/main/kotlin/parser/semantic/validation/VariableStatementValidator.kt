@@ -88,9 +88,9 @@ class VariableStatementValidator(private val inputProvider: InputProvider) : Val
     }
 
     private fun validateReadInput(node: StatementType.Variable, readInput: Expression.ReadInput): ValidationResult {
-        val valueOfTheReadInput = evaluateExpression(readInput.value, Environment())
-
-        val actualType = convertToCorrespondingType(valueOfTheReadInput.first, node)
+        val valueOfTheReadInputInput = evaluateExpression(readInput.value, Environment())
+        val valueOfTheReadInput = getValueOfReadInput(node, readInput)
+        val actualType = convertToCorrespondingType(valueOfTheReadInputInput.first, node)
 
 
         return when {
@@ -103,6 +103,10 @@ class VariableStatementValidator(private val inputProvider: InputProvider) : Val
                 "Type mismatch: Expected '${node.dataType}' but found '$actualType' in variable '${node.identifier}'."
             )
         }
+    }
+
+    private fun getValueOfReadInput(node: StatementType.Variable, readInput: Expression.ReadInput): Any {
+
     }
 
 
