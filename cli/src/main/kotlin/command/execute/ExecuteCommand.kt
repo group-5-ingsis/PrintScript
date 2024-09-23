@@ -9,6 +9,7 @@ import nodes.Expression
 import nodes.StatementType
 import parser.Parser
 import utils.ProgressTracker
+import visitor.PrintScriptInputProvider
 
 class ExecuteCommand(
     private val fileContent: String,
@@ -39,7 +40,7 @@ class ExecuteCommand(
         while (astNodes.hasNext()) {
             currentEnv = astNodes.setEnv(currentEnv)
             val statement = astNodes.next()
-            val (output, updatedEnv) = processStatement(version, statement, astNodes, currentEnv)
+            val (output, updatedEnv) = processStatement(version, statement, currentEnv)
             outputEmitter = outputEmitter.append(output)
             currentEnv = updatedEnv
 
@@ -55,37 +56,34 @@ class ExecuteCommand(
     private fun processStatement(
         version: String,
         statement: StatementType,
-        astNodes: Parser,
         currentEnv: Environment
     ): Pair<StringBuilder, Environment> {
         return when (statement) {
             is StatementType.Variable -> {
                 val initializer = statement.initializer
                 if (initializer is Expression.ReadInput) {
-                    handleReadInput(statement, initializer, astNodes, version, currentEnv)
+                    handleReadInput(statement, initializer, version, currentEnv)
                 } else {
-                    Interpreter.interpret(statement, version, currentEnv, null)
+                    Interpreter.interpret(statement, version, currentEnv)
                 }
             }
-            else -> Interpreter.interpret(statement, version, currentEnv, null)
+            else -> Interpreter.interpret(statement, version, currentEnv)
         }
     }
 
     private fun handleReadInput(
         statement: StatementType.Variable,
         initializer: Expression.ReadInput,
-        astNodes: Parser,
         version: String,
         currentEnv: Environment
     ): Pair<StringBuilder, Environment> {
         val value = initializer.value
         return if (value.expression is Expression.Literal) {
             print((value.expression as Expression.Literal).value)
-            val input = readln()
-            astNodes.setInput(input)
+            val input = PrintScriptInputProvider()
             Interpreter.interpret(statement, version, currentEnv, input)
         } else {
-            Interpreter.interpret(statement, version, currentEnv, null)
+            Interpreter.interpret(statement, version, currentEnv)
         }
     }
 }

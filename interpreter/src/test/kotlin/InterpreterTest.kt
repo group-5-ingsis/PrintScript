@@ -212,7 +212,7 @@ class InterpreterTest {
         while (asts.hasNext()) {
             asts.setEnv(currentEnvironment)
             val statement = asts.next()
-            val result = Interpreter.interpret(statement, version, currentEnvironment, outputBuilder)
+            val result = Interpreter.interpret(statement, version, currentEnvironment)
             outputBuilder = result.first
             currentEnvironment = result.second
             asts.setEnv(currentEnvironment)
@@ -233,7 +233,7 @@ class InterpreterTest {
         while (asts.hasNext()) {
             asts.setEnv(currentEnvironment)
             val statement = asts.next()
-            val result = Interpreter.interpret(statement, version, currentEnvironment, outputBuilder)
+            val result = Interpreter.interpret(statement, version, currentEnvironment)
             outputBuilder = result.first
             currentEnvironment = result.second
             asts.setEnv(currentEnvironment)
@@ -401,7 +401,7 @@ class InterpreterTest {
         while (asts.hasNext()) {
             asts.setEnv(currentEnvironment)
             val statement = asts.next()
-            val result = Interpreter.interpret(statement, version, currentEnvironment, outputBuilder)
+            val result = Interpreter.interpret(statement, version, currentEnvironment)
             outputBuilder = result.first
             currentEnvironment = result.second
             asts.setEnv(currentEnvironment)
@@ -425,7 +425,7 @@ class InterpreterTest {
         while (asts.hasNext()) {
             asts.setEnv(currentEnvironment)
             val statement = asts.next()
-            val result = Interpreter.interpret(statement, version, currentEnvironment, outputBuilder)
+            val result = Interpreter.interpret(statement, version, currentEnvironment)
             outputBuilder = result.first
             currentEnvironment = result.second
             asts.setEnv(currentEnvironment)
@@ -485,7 +485,7 @@ class InterpreterTest {
         while (asts.hasNext()) {
             asts.setEnv(currentEnvironment)
             val statement = asts.next()
-            val result = Interpreter.interpret(statement, version, currentEnvironment, outputBuilder)
+            val result = Interpreter.interpret(statement, version, currentEnvironment)
             outputBuilder = result.first
             currentEnvironment = result.second
             asts.setEnv(currentEnvironment)
