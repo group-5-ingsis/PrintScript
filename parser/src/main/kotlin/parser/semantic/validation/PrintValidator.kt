@@ -2,12 +2,12 @@ package parser.semantic.validation
 
 import environment.Environment
 import nodes.Expression
-import nodes.Statement
+import nodes.StatementType
 
-class PrintValidator : Validator<Statement.Print> {
+class PrintValidator : Validator<StatementType.Print> {
 
-    override fun validate(node: Statement, scope: Environment): ValidationResult {
-        if (node !is Statement.Print) {
+    override fun validate(node: StatementType, scope: Environment): ValidationResult {
+        if (node !is StatementType.Print) {
             return ValidationResult(
                 isInvalid = true,
                 where = null,

@@ -1,11 +1,11 @@
 package linter
 
-import nodes.Statement
+import nodes.StatementType
 import rules.LinterRules
 
 object Linter {
 
-    fun lint(statement: Statement, rules: LinterRules, version: String): LinterResult {
+    fun lint(statement: StatementType, rules: LinterRules, version: String): LinterResult {
         val errors = mutableListOf<LinterResult>()
         val linterVisitor = LinterVisitor(rules)
 

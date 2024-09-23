@@ -1,15 +1,15 @@
 package formatter
 
 import nodes.Expression
-import nodes.Statement
+import nodes.StatementType
+import position.visitor.Visitor
 import rules.FormattingRules
 import rules.RuleApplier
-import visitor.Visitor
 
 class FormatterVisitor(
     private val rules: FormattingRules,
     private val version: String
-) : Visitor<String> {
+) : Visitor {
 
     private val output = StringBuilder()
     private val ruleApplier = RuleApplier(rules)
@@ -19,71 +19,62 @@ class FormatterVisitor(
         return output.toString()
     }
 
-    override fun visitPrint(statement: Statement.Print): String {
+    override fun visitPrintStm(statement: StatementType.Print) {
         appendPrintKeyword()
         statement.value.accept(this)
         output.append(";\n")
         appendNewlines(rules.newlineAfterPrintln)
-        return output.toString()
     }
 
-    override fun visitExpression(statement: Statement.StatementExpression): String {
+    override fun visitExpressionStm(statement: StatementType.StatementExpression) {
         val expression = statement.value
         expression.accept(this)
-        return output.toString()
     }
 
-    override fun visitVariable(statement: Statement.Variable): String {
+    override fun visitVariableStm(statement: StatementType.Variable) {
         appendVariableDeclaration(statement)
         appendVariableInitializer(statement.initializer)
         output.append(";\n")
-        return output.toString()
     }
 
-    private fun appendVariableInitializer(initializer: Expression?): String {
+    private fun appendVariableInitializer(initializer: Expression?) {
         initializer?.accept(this)
-        return output.toString()
     }
 
-    override fun visitBlockStm(statement: Statement.BlockStatement): String {
+    override fun visitBlockStm(statement: StatementType.BlockStatement) {
         if (version >= "1.1") {
             val statements = statement.listStm
             processBlockStatements(statements)
             finalizeBlockIndentation()
         }
-        return output.toString()
     }
 
-    private fun processBlockStatements(statements: List<Statement>): String {
+    private fun processBlockStatements(statements: List<StatementType>) {
         statements.forEach {
             appendIndent()
             it.accept(this)
         }
-        return output.toString()
     }
 
-    private fun finalizeBlockIndentation(): String {
+    private fun finalizeBlockIndentation() {
         currentIndent -= rules.blockIndentation
         appendIndent()
-        return output.toString()
     }
 
-    override fun visitIf(statement: Statement.IfStatement): String {
+    override fun visitIfStm(statement: StatementType.IfStatement) {
         handleIfCondition(statement.condition)
         handleThenBranch(statement.thenBranch)
         handleElseBranch(statement.elseBranch)
-        return output.toString()
     }
 
-    private fun handleIfCondition(condition: Expression): String {
+    private fun handleIfCondition(condition: Expression) {
         output.append("if (")
         condition.accept(this)
         output.append(")")
         appendBracesForCondition()
-        return output.toString()
     }
 
-    private fun appendBracesForCondition(): String {
+    private fun appendBracesForCondition() {
         if (rules.ifBraceSameLine) {
             output.append(" {\n")
         } else {
@@ -92,18 +83,16 @@ class FormatterVisitor(
             output.append("{\n")
         }
         currentIndent += rules.blockIndentation
-        return output.toString()
     }
 
-    private fun handleThenBranch(thenBranch: Statement): String {
+    private fun handleThenBranch(thenBranch: StatementType) {
         thenBranch.accept(this)
         currentIndent -= rules.blockIndentation
         appendIndent()
         output.append("}")
-        return output.toString()
     }
 
-    private fun handleElseBranch(elseBranch: Statement?): String {
+    private fun handleElseBranch(elseBranch: StatementType?) {
         elseBranch?.let {
             output.append(" else")
             appendBracesForCondition()
@@ -114,95 +103,73 @@ class FormatterVisitor(
             output.append("}\n")
         }
         output.append("\n")
-        return output.toString()
     }
 
-    private fun appendPrintKeyword(): String {
+    private fun appendPrintKeyword() {
         val spaceSeparator = if (rules.singleSpaceSeparation) " " else ""
         output.append("println$spaceSeparator")
-        return output.toString()
     }
 
-    private fun appendNewlines(count: Int): String {
+    private fun appendNewlines(count: Int) {
         repeat(count) { output.append("\n") }
-        return output.toString()
     }
 
-    private fun appendVariableDeclaration(statement: Statement.Variable): String {
+    private fun appendVariableDeclaration(statement: StatementType.Variable) {
         val variableKind = statement.designation
         val identifier = statement.identifier
         val dataType = statement.dataType
         val spaceForColons = ruleApplier.applySpaceForColon()
         val spacesAroundAssignment = ruleApplier.applySpacesAroundAssignment()
         output.append("$variableKind $identifier$spaceForColons$dataType$spacesAroundAssignment")
-        return output.toString()
     }
 
-    override fun visitVariable(expression: Expression.Variable): String {
+    override fun visitVariable(expression: Expression.Variable) {
         output.append(expression.name)
-        return output.toString()
     }
 
-    override fun visitAssign(expression: Expression.Assign): String {
+    override fun visitAssign(expression: Expression.Assign) {
         appendAssignment(expression)
         expression.value.accept(this)
         output.append(";\n")
-        return output.toString()
     }
 
-    private fun appendAssignment(expression: Expression.Assign): String {
+    private fun appendAssignment(expression: Expression.Assign) {
         val spaceAroundAssignment = if (rules.spaceAroundAssignment) " " else ""
         output.append("${expression.name}$spaceAroundAssignment=$spaceAroundAssignment")
-        return output.toString()
     }
 
-    override fun visitBinary(expression: Expression.Binary): String {
+    override fun visitBinary(expression: Expression.Binary) {
         expression.left.accept(this)
         appendBinaryOperator(expression)
         expression.right.accept(this)
-        return output.toString()
     }
 
-    private fun appendBinaryOperator(expression: Expression.Binary): String {
+    private fun appendBinaryOperator(expression: Expression.Binary) {
         val spaceAroundOperator = if (rules.spaceAroundAssignment) " " else ""
         output.append("$spaceAroundOperator${expression.operator}$spaceAroundOperator")
-        return output.toString()
     }
 
-    override fun visitGrouping(expression: Expression.Grouping): String {
+    override fun visitGrouping(expression: Expression.Grouping) {
         val spaceSeparator = if (rules.singleSpaceSeparation) " " else ""
         output.append("($spaceSeparator")
         expression.expression.accept(this)
         output.append("$spaceSeparator)")
-        return output.toString()
     }
 
-    override fun visitLiteral(expression: Expression.Literal): String {
+    override fun visitLiteral(expression: Expression.Literal) {
         output.append(if (expression.value is String) "\"${expression.value}\"" else expression.value)
-        return output.toString()
     }
 
-    override fun visitUnary(expression: Expression.Unary): String {
+    override fun visitUnary(expression: Expression.Unary) {
         output.append(expression.operator)
         expression.right.accept(this)
-        return output.toString()
     }
 
-    override fun visitIdentifier(expression: Expression.IdentifierExpression): String {
+    override fun visitIdentifier(expression: Expression.IdentifierExpression) {
         output.append(expression.name)
-        return output.toString()
     }
 
-    override fun visitReadInput(expression: Expression.ReadInput): String {
-        TODO("Not yet implemented")
-    }
-
-    override fun visitReadEnv(expression: Expression.ReadEnv): String {
-        TODO("Not yet implemented")
-    }
-
-    private fun appendIndent(): String {
+    private fun appendIndent() {
         repeat(currentIndent) { output.append(" ") }
-        return output.toString()
     }
 }

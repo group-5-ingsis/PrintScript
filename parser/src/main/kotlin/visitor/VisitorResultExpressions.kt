@@ -1,5 +1,3 @@
-package visitor
+package position.visitor
 
-import environment.Environment
-
-typealias VisitorResultExpressions = Pair<Any?, Environment>
+typealias VisitorResultExpressions = Pair<Any?, environment.Environment>

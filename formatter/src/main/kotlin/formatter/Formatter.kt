@@ -1,12 +1,16 @@
 package formatter
 
-import nodes.Statement
+import nodes.StatementType
 import rules.FormattingRules
 
 object Formatter {
 
-    fun format(statement: Statement, rules: FormattingRules, version: String = "1.1"): String {
+    fun format(statement: StatementType, rules: FormattingRules, version: String = "1.1"): String {
+        val formattedResult = StringBuilder()
         val visitor = FormatterVisitor(rules, version)
-        return statement.accept(visitor)
+        statement.accept(visitor)
+        val formattedOutput = visitor.getFormattedOutput()
+        formattedResult.append(formattedOutput)
+        return formattedResult.toString()
     }
 }

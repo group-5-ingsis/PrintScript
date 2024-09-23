@@ -1,14 +1,14 @@
 package interpreter
 
 import environment.Environment
-import nodes.Statement
+import nodes.StatementType
 import visitor.StatementVisitor
 import visitor.statementVisitorResult
 
 object Interpreter {
 
     fun interpret(
-        statement: Statement,
+        statement: StatementType,
         version: String = "1.1",
         scope: Environment,
         readInput: String? = null,

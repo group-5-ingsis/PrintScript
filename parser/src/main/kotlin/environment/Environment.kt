@@ -1,25 +1,25 @@
 package environment
 
 import nodes.Expression
-import nodes.Statement
+import nodes.StatementType
 import visitor.ExpressionVisitor
 
 class Environment(
 
     val enclosing: Environment? = null,
-    val values: List<Statement.Variable> = listOf()
+    val values: List<StatementType.Variable> = listOf()
 
 ) {
 
     // Define a new variable in the environment
-    fun define(variable: Statement.Variable): Environment {
+    fun define(variable: StatementType.Variable): Environment {
         val NewValues = copyAndAdd(variable)
 
         return Environment(enclosing, NewValues)
     }
 
     // Retrieve the variable's value by name
-    fun get(name: String): Statement.Variable {
+    fun get(name: String): StatementType.Variable {
         val result = values.find { it.identifier == name }
 
         return result ?: enclosing?.get(name) ?: throw Error("Undefined variable: $name")
@@ -41,7 +41,7 @@ class Environment(
         val variable = values.find { it.identifier == name }
 
         if (variable != null) {
-            val newValues = copyAndReplace(Statement.Variable(variable.designation, variable.identifier, value, variable.dataType, variable.position))
+            val newValues = copyAndReplace(StatementType.Variable(variable.designation, variable.identifier, value, variable.dataType, variable.position))
             return Environment(enclosing, newValues)
         }
         if (enclosing != null) {
@@ -62,13 +62,13 @@ class Environment(
         return values.any { it.identifier == varName }
     }
 
-    fun copyAndAdd(variable: Statement.Variable): List<Statement.Variable> {
+    fun copyAndAdd(variable: StatementType.Variable): List<StatementType.Variable> {
         val newList = values.toMutableList()
         newList.add(variable)
         return newList
     }
 
-    fun copyAndReplace(newVariable: Statement.Variable): List<Statement.Variable> {
+    fun copyAndReplace(newVariable: StatementType.Variable): List<StatementType.Variable> {
         return values.map {
             if (it.identifier == newVariable.identifier) {
                 newVariable

@@ -6,7 +6,7 @@ import environment.EnvironmentCreator
 import interpreter.Interpreter
 import lexer.Lexer
 import nodes.Expression
-import nodes.Statement
+import nodes.StatementType
 import parser.Parser
 import utils.ProgressTracker
 
@@ -54,12 +54,12 @@ class ExecuteCommand(
 
     private fun processStatement(
         version: String,
-        statement: Statement,
+        statement: StatementType,
         astNodes: Parser,
         currentEnv: Environment
     ): Pair<StringBuilder, Environment> {
         return when (statement) {
-            is Statement.Variable -> {
+            is StatementType.Variable -> {
                 val initializer = statement.initializer
                 if (initializer is Expression.ReadInput) {
                     handleReadInput(statement, initializer, astNodes, version, currentEnv)
@@ -72,7 +72,7 @@ class ExecuteCommand(
     }
 
     private fun handleReadInput(
-        statement: Statement.Variable,
+        statement: StatementType.Variable,
         initializer: Expression.ReadInput,
         astNodes: Parser,
         version: String,

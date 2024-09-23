@@ -2,22 +2,23 @@ package visitor
 
 import environment.Environment
 import nodes.Expression
-import nodes.Statement
+import nodes.StatementType
+import position.visitor.VisitorResultExpressions
 
-typealias statementVisitorResult = Pair<StringBuilder, Environment>
+typealias statementVisitorResult = Pair<StringBuilder, environment.Environment>
 
 class StatementVisitor(val readInput: String? = null) {
 
-    fun evaluateExpression(expr: Expression): VisitorResultExpressions {
+    fun evaluateExpression(expr: Expression, scope: Environment): VisitorResultExpressions {
         val visitor = ExpressionVisitor(readInput)
-        return expr.accept(visitor)
+        return expr.acceptVisitor(visitor, scope)
     }
 
-    fun visitBlockStm(statement: Statement.BlockStatement, environment: Environment, stringBuilder: StringBuilder): statementVisitorResult {
+    fun visitBlockStm(statement: StatementType.BlockStatement, environment: Environment, stringBuilder: StringBuilder): statementVisitorResult {
         var newEnvironment = Environment(enclosing = environment)
         var stB = StringBuilder(stringBuilder.toString())
         statement.listStm.forEach {
-            val (newStringBuilder, newEnv) = it.accept(this, newEnvironment, stB)
+            val (newStringBuilder, newEnv) = it.acceptVisitor(this, newEnvironment, stringBuilder)
 
             stB = newStringBuilder
             newEnvironment = newEnv
@@ -27,7 +28,7 @@ class StatementVisitor(val readInput: String? = null) {
     }
 
     fun visitIfStm(
-        statement: Statement.IfStatement,
+        statement: StatementType.IfStatement,
         environment: Environment,
         stringBuilder: StringBuilder
     ): statementVisitorResult {
@@ -37,44 +38,46 @@ class StatementVisitor(val readInput: String? = null) {
 
         val booleanValue = when (value) {
             is Boolean -> value
-            else -> throw IllegalArgumentException("Invalid expression for if statement: $value in ${statement.position}, expected boolean or variable")
+            else -> throw IllegalArgumentException("Invalid expression for if statement: $value" + " in " + statement.position.toString() + ", expected boolean or variable")
         }
 
         return if (booleanValue) {
-            statement.thenBranch.accept(this)
+            statement.thenBranch.acceptVisitor(this, newEnvironment, newStringBuilder)
         } else {
-            statement.elseBranch?.accept(this) ?: Pair(newStringBuilder, newEnvironment)
+            statement.elseBranch?.acceptVisitor(this, newEnvironment, newStringBuilder) ?: Pair(newStringBuilder, newEnvironment)
         }
     }
 
     fun visitPrintStm(
-        statement: Statement.Print,
+        statement: StatementType.Print,
         environment: Environment,
         stringBuilder: StringBuilder
     ): statementVisitorResult {
-        val newValue = evaluateExpression(statement.value)
+        val value = statement.value
+        val newValue = evaluateExpression(value, environment)
         val printTarget = newValue.first
 
         val trimmedPrintTarget = printTarget.toString().trim().removeSurrounding("\"", "\"")
 
-        if (stringBuilder.isEmpty()) {
+        if (stringBuilder.toString() == "") {
             return Pair(StringBuilder(trimmedPrintTarget), environment)
         }
 
-        stringBuilder.append("\n$trimmedPrintTarget")
+        stringBuilder.append("\n" + trimmedPrintTarget)
+
         return Pair(stringBuilder, environment)
     }
 
-    fun visitExpressionStm(statement: Statement.StatementExpression, stringBuilder: StringBuilder): statementVisitorResult {
-        val newEnvironment = evaluateExpression(statement.value).second
+    fun visitExpressionStm(statement: StatementType.StatementExpression, environment: Environment, stringBuilder: StringBuilder): statementVisitorResult {
+        val newEnvironment = evaluateExpression(statement.value, environment).second
         return Pair(stringBuilder, newEnvironment)
     }
 
-    fun visitVariableStm(statement: Statement.Variable, environment: Environment, stringBuilder: StringBuilder): statementVisitorResult {
+    fun visitVariableStm(statement: StatementType.Variable, environment: Environment, stringBuilder: StringBuilder): statementVisitorResult {
         val newEnvironment = if (statement.initializer != null) {
-            val (newValue, env) = evaluateExpression(statement.initializer)
+            val (newValue, env) = evaluateExpression(statement.initializer, environment)
             val initializer = Expression.Literal(newValue, statement.position)
-            val newVariable = Statement.Variable(
+            val newVariable = StatementType.Variable(
                 designation = statement.designation,
                 identifier = statement.identifier,
                 initializer = initializer,

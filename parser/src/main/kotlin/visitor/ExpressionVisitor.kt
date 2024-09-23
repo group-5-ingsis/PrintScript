@@ -2,121 +2,125 @@ package visitor
 
 import environment.Environment
 import nodes.Expression
-import nodes.Statement
+import position.visitor.VisitorResultExpressions
 
-class ExpressionVisitor(val readInput: String? = null) : Visitor<VisitorResultExpressions> {
+class ExpressionVisitor(val readInput: String? = null) {
 
-    val environment = Environment()
-
-    fun evaluateExpression(expr: Expression): VisitorResultExpressions {
-        return expr.accept(this)
+    fun evaluateExpression(expr: Expression, environment: Environment): VisitorResultExpressions {
+        return expr.acceptVisitor(this, environment)
     }
 
-    override fun visitLiteral(exp: Expression.Literal): VisitorResultExpressions {
+    fun visitLiteralExp(exp: Expression.Literal, environment: Environment): VisitorResultExpressions {
         return Pair(exp.value, environment)
     }
-
-    override fun visitGrouping(expression: Expression.Grouping): VisitorResultExpressions {
-        return expression.accept(this)
+    fun visitGroupExp(exp: Expression.Grouping, environment: Environment): VisitorResultExpressions {
+        return evaluateExpression(exp.expression, environment)
     }
-
-    override fun visitUnary(expression: Expression.Unary): VisitorResultExpressions {
-        val rightObject = expression.right.accept(this)
-        return when (expression.operator) {
+    fun visitUnaryExpr(exp: Expression.Unary, environment: Environment): Pair<Any?, Environment> {
+        val rightObject = evaluateExpression(exp.right, environment)
+        return when (exp.operator) {
             "-" -> {
-                val result = -convertToDouble(rightObject.first)
+                val result = -convertToDouble(rightObject)
                 Pair(result, environment)
             }
             "!" -> {
-                val result = !isTruthy(rightObject.first)
+                val result = !isTruthy(rightObject)
                 Pair(result, environment)
             }
-            else -> throw IllegalArgumentException("Unsupported types for ${expression.operator} in Unary operation: $rightObject")
+            else -> throw IllegalArgumentException("Unsupported types for ${exp.operator} in Unary operation: $rightObject")
         }
     }
 
-    override fun visitBinary(exp: Expression.Binary): VisitorResultExpressions {
-        val (left, _) = evaluateExpression(exp.left)
-        val (right, rightEnv) = evaluateExpression(exp.right)
+    fun visitBinaryExpr(exp: Expression.Binary, scope: Environment): Pair<Any?, Environment> {
+        val (left, leftScope) = evaluateExpression(exp.left, scope)
+        val (right, rigthScope) = evaluateExpression(exp.right, leftScope)
 
         return when {
-            (left is Number && right is Number) -> BinaryOperator.solveNumberAndNumber(left, right, exp.operator) to rightEnv
-            (left is String && right is String) -> BinaryOperator.solveStringAndString(left, right, exp.operator) to rightEnv
-            (left is String && right is Number) -> BinaryOperator.solveStringAndNumber(left, right, exp.operator) to rightEnv
-            (left is Number && right is String) -> BinaryOperator.solveNumberAndString(left, right, exp.operator) to rightEnv
+            (left is Number && right is Number) -> solveNumberAndNumber(left, right, exp.operator) to rigthScope
+            (left is String && right is String) -> solveStringAndString(left, right, exp.operator) to rigthScope
+            (left is String && right is Number) -> solveStringAndNumber(left, right, exp.operator) to rigthScope
+            (left is Number && right is String) -> solveNumberAndString(left, right, exp.operator) to rigthScope
             else -> throw IllegalArgumentException("Unsupported operand types: ${left!!::class} and ${right!!::class}")
         }
     }
 
-    override fun visitVariable(exp: Expression.Variable): VisitorResultExpressions {
-        val value = environment.getValue(exp.name)
-        return Pair(value, environment)
+    fun solveStringAndString(left: String, right: String, operator: String): String {
+        return when (operator) {
+            "+" -> left + right
+            else -> throw IllegalArgumentException("Unsupported string operation: $operator")
+        }
     }
 
-    override fun visitAssign(exp: Expression.Assign): VisitorResultExpressions {
-        val (value, newScope) = evaluateExpression(exp.value)
-        newScope.assign(exp.name, value as Expression)
-        return Pair(value, newScope)
+    fun solveStringAndNumber(left: String, right: Number, operator: String): String {
+        return when (operator) {
+            "+" -> left.removeSurrounding("\"") + right.toString()
+            else -> throw IllegalArgumentException("Unsupported operation between String and Number: $operator")
+        }
     }
 
-    override fun visitReadInput(expr: Expression.ReadInput): VisitorResultExpressions {
+    fun solveNumberAndString(left: Number, right: String, operator: String): String {
+        return when (operator) {
+            "+" -> left.toString() + right.removeSurrounding("\"")
+            else -> throw IllegalArgumentException("Unsupported operation between Number and String: $operator")
+        }
+    }
+
+    fun solveNumberAndNumber(left: Number, right: Number, operator: String): Number {
+        val leftValue = if (left is Int) left else left.toDouble()
+        val rightValue = if (right is Int) right else right.toDouble()
+
+        return when (operator) {
+            "+" -> if (leftValue is Int && rightValue is Int) leftValue + rightValue else (leftValue.toDouble() + rightValue.toDouble())
+            "-" -> if (leftValue is Int && rightValue is Int) leftValue - rightValue else (leftValue.toDouble() - rightValue.toDouble())
+            "*" -> if (leftValue is Int && rightValue is Int) leftValue * rightValue else (leftValue.toDouble() * rightValue.toDouble())
+            "/" -> if (leftValue is Int && rightValue is Int) leftValue / rightValue else (leftValue.toDouble() / rightValue.toDouble())
+            else -> throw IllegalArgumentException("Unsupported number operation: $operator")
+        }
+    }
+
+    fun visitVariableExp(exp: Expression.Variable, scope: Environment): VisitorResultExpressions {
+        val expressionName = exp.name
+        val name = scope.getValue(expressionName)
+
+        return Pair(name, scope)
+    }
+
+    fun visitAssignExpr(exp: Expression.Assign, scope: Environment): VisitorResultExpressions {
+        val (value, newScope) = evaluateExpression(exp.value, scope)
+        val newScope2 = newScope.assign(exp.name, exp.value)
+        return Pair(value, newScope2)
+    }
+
+    fun visitReadInput(expr: Expression.ReadInput, env: Environment): VisitorResultExpressions {
         val input = readInput
-        return Pair(input.toString().trim(), environment)
+        return Pair(input.toString().trim(), env)
     }
 
-    override fun visitReadEnv(expr: Expression.ReadEnv): VisitorResultExpressions {
-        val keyResult = evaluateExpression(expr.value)
-        val variableName = keyResult.first.toString()
-        val envValue = environment.getValue(variableName)
-        return Pair(envValue, environment)
+    fun visitReadEnv(expr: Expression.ReadEnv, env: Environment): VisitorResultExpressions {
+        val key = expr.value
+
+        val result = evaluateExpression(key.expression, env)
+
+        val variableName = result.first
+        val environment = result.second
+
+        val envValue = environment.getValue(variableName.toString())
+
+        return Pair(envValue, env)
     }
 
-    override fun visitIdentifier(exp: Expression.IdentifierExpression): VisitorResultExpressions {
+    fun visitIdentifierExp(exp: Expression.IdentifierExpression, environment: Environment): VisitorResultExpressions {
         return Pair(exp, environment)
     }
 
-    override fun visitPrint(statement: Statement.Print): VisitorResultExpressions {
-        val (value, _) = evaluateExpression(statement.expression)
-        println(value) // Output the value
-        return Pair(value, environment)
+    private fun checkNumberOperands(operator: String, left: Any, right: Any) {
+        if (left is Number && right is Number) return
+        throw RuntimeException("error in operator: $operator , $left and $right  must be numbers.")
     }
 
-    override fun visitExpression(statement: Statement.StatementExpression): VisitorResultExpressions {
-        return evaluateExpression(statement.expression, environment)
-    }
-
-    override fun visitVariable(statement: Statement.Variable): VisitorResultExpressions {
-        val (value, newScope) = evaluateExpression(statement.initializer, environment)
-        newScope.assign(statement.name, value)
-        return Pair(value, newScope)
-    }
-
-    override fun visitBlock(statement: Statement.BlockStatement): VisitorResultExpressions {
-        var currentEnv = environment
-        for (stm in statement.statements) {
-            val result = evaluateStatement(stm, currentEnv)
-            currentEnv = result.second // Update environment with the result's new scope
-        }
-        return Pair(Unit, currentEnv)
-    }
-
-    override fun visitIf(statement: Statement.IfStatement): VisitorResultExpressions {
-        val conditionValue = evaluateExpression(statement.condition, environment)
-        return if (isTruthy(conditionValue.first)) {
-            evaluateStatement(statement.thenBranch, environment)
-        } else {
-            statement.elseBranch?.let { evaluateStatement(it, environment) } ?: Pair(Unit, environment)
-        }
-    }
-
-    // Implement evaluateStatement if needed
-    private fun evaluateStatement(statement: Statement, environment: Environment): VisitorResultExpressions {
-        return statement.accept(this, environment)
-    }
-
-    private fun isTruthy(value: Any?): Boolean {
-        if (value == null) return false
-        if (value is Boolean) return value
+    private fun isTruthy(thing: Any?): Boolean {
+        if (thing == null) return false
+        if (thing is Boolean) return thing
         return true
     }
 
