@@ -40,7 +40,7 @@ class ExecuteCommand(
         while (astNodes.hasNext()) {
             currentEnv = astNodes.setEnv(currentEnv)
             val statement = astNodes.next()
-            val (outPut, updatedEnv) = Interpreter.interpret(statement, version, currentEnv, outputEmitter, PrintScriptInputProvider())
+            val (outPut, updatedEnv) = Interpreter.interpret(statement, version, currentEnv, PrintScriptInputProvider(), outputEmitter)
             outputEmitter = outPut
             currentEnv = updatedEnv
 
