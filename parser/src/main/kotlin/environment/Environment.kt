@@ -7,15 +7,15 @@ import visitor.ExpressionVisitor
 class Environment(
 
     val enclosing: Environment? = null,
-    val values: List<StatementType.Variable> = listOf()
+    private val values: List<StatementType.Variable> = listOf()
 
 ) {
 
     // Define a new variable in the environment
     fun define(variable: StatementType.Variable): Environment {
-        val NewValues = copyAndAdd(variable)
+        val newValues = copyAndAdd(variable)
 
-        return Environment(enclosing, NewValues)
+        return Environment(enclosing, newValues)
     }
 
     // Retrieve the variable's value by name
@@ -27,10 +27,7 @@ class Environment(
 
     fun getValue(name: String): Any? {
         val variable = get(name)
-        val initializer = variable.initializer
-        if (initializer == null) {
-            return null
-        }
+        val initializer = variable.initializer ?: return null
         val expressionVisitor = ExpressionVisitor()
         val result = initializer.acceptVisitor(expressionVisitor, this)
         return result.first
@@ -62,13 +59,13 @@ class Environment(
         return values.any { it.identifier == varName }
     }
 
-    fun copyAndAdd(variable: StatementType.Variable): List<StatementType.Variable> {
+    private fun copyAndAdd(variable: StatementType.Variable): List<StatementType.Variable> {
         val newList = values.toMutableList()
         newList.add(variable)
         return newList
     }
 
-    fun copyAndReplace(newVariable: StatementType.Variable): List<StatementType.Variable> {
+    private fun copyAndReplace(newVariable: StatementType.Variable): List<StatementType.Variable> {
         return values.map {
             if (it.identifier == newVariable.identifier) {
                 newVariable

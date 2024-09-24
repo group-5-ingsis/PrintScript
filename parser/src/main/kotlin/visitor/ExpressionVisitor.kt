@@ -2,9 +2,11 @@ package visitor
 
 import environment.Environment
 import nodes.Expression
+import position.nodes.Type
 import position.visitor.VisitorResultExpressions
+import token.Position
 
-class ExpressionVisitor(val readInput: String? = null) {
+class ExpressionVisitor(private val inputProvider: InputProvider = PrintScriptInputProvider()) {
 
     fun evaluateExpression(expr: Expression, environment: Environment): VisitorResultExpressions {
         return expr.acceptVisitor(this, environment)
@@ -33,39 +35,39 @@ class ExpressionVisitor(val readInput: String? = null) {
 
     fun visitBinaryExpr(exp: Expression.Binary, scope: Environment): Pair<Any?, Environment> {
         val (left, leftScope) = evaluateExpression(exp.left, scope)
-        val (right, rigthScope) = evaluateExpression(exp.right, leftScope)
+        val (right, rightScope) = evaluateExpression(exp.right, leftScope)
 
         return when {
-            (left is Number && right is Number) -> solveNumberAndNumber(left, right, exp.operator) to rigthScope
-            (left is String && right is String) -> solveStringAndString(left, right, exp.operator) to rigthScope
-            (left is String && right is Number) -> solveStringAndNumber(left, right, exp.operator) to rigthScope
-            (left is Number && right is String) -> solveNumberAndString(left, right, exp.operator) to rigthScope
+            (left is Number && right is Number) -> solveNumberAndNumber(left, right, exp.operator) to rightScope
+            (left is String && right is String) -> solveStringAndString(left, right, exp.operator) to rightScope
+            (left is String && right is Number) -> solveStringAndNumber(left, right, exp.operator) to rightScope
+            (left is Number && right is String) -> solveNumberAndString(left, right, exp.operator) to rightScope
             else -> throw IllegalArgumentException("Unsupported operand types: ${left!!::class} and ${right!!::class}")
         }
     }
 
-    fun solveStringAndString(left: String, right: String, operator: String): String {
+    private fun solveStringAndString(left: String, right: String, operator: String): String {
         return when (operator) {
             "+" -> left + right
             else -> throw IllegalArgumentException("Unsupported string operation: $operator")
         }
     }
 
-    fun solveStringAndNumber(left: String, right: Number, operator: String): String {
+    private fun solveStringAndNumber(left: String, right: Number, operator: String): String {
         return when (operator) {
             "+" -> left.removeSurrounding("\"") + right.toString()
             else -> throw IllegalArgumentException("Unsupported operation between String and Number: $operator")
         }
     }
 
-    fun solveNumberAndString(left: Number, right: String, operator: String): String {
+    private fun solveNumberAndString(left: Number, right: String, operator: String): String {
         return when (operator) {
             "+" -> left.toString() + right.removeSurrounding("\"")
             else -> throw IllegalArgumentException("Unsupported operation between Number and String: $operator")
         }
     }
 
-    fun solveNumberAndNumber(left: Number, right: Number, operator: String): Number {
+    private fun solveNumberAndNumber(left: Number, right: Number, operator: String): Number {
         val leftValue = if (left is Int) left else left.toDouble()
         val rightValue = if (right is Int) right else right.toDouble()
 
@@ -92,30 +94,56 @@ class ExpressionVisitor(val readInput: String? = null) {
     }
 
     fun visitReadInput(expr: Expression.ReadInput, env: Environment): VisitorResultExpressions {
-        val input = readInput
-        return Pair(input.toString().trim(), env)
+        val solved = evaluateExpression(expr.value, env)
+        val env2 = solved.second
+
+        val inputText = solved.first
+
+        if (inputText !is String) throw IllegalArgumentException("Input Text must be a string in : " + expr.position.toString())
+
+        val input = inputProvider.input(inputText)
+
+        val convertedInput: Any = convertInput(expr.valueShouldBeOfType, input, expr.position)
+
+        return Pair(convertedInput, env2)
+    }
+
+    private fun convertInput(type: Type, input: String, position: Position): Any {
+        return when (type) {
+            Type.BOOLEAN -> input.toBooleanStrictOrNull()
+                ?: throw IllegalArgumentException("Expected a Boolean but got: $input at $position")
+
+            Type.NUMBER -> if (input.contains(".")) {
+                input.toDoubleOrNull()
+                    ?: throw IllegalArgumentException("Expected a Number but got: $input at $position")
+            } else {
+                input.toIntOrNull()
+                    ?: throw IllegalArgumentException("Expected an Integer but got: $input at $position")
+            }
+
+            Type.STRING -> input
+
+            Type.ANY -> input
+        }
     }
 
     fun visitReadEnv(expr: Expression.ReadEnv, env: Environment): VisitorResultExpressions {
-        val key = expr.value
+        val solved = evaluateExpression(expr.value, env)
+        val env2 = solved.second
 
-        val result = evaluateExpression(key.expression, env)
+        val variableName = solved.first
 
-        val variableName = result.first
-        val environment = result.second
+        if (variableName !is String) throw IllegalArgumentException("Input Text must be a string in : " + expr.position.toString())
 
-        val envValue = environment.getValue(variableName.toString())
+        val value = env2.getValue(variableName)
 
-        return Pair(envValue, env)
+        val envValue = convertInput(expr.valueShouldBeOfType, value.toString(), expr.position)
+
+        return Pair(envValue, env2)
     }
 
     fun visitIdentifierExp(exp: Expression.IdentifierExpression, environment: Environment): VisitorResultExpressions {
         return Pair(exp, environment)
-    }
-
-    private fun checkNumberOperands(operator: String, left: Any, right: Any) {
-        if (left is Number && right is Number) return
-        throw RuntimeException("error in operator: $operator , $left and $right  must be numbers.")
     }
 
     private fun isTruthy(thing: Any?): Boolean {

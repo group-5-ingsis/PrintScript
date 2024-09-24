@@ -1,9 +1,9 @@
 package nodes
 
 import environment.Environment
-import position.visitor.Visitor
 import token.Position
 import visitor.StatementVisitor
+import visitor.Visitor
 import visitor.statementVisitorResult
 
 sealed class StatementType {

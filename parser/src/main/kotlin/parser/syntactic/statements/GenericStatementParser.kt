@@ -1,7 +1,6 @@
 package parser.syntactic.statements
 
 import parser.syntactic.TokenManager
-import parser.syntactic.expressions.ExpressionType
 import token.Token
 
 class GenericStatementParser(private val nextStatementsList: List<Pair<String, StatementParser>>) : StatementParser {
@@ -24,8 +23,8 @@ class GenericStatementParser(private val nextStatementsList: List<Pair<String, S
 
     companion object {
 
-        val expressionEvaluatorV_1 = ExpressionType.makeExpressionEvaluator()
-        val expressionEvaluatorV_1_1 = ExpressionType.makeExpressionEvaluator()
+        private val expressionEvaluatorV_1 = ExpressionType.makeExpressionEvaluatorV1_0()
+        private val expressionEvaluatorV_1_1 = ExpressionType.makeExpressionEvaluatorV1_1()
 
         fun makeStatementParser(version: String): StatementParser {
             return when (version) {

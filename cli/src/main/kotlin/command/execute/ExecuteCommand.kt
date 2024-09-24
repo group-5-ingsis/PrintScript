@@ -1,14 +1,12 @@
 package command.execute
 
 import command.Command
-import environment.Environment
 import environment.EnvironmentCreator
 import interpreter.Interpreter
 import lexer.Lexer
-import nodes.Expression
-import nodes.StatementType
 import parser.Parser
 import utils.ProgressTracker
+import visitor.PrintScriptInputProvider
 
 class ExecuteCommand(
     private val fileContent: String,
@@ -39,8 +37,8 @@ class ExecuteCommand(
         while (astNodes.hasNext()) {
             currentEnv = astNodes.setEnv(currentEnv)
             val statement = astNodes.next()
-            val (output, updatedEnv) = processStatement(version, statement, astNodes, currentEnv)
-            outputEmitter = outputEmitter.append(output)
+            val (outPut, updatedEnv) = Interpreter.interpret(statement, version, currentEnv, PrintScriptInputProvider())
+            outputEmitter = outPut
             currentEnv = updatedEnv
 
             processedChars = ProgressTracker.updateProgress(lexer, processedChars, totalChars)
@@ -50,42 +48,5 @@ class ExecuteCommand(
 
         val printResult = outputEmitter.toString()
         return "$printResult\nFile Executed!"
-    }
-
-    private fun processStatement(
-        version: String,
-        statement: StatementType,
-        astNodes: Parser,
-        currentEnv: Environment
-    ): Pair<StringBuilder, Environment> {
-        return when (statement) {
-            is StatementType.Variable -> {
-                val initializer = statement.initializer
-                if (initializer is Expression.ReadInput) {
-                    handleReadInput(statement, initializer, astNodes, version, currentEnv)
-                } else {
-                    Interpreter.interpret(statement, version, currentEnv, null)
-                }
-            }
-            else -> Interpreter.interpret(statement, version, currentEnv, null)
-        }
-    }
-
-    private fun handleReadInput(
-        statement: StatementType.Variable,
-        initializer: Expression.ReadInput,
-        astNodes: Parser,
-        version: String,
-        currentEnv: Environment
-    ): Pair<StringBuilder, Environment> {
-        val value = initializer.value
-        return if (value.expression is Expression.Literal) {
-            print((value.expression as Expression.Literal).value)
-            val input = readln()
-            astNodes.setInput(input)
-            Interpreter.interpret(statement, version, currentEnv, input)
-        } else {
-            Interpreter.interpret(statement, version, currentEnv, null)
-        }
     }
 }

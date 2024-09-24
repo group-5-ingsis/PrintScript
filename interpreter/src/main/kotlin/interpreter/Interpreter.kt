@@ -2,6 +2,8 @@ package interpreter
 
 import environment.Environment
 import nodes.StatementType
+import visitor.InputProvider
+import visitor.PrintScriptInputProvider
 import visitor.StatementVisitor
 import visitor.statementVisitorResult
 
@@ -11,11 +13,10 @@ object Interpreter {
         statement: StatementType,
         version: String = "1.1",
         scope: Environment,
-        readInput: String? = null,
-        stringBuilder: StringBuilder = StringBuilder()
+        inputProvider: InputProvider = PrintScriptInputProvider()
     ): statementVisitorResult {
-        val nodeVisitor = StatementVisitor(readInput)
-        val result = statement.acceptVisitor(nodeVisitor, scope, stringBuilder)
+        val nodeVisitor = StatementVisitor(inputProvider)
+        val result = statement.acceptVisitor(nodeVisitor, scope, StringBuilder())
         val printOutput = result.first
         val newScope = result.second
         return Pair(printOutput, newScope)

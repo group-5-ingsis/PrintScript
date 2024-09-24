@@ -1,10 +1,11 @@
 package nodes
 
 import environment.Environment
-import position.visitor.Visitor
+import position.nodes.Type
 import position.visitor.VisitorResultExpressions
 import token.Position
 import visitor.ExpressionVisitor
+import visitor.Visitor
 
 sealed class Expression {
     abstract val expressionType: String
@@ -99,19 +100,22 @@ sealed class Expression {
     class ReadInput(
         override val position: Position,
         val value: Grouping,
-        val message: String
+        val valueShouldBeOfType: Type
     ) : Expression() {
         override val expressionType: String = "READ_INPUT"
         override fun acceptVisitor(visitor: ExpressionVisitor, environment: Environment): VisitorResultExpressions {
             return visitor.visitReadInput(this, environment)
         }
-
         override fun accept(visitor: Visitor) {
             return visitor.visitReadInput(this)
         }
     }
 
-    class ReadEnv(override val position: Position, val value: Grouping) : Expression() {
+    class ReadEnv(
+        override val position: Position,
+        val value: Grouping,
+        val valueShouldBeOfType: Type
+    ) : Expression() {
         override val expressionType: String = "READ_ENV"
         override fun acceptVisitor(visitor: ExpressionVisitor, environment: Environment): VisitorResultExpressions {
             return visitor.visitReadEnv(this, environment)
