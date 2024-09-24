@@ -111,7 +111,11 @@ sealed class Expression {
         }
     }
 
-    class ReadEnv(override val position: Position, val value: Grouping) : Expression() {
+    class ReadEnv(
+        override val position: Position,
+        val value: Grouping,
+        val valueShouldBeOfType: Type
+    ) : Expression() {
         override val expressionType: String = "READ_ENV"
         override fun acceptVisitor(visitor: ExpressionVisitor, environment: Environment): VisitorResultExpressions {
             return visitor.visitReadEnv(this, environment)

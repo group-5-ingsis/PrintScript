@@ -4,6 +4,7 @@ import environment.Environment
 import nodes.Expression
 import position.nodes.Type
 import position.visitor.VisitorResultExpressions
+import token.Position
 
 class ExpressionVisitor(private val inputProvider: InputProvider = PrintScriptInputProvider()) {
 
@@ -102,22 +103,22 @@ class ExpressionVisitor(private val inputProvider: InputProvider = PrintScriptIn
 
         val input = inputProvider.input(inputText)
 
-        val convertedInput: Any = convertInput(expr, input)
+        val convertedInput: Any = convertInput(expr.valueShouldBeOfType, input, expr.position)
 
         return Pair(convertedInput, env2)
     }
 
-    private fun convertInput(exp: Expression.ReadInput, input: String): Any {
-        return when (exp.valueShouldBeOfType) {
+    private fun convertInput(type: Type, input: String, position: Position): Any {
+        return when (type) {
             Type.BOOLEAN -> input.toBooleanStrictOrNull()
-                ?: throw IllegalArgumentException("Expected a Boolean but got: $input at " + exp.position.toString())
+                ?: throw IllegalArgumentException("Expected a Boolean but got: $input at $position")
 
             Type.NUMBER -> if (input.contains(".")) {
                 input.toDoubleOrNull()
-                    ?: throw IllegalArgumentException("Expected a Number but got: $input at " + exp.position.toString())
+                    ?: throw IllegalArgumentException("Expected a Number but got: $input at $position")
             } else {
                 input.toIntOrNull()
-                    ?: throw IllegalArgumentException("Expected an Integer but got: $input at " + exp.position.toString())
+                    ?: throw IllegalArgumentException("Expected an Integer but got: $input at $position")
             }
 
             Type.STRING -> input
@@ -127,15 +128,18 @@ class ExpressionVisitor(private val inputProvider: InputProvider = PrintScriptIn
     }
 
     fun visitReadEnv(expr: Expression.ReadEnv, env: Environment): VisitorResultExpressions {
-        val key = expr.value
-        val result = evaluateExpression(key.expression, env)
+        val solved = evaluateExpression(expr.value, env)
+        val env2 = solved.second
 
-        val variableName = result.first
-        val environment = result.second
+        val variableName = solved.first
 
-        val envValue = environment.getValue(variableName.toString())
+        if (variableName !is String) throw IllegalArgumentException("Input Text must be a string in : " + expr.position.toString())
 
-        return Pair(envValue, env)
+        val value = env2.getValue(variableName)
+
+        val envValue = convertInput(expr.valueShouldBeOfType, value.toString(), expr.position)
+
+        return Pair(envValue, env2)
     }
 
     fun visitIdentifierExp(exp: Expression.IdentifierExpression, environment: Environment): VisitorResultExpressions {

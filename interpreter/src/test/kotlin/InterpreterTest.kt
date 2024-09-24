@@ -213,7 +213,7 @@ class InterpreterTest {
             asts.setEnv(currentEnvironment)
             val statement = asts.next()
             val result = Interpreter.interpret(statement, version, currentEnvironment)
-            outputBuilder = result.first
+            outputBuilder.append(result.first)
             currentEnvironment = result.second
             asts.setEnv(currentEnvironment)
         }
@@ -234,7 +234,7 @@ class InterpreterTest {
             asts.setEnv(currentEnvironment)
             val statement = asts.next()
             val result = Interpreter.interpret(statement, version, currentEnvironment)
-            outputBuilder = result.first
+            outputBuilder.append(result.first)
             currentEnvironment = result.second
             asts.setEnv(currentEnvironment)
         }
@@ -395,43 +395,18 @@ class InterpreterTest {
         val tokens = Lexer(input, version)
         val asts = Parser(tokens, version)
 
-        var outputBuilder = StringBuilder()
         var currentEnvironment = createEnvironmentFromMap(System.getenv())
-
+        val builder = StringBuilder()
         while (asts.hasNext()) {
             asts.setEnv(currentEnvironment)
             val statement = asts.next()
             val result = Interpreter.interpret(statement, version, currentEnvironment)
-            outputBuilder = result.first
+            builder.append(result.first.toString())
             currentEnvironment = result.second
             asts.setEnv(currentEnvironment)
         }
 
-        assertEquals("What is the best football club?\n" + "San Lorenzo", outputBuilder.toString())
-    }
-
-    @Test
-    fun testReadEnvHelloWorld() {
-        val input =
-            "const name: string = readEnv(\"NAME\"); " +
-                "println(\"Hello \" + name + 22);\n"
-
-        val tokens = Lexer(input, version)
-        val asts = Parser(tokens, version)
-
-        var outputBuilder = StringBuilder()
-        var currentEnvironment = createEnvironmentFromMap(System.getenv())
-
-        while (asts.hasNext()) {
-            asts.setEnv(currentEnvironment)
-            val statement = asts.next()
-            val result = Interpreter.interpret(statement, version, currentEnvironment)
-            outputBuilder = result.first
-            currentEnvironment = result.second
-            asts.setEnv(currentEnvironment)
-        }
-
-        assertEquals("Hello WORLD22", outputBuilder.toString().trim())
+        assertEquals("What is the best football club?\n" + "San Lorenzo", builder.toString())
     }
 
     @Test

@@ -29,9 +29,10 @@ class Primary(val version: String) : ExpressionParser {
 
         fun parseReadEnv(): ParseResult {
             tokenMng.advance()
-            val evaluator = ExpressionType.makeExpressionEvaluatorV1_1()
-            val expr = evaluator.parse(tokenMng.getTokens())
-            return expr.first to Expression.ReadEnv(position, expr.second as Expression.Grouping)
+            val result = Primary("1.1").parse(tokenMng.getTokens())
+            val tokenMng2 = TokenManager(result.first)
+            val grouping = result.second as Expression.Grouping
+            return Pair(tokenMng2.getTokens(), Expression.ReadEnv(tokenMng.getPosition(), grouping, parsedShouldBeOfType))
         }
 
         fun parseLiteral(): ParseResult {

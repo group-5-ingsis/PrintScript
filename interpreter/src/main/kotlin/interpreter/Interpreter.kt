@@ -13,11 +13,10 @@ object Interpreter {
         statement: StatementType,
         version: String = "1.1",
         scope: Environment,
-        inputProvider: InputProvider = PrintScriptInputProvider(),
-        printing: StringBuilder = StringBuilder()
+        inputProvider: InputProvider = PrintScriptInputProvider()
     ): statementVisitorResult {
         val nodeVisitor = StatementVisitor(inputProvider)
-        val result = statement.acceptVisitor(nodeVisitor, scope, printing)
+        val result = statement.acceptVisitor(nodeVisitor, scope, StringBuilder())
         val printOutput = result.first
         val newScope = result.second
         return Pair(printOutput, newScope)

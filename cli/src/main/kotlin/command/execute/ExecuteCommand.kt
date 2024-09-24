@@ -1,12 +1,9 @@
 package command.execute
 
 import command.Command
-import environment.Environment
 import environment.EnvironmentCreator
 import interpreter.Interpreter
 import lexer.Lexer
-import nodes.Expression
-import nodes.StatementType
 import parser.Parser
 import utils.ProgressTracker
 import visitor.PrintScriptInputProvider
@@ -40,7 +37,7 @@ class ExecuteCommand(
         while (astNodes.hasNext()) {
             currentEnv = astNodes.setEnv(currentEnv)
             val statement = astNodes.next()
-            val (outPut, updatedEnv) = Interpreter.interpret(statement, version, currentEnv, PrintScriptInputProvider(), outputEmitter)
+            val (outPut, updatedEnv) = Interpreter.interpret(statement, version, currentEnv, PrintScriptInputProvider())
             outputEmitter = outPut
             currentEnv = updatedEnv
 
@@ -52,6 +49,4 @@ class ExecuteCommand(
         val printResult = outputEmitter.toString()
         return "$printResult\nFile Executed!"
     }
-
-
 }
