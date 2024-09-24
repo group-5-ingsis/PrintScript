@@ -30,18 +30,20 @@ class Parser(
     }
 
     override fun next(): Statement {
-        val mutableListTokensForParse: MutableList<Token> = mutableListOf()
+        var tokensForParsing: List<Token> = momentList.toList()
         var lastException: Exception? = null
 
         while (lexer.hasNext() || momentList.isNotEmpty()) {
             if (momentList.isNotEmpty()) {
-                mutableListTokensForParse.add(momentList.removeFirst())
+                val firstToken = momentList.removeFirst()
+                tokensForParsing = tokensForParsing + firstToken
             } else {
-                mutableListTokensForParse.add(lexer.next())
+                val nextToken = lexer.next()
+                tokensForParsing = tokensForParsing + nextToken
             }
 
             try {
-                val (stm, _) = SyntacticParser.parse(mutableListTokensForParse, version)
+                val (stm, _) = SyntacticParser.parse(tokensForParsing, version)
                 ifChecker()
 
                 env = SemanticParser.validate(stm, env, readInput)
@@ -51,7 +53,7 @@ class Parser(
                 if (!lexer.hasNext()) {
                     throw e
                 }
-                if (!isAllowedException(e)) {
+                if (!allowedException(e)) {
                     if (lastException != null && lastException::class == e::class && lastException.message == e.message) {
                         throw e
                     }
@@ -65,7 +67,8 @@ class Parser(
     }
 
     private fun ifChecker() {
-        if (lexer.hasNext()) {
+        val hasNext = lexer.hasNext()
+        if (hasNext) {
             val next = lexer.next()
             momentList.add(next)
             if (next.type == "ELSE") {
@@ -74,8 +77,8 @@ class Parser(
         }
     }
 
-    private fun isAllowedException(e: Exception): Boolean {
-        val listMng = listOf(
+    private fun allowedException(e: Exception): Boolean {
+        val allowedExceptions = listOf(
             "No tokens to get position from.",
             "Find unknown expression at line: 0 and at index: 0",
             "No tokens to parse",
@@ -83,6 +86,7 @@ class Parser(
             "Expect this type: RIGHT_BRACE in Line 0, symbol 0"
         )
 
-        return e.message in listMng
+        val exception = e.message
+        return exception in allowedExceptions
     }
 }
