@@ -1,7 +1,7 @@
 package parser
 
 import environment.Environment
-import nodes.StatementType
+import nodes.Statement
 import parser.semantic.SemanticParser
 import parser.syntactic.SyntacticParser
 import token.Token
@@ -12,7 +12,7 @@ class Parser(
     private val lexer: Iterator<Token>,
     private val version: String = "1.1",
     private var readInput: InputProvider = PrintScriptInputProvider()
-) : Iterator<StatementType> {
+) : Iterator<Statement> {
     private var env = Environment()
     private val momentList: ArrayDeque<Token> = ArrayDeque()
 
@@ -29,7 +29,7 @@ class Parser(
         return env
     }
 
-    override fun next(): StatementType {
+    override fun next(): Statement {
         val mutableListTokensForParse: MutableList<Token> = mutableListOf()
         var lastException: Exception? = null
 
@@ -69,7 +69,7 @@ class Parser(
             val next = lexer.next()
             momentList.add(next)
             if (next.type == "ELSE") {
-                throw Exception("Exeption for continue the loop")
+                throw Exception("Exception for continue the loop")
             }
         }
     }

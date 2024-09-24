@@ -52,7 +52,7 @@ sealed class Statement {
         override val statementType: String = "VARIABLE_STATEMENT"
 
         override fun <R> accept(visitor: Visitor<R>): R {
-            return visitor.visitVariable(this)
+            return visitor.visitVariableStatement(this)
         }
     }
 }

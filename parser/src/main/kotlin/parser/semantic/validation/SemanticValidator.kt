@@ -1,18 +1,18 @@
 package parser.semantic.validation
 
 import environment.Environment
-import nodes.StatementType
+import nodes.Statement
 import visitor.InputProvider
 
 class SemanticValidator(private val inputProvider: InputProvider) {
-    private val validatorsForTypes: Map<String, Validator<out StatementType>> =
+    private val validatorsForTypes: Map<String, Validator<out Statement>> =
         mapOf(
             "VARIABLE_STATEMENT" to VariableStatementValidator(inputProvider),
             "PRINT" to PrintValidator(),
             "STATEMENT_EXPRESSION" to StatementExpressionValidator(inputProvider)
         )
 
-    fun validateSemantics(node: StatementType, varTable: Environment): ValidationResult {
+    fun validateSemantics(node: Statement, varTable: Environment): ValidationResult {
         val validator = validatorsForTypes[node.statementType]
         validator?.let {
             val result = it.validate(node, varTable)

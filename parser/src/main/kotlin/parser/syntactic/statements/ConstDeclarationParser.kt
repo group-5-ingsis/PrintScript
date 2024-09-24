@@ -3,9 +3,9 @@ package parser.syntactic.statements
 import ExpressionType
 import exception.SemanticErrorException
 import nodes.Expression
-import nodes.StatementType
+import nodes.Statement
+import nodes.Type
 import parser.syntactic.TokenManager
-import position.nodes.Type
 import token.Token
 
 class ConstDeclarationParser(private val expressionEvaluator: ExpressionType) : StatementParser {
@@ -32,6 +32,6 @@ class ConstDeclarationParser(private val expressionEvaluator: ExpressionType) : 
 
         manager.consumeTokenValue(";")
 
-        return Pair(manager.getTokens(), StatementType.Variable("const", identifier.value, initializer, dataType, position))
+        return Pair(manager.getTokens(), Statement.Variable("const", identifier.value, initializer, dataType, position))
     }
 }

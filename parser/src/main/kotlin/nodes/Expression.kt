@@ -1,6 +1,5 @@
 package nodes
 
-import position.nodes.Type
 import token.Position
 import visitor.Visitor
 

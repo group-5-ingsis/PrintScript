@@ -3,7 +3,6 @@ import environment.Environment
 import interpreter.Interpreter
 import lexer.Lexer
 import nodes.Expression
-import nodes.StatementType
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertThrows
 import org.junit.Test

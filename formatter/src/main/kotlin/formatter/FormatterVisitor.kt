@@ -1,7 +1,6 @@
 package formatter
 
 import nodes.Expression
-import nodes.StatementType
 import rules.FormattingRules
 import rules.RuleApplier
 import visitor.Visitor

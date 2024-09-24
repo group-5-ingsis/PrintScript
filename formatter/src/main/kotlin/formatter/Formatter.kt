@@ -1,6 +1,5 @@
 package formatter
 
-import nodes.StatementType
 import rules.FormattingRules
 
 object Formatter {

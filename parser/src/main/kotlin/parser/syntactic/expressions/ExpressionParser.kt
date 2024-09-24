@@ -1,6 +1,6 @@
 package parser.syntactic.expressions
 import nodes.Expression
-import position.nodes.Type
+import nodes.Type
 import token.Token
 
 typealias ParseResult = Pair<List<Token>, Expression>

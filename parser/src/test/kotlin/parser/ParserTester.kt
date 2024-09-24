@@ -3,7 +3,6 @@ package parser
 import exception.InvalidSyntaxException
 import lexer.Lexer
 import nodes.Expression
-import nodes.StatementType
 import token.Position
 import kotlin.test.*
 

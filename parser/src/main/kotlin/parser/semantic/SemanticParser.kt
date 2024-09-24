@@ -3,20 +3,16 @@ package parser.semantic
 import environment.Environment
 import exception.SemanticErrorException
 import nodes.Statement
-import nodes.StatementType
 import parser.semantic.validation.SemanticValidator
 import parser.semantic.validation.ValidationResult
 import visitor.InputProvider
 import visitor.NodeVisitor
-import java.lang.StringBuilder
 
 object SemanticParser {
 
     @Throws(SemanticErrorException::class)
-    fun validate(ast: Statement, environment: Environment, readInput: String?): Environment {
-        val statementVisitor = NodeVisitor()
-        val stringBuilder = StringBuilder()
-
+    fun validate(ast: Statement, environment: Environment, readInput: InputProvider): Environment {
+        val statementVisitor = NodeVisitor(environment)
         val visitorResult = ast.accept(statementVisitor)
         val newEnvironment = visitorResult.second
         val result = runValidators(ast, newEnvironment, readInput)
@@ -27,7 +23,7 @@ object SemanticParser {
         }
     }
 
-    private fun runValidators(node: StatementType, environment: Environment, inputProvider: InputProvider): ValidationResult {
+    private fun runValidators(node: Statement, environment: Environment, inputProvider: InputProvider): ValidationResult {
         val validator = SemanticValidator(inputProvider)
         return validator.validateSemantics(node, environment)
     }

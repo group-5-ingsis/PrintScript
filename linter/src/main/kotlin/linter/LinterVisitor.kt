@@ -1,7 +1,6 @@
 package linter
 
 import nodes.Expression
-import nodes.StatementType
 import rules.LinterRules
 import token.Position
 import visitor.Visitor

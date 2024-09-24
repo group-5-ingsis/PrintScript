@@ -1,9 +1,9 @@
 package parser.syntactic.statements
 import ExpressionType
 import nodes.Expression
-import nodes.StatementType
+import nodes.Statement
+import nodes.Type
 import parser.syntactic.TokenManager
-import position.nodes.Type
 import token.Token
 
 class LetDeclarationParser(private val expressionEvaluator: ExpressionType) : StatementParser {
@@ -26,6 +26,6 @@ class LetDeclarationParser(private val expressionEvaluator: ExpressionType) : St
 
         manager.consumeTokenValue(";")
 
-        return Pair(manager.getTokens(), StatementType.Variable("let", identifier.value, initializer, dataType, position))
+        return Pair(manager.getTokens(), Statement.Variable("let", identifier.value, initializer, dataType, position))
     }
 }

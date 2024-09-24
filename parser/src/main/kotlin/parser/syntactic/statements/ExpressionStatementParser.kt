@@ -1,7 +1,7 @@
 package parser.syntactic.statements
 
 import ExpressionType
-import nodes.StatementType
+import nodes.Statement
 import parser.syntactic.TokenManager
 import token.Token
 
@@ -12,6 +12,6 @@ class ExpressionStatementParser(private val expressionEvaluator: ExpressionType)
         val position = manager.getPosition()
         manager.consumeTokenValue(";")
 
-        return Pair(manager.getTokens(), StatementType.StatementExpression(exp, position))
+        return Pair(manager.getTokens(), Statement.StatementExpression(exp, position))
     }
 }
