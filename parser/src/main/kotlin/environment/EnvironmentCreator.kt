@@ -1,7 +1,7 @@
 package environment
 
 import nodes.Expression
-import nodes.Statement
+import nodes.StatementType
 import token.Position
 
 object EnvironmentCreator {
@@ -9,7 +9,7 @@ object EnvironmentCreator {
     fun create(envVars: Map<String, String>): Environment {
         var environment = Environment()
         for ((key, value) in envVars) {
-            val variable = Statement.Variable(
+            val variable = StatementType.Variable(
                 designation = "const",
                 identifier = key,
                 initializer = Expression.Literal(value, Position(0, 0)),

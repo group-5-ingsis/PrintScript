@@ -1,9 +1,9 @@
 package parser.syntactic.statements
 
+import ExpressionType
 import nodes.Expression
-import nodes.Statement
+import nodes.StatementType
 import parser.syntactic.TokenManager
-import parser.syntactic.expressions.ExpressionType
 import token.Token
 
 class PrintStatementParser(private val expressionEvaluator: ExpressionType) : StatementParser {
@@ -15,7 +15,7 @@ class PrintStatementParser(private val expressionEvaluator: ExpressionType) : St
         manager.consumeTokenValue(";")
 
         return if (exp is Expression.Grouping) {
-            Pair(manager.getTokens(), Statement.Print(exp, position))
+            Pair(manager.getTokens(), StatementType.Print(exp, position))
         } else {
             throw Error("Expression shoud be groupping at line : " + position.line)
         }

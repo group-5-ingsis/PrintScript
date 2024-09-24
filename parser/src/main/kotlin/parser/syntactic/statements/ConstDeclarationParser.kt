@@ -1,10 +1,11 @@
 package parser.syntactic.statements
 
+import ExpressionType
 import exception.SemanticErrorException
 import nodes.Expression
-import nodes.Statement
+import nodes.StatementType
 import parser.syntactic.TokenManager
-import parser.syntactic.expressions.ExpressionType
+import position.nodes.Type
 import token.Token
 
 class ConstDeclarationParser(private val expressionEvaluator: ExpressionType) : StatementParser {
@@ -24,12 +25,13 @@ class ConstDeclarationParser(private val expressionEvaluator: ExpressionType) : 
         }
 
         manager.consumeTokenValue("=")
-        val (remainingTokens, exp) = expressionEvaluator.parse(manager.getTokens())
+        val getType = Type.stringToType(dataType)
+        val (remainingTokens, exp) = expressionEvaluator.parse(manager.getTokens(), getType)
         initializer = exp
         manager = TokenManager(remainingTokens)
 
         manager.consumeTokenValue(";")
 
-        return Pair(manager.getTokens(), Statement.Variable("const", identifier.value, initializer, dataType, position))
+        return Pair(manager.getTokens(), StatementType.Variable("const", identifier.value, initializer, dataType, position))
     }
 }

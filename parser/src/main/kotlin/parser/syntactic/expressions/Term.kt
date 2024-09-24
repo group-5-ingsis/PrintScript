@@ -2,12 +2,13 @@ package parser.syntactic.expressions
 
 import nodes.Expression
 import parser.syntactic.TokenManager
+import position.nodes.Type
 import token.Token
 
 class Term(private val parseInferiorFunction: ExpressionParser) : ExpressionParser {
 
-    override fun parse(tokens: List<Token>): ParseResult {
-        var (remainingTokens, expression) = parseInferiorFunction.parse(tokens)
+    override fun parse(tokens: List<Token>, parsedShouldBeOfType: Type): ParseResult {
+        var (remainingTokens, expression) = parseInferiorFunction.parse(tokens, parsedShouldBeOfType)
 
         var tokenMng = TokenManager(remainingTokens)
 
@@ -24,7 +25,7 @@ class Term(private val parseInferiorFunction: ExpressionParser) : ExpressionPars
             val position = tokenMng.getPosition()
             tokenMng.advance()
 
-            val (remainingTokens2, rightExpression) = parseInferiorFunction.parse(tokenMng.getTokens())
+            val (remainingTokens2, rightExpression) = parseInferiorFunction.parse(tokenMng.getTokens(), parsedShouldBeOfType)
             remainingTokens = remainingTokens2
             tokenMng = TokenManager(remainingTokens2)
             expression = Expression.Binary(expression, tokenOperator, rightExpression, position)

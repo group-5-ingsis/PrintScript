@@ -1,20 +1,21 @@
 package interpreter
 
 import environment.Environment
-import nodes.Statement
+import nodes.StatementType
+import visitor.InputProvider
 import visitor.NodeVisitor
+import visitor.PrintScriptInputProvider
 import visitor.statementVisitorResult
 
 object Interpreter {
 
     fun interpret(
-        statement: Statement,
+        statement: StatementType,
         version: String = "1.1",
         scope: Environment,
-        readInput: String? = null,
-        stringBuilder: StringBuilder = StringBuilder()
+        inputProvider: InputProvider = PrintScriptInputProvider()
     ): statementVisitorResult {
-        val nodeVisitor = NodeVisitor()
+        val nodeVisitor = NodeVisitor(scope, version, inputProvider)
         val result = statement.accept(nodeVisitor)
         val printOutput = result.first
         val newScope = result.second

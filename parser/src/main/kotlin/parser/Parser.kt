@@ -1,16 +1,18 @@
 package parser
 
 import environment.Environment
-import nodes.Statement
+import nodes.StatementType
 import parser.semantic.SemanticParser
 import parser.syntactic.SyntacticParser
 import token.Token
+import visitor.InputProvider
+import visitor.PrintScriptInputProvider
 
 class Parser(
     private val lexer: Iterator<Token>,
     private val version: String = "1.1",
-    private var readInput: String? = null
-) : Iterator<Statement> {
+    private var readInput: InputProvider = PrintScriptInputProvider()
+) : Iterator<StatementType> {
     private var env = Environment()
     private val momentList: ArrayDeque<Token> = ArrayDeque()
 
@@ -27,11 +29,7 @@ class Parser(
         return env
     }
 
-    fun setInput(input: String) {
-        readInput = input
-    }
-
-    override fun next(): Statement {
+    override fun next(): StatementType {
         val mutableListTokensForParse: MutableList<Token> = mutableListOf()
         var lastException: Exception? = null
 
@@ -43,14 +41,10 @@ class Parser(
             }
 
             try {
-                val (stm, tokens) = SyntacticParser.parse(mutableListTokensForParse, version)
+                val (stm, _) = SyntacticParser.parse(mutableListTokensForParse, version)
                 ifChecker()
 
-                if (tokens.isEmpty()) {
-                    val newEnv = SemanticParser.validate(stm, env, readInput)
-                    env = setEnv(newEnv)
-                    return stm
-                }
+                env = SemanticParser.validate(stm, env, readInput)
 
                 return stm
             } catch (e: Exception) {
@@ -85,6 +79,7 @@ class Parser(
             "No tokens to get position from.",
             "Find unknown expression at line: 0 and at index: 0",
             "No tokens to parse",
+            "Expected ')' after expression in Line 0, symbol 0",
             "Expect this type: RIGHT_BRACE in Line 0, symbol 0"
         )
 

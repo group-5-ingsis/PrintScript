@@ -3,13 +3,14 @@ package parser.semantic.validation
 import environment.Environment
 import exception.SemanticErrorException
 import nodes.Expression
-import nodes.Statement
+import nodes.StatementType
+import visitor.InputProvider
 import visitor.NodeVisitor
 
-class StatementExpressionValidator(private val input: String?) : Validator<Statement.StatementExpression> {
+class StatementExpressionValidator(private val inputProvider: InputProvider) : Validator<StatementType.StatementExpression> {
 
-    override fun validate(node: Statement, scope: Environment): ValidationResult {
-        if (node !is Statement.StatementExpression) {
+    override fun validate(node: StatementType, scope: Environment): ValidationResult {
+        if (node !is StatementType.StatementExpression) {
             return ValidationResult(
                 isInvalid = true,
                 where = null,
@@ -26,12 +27,14 @@ class StatementExpressionValidator(private val input: String?) : Validator<State
         }
     }
 
-    private fun handleAssign(exp: Expression.Assign, scope: Environment, node: Statement.StatementExpression): ValidationResult {
+    private fun handleAssign(exp: Expression.Assign, scope: Environment, node: StatementType.StatementExpression): ValidationResult {
         val identifier = exp.name
         val valueExpression = exp.value
         /* null check for getting the value is made on Environment. */
         val variableInfo = scope.get(identifier)
+
         val actualValue = valueExpression.accept(NodeVisitor())
+
         val actualType = getTypeInString(actualValue.first)
 
         if (variableInfo.designation == "const") {

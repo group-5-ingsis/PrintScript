@@ -1,8 +1,9 @@
 package parser.syntactic.statements
+import ExpressionType
 import nodes.Expression
-import nodes.Statement
+import nodes.StatementType
 import parser.syntactic.TokenManager
-import parser.syntactic.expressions.ExpressionType
+import position.nodes.Type
 import token.Token
 
 class LetDeclarationParser(private val expressionEvaluator: ExpressionType) : StatementParser {
@@ -10,7 +11,6 @@ class LetDeclarationParser(private val expressionEvaluator: ExpressionType) : St
     override fun parse(tokens: List<Token>): ParseStatementResult {
         var manager = TokenManager(tokens)
         val position = manager.getPosition()
-        // a : Number =
         var initializer: Expression? = null
         val identifier = manager.consumeTokenType("IDENTIFIER")
         manager.consumeTokenValue(":")
@@ -18,13 +18,14 @@ class LetDeclarationParser(private val expressionEvaluator: ExpressionType) : St
 
         if (manager.isValue("=")) {
             manager.consumeTokenValue("=")
-            val (remainingTokens, exp) = expressionEvaluator.parse(manager.getTokens())
+            val getType = Type.stringToType(dataType)
+            val (remainingTokens, exp) = expressionEvaluator.parse(manager.getTokens(), getType)
             initializer = exp
             manager = TokenManager(remainingTokens)
         }
 
         manager.consumeTokenValue(";")
 
-        return Pair(manager.getTokens(), Statement.Variable("let", identifier.value, initializer, dataType, position))
+        return Pair(manager.getTokens(), StatementType.Variable("let", identifier.value, initializer, dataType, position))
     }
 }

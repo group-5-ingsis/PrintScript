@@ -1,8 +1,8 @@
 package parser.semantic.validation
 
 import environment.Environment
-import nodes.Statement
+import nodes.StatementType
 
 interface Validator<T> {
-    fun validate(node: Statement, scope: Environment): ValidationResult
+    fun validate(node: StatementType, scope: Environment): ValidationResult
 }
