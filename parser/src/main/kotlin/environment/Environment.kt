@@ -2,7 +2,6 @@ package environment
 
 import nodes.Expression
 import nodes.Statement
-import visitor.ExpressionVisitor
 import visitor.NodeVisitor
 
 class Environment(
@@ -18,7 +17,6 @@ class Environment(
         return Environment(enclosing, newValues)
     }
 
-    // Retrieve the variable's value by name
     fun get(name: String): Statement.Variable {
         val result = values.find { it.identifier == name }
 
@@ -29,13 +27,11 @@ class Environment(
         val variable = get(name)
 
         val initializer = variable.initializer ?: return null
-        val expressionVisitor = ExpressionVisitor()
-        val result = initializer.acceptVisitor(expressionVisitor, this)
+        val result = initializer.accept(NodeVisitor())
 
         return result.first
     }
 
-    // Assign a new value to a variable
     fun assign(name: String, value: Expression): Environment {
         val variable = values.find { it.identifier == name }
 
@@ -50,13 +46,11 @@ class Environment(
         throw Error("Cannot perform assignation on undefined variable '$name'.")
     }
 
-    // Method to get the value of a variable using the ExpressionVisitor
     fun getValue(variableName: String, visitor: NodeVisitor): Any? {
         val variable = get(variableName)
         return variable.initializer?.let { visitor.evaluateExpression(it).first }
     }
 
-    // Method to check if the environment contains a variable
     fun contains(varName: String): Boolean {
         return values.any { it.identifier == varName }
     }

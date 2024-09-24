@@ -1,38 +1,26 @@
 package nodes
 
-import environment.Environment
 import position.nodes.Type
-import position.visitor.VisitorResultExpressions
 import token.Position
-import visitor.ExpressionVisitor
 import visitor.Visitor
 
 sealed class Expression {
     abstract val expressionType: String
     abstract val position: Position
 
-    abstract fun acceptVisitor(visitor: ExpressionVisitor, environment: Environment): VisitorResultExpressions
+    abstract fun <T> accept(visitor: Visitor<T>): T
 
-    abstract fun accept(visitor: Visitor)
-
-    // There are complex expression that are variables exp: Position(x, y).y = 5, refers to this
     data class Variable(val name: String, override val position: Position) : Expression() {
         override val expressionType = "VARIABLE_EXPRESSION"
-        override fun acceptVisitor(visitor: ExpressionVisitor, environment: Environment): VisitorResultExpressions {
-            return visitor.visitVariableExp(this, environment)
-        }
 
-        override fun accept(visitor: Visitor) {
-            return visitor.visitVariable(this)
+        override fun <T> accept(visitor: Visitor<T>): T {
+            return visitor.visitVariableExpression(this)
         }
     }
     data class Assign(val name: String, val value: Expression, override val position: Position) : Expression() {
         override val expressionType = "ASSIGNMENT_EXPRESSION"
-        override fun acceptVisitor(visitor: ExpressionVisitor, environment: Environment): VisitorResultExpressions {
-            return visitor.visitAssignExpr(this, environment)
-        }
 
-        override fun accept(visitor: Visitor) {
+        override fun <T> accept(visitor: Visitor<T>): T {
             return visitor.visitAssign(this)
         }
     }
@@ -44,55 +32,40 @@ sealed class Expression {
         override val position: Position
     ) : Expression() {
         override val expressionType: String = "BINARY_EXPRESSION"
-        override fun acceptVisitor(visitor: ExpressionVisitor, environment: Environment): VisitorResultExpressions {
-            return visitor.visitBinaryExpr(this, environment)
-        }
 
-        override fun accept(visitor: Visitor) {
+        override fun <T> accept(visitor: Visitor<T>): T {
             return visitor.visitBinary(this)
         }
     }
 
     data class Grouping(val expression: Expression, override val position: Position) : Expression() {
         override val expressionType: String = "GROUPING_EXPRESSION"
-        override fun acceptVisitor(visitor: ExpressionVisitor, environment: Environment): VisitorResultExpressions {
-            return visitor.visitGroupExp(this, environment)
-        }
 
-        override fun accept(visitor: Visitor) {
+        override fun <T> accept(visitor: Visitor<T>): T {
             return visitor.visitGrouping(this)
         }
     }
 
     data class Literal(val value: Any?, override val position: Position) : Expression() {
         override val expressionType: String = "LITERAL_EXPRESSION"
-        override fun acceptVisitor(visitor: ExpressionVisitor, environment: Environment): VisitorResultExpressions {
-            return visitor.visitLiteralExp(this, environment)
-        }
 
-        override fun accept(visitor: Visitor) {
+        override fun <T> accept(visitor: Visitor<T>): T {
             return visitor.visitLiteral(this)
         }
     }
 
     data class Unary(val operator: String, val right: Expression, override val position: Position) : Expression() {
         override val expressionType: String = "UNARY_EXPRESSION"
-        override fun acceptVisitor(visitor: ExpressionVisitor, environment: Environment): VisitorResultExpressions {
-            return visitor.visitUnaryExpr(this, environment)
-        }
 
-        override fun accept(visitor: Visitor) {
+        override fun <T> accept(visitor: Visitor<T>): T {
             return visitor.visitUnary(this)
         }
     }
 
     data class IdentifierExpression(val name: String, override val position: Position) : Expression() {
         override val expressionType: String = "IDENTIFIER"
-        override fun acceptVisitor(visitor: ExpressionVisitor, environment: Environment): VisitorResultExpressions {
-            return visitor.visitIdentifierExp(this, environment)
-        }
 
-        override fun accept(visitor: Visitor) {
+        override fun <T> accept(visitor: Visitor<T>): T {
             return visitor.visitIdentifier(this)
         }
     }
@@ -103,10 +76,7 @@ sealed class Expression {
         val valueShouldBeOfType: Type
     ) : Expression() {
         override val expressionType: String = "READ_INPUT"
-        override fun acceptVisitor(visitor: ExpressionVisitor, environment: Environment): VisitorResultExpressions {
-            return visitor.visitReadInput(this, environment)
-        }
-        override fun accept(visitor: Visitor) {
+        override fun <T> accept(visitor: Visitor<T>): T {
             return visitor.visitReadInput(this)
         }
     }
@@ -117,11 +87,8 @@ sealed class Expression {
         val valueShouldBeOfType: Type
     ) : Expression() {
         override val expressionType: String = "READ_ENV"
-        override fun acceptVisitor(visitor: ExpressionVisitor, environment: Environment): VisitorResultExpressions {
-            return visitor.visitReadEnv(this, environment)
-        }
 
-        override fun accept(visitor: Visitor) {
+        override fun <T> accept(visitor: Visitor<T>): T {
             return visitor.visitReadEnv(this)
         }
     }

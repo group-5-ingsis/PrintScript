@@ -4,9 +4,8 @@ import environment.Environment
 import nodes.Expression
 import nodes.Statement
 
-class NodeVisitor : Visitor<VisitorResult> {
+class NodeVisitor(private val environment: Environment = Environment(), val version: String = "1.1") : Visitor<VisitorResult> {
 
-    val environment = Environment()
     val readInput = ""
 
     override fun visitExpression(statement: Statement.StatementExpression): VisitorResult {
