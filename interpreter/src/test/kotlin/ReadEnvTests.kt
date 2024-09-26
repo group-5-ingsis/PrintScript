@@ -2,6 +2,7 @@ import environment.Environment
 import interpreter.Interpreter
 import lexer.Lexer
 import nodes.Expression
+import nodes.Statement
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import parser.Parser
@@ -47,7 +48,6 @@ class ReadEnvTests {
 
         var outputBuilder = StringBuilder()
 
-        // Definimos múltiples variables en el `Environment`
         var currentEnvironment = Environment()
             .define(createVariable("FIRST_NAME", "John"))
             .define(createVariable("LAST_NAME", "Doe"))
@@ -61,7 +61,6 @@ class ReadEnvTests {
             asts.setEnv(currentEnvironment)
         }
 
-        // Se espera que el output sea "Hello John Doe"
         assertEquals("Hello John Doe", outputBuilder.toString().trim())
     }
 
@@ -76,7 +75,6 @@ class ReadEnvTests {
 
         var outputBuilder = StringBuilder()
 
-        // No definimos "AGE" en el `Environment`, por lo que debería ser `null`
         var currentEnvironment = Environment().define(createVariable("AGE", "4"))
 
         while (asts.hasNext()) {
@@ -88,7 +86,6 @@ class ReadEnvTests {
             asts.setEnv(currentEnvironment)
         }
 
-        // Asumimos que si la variable no existe en el entorno, imprime `null`
         assertEquals("4", outputBuilder.toString().trim())
     }
 
@@ -103,7 +100,6 @@ class ReadEnvTests {
 
         var outputBuilder = StringBuilder()
 
-        // Definimos "NUMERO" como un string no convertible a número
         var currentEnvironment = Environment().define(createVariable("NUMERO", "hola"))
 
         try {
@@ -120,34 +116,8 @@ class ReadEnvTests {
         }
     }
 
-//    TODO Esto no se puede hacer, no se permiten readEnv adetnro de prints, igualmente no hay tiempo para arreglo
-//    @Test
-//    fun testReadEnvInOperations() {
-//        val input = "println(readEnv(\"COUNT\") + 10);"
-//
-//        val tokens = Lexer(input, version)
-//        val asts = Parser(tokens, version)
-//
-//        var outputBuilder = StringBuilder()
-//
-//        // Definimos "COUNT" como el número 20
-//        var currentEnvironment = Environment().define(createVariable("COUNT", "20"))
-//
-//        while (asts.hasNext()) {
-//            asts.setEnv(currentEnvironment)
-//            val statement = asts.next()
-//            val result = Interpreter.interpret(statement, version, currentEnvironment)
-//            outputBuilder = result.first
-//            currentEnvironment = result.second
-//            asts.setEnv(currentEnvironment)
-//        }
-//
-//        // Se espera que el output sea "30" (20 + 10)
-//        assertEquals("30", outputBuilder.toString().trim())
-//    }
-
-    fun createVariable(name: String, value: String): StatementType.Variable {
-        return StatementType.Variable(
+    fun createVariable(name: String, value: String): Statement.Variable {
+        return Statement.Variable(
             designation = "const",
             identifier = name,
             initializer = Expression.Literal(value, Position(1, 1)), // Literal con valor dinámico

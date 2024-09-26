@@ -2,6 +2,7 @@ import environment.Environment
 import interpreter.Interpreter
 import lexer.Lexer
 import nodes.Expression
+import nodes.Statement
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import parser.Parser
@@ -371,7 +372,7 @@ class InterpreterTest {
         var env = Environment()
 
         for ((key, value) in envVarsMap) {
-            val variable = StatementType.Variable(
+            val variable = Statement.Variable(
                 designation = "const",
                 identifier = key,
                 initializer = Expression.Literal(value, Position(0, 0)),
@@ -449,7 +450,7 @@ class InterpreterTest {
 
     @Test
     fun testPrinter() {
-        val input = "let a : number = 1; println(a);" // Si vos le agregas un espacio al final del string, el hasNext() del lexer tira -> True cuando deberia ser false
+        val input = "let a : number = 1; println(a);"
         val tokens = Lexer(input, version)
         val asts = Parser(tokens, version)
 

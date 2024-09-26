@@ -1,6 +1,7 @@
 package formatter
 
 import nodes.Expression
+import nodes.Statement
 import rules.FormattingRules
 import rules.RuleApplier
 import visitor.Visitor
@@ -8,7 +9,7 @@ import visitor.Visitor
 class FormatterVisitor(
     private val rules: FormattingRules,
     private val version: String
-) : Visitor {
+) : Visitor<Unit> {
 
     private val output = StringBuilder()
     private val ruleApplier = RuleApplier(rules)
@@ -18,19 +19,27 @@ class FormatterVisitor(
         return output.toString()
     }
 
-    override fun visitPrintStm(statement: StatementType.Print) {
+    override fun visitPrint(statement: Statement.Print) {
         appendPrintKeyword()
         statement.value.accept(this)
         output.append(";\n")
         appendNewlines(rules.newlineAfterPrintln)
     }
 
-    override fun visitExpressionStm(statement: StatementType.StatementExpression) {
+    override fun visitReadInput(expression: Expression.ReadInput) {
+        TODO("Not yet implemented")
+    }
+
+    override fun visitReadEnv(expression: Expression.ReadEnv) {
+        TODO("Not yet implemented")
+    }
+
+    override fun visitExpression(statement: Statement.StatementExpression) {
         val expression = statement.value
         expression.accept(this)
     }
 
-    override fun visitVariableStm(statement: StatementType.Variable) {
+    override fun visitVariableStatement(statement: Statement.Variable) {
         appendVariableDeclaration(statement)
         appendVariableInitializer(statement.initializer)
         output.append(";\n")
@@ -40,7 +49,7 @@ class FormatterVisitor(
         initializer?.accept(this)
     }
 
-    override fun visitBlockStm(statement: StatementType.BlockStatement) {
+    override fun visitBlock(statement: Statement.BlockStatement) {
         if (version >= "1.1") {
             val statements = statement.listStm
             processBlockStatements(statements)
@@ -48,7 +57,7 @@ class FormatterVisitor(
         }
     }
 
-    private fun processBlockStatements(statements: List<StatementType>) {
+    private fun processBlockStatements(statements: List<Statement>) {
         statements.forEach {
             appendIndent()
             it.accept(this)
@@ -60,7 +69,7 @@ class FormatterVisitor(
         appendIndent()
     }
 
-    override fun visitIfStm(statement: StatementType.IfStatement) {
+    override fun visitIf(statement: Statement.IfStatement) {
         handleIfCondition(statement.condition)
         handleThenBranch(statement.thenBranch)
         handleElseBranch(statement.elseBranch)
@@ -84,14 +93,14 @@ class FormatterVisitor(
         currentIndent += rules.blockIndentation
     }
 
-    private fun handleThenBranch(thenBranch: StatementType) {
+    private fun handleThenBranch(thenBranch: Statement) {
         thenBranch.accept(this)
         currentIndent -= rules.blockIndentation
         appendIndent()
         output.append("}")
     }
 
-    private fun handleElseBranch(elseBranch: StatementType?) {
+    private fun handleElseBranch(elseBranch: Statement?) {
         elseBranch?.let {
             output.append(" else")
             appendBracesForCondition()
@@ -113,7 +122,7 @@ class FormatterVisitor(
         repeat(count) { output.append("\n") }
     }
 
-    private fun appendVariableDeclaration(statement: StatementType.Variable) {
+    private fun appendVariableDeclaration(statement: Statement.Variable) {
         val variableKind = statement.designation
         val identifier = statement.identifier
         val dataType = statement.dataType
@@ -122,7 +131,7 @@ class FormatterVisitor(
         output.append("$variableKind $identifier$spaceForColons$dataType$spacesAroundAssignment")
     }
 
-    override fun visitVariable(expression: Expression.Variable) {
+    override fun visitVariableExpression(expression: Expression.Variable) {
         output.append(expression.name)
     }
 
