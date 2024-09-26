@@ -6,13 +6,13 @@ import nodes.Statement
 import parser.semantic.validation.SemanticValidator
 import parser.semantic.validation.ValidationResult
 import visitor.InputProvider
-import visitor.NodeVisitor
+import visitor.InterpreterVisitor
 
 object SemanticParser {
 
     @Throws(SemanticErrorException::class)
     fun validate(ast: Statement, environment: Environment, readInput: InputProvider): Environment {
-        val statementVisitor = NodeVisitor(environment)
+        val statementVisitor = InterpreterVisitor(environment)
         val visitorResult = ast.accept(statementVisitor)
         val newEnvironment = visitorResult.second
         val result = runValidators(ast, newEnvironment, readInput)

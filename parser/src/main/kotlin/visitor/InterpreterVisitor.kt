@@ -4,7 +4,7 @@ import environment.Environment
 import nodes.Expression
 import nodes.Statement
 
-class NodeVisitor(private val environment: Environment = Environment(), val version: String = "1.1", val inputProvider: InputProvider = PrintScriptInputProvider()) : Visitor<VisitorResult> {
+class InterpreterVisitor(private val environment: Environment = Environment(), val version: String = "1.1", val inputProvider: InputProvider = PrintScriptInputProvider()) : Visitor<VisitorResult> {
 
     val readInput = ""
 

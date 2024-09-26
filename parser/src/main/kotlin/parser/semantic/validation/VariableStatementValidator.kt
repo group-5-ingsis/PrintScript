@@ -4,13 +4,13 @@ import environment.Environment
 import nodes.Expression
 import nodes.Statement
 import visitor.InputProvider
-import visitor.NodeVisitor
+import visitor.InterpreterVisitor
 
 class VariableStatementValidator(private val inputProvider: InputProvider) : Validator<Statement.Variable> {
 
     private fun evaluateExpression(expression: Expression, scope: Environment): Pair<Any?, Environment> {
-        val nodeVisitor = NodeVisitor()
-        return expression.accept(nodeVisitor)
+        val interpreterVisitor = InterpreterVisitor()
+        return expression.accept(interpreterVisitor)
     }
 
     override fun validate(node: Statement, scope: Environment): ValidationResult {

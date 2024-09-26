@@ -2,7 +2,7 @@ package environment
 
 import nodes.Expression
 import nodes.Statement
-import visitor.NodeVisitor
+import visitor.InterpreterVisitor
 
 class Environment(
 
@@ -27,7 +27,7 @@ class Environment(
         val variable = get(name)
 
         val initializer = variable.initializer ?: return null
-        val result = initializer.accept(NodeVisitor())
+        val result = initializer.accept(InterpreterVisitor())
 
         return result.first
     }
@@ -46,7 +46,7 @@ class Environment(
         throw Error("Cannot perform assignation on undefined variable '$name'.")
     }
 
-    fun getValue(variableName: String, visitor: NodeVisitor): Any? {
+    fun getValue(variableName: String, visitor: InterpreterVisitor): Any? {
         val variable = get(variableName)
         return variable.initializer?.let { visitor.evaluateExpression(it).first }
     }
