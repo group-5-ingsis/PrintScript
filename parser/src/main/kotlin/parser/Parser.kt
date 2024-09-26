@@ -43,12 +43,12 @@ class Parser(
             }
 
             try {
-                val (stm, _) = SyntacticParser.parse(tokensForParsing, version)
+                val statement = SyntacticParser.parse(tokensForParsing, version)
                 ifChecker()
 
-                env = SemanticParser.validate(stm, env, readInput)
+                env = SemanticParser.validate(statement, env, readInput)
 
-                return stm
+                return statement
             } catch (e: Exception) {
                 if (!lexer.hasNext()) {
                     throw e

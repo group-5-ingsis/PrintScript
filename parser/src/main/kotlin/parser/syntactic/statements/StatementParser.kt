@@ -6,5 +6,5 @@ typealias ParseStatementResult = Pair<List<Token>, Statement>
 
 interface StatementParser {
 
-    fun parse(tokens: List<Token>): ParseStatementResult
+    fun parse(tokens: List<Token>): Statement
 }
