@@ -1,6 +1,5 @@
-
+package parser.syntactic.expressions
 import nodes.Type
-import parser.syntactic.expressions.*
 import token.Token
 
 class ExpressionType(private val parseInferiorFunction: ExpressionParser, val version: String = "1.1") {

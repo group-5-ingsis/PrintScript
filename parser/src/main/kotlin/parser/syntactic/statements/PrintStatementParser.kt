@@ -1,9 +1,9 @@
 package parser.syntactic.statements
 
-import ExpressionType
 import nodes.Expression
 import nodes.Statement
 import parser.syntactic.TokenManager
+import parser.syntactic.expressions.ExpressionType
 import token.Token
 
 class PrintStatementParser(private val expressionEvaluator: ExpressionType) : StatementParser {
