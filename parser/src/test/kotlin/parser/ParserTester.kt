@@ -10,6 +10,17 @@ import kotlin.test.*
 class ParserTester {
 
     @Test
+    fun testSimpleDeclaration() {
+        val input = "let a : number = 3;"
+        val version = "1.0"
+
+        val lexer = Lexer(input, version)
+        val parser = Parser(lexer, version)
+
+        val ast1 = parser.next()
+    }
+
+    @Test
     fun testOperation() {
         val lexer = Lexer("let a : number = 3 + 5;", "1.0")
         val parser = Parser(lexer, "1.0")

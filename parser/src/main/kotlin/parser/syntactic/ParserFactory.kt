@@ -2,7 +2,7 @@ package parser.syntactic
 
 import parser.syntactic.expressions.AssignmentParser
 import parser.syntactic.expressions.ExpressionParser
-import parser.syntactic.statements.ConstDeclarationParser
+import parser.syntactic.statements.DeclarationParser
 import parser.syntactic.statements.StatementParser
 
 object ParserFactory {
@@ -45,7 +45,7 @@ object ParserFactory {
 
     private fun getDefaultStatements(version: String): List<Pair<String, StatementParser>> {
         return listOf(
-            Pair("DECLARATION_KEYWORD", ConstDeclarationParser(version))
+            Pair("DECLARATION_KEYWORD", DeclarationParser(version))
         )
     }
 
