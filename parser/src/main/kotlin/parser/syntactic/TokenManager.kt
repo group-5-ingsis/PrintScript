@@ -47,8 +47,4 @@ class TokenManager private constructor(
     fun hasNext(): Boolean {
         return index < tokens.size
     }
-
-    fun remainingTokens(): List<Token> {
-        return tokens.subList(index, tokens.size)
-    }
 }

@@ -58,14 +58,14 @@ object ParserFactory {
 
     private fun getAllowedExpressions(version: String): List<Pair<String, ExpressionParser>> {
         return when (version) {
-            "1.0" -> getDefaultExpressions()
+            "1.0" -> getDefaultExpressions("1.0")
             else -> throw Error("Version not supported")
         }
     }
 
-    private fun getDefaultExpressions(): List<Pair<String, ExpressionParser>> {
+    private fun getDefaultExpressions(version: String): List<Pair<String, ExpressionParser>> {
         return listOf(
-            Pair("ASSIGN", AssignmentParser)
+            Pair("ASSIGN", AssignmentParser(version))
         )
     }
 }
