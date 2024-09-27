@@ -2,7 +2,6 @@ package parser.syntactic.expressions
 
 import exception.UnknownExpressionException
 import nodes.Expression
-import nodes.Type
 import parser.syntactic.TokenManager
 import token.Token
 

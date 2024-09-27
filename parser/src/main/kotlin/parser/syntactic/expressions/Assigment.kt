@@ -2,13 +2,12 @@ package parser.syntactic.expressions
 
 import exception.InvalidSyntaxException
 import nodes.Expression
-import nodes.Type
 import parser.syntactic.TokenManager
 import token.Token
 
 class Assigment(private val parseInferiorFunction: ExpressionParser) : ExpressionParser {
 
-    override fun parse(tokens: List<Token>, parsedShouldBeOfType: Type): ParseResult {
+    override fun parse(tokens: List<Token>): Expression {
         val (remainingTokens, expression) = parseInferiorFunction.parse(tokens, parsedShouldBeOfType)
 
         val tokenManager = TokenManager(remainingTokens)

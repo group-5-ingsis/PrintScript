@@ -1,6 +1,5 @@
 package parser.syntactic
 
-import parser.syntactic.expressions.ExpressionType
 import parser.syntactic.statements.ExpressionStatementParser
 import parser.syntactic.statements.IfStatementParser
 import parser.syntactic.statements.LetDeclarationParser
@@ -13,26 +12,13 @@ object ParserFactory {
     fun createStatementParser(tokens: List<Token>, version: String): StatementParser {
         val allowedStatements = getAllowedStatements(version)
         val manager = TokenManager(tokens)
-
-        for ((statementType, statementParser) in allowedStatements) {
-            val nextTokenMatchesExpectedType = manager.nextTokenMatchesExpectedType(statementType)
-            if (nextTokenMatchesExpectedType) {
-                manager.advance()
-                val tokensToParse = manager.getTokens()
-                return statementParser.parse(tokensToParse)
-            }
-        }
-
-        val (_, statementParser) = allowedStatements.last()
-        val remainingTokens = manager.getTokens()
-        return statementParser.parse(remainingTokens)
     }
 
     private fun getAllowedStatements(version: String): List<Pair<String, StatementParser>> {
         return when (version) {
             "1.0" -> getDefaultStatements()
             "1.1" -> getDefaultStatements() + listOf(
-                Pair("IF", IfStatementParser(ExpressionType.Companion.makeExpressionEvaluatorV1_1()))
+                Pair("IF", IfStatementParser)
             )
             else -> throw Error("Version not supported")
         }
@@ -40,9 +26,9 @@ object ParserFactory {
 
     private fun getDefaultStatements(): List<Pair<String, StatementParser>> {
         return listOf(
-            Pair("PRINT", PrintStatementParser(ExpressionType.Companion.makeExpressionEvaluatorV1_0())),
-            Pair("DECLARATION_KEYWORD", LetDeclarationParser(ExpressionType.Companion.makeExpressionEvaluatorV1_0())),
-            Pair("", ExpressionStatementParser(ExpressionType.Companion.makeExpressionEvaluatorV1_0()))
+            Pair("PRINT", PrintStatementParser),
+            Pair("DECLARATION_KEYWORD", LetDeclarationParser),
+            Pair("", ExpressionStatementParser)
         )
     }
 }

@@ -7,7 +7,7 @@ object SyntacticParser {
 
     fun parse(tokens: List<Token>, version: String): Statement {
         val statementParser = ParserFactory.createStatementParser(tokens, version)
-        val node = statementParser.parse(tokens)
-        return node
+        val statement = statementParser.parse(tokens)
+        return statement
     }
 }

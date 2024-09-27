@@ -1,12 +1,10 @@
 package parser.syntactic.statements
 
 import nodes.Statement
-import nodes.Type
 import parser.syntactic.TokenManager
-import parser.syntactic.expressions.ExpressionType
 import token.Token
 
-class IfStatementParser(private val expresionEvaluatorV_1_1: ExpressionType, val statementEvaluator: () -> StatementParser) : StatementParser {
+object IfStatementParser : StatementParser {
 
     override fun parse(tokens: List<Token>): ParseStatementResult {
         val stmEvaluator = statementEvaluator()

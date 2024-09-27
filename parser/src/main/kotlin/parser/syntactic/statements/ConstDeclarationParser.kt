@@ -3,9 +3,7 @@ package parser.syntactic.statements
 import exception.SemanticErrorException
 import nodes.Expression
 import nodes.Statement
-import nodes.Type
 import parser.syntactic.TokenManager
-import parser.syntactic.expressions.ExpressionType
 import token.Token
 
 class ConstDeclarationParser(private val expressionEvaluator: ExpressionType) : StatementParser {

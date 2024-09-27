@@ -1,7 +1,6 @@
 package parser.syntactic.expressions
 
 import nodes.Expression
-import nodes.Type
 import parser.syntactic.TokenManager
 import token.Token
 
