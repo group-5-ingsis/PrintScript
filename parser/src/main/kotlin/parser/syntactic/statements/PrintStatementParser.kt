@@ -1,22 +1,28 @@
 package parser.syntactic.statements
 
+import exception.InvalidSyntaxException
 import nodes.Expression
 import nodes.Statement
 import parser.syntactic.TokenManager
-import token.Token
 
 object PrintStatementParser : StatementParser {
-    override fun parse(tokens: List<Token>): ParseStatementResult {
-        var manager = TokenManager(tokens)
+    override fun parse(manager: TokenManager): Statement {
         val position = manager.getPosition()
-        val (remainingTokens, exp) = expressionEvaluator.parse(manager.getTokens())
-        manager = TokenManager(remainingTokens)
-        manager.consumeTokenValue(";")
-
-        return if (exp is Expression.Grouping) {
-            Pair(manager.getTokens(), Statement.Print(exp, position))
+        val expression = parseExpression(manager)
+        manager.consume(";")
+        if (expression is Expression.Grouping) {
+            return Statement.Print(expression, position)
         } else {
-            throw Error("Expression shoud be groupping at line : " + position.line)
+            throw Error("Expected a grouping expression at line: ${position.line}")
+        }
+    }
+
+    private fun parseExpression(manager: TokenManager): Expression {
+        val token = manager.advance()
+        return when (token.type) {
+            "STRING" -> Expression.Literal(token.value, token.position)
+            "NUMBER" -> Expression.Literal(token.value.toDouble(), token.position)
+            else -> throw InvalidSyntaxException("Invalid expression at line: ${token.position.line}")
         }
     }
 }

@@ -4,14 +4,13 @@ import nodes.Statement
 import parser.syntactic.TokenManager
 import token.Token
 
-class BlockStatementParser(val declarationParser: () -> StatementParser) : StatementParser {
-    override fun parse(tokens: List<Token>): ParseStatementResult {
-        val statementParser = declarationParser()
-        val position = TokenManager(tokens).getPosition()
+object BlockStatementParser : StatementParser {
+    override fun parse(tokens: List<Token>): Statement {
         val statements = mutableListOf<Statement>()
+        val position = TokenManager(tokens).getPosition()
         var manager = TokenManager(tokens)
 
-        while (!manager.nextTokenMatchesExpectedType("RIGHT_BRACE") && manager.isNotTheEndOfTokens()) {
+        while (!manager.matches("RIGHT_BRACE") && manager.hasNext()) {
             val (remainingTokens, statement) = statementParser.parse(manager.getTokens())
             manager = TokenManager(remainingTokens)
             statements.add(statement)

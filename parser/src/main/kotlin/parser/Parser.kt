@@ -31,7 +31,7 @@ class Parser(
             try {
                 val statement = SyntacticParser.parse(tokens, version)
 
-                env = SemanticParser.validate(statement, env, readInput)
+                statement = SemanticParser.validate(statement, env, readInput)
 
                 return statement
             } catch (e: Exception) {

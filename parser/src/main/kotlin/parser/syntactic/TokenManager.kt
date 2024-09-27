@@ -3,69 +3,52 @@ package parser.syntactic
 import exception.InvalidSyntaxException
 import token.Position
 import token.Token
-import java.util.*
+import java.util.NoSuchElementException
 
-class TokenManager(tokens: List<Token>) {
+class TokenManager private constructor(
+    private val tokens: List<Token>,
+    private val index: Int
+) {
 
-    private val tokenQueue: Queue<Token> = LinkedList(tokens)
-    private var lastToken: Token = Token("", "", Position(0, 0))
+    constructor(tokens: List<Token>) : this(tokens, 0)
 
-    fun isValue(value: String): Boolean {
-        if (tokenQueue.isEmpty()) {
-            return false
-        }
-        return peek().value == value
-    }
-
-    fun isType(value: String): Boolean {
-        return tokenQueue.isNotEmpty() && peek().type == value
-    }
-
-    fun advance(): Token {
-        if (tokenQueue.isEmpty()) {
-            return lastToken
-        }
-        lastToken = tokenQueue.peek()
-        return tokenQueue.poll() ?: throw NoSuchElementException("No more tokens to consume.")
+    fun advance(): TokenManager {
+        if (index >= tokens.size) throw NoSuchElementException("No more tokens to consume.")
+        return TokenManager(tokens, index + 1)
     }
 
     fun peek(): Token {
-        if (tokenQueue.isEmpty()) {
-            return lastToken
+        if (index >= tokens.size) throw NoSuchElementException("No tokens to peek at.")
+        return tokens[index]
+    }
+
+    fun consume(expectedValue: String): TokenManager {
+        val token = peek()
+        if (token.value != expectedValue) {
+            throw InvalidSyntaxException("Expected '$expectedValue' at line ${token.position.line}")
         }
-        return tokenQueue.peek() ?: throw NoSuchElementException("No tokens to peek at.")
-    }
-
-    fun nextTokenMatchesExpectedType(type: String): Boolean {
-        return peek().type == type
-    }
-
-    fun getTokens(): List<Token> {
-        return tokenQueue.toList()
+        return advance()
     }
 
     fun getPosition(): Position {
         return peek().position
     }
 
-    fun consumeTokenValue(value: String): Token {
-        if (peek().value == value) return advance()
-
-        throw InvalidSyntaxException("Expected '$value' after expression in " + peek().position.toString())
+    fun isValue(value: String): Boolean {
+        if (index >= tokens.size) return false
+        return peek().value == value
     }
 
-    fun consumeTokenType(type: String): Token {
-        if (peek().type == type) return advance()
-
-        throw InvalidSyntaxException("Expect this type: $type in " + peek().position.toString())
+    fun isType(type: String): Boolean {
+        if (index >= tokens.size) return false
+        return peek().type == type
     }
 
-    fun isNotTheEndOfTokens(): Boolean {
-        return (!tokenQueue.isEmpty())
+    fun hasNext(): Boolean {
+        return index < tokens.size
     }
 
-    fun checkTokensAreFromSomeTypes(types: List<String>): Boolean {
-        val nextTokenType = peek().type
-        return types.contains(nextTokenType)
+    fun remainingTokens(): List<Token> {
+        return tokens.subList(index, tokens.size)
     }
 }

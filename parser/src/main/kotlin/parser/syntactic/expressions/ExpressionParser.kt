@@ -1,7 +1,7 @@
 package parser.syntactic.expressions
 import nodes.Expression
-import token.Token
+import parser.syntactic.TokenManager
 
 interface ExpressionParser {
-    fun parse(tokens: List<Token>): Expression
+    fun parse(manager: TokenManager): Expression
 }

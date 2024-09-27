@@ -5,13 +5,21 @@ import parser.syntactic.statements.IfStatementParser
 import parser.syntactic.statements.LetDeclarationParser
 import parser.syntactic.statements.PrintStatementParser
 import parser.syntactic.statements.StatementParser
-import token.Token
 
 object ParserFactory {
 
-    fun createStatementParser(tokens: List<Token>, version: String): StatementParser {
+    fun createStatementParser(manager: TokenManager, version: String): StatementParser {
         val allowedStatements = getAllowedStatements(version)
-        val manager = TokenManager(tokens)
+
+        for ((statementType, parser) in allowedStatements) {
+            val matches = manager.isType(statementType)
+
+            if (matches) {
+                return parser
+            }
+        }
+
+        throw Error("No matching statement parser found for version $version")
     }
 
     private fun getAllowedStatements(version: String): List<Pair<String, StatementParser>> {
