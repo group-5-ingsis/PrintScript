@@ -52,7 +52,7 @@ class DeclarationParser(private val version: String) : StatementParser {
     }
 
     private fun parseInitializer(manager: TokenManager): nodes.Expression {
-        val expressionParser = ParserFactory.createExpressionParser(manager, version)
+        val expressionParser = ParserFactory.createExpressionParser(version)
         return expressionParser.parse(manager)
     }
 }
