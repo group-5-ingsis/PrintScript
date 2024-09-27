@@ -1,6 +1,6 @@
 package parser.syntactic
 
-import exception.InvalidSyntaxException
+import exception.AllowedException
 import token.Position
 import token.Token
 import java.util.NoSuchElementException
@@ -23,14 +23,14 @@ class TokenManager private constructor(
         val token = peek()
         val type = token.type
         if (type != expectedValue) {
-            throw InvalidSyntaxException("Expected '$expectedValue' at line ${token.position.line}, found '$type'")
+            throw AllowedException("Expected '$expectedValue' at line ${token.position.line}, found '$type'")
         }
         return advance()
     }
 
     fun peek(): Token {
         if (index >= tokens.size) {
-            throw NoSuchElementException("No tokens to peek at.")
+            throw AllowedException("No tokens to peek at.")
         }
         return tokens[index]
     }
