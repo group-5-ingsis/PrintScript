@@ -71,8 +71,7 @@ sealed class Expression {
 
     class ReadInput(
         override val position: Position,
-        val value: Grouping,
-        val valueShouldBeOfType: Type
+        val value: Grouping
     ) : Expression() {
         override val expressionType: String = "READ_INPUT"
         override fun <T> accept(visitor: Visitor<T>): T {
@@ -82,8 +81,7 @@ sealed class Expression {
 
     class ReadEnv(
         override val position: Position,
-        val value: Grouping,
-        val valueShouldBeOfType: Type
+        val value: Grouping
     ) : Expression() {
         override val expressionType: String = "READ_ENV"
 

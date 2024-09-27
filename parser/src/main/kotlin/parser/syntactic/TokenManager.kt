@@ -13,21 +13,26 @@ class TokenManager private constructor(
     constructor(tokens: List<Token>) : this(tokens, 0)
 
     fun advance(): TokenManager {
-        if (index >= tokens.size) throw NoSuchElementException("No more tokens to consume.")
+        if (index >= tokens.size) {
+            throw NoSuchElementException("No more tokens to consume.")
+        }
         return TokenManager(tokens, index + 1)
-    }
-
-    fun peek(): Token {
-        if (index >= tokens.size) throw NoSuchElementException("No tokens to peek at.")
-        return tokens[index]
     }
 
     fun consume(expectedValue: String): TokenManager {
         val token = peek()
-        if (token.value != expectedValue) {
-            throw InvalidSyntaxException("Expected '$expectedValue' at line ${token.position.line}")
+        val type = token.type
+        if (type != expectedValue) {
+            throw InvalidSyntaxException("Expected '$expectedValue' at line ${token.position.line}, found '$type'")
         }
         return advance()
+    }
+
+    fun peek(): Token {
+        if (index >= tokens.size) {
+            throw NoSuchElementException("No tokens to peek at.")
+        }
+        return tokens[index]
     }
 
     fun getPosition(): Position {

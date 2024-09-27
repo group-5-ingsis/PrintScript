@@ -3,9 +3,6 @@ package parser.syntactic
 import parser.syntactic.expressions.AssignmentParser
 import parser.syntactic.expressions.ExpressionParser
 import parser.syntactic.statements.ConstDeclarationParser
-import parser.syntactic.statements.ExpressionStatementParser
-import parser.syntactic.statements.IfStatementParser
-import parser.syntactic.statements.PrintStatementParser
 import parser.syntactic.statements.StatementParser
 
 object ParserFactory {
@@ -41,18 +38,14 @@ object ParserFactory {
     private fun getAllowedStatements(version: String): List<Pair<String, StatementParser>> {
         return when (version) {
             "1.0" -> getDefaultStatements("1.0")
-            "1.1" -> getDefaultStatements("1.1") + listOf(
-                Pair("IF", IfStatementParser)
-            )
+            "1.1" -> getDefaultStatements("1.1") + listOf()
             else -> throw Error("Version not supported")
         }
     }
 
     private fun getDefaultStatements(version: String): List<Pair<String, StatementParser>> {
         return listOf(
-            Pair("PRINT", PrintStatementParser(version)),
-            Pair("DECLARATION_KEYWORD", ConstDeclarationParser(version)),
-            Pair("", ExpressionStatementParser)
+            Pair("DECLARATION_KEYWORD", ConstDeclarationParser(version))
         )
     }
 

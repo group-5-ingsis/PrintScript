@@ -2,7 +2,6 @@ package parser
 
 import environment.Environment
 import nodes.Statement
-import parser.semantic.SemanticParser
 import parser.syntactic.SyntacticParser
 import token.Token
 import visitor.InputProvider
@@ -31,7 +30,7 @@ class Parser(
             try {
                 val statement = SyntacticParser.parse(tokens, version)
 
-                statement = SemanticParser.validate(statement, env, readInput)
+                // statement = SemanticParser.validate(statement, env, readInput)
 
                 return statement
             } catch (e: Exception) {

@@ -10,25 +10,28 @@ class ConstDeclarationParser(private val version: String) : StatementParser {
     override fun parse(manager: TokenManager): Statement {
         val position = manager.getPosition()
 
-        val identifier = manager.consume("IDENTIFIER").peek().value
+        var tokenManager = manager.consume("DECLARATION_KEYWORD")
 
-        var updatedManager = manager.consume(":")
+        tokenManager = tokenManager.consume("IDENTIFIER")
+        val identifier = tokenManager.peek().value
+
+        tokenManager = manager.consume(":")
 
         val dataType = manager.peek().value
 
-        updatedManager = updatedManager.consume("VARIABLE_TYPE")
+        tokenManager = tokenManager.consume("VARIABLE_TYPE")
 
-        if (updatedManager.isValue(";")) {
+        if (tokenManager.isValue(";")) {
             throw SemanticErrorException("Invalid procedure: variable '$identifier' of type 'const' cannot be declared.")
         }
 
-        updatedManager = updatedManager.consume("=")
+        tokenManager = tokenManager.consume("=")
 
-        val expressionParser = ParserFactory.createExpressionParser(updatedManager, version)
+        val expressionParser = ParserFactory.createExpressionParser(tokenManager, version)
 
-        val initializer = expressionParser.parse(updatedManager)
+        val initializer = expressionParser.parse(tokenManager)
 
-        updatedManager = updatedManager.consume(";")
+        tokenManager = tokenManager.consume(";")
 
         return Statement.Variable("const", identifier, initializer, dataType, position)
     }
