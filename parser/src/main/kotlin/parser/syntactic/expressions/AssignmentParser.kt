@@ -12,7 +12,7 @@ class AssignmentParser(private val version: String) : ExpressionParser {
 
         if (manager.isValue("=")) {
             val position = manager.getPosition()
-            val newManager = manager.consume("=")
+            val newManager = manager.consumeValue("=")
 
             if (expression is Expression.Variable) {
                 val value = expressionParser.parse(newManager)

@@ -19,9 +19,18 @@ class TokenManager private constructor(
         return TokenManager(tokens, index + 1)
     }
 
-    fun consume(expectedValue: String): TokenManager {
+    fun consumeType(expectedType: String): TokenManager {
         val token = peek()
         val type = token.type
+        if (type != expectedType) {
+            throw AllowedException("Expected '$expectedType' at line ${token.position.line}, found '$type'")
+        }
+        return advance()
+    }
+
+    fun consumeValue(expectedValue: String): TokenManager {
+        val token = peek()
+        val type = token.value
         if (type != expectedValue) {
             throw AllowedException("Expected '$expectedValue' at line ${token.position.line}, found '$type'")
         }
@@ -41,12 +50,14 @@ class TokenManager private constructor(
 
     fun isValue(value: String): Boolean {
         if (index >= tokens.size) return false
-        return peek().value == value
+        val nextTokenType = peek().value
+        return nextTokenType == value
     }
 
-    fun isType(type: String): Boolean {
+    fun nextTokenIsType(type: String): Boolean {
         if (index >= tokens.size) return false
-        return peek().type == type
+        val nextTokenType = peek().type
+        return nextTokenType == type
     }
 
     fun hasNext(): Boolean {

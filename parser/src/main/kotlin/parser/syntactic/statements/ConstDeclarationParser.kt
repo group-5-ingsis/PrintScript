@@ -12,29 +12,33 @@ class ConstDeclarationParser(private val version: String) : StatementParser {
 
         val declarationToken = manager.peek()
         val declarationType = declarationToken.value
-        var tokenManager = manager.consume("DECLARATION_KEYWORD")
+        var tokenManager = manager.consumeType("DECLARATION_KEYWORD")
 
         val identifierToken = tokenManager.peek()
         val identifier = identifierToken.value
-        tokenManager = tokenManager.consume("IDENTIFIER")
+        tokenManager = tokenManager.consumeType("IDENTIFIER")
 
-        tokenManager = tokenManager.consume(":")
+        tokenManager = tokenManager.consumeValue(":")
 
-        val dataType = manager.peek().value
+        val dataTypeToken = tokenManager.peek()
+        val dataType = dataTypeToken.value
 
-        tokenManager = tokenManager.consume("VARIABLE_TYPE")
+        tokenManager = tokenManager.consumeType("VARIABLE_TYPE")
 
-        if (tokenManager.isValue(";") && declarationType == "CONST") {
+        val constDeclaration = declarationType == "CONST"
+        val endOfStatement = tokenManager.isValue(";")
+
+        if (constDeclaration && endOfStatement) {
             throw SemanticErrorException("Invalid procedure: variable '$identifier' of type 'const' cannot be declared.")
         }
 
-        tokenManager = tokenManager.consume("=")
+        tokenManager = tokenManager.consumeValue("=")
 
         val expressionParser = ParserFactory.createExpressionParser(tokenManager, version)
 
         val initializer = expressionParser.parse(tokenManager)
 
-        tokenManager = tokenManager.consume(";")
+        tokenManager = tokenManager.consumeValue(";")
 
         return Statement.Variable("const", identifier, initializer, dataType, position)
     }

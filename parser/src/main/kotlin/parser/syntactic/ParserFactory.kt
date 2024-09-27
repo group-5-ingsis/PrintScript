@@ -11,7 +11,7 @@ object ParserFactory {
         val allowedStatements = getAllowedStatements(version)
 
         for ((statementType, parser) in allowedStatements) {
-            val matches = manager.isType(statementType)
+            val matches = manager.nextTokenIsType(statementType)
 
             if (matches) {
                 return parser
@@ -25,7 +25,7 @@ object ParserFactory {
         val allowedExpressions = getAllowedExpressions(version)
 
         for ((expression, parser) in allowedExpressions) {
-            val matches = manager.isType(expression)
+            val matches = manager.nextTokenIsType(expression)
 
             if (matches) {
                 return parser
