@@ -1,35 +1,35 @@
 package parser.syntactic.statements
 
 import exception.SemanticErrorException
-import nodes.Expression
 import nodes.Statement
+import parser.syntactic.ParserFactory
 import parser.syntactic.TokenManager
-import token.Token
 
-class ConstDeclarationParser(private val expressionEvaluator: ExpressionType) : StatementParser {
+class ConstDeclarationParser(private val version: String) : StatementParser {
 
-    override fun parse(tokens: List<Token>): ParseStatementResult {
-        var manager = TokenManager(tokens)
+    override fun parse(manager: TokenManager): Statement {
         val position = manager.getPosition()
 
-        val identifier = manager.consumeTokenType("IDENTIFIER")
-        var initializer: Expression? = null
+        val identifier = manager.consume("IDENTIFIER").peek().value
 
-        manager.consumeTokenValue(":")
-        val dataType = manager.consumeTokenType("VARIABLE_TYPE").value
+        var updatedManager = manager.consume(":")
 
-        if (manager.isValue(";")) {
-            throw SemanticErrorException("Invalid procedure: variable '${identifier.value}' of type 'const' cannot be declared. ")
+        val dataType = manager.peek().value
+
+        updatedManager = updatedManager.consume("VARIABLE_TYPE")
+
+        if (updatedManager.isValue(";")) {
+            throw SemanticErrorException("Invalid procedure: variable '$identifier' of type 'const' cannot be declared.")
         }
 
-        manager.consumeTokenValue("=")
-        val getType = Type.stringToType(dataType)
-        val (remainingTokens, exp) = expressionEvaluator.parse(manager.getTokens(), getType)
-        initializer = exp
-        manager = TokenManager(remainingTokens)
+        updatedManager = updatedManager.consume("=")
 
-        manager.consumeTokenValue(";")
+        val expressionParser = ParserFactory.createExpressionParser(updatedManager, version)
 
-        return Pair(manager.getTokens(), Statement.Variable("const", identifier.value, initializer, dataType, position))
+        val initializer = expressionParser.parse(updatedManager)
+
+        updatedManager = updatedManager.consume(";")
+
+        return Statement.Variable("const", identifier, initializer, dataType, position)
     }
 }
