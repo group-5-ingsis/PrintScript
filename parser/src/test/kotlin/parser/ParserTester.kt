@@ -21,6 +21,20 @@ class ParserTester {
     }
 
     @Test
+    fun testSimpleDeclarationAssignation() {
+        val input = "let a : number = 3; a = 4"
+        val version = "1.0"
+
+        val lexer = Lexer(input, version)
+        val parser = Parser(lexer, version)
+
+        val ast1 = parser.next()
+        val ast2 = parser.next()
+        println(ast1)
+        println(ast2)
+    }
+
+    @Test
     fun testOperation() {
         val lexer = Lexer("let a : number = 3 + 5;", "1.0")
         val parser = Parser(lexer, "1.0")

@@ -3,7 +3,6 @@ package parser
 import environment.Environment
 import exception.AllowedException
 import nodes.Statement
-import parser.semantic.SemanticParser
 import parser.syntactic.SyntacticParser
 import token.Token
 import utils.InputProvider
@@ -16,13 +15,12 @@ class Parser(
     private var environment: Environment = Environment()
 ) : Iterator<Statement> {
 
-    var tokens: List<Token> = listOf()
-
     override fun hasNext(): Boolean {
         return lexer.hasNext()
     }
 
     override fun next(): Statement {
+        var tokens: List<Token> = listOf()
         var lastException: Exception? = null
 
         while (lexer.hasNext()) {
@@ -30,9 +28,9 @@ class Parser(
             tokens = tokens + nextToken
 
             try {
-                val statement = SyntacticParser.parse(tokens, version)
+                var statement = SyntacticParser.parse(tokens, version)
 
-                statement = SemanticParser.validate(statement, environment, readInput)
+                // statement = SemanticParser.validate(statement, environment, readInput)
 
                 return statement
             } catch (e: Exception) {

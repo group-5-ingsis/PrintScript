@@ -4,9 +4,10 @@ import exception.InvalidSyntaxException
 import parser.syntactic.expressions.AssignmentParser
 import parser.syntactic.expressions.ExpressionParser
 import parser.syntactic.expressions.GroupingParser
+import parser.syntactic.expressions.IdentifierExpressionParser
 import parser.syntactic.expressions.LiteralParser
-import parser.syntactic.expressions.VariableParser
 import parser.syntactic.statements.DeclarationParser
+import parser.syntactic.statements.ExpressionStatementParser
 import parser.syntactic.statements.StatementParser
 
 object ParserFactory {
@@ -22,14 +23,13 @@ object ParserFactory {
             }
         }
 
-        throw Error("No matching statement parser found for version $version")
+        return ExpressionStatementParser(version)
     }
 
-    // Separar por verison (asi agarra boolean como tipo)
     fun createExpressionParser(manager: TokenManager, version: String): ExpressionParser {
         return when {
             manager.nextTokenIsType("ASSIGNMENT") -> AssignmentParser(version)
-            manager.nextTokenIsType("IDENTIFIER") -> VariableParser()
+            manager.nextTokenIsType("IDENTIFIER") -> IdentifierExpressionParser()
             manager.nextTokenIsType("NUMBER") -> LiteralParser()
             manager.nextTokenIsType("STRING") -> LiteralParser()
             manager.nextTokenIsType("(") -> GroupingParser(version)

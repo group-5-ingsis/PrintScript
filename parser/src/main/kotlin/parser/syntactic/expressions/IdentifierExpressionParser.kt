@@ -4,7 +4,7 @@ import exception.UnknownExpressionException
 import nodes.Expression
 import parser.syntactic.TokenManager
 
-class VariableParser : ExpressionParser {
+class IdentifierExpressionParser : ExpressionParser {
     override fun parse(manager: TokenManager): Expression {
         val tokenManger = manager.advance()
         val token = tokenManger.peek()
