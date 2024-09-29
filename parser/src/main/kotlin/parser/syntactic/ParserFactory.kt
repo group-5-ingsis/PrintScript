@@ -28,11 +28,11 @@ object ParserFactory {
     // Separar por verison (asi agarra boolean como tipo)
     fun createExpressionParser(manager: TokenManager, version: String): ExpressionParser {
         return when {
-            manager.nextTokenIsType("VARIABLE") -> VariableParser()
+            manager.nextTokenIsType("ASSIGNMENT") -> AssignmentParser(version)
+            manager.nextTokenIsType("IDENTIFIER") -> VariableParser()
             manager.nextTokenIsType("NUMBER") -> LiteralParser()
             manager.nextTokenIsType("STRING") -> LiteralParser()
             manager.nextTokenIsType("(") -> GroupingParser(version)
-            manager.nextTokenIsType("ASSIGNMENT") -> AssignmentParser(version)
             else -> {
                 val token = manager.peek()
                 throw InvalidSyntaxException("Unexpected token: $token")

@@ -5,8 +5,8 @@ import environment.EnvironmentCreator
 import interpreter.Interpreter
 import lexer.Lexer
 import parser.Parser
+import utils.PrintScriptInputProvider
 import utils.ProgressTracker
-import visitor.PrintScriptInputProvider
 
 class ExecuteCommand(
     private val fileContent: String,

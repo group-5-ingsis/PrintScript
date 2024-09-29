@@ -2,9 +2,8 @@ package interpreter
 
 import environment.Environment
 import nodes.Statement
-import visitor.InputProvider
-import visitor.InterpreterVisitor
-import visitor.PrintScriptInputProvider
+import utils.InputProvider
+import utils.PrintScriptInputProvider
 
 typealias statementVisitorResult = Pair<StringBuilder, Environment>
 

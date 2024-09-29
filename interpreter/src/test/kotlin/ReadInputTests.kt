@@ -8,7 +8,7 @@ import org.junit.Assert.assertThrows
 import org.junit.Test
 import parser.Parser
 import token.Position
-import visitor.PrintScriptInputProvider
+import utils.PrintScriptInputProvider
 
 class ReadInputTests {
     private val version = "1.1"

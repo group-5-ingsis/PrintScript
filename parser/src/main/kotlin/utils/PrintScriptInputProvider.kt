@@ -1,4 +1,6 @@
-package visitor
+package utils
+
+import kotlin.collections.get
 
 class PrintScriptInputProvider(private val inputMap: Map<String, String> = emptyMap()) : InputProvider {
     override fun input(name: String?): String {

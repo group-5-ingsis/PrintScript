@@ -1,10 +1,16 @@
-package visitor
+package interpreter
 
 import environment.Environment
 import nodes.Expression
 import nodes.Statement
+import utils.BinaryOperator
+import utils.InputProvider
+import utils.PrintScriptInputProvider
+import visitor.Visitor
+import visitor.VisitorResult
 
-class InterpreterVisitor(private val environment: Environment = Environment(), val version: String = "1.1", val inputProvider: InputProvider = PrintScriptInputProvider()) : Visitor<VisitorResult> {
+class InterpreterVisitor(private val environment: Environment = Environment(), val version: String = "1.1", val inputProvider: InputProvider = PrintScriptInputProvider()) :
+    Visitor<VisitorResult> {
 
     val readInput = ""
 

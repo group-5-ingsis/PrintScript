@@ -1,15 +1,15 @@
 package parser.semantic.validation
 
 import environment.Environment
+import interpreter.InterpreterVisitor
 import nodes.Expression
 import nodes.Statement
-import visitor.InputProvider
-import visitor.InterpreterVisitor
+import utils.InputProvider
 
 class VariableStatementValidator(private val inputProvider: InputProvider) : Validator<Statement.Variable> {
 
     private fun evaluateExpression(expression: Expression, scope: Environment): Pair<Any?, Environment> {
-        val interpreterVisitor = InterpreterVisitor()
+        val interpreterVisitor = interpreter.InterpreterVisitor()
         return expression.accept(interpreterVisitor)
     }
 

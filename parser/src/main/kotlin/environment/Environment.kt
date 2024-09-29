@@ -1,8 +1,8 @@
 package environment
 
+import interpreter.InterpreterVisitor
 import nodes.Expression
 import nodes.Statement
-import visitor.InterpreterVisitor
 
 class Environment(
 
@@ -27,7 +27,7 @@ class Environment(
         val variable = get(name)
 
         val initializer = variable.initializer ?: return null
-        val result = initializer.accept(InterpreterVisitor())
+        val result = initializer.accept(interpreter.InterpreterVisitor())
 
         return result.first
     }
@@ -46,9 +46,9 @@ class Environment(
         throw Error("Cannot perform assignation on undefined variable '$name'.")
     }
 
-    fun getValue(variableName: String, visitor: InterpreterVisitor): Any? {
+    fun getValue(variableName: String, visitor: interpreter.InterpreterVisitor): Any? {
         val variable = get(variableName)
-        return variable.initializer?.let { visitor.evaluateExpression(it).first }
+        return variable.initializer?.let { interpreter.InterpreterVisitor.evaluateExpression(it).first }
     }
 
     fun contains(varName: String): Boolean {

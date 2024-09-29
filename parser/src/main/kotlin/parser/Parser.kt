@@ -3,10 +3,11 @@ package parser
 import environment.Environment
 import exception.AllowedException
 import nodes.Statement
+import parser.semantic.SemanticParser
 import parser.syntactic.SyntacticParser
 import token.Token
-import visitor.InputProvider
-import visitor.PrintScriptInputProvider
+import utils.InputProvider
+import utils.PrintScriptInputProvider
 
 class Parser(
     private val lexer: Iterator<Token>,
@@ -31,7 +32,7 @@ class Parser(
             try {
                 val statement = SyntacticParser.parse(tokens, version)
 
-                // statement = SemanticParser.validate(statement, env, readInput)
+                statement = SemanticParser.validate(statement, environment, readInput)
 
                 return statement
             } catch (e: Exception) {

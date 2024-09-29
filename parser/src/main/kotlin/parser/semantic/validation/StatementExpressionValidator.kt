@@ -2,10 +2,10 @@ package parser.semantic.validation
 
 import environment.Environment
 import exception.SemanticErrorException
+import interpreter.InterpreterVisitor
 import nodes.Expression
 import nodes.Statement
-import visitor.InputProvider
-import visitor.InterpreterVisitor
+import utils.InputProvider
 
 class StatementExpressionValidator(private val inputProvider: InputProvider) : Validator<Statement.StatementExpression> {
 
@@ -33,7 +33,7 @@ class StatementExpressionValidator(private val inputProvider: InputProvider) : V
         /* null check for getting the value is made on Environment. */
         val variableInfo = scope.get(identifier)
 
-        val actualValue = valueExpression.accept(InterpreterVisitor())
+        val actualValue = valueExpression.accept(interpreter.InterpreterVisitor())
 
         val actualType = getTypeInString(actualValue.first)
 
