@@ -24,6 +24,7 @@ class DeclarationParser(private val version: String) : StatementParser {
         tokenManager = tokenManager.consumeValue("=")
 
         val initializer = parseInitializer(tokenManager)
+        tokenManager = tokenManager.advance()
 
         tokenManager = tokenManager.consumeValue(";")
 
@@ -52,7 +53,7 @@ class DeclarationParser(private val version: String) : StatementParser {
     }
 
     private fun parseInitializer(manager: TokenManager): nodes.Expression {
-        val expressionParser = ParserFactory.createExpressionParser(version)
+        val expressionParser = ParserFactory.createExpressionParser(manager, version)
         return expressionParser.parse(manager)
     }
 }

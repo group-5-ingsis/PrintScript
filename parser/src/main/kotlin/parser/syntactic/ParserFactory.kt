@@ -1,8 +1,11 @@
 package parser.syntactic
 
-import parser.syntactic.expressions.BinaryParser
+import exception.InvalidSyntaxException
+import parser.syntactic.expressions.AssignmentParser
 import parser.syntactic.expressions.ExpressionParser
-import parser.syntactic.expressions.PrimaryParser
+import parser.syntactic.expressions.GroupingParser
+import parser.syntactic.expressions.LiteralParser
+import parser.syntactic.expressions.VariableParser
 import parser.syntactic.statements.DeclarationParser
 import parser.syntactic.statements.StatementParser
 
@@ -22,9 +25,19 @@ object ParserFactory {
         throw Error("No matching statement parser found for version $version")
     }
 
-    fun createExpressionParser(version: String): ExpressionParser {
-        val primary = PrimaryParser(version)
-        return BinaryParser(primary, listOf("PLUS", "MINUS", "STAR", "SLASH", "AND", "OR"))
+    // Separar por verison (asi agarra boolean como tipo)
+    fun createExpressionParser(manager: TokenManager, version: String): ExpressionParser {
+        return when {
+            manager.nextTokenIsType("VARIABLE") -> VariableParser()
+            manager.nextTokenIsType("NUMBER") -> LiteralParser()
+            manager.nextTokenIsType("STRING") -> LiteralParser()
+            manager.nextTokenIsType("(") -> GroupingParser(version)
+            manager.nextTokenIsType("ASSIGNMENT") -> AssignmentParser(version)
+            else -> {
+                val token = manager.peek()
+                throw InvalidSyntaxException("Unexpected token: $token")
+            }
+        }
     }
 
     private fun getAllowedStatements(version: String): List<Pair<String, StatementParser>> {

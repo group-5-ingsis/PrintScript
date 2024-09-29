@@ -6,7 +6,7 @@ import parser.syntactic.TokenManager
 
 class LiteralParser : ExpressionParser {
     override fun parse(manager: TokenManager): Expression {
-        val token = manager.advance()
+        val token = manager.peek()
         val value = when (token.type) {
             "NUMBER" -> token.value.toDouble()
             "STRING" -> token.value

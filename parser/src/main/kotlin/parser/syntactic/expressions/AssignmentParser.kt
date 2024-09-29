@@ -2,10 +2,12 @@ package parser.syntactic.expressions
 
 import exception.InvalidSyntaxException
 import nodes.Expression
+import parser.syntactic.ParserFactory
 import parser.syntactic.TokenManager
 
-class AssignmentParser(private val expressionParser: ExpressionParser) : ExpressionParser {
+class AssignmentParser(val version: String) : ExpressionParser {
     override fun parse(manager: TokenManager): Expression {
+        val expressionParser = ParserFactory.createExpressionParser(manager, version)
         val expression = expressionParser.parse(manager)
 
         if (manager.isValue("=")) {

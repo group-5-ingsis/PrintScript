@@ -6,10 +6,14 @@ import parser.syntactic.TokenManager
 
 class VariableParser : ExpressionParser {
     override fun parse(manager: TokenManager): Expression {
-        val identifier = manager.advance()
-        if (identifier.type != "IDENTIFIER") {
-            throw UnknownExpressionException(identifier)
+        val tokenManger = manager.advance()
+        val token = tokenManger.peek()
+
+        if (token.type != "IDENTIFIER") {
+            throw UnknownExpressionException(token)
         }
-        return Expression.Variable(identifier.value, manager.getPosition())
+
+        val position = manager.getPosition()
+        return Expression.Variable(token.value, position)
     }
 }
