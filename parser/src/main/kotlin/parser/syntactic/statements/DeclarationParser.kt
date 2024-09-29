@@ -47,7 +47,8 @@ class DeclarationParser(private val version: String) : StatementParser {
     }
 
     private fun validateConstDeclaration(declarationType: String, identifier: String, manager: TokenManager) {
-        if (declarationType == "CONST" && manager.isValue(";")) {
+        val nextToken = manager.peek()
+        if (declarationType == "CONST" && nextToken.value == ";") {
             throw SemanticErrorException("Invalid procedure: variable '$identifier' of type 'const' cannot be declared.")
         }
     }

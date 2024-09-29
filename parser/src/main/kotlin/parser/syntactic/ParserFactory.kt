@@ -4,7 +4,6 @@ import exception.InvalidSyntaxException
 import parser.syntactic.expressions.AssignmentParser
 import parser.syntactic.expressions.ExpressionParser
 import parser.syntactic.expressions.GroupingParser
-import parser.syntactic.expressions.IdentifierExpressionParser
 import parser.syntactic.expressions.LiteralParser
 import parser.syntactic.statements.DeclarationParser
 import parser.syntactic.statements.ExpressionStatementParser
@@ -28,8 +27,7 @@ object ParserFactory {
 
     fun createExpressionParser(manager: TokenManager, version: String): ExpressionParser {
         return when {
-            manager.nextTokenIsType("ASSIGNMENT") -> AssignmentParser(version)
-            manager.nextTokenIsType("IDENTIFIER") -> IdentifierExpressionParser()
+            manager.nextTokenIsType("IDENTIFIER") -> AssignmentParser(version)
             manager.nextTokenIsType("NUMBER") -> LiteralParser()
             manager.nextTokenIsType("STRING") -> LiteralParser()
             manager.nextTokenIsType("(") -> GroupingParser(version)

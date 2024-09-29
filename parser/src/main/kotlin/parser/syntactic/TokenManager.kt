@@ -48,12 +48,6 @@ class TokenManager private constructor(
         return peek().position
     }
 
-    fun isValue(value: String): Boolean {
-        if (index >= tokens.size) return false
-        val nextTokenType = peek().value
-        return nextTokenType == value
-    }
-
     fun nextTokenIsType(type: String): Boolean {
         if (index >= tokens.size) return false
         val nextTokenType = peek().type

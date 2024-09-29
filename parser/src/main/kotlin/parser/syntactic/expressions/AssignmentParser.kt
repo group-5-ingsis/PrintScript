@@ -7,18 +7,17 @@ import parser.syntactic.TokenManager
 
 class AssignmentParser(val version: String) : ExpressionParser {
     override fun parse(manager: TokenManager): Expression {
-        val expressionParser = ParserFactory.createExpressionParser(manager, version)
-        val expression = expressionParser.parse(manager)
+        var tokenManager = manager.advance()
+        tokenManager = manager.consumeValue("=")
 
-        if (manager.isValue("=")) {
-            manager.consumeValue("=")
-            if (expression is Expression.Variable) {
-                val value = expressionParser.parse(manager)
-                return Expression.Assign(expression.name, value, manager.getPosition())
-            } else {
-                throw InvalidSyntaxException("Invalid assignment target.")
-            }
+        val expressionParser = ParserFactory.createExpressionParser(tokenManager, version)
+        val expression = expressionParser.parse(tokenManager)
+
+        if (expression is Expression.Variable) {
+            val value = expressionParser.parse(manager)
+            return Expression.Assign(expression.name, value, manager.getPosition())
+        } else {
+            throw InvalidSyntaxException("Invalid assignment target.")
         }
-        return expression
     }
 }
