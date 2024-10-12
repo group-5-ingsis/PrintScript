@@ -3,6 +3,7 @@ package parser
 import environment.Environment
 import exception.AllowedException
 import nodes.Statement
+import parser.semantic.SemanticParser
 import parser.syntactic.SyntacticParser
 import token.Token
 import utils.InputProvider
@@ -30,7 +31,7 @@ class Parser(
             try {
                 var statement = SyntacticParser.parse(tokens, version)
 
-                // statement = SemanticParser.validate(statement, environment, readInput)
+                statement = SemanticParser.validate(statement, environment, readInput)
 
                 return statement
             } catch (e: Exception) {

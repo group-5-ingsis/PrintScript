@@ -1,4 +1,4 @@
-name: Continuos Integration
+name: Continuos Delivery
 
 on:
   pull_request:
@@ -10,4 +10,4 @@ permissions:
 
 jobs:
   ci:
-    uses: husseymarcos/ingsis-workflows/.github/workflows/ci.yml@main
+    uses: husseymarcos/ingsis-workflows/.github/workflows/cd-packages.yml@main
