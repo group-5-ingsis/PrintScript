@@ -36,7 +36,7 @@ class ReadInputTests {
         currentEnvironment = result2.second
         outputBuilder = result2.first
 
-        assertEquals("Hello world!", outputBuilder.toString())
+        assertEquals("Hello world!\n", outputBuilder.toString())
     }
 
     @Test
@@ -62,7 +62,7 @@ class ReadInputTests {
             outputBuilder = result.first
         }
 
-        assertEquals("Welcome John Doe!", outputBuilder.toString())
+        assertEquals("Welcome John Doe!\n", outputBuilder.toString())
     }
 
     @Test
@@ -109,7 +109,7 @@ class ReadInputTests {
             outputBuilder = result.first
         }
 
-        assertEquals("Proceeding...", outputBuilder.toString())
+        assertEquals("Proceeding...\n", outputBuilder.toString())
     }
 
     @Test
@@ -158,7 +158,7 @@ class ReadInputTests {
             outputBuilder = result.first
         }
 
-        assertEquals("The next should be a number and a string: 42 and true", outputBuilder.toString())
+        assertEquals("The next should be a number and a string: 42 and true\n", outputBuilder.toString())
     }
 
     @Test
@@ -180,7 +180,7 @@ class ReadInputTests {
             outputBuilder = result.first
         }
 
-        assertEquals(input, outputBuilder.toString())
+        assertEquals(input + "\n", outputBuilder.toString())
     }
 
     @Test
