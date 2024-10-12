@@ -197,7 +197,7 @@ class InterpreterTest {
         }
 
         // Check that the output matches the expected print result
-        assertEquals("Hello, World!", outputBuilder.toString())
+        assertEquals("Hello, World!\n", outputBuilder.toString())
     }
 
     @Test
@@ -218,7 +218,7 @@ class InterpreterTest {
             asts.setEnv(currentEnvironment)
         }
 
-        assertEquals("First print\nSecond print", outputBuilder.toString())
+        assertEquals("First print\nSecond print\n", outputBuilder.toString())
     }
 
     @Test
@@ -239,7 +239,7 @@ class InterpreterTest {
             asts.setEnv(currentEnvironment)
         }
         // Verify the output for the variable and the expression
-        assertEquals("42\n50", outputBuilder.toString())
+        assertEquals("42\n50\n", outputBuilder.toString())
     }
 
     @Test
@@ -406,7 +406,7 @@ class InterpreterTest {
             asts.setEnv(currentEnvironment)
         }
 
-        assertEquals("What is the best football club?\n" + "San Lorenzo", builder.toString())
+        assertEquals("What is the best football club?\n" + "San Lorenzo\n", builder.toString())
     }
 
     @Test
@@ -426,7 +426,7 @@ class InterpreterTest {
             asts.setEnv(currentEnvironment)
         }
 
-        assertEquals("3", outputBuilder.toString())
+        assertEquals("3\n", outputBuilder.toString())
     }
 
     @Test
@@ -465,7 +465,7 @@ class InterpreterTest {
             currentEnvironment = result.second
             asts.setEnv(currentEnvironment)
         }
-        assertEquals("1", outputBuilder.toString())
+        assertEquals("1\n", outputBuilder.toString())
         assertEquals(1, currentEnvironment.getValue("a"))
     }
 }
