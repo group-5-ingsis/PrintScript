@@ -10,44 +10,44 @@ import utils.InputProvider
 import utils.PrintScriptInputProvider
 
 class Parser(
-    private val lexer: Iterator<Token>,
-    private val version: String = "1.1",
-    private var readInput: InputProvider = PrintScriptInputProvider(),
-    private var environment: Environment = Environment()
+  private val lexer: Iterator<Token>,
+  private val version: String = "1.1",
+  private var readInput: InputProvider = PrintScriptInputProvider(),
+  private var environment: Environment = Environment()
 ) : Iterator<Statement> {
 
-    override fun hasNext(): Boolean {
-        return lexer.hasNext()
-    }
+  override fun hasNext(): Boolean {
+    return lexer.hasNext()
+  }
 
-    override fun next(): Statement {
-        var tokens: List<Token> = listOf()
-        var lastException: Exception? = null
+  override fun next(): Statement {
+    var tokens: List<Token> = listOf()
+    var lastException: Exception? = null
 
-        while (lexer.hasNext()) {
-            val nextToken = lexer.next()
-            tokens = tokens + nextToken
+    while (lexer.hasNext()) {
+      val nextToken = lexer.next()
+      tokens = tokens + nextToken
 
-            try {
-                var statement = SyntacticParser.parse(tokens, version)
+      try {
+        var statement = SyntacticParser.parse(tokens, version)
 
-                statement = SemanticParser.validate(statement, environment, readInput)
+        statement = SemanticParser.validate(statement, environment, readInput)
 
-                return statement
-            } catch (e: Exception) {
-                if (!lexer.hasNext()) {
-                    throw e
-                }
-                if (e !is AllowedException) {
-                    if (lastException != null && lastException::class == e::class && lastException.message == e.message) {
-                        throw e
-                    }
-                }
-
-                lastException = e
-            }
+        return statement
+      } catch (e: Exception) {
+        if (!lexer.hasNext()) {
+          throw e
+        }
+        if (e !is AllowedException) {
+          if (lastException != null && lastException::class == e::class && lastException.message == e.message) {
+            throw e
+          }
         }
 
-        throw NoSuchElementException("No more tokens available to parse")
+        lastException = e
+      }
     }
+
+    throw NoSuchElementException("No more tokens available to parse")
+  }
 }

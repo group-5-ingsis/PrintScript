@@ -6,5 +6,5 @@ import token.Token
 typealias ParseStatementResult = Pair<List<Token>, Statement>
 
 interface StatementParser {
-    fun parse(manager: TokenManager): Statement
+  fun parse(manager: TokenManager): Statement
 }

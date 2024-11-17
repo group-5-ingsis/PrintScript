@@ -8,14 +8,14 @@ import visitor.SemanticVisitor
 
 object SemanticParser {
 
-    fun validate(statement: Statement, environment: Environment, readInput: InputProvider): Statement {
-        val semanticVisitor = SemanticVisitor(environment, readInput)
-        val visitorResult = statement.accept(semanticVisitor)
+  fun validate(statement: Statement, environment: Environment, readInput: InputProvider): Statement {
+    val semanticVisitor = SemanticVisitor(environment, readInput)
+    val visitorResult = statement.accept(semanticVisitor)
 
-        if (!visitorResult.isValid) {
-            throw SemanticErrorException("Invalid procedure: " + visitorResult.message)
-        }
-
-        return statement
+    if (!visitorResult.isValid) {
+      throw SemanticErrorException("Invalid procedure: " + visitorResult.message)
     }
+
+    return statement
+  }
 }

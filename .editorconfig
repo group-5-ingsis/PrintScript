@@ -1,7 +1,5 @@
-# Top-most EditorConfig file
 root = true
 
-# Global rules (apply to all files)
 [*.kt]
 indent_style = space
 indent_size = 2

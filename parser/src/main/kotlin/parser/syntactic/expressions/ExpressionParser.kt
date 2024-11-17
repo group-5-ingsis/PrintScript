@@ -3,5 +3,5 @@ import nodes.Expression
 import parser.syntactic.TokenManager
 
 interface ExpressionParser {
-    fun parse(manager: TokenManager): Expression
+  fun parse(manager: TokenManager): Expression
 }

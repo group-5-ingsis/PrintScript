@@ -10,4 +10,4 @@ permissions:
 
 jobs:
   ci:
-    uses: husseymarcos/ingsis-workflows/.github/workflows/ci.yml@main
+    uses: group-5-ingsis/workflows/.github/workflows/ci-gradle.yml@main

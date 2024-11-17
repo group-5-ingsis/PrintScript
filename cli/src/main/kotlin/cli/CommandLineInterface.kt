@@ -8,28 +8,28 @@ import command.validate.ValidationCommandBuilder
 import utils.CommandParser
 
 object CommandLineInterface {
-    private val commandBuilders: Map<String, CommandBuilder> = getValidBuilders()
+  private val commandBuilders: Map<String, CommandBuilder> = getValidBuilders()
 
-    fun execute(command: String): String {
-        val file = CommandParser.getFile(command)
-        val operation = CommandParser.getOperation(command)
-        val version = CommandParser.getVersion(command)
-        val arguments = CommandParser.getArguments(command)
+  fun execute(command: String): String {
+    val file = CommandParser.getFile(command)
+    val operation = CommandParser.getOperation(command)
+    val version = CommandParser.getVersion(command)
+    val arguments = CommandParser.getArguments(command)
 
-        val commandBuilder = commandBuilders[operation] ?: return "Unknown command: $command"
+    val commandBuilder = commandBuilders[operation] ?: return "Unknown command: $command"
 
-        val command = commandBuilder.build(file, arguments, version)
-        val result = command.execute()
+    val command = commandBuilder.build(file, arguments, version)
+    val result = command.execute()
 
-        return result
-    }
+    return result
+  }
 
-    private fun getValidBuilders(): Map<String, CommandBuilder> {
-        return mapOf(
-            "validate" to ValidationCommandBuilder(),
-            "execute" to ExecuteCommandBuilder(),
-            "format" to FormatCommandBuilder(),
-            "analyze" to AnalyzeCommandBuilder()
-        )
-    }
+  private fun getValidBuilders(): Map<String, CommandBuilder> {
+    return mapOf(
+      "validate" to ValidationCommandBuilder(),
+      "execute" to ExecuteCommandBuilder(),
+      "format" to FormatCommandBuilder(),
+      "analyze" to AnalyzeCommandBuilder()
+    )
+  }
 }
