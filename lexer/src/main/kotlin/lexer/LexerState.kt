@@ -7,3 +7,7 @@ data class LexerState(
   val currentIndex: Int = 0,
   val nextToken: Token? = null
 )
+
+fun Char.isQuote(): Boolean = this == '\'' || this == '\"'
+
+fun Char.isSeparator(separators: List<Char>): Boolean = separators.contains(this)

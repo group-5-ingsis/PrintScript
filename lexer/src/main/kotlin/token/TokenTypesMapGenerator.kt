@@ -13,7 +13,7 @@ object TokenTypesMapGenerator {
   }
 
   private fun getVersionTypesMap(version: String): Map<String, String> {
-    return getDefaultPatternsMap(version) + getVariablePatternsMap(version)
+    return getDefaultPatternsMap(version) + getVersionPatternsMap(version)
   }
 
   private fun getDefaultPatternsMap(version: String): Map<String, String> {
@@ -34,7 +34,7 @@ object TokenTypesMapGenerator {
     }
   }
 
-  private fun getVariablePatternsMap(version: String): Map<String, String> {
+  private fun getVersionPatternsMap(version: String): Map<String, String> {
     val fileName = "$version/token_types.txt"
     val map = mutableMapOf<String, String>()
 

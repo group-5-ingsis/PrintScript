@@ -1,7 +1,5 @@
 package lexer
 
-import lexer.LexerUtils.isQuote
-import lexer.LexerUtils.isSeparator
 import token.Token
 import token.TokenGenerator
 import java.io.BufferedReader

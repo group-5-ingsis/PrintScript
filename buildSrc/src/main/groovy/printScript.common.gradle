@@ -45,12 +45,6 @@ koverReport {
             }
         }
     }
-
-    defaults {
-        html {
-            onCheck = true
-        }
-    }
 }
 
 

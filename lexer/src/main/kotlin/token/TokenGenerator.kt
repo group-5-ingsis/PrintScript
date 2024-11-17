@@ -1,6 +1,6 @@
 package token
 
-class TokenGenerator(private val version: String = "1.1") {
+class TokenGenerator(private val version: String) {
 
   fun generateToken(
     value: String,

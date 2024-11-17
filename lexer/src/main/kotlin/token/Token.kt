@@ -5,3 +5,8 @@ data class Token(
   val type: String,
   val position: Position
 )
+
+data class Position(
+  val line: Int,
+  val symbolIndex: Int
+)
