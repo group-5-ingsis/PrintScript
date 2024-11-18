@@ -18,3 +18,7 @@ class InputStreamInputSource(private val stream: InputStream) : InputSource {
     return stream.bufferedReader()
   }
 }
+
+fun Char.isQuote(): Boolean = this == '\'' || this == '\"'
+
+fun Char.isSeparator(separators: List<Char>): Boolean = separators.contains(this)
