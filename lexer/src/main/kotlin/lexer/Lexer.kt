@@ -52,18 +52,32 @@ class Lexer(inputSource: InputSource, version: String = "1.1") : Iterator<Token>
     var buffer = state.buffer
     var currentIndex = state.currentIndex
     val tokens = mutableListOf<Token>()
+    var isInsideQuote = false
+    var currentQuoteChar: Char? = null
 
     for (currentChar in line) {
       currentIndex++
-      when {
-        currentChar.isWhitespace() -> {
-          handleWhitespace(buffer, tokens, currentIndex)
+
+      if (currentChar.isQuote()) {
+        if (isInsideQuote && currentQuoteChar == currentChar) {
+          tokens += tokenGenerator.generateToken(buffer, state.currentRow, currentIndex - buffer.length)
           buffer = ""
+          isInsideQuote = false
+        } else if (!isInsideQuote) {
+          isInsideQuote = true
+          currentQuoteChar = currentChar
+          if (buffer.isNotEmpty()) {
+            tokens += tokenGenerator.generateToken(buffer, state.currentRow, currentIndex - buffer.length)
+            buffer = ""
+          }
         }
-        currentChar.isSeparator(separators) -> {
-          buffer = handleSeparator(buffer, currentChar, tokens, currentIndex)
-        }
-        else -> buffer += currentChar
+      } else if (currentChar.isWhitespace()) {
+        handleWhitespace(buffer, tokens, currentIndex)
+        buffer = ""
+      } else if (currentChar.isSeparator(separators)) {
+        buffer = handleSeparator(buffer, currentChar, tokens, currentIndex)
+      } else {
+        buffer += currentChar
       }
     }
 
