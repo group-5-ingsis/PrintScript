@@ -7,6 +7,8 @@ import kotlin.test.Test
 
 class BasicSyntaxTests {
 
+  private val version = "1.1"
+
   private fun collectTokens(lexer: Lexer): List<Token> {
     val tokens = mutableListOf<Token>()
     while (lexer.hasNext()) {
@@ -26,7 +28,7 @@ class BasicSyntaxTests {
       Token(";", "PUNCTUATION", Position(1, 10))
     )
 
-    val tokens = Lexer.create(input)
+    val tokens = Lexer.fromString(input, version)
     assertEquals(expected, collectTokens(tokens))
   }
 
@@ -46,7 +48,7 @@ class BasicSyntaxTests {
       Token(";", "PUNCTUATION", Position(2, 10))
     )
 
-    val tokens = Lexer.create(input)
+    val tokens = Lexer.fromString(input)
     assertEquals(expected, collectTokens(tokens))
   }
 }

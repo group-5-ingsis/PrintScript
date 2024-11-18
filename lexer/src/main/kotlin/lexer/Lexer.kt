@@ -2,25 +2,23 @@ package lexer
 
 import token.Token
 import token.TokenGenerator
-import java.io.BufferedReader
 import java.io.InputStream
-import java.io.InputStreamReader
 
-class Lexer(reader: BufferedReader, version: String = "1.1") : Iterator<Token> {
-  private val lines = reader.lineSequence().iterator()
+class Lexer(inputSource: InputSource, version: String = "1.1") : Iterator<Token> {
+  private val lines = inputSource.toBufferedReader().lineSequence().iterator() // Using the BufferedReader from the InputSource
   private var state = LexerState()
   private val tokenGenerator = TokenGenerator(version)
   private val separators = listOf(';', ':', '(', ')', '+', '-', '/', '*', '}', '{', '=')
 
   companion object {
-    fun create(input: Any, version: String = "1.1"): Lexer {
-      val reader = when (input) {
-        is String -> BufferedReader(input.reader())
-        is InputStream -> BufferedReader(InputStreamReader(input))
-        is BufferedReader -> input
-        else -> throw IllegalArgumentException("Unsupported input type: ${input::class.simpleName}")
-      }
-      return Lexer(reader, version)
+    fun fromString(input: String, version: String = "1.1"): Lexer {
+      val inputSource = StringInputSource(input)
+      return Lexer(inputSource, version)
+    }
+
+    fun fromInputStream(inputStream: InputStream, version: String = "1.1"): Lexer {
+      val inputSource = InputStreamInputSource(inputStream)
+      return Lexer(inputSource, version)
     }
   }
 
