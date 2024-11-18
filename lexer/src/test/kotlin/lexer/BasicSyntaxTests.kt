@@ -26,7 +26,7 @@ class BasicSyntaxTests {
       Token(";", "PUNCTUATION", Position(1, 10))
     )
 
-    val tokens = Lexer.fromString(input)
+    val tokens = Lexer.create(input)
     assertEquals(expected, collectTokens(tokens))
   }
 
@@ -46,7 +46,7 @@ class BasicSyntaxTests {
       Token(";", "PUNCTUATION", Position(2, 10))
     )
 
-    val tokens = Lexer.fromString(input)
+    val tokens = Lexer.create(input)
     assertEquals(expected, collectTokens(tokens))
   }
 }

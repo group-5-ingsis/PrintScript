@@ -38,7 +38,7 @@ class ControlStructureTests {
       Token("}", "RIGHT_BRACE", Position(1, 36))
     )
 
-    val tokens = Lexer.fromString(input, "1.1")
+    val tokens = Lexer.create(input, "1.1")
     assertEquals(expected, collectTokens(tokens))
   }
 }

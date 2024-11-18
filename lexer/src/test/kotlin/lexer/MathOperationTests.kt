@@ -26,7 +26,7 @@ class MathOperationTests {
       Token("z", "IDENTIFIER", Position(1, 8))
     )
 
-    val tokens = Lexer.fromString(input)
+    val tokens = Lexer.create(input)
     assertEquals(expected, collectTokens(tokens))
   }
 }

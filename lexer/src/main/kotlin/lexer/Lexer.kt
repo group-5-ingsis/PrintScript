@@ -13,12 +13,14 @@ class Lexer(reader: BufferedReader, version: String = "1.1") : Iterator<Token> {
   private val separators = listOf(';', ':', '(', ')', '+', '-', '/', '*', '}', '{', '=')
 
   companion object {
-    fun fromString(input: String, version: String = "1.1"): Lexer {
-      return Lexer(BufferedReader(input.reader()), version)
-    }
-
-    fun fromInputStream(inputStream: InputStream, version: String = "1.1"): Lexer {
-      return Lexer(BufferedReader(InputStreamReader(inputStream)), version)
+    fun create(input: Any, version: String = "1.1"): Lexer {
+      val reader = when (input) {
+        is String -> BufferedReader(input.reader())
+        is InputStream -> BufferedReader(InputStreamReader(input))
+        is BufferedReader -> input
+        else -> throw IllegalArgumentException("Unsupported input type: ${input::class.simpleName}")
+      }
+      return Lexer(reader, version)
     }
   }
 

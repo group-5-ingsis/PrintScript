@@ -2,7 +2,8 @@ package runner
 
 object Runner {
 
-  fun validate() {}
+  fun validate() {
+  }
 
   fun format() {}
 
