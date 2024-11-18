@@ -1,12 +1,6 @@
 OPERATOR :: \+, \-, \*, /
-LET :: let
-VARIABLE_TYPE :: string,number,boolean
-PRINT :: println
-BOOLEAN :: true,false
-CONST :: const
-IF :: if
-ELSE :: else
-LEFT_BRACE :: \{
-RIGHT_BRACE :: \}
-READ_INPUT :: readInput
-READ_ENV :: readEnv
+DECLARATION_KEYWORD :: let, const
+VARIABLE_TYPE :: string, number, boolean
+METHOD_CALL :: println, readInput, readInput
+CONDITIONAL :: if, else
+SCOPE :: \{, \}

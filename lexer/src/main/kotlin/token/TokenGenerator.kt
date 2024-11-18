@@ -9,7 +9,7 @@ class TokenGenerator(private val version: String) {
     val type = getTypeFromValue(value)
 
     if (type == "UNKNOWN") {
-      throw IllegalArgumentException("Unknown symbol $value in line ${position.line} index ${position.symbolIndex}")
+      throw IllegalArgumentException("Unknown symbol $value in line ${position.line} index ${position.startIndex}")
     }
 
     if (type == "STRING") {

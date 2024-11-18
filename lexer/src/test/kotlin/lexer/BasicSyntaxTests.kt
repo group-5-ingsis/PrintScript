@@ -21,10 +21,10 @@ class BasicSyntaxTests {
   fun testLexSimpleVariableDeclaration() {
     val input = "let x = 10;"
     val expected = listOf(
-      Token("let", "LET", Position(1, 1)),
-      Token("x", "IDENTIFIER", Position(1, 5)),
-      Token("=", "ASSIGNMENT", Position(1, 7)),
-      Token("10", "NUMBER", Position(1, 9)),
+      Token("let", "LET", Position(1, 0)),
+      Token("x", "IDENTIFIER", Position(1, 4)),
+      Token("=", "ASSIGNMENT", Position(1, 6)),
+      Token("10", "NUMBER", Position(1, 8)),
       Token(";", "PUNCTUATION", Position(1, 10))
     )
 
