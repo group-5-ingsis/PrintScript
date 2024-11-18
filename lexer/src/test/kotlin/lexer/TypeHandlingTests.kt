@@ -28,7 +28,7 @@ class TypeHandlingTests {
       Token(";", "PUNCTUATION", Position(1, 23))
     )
 
-    val tokens = Lexer.create(input)
+    val tokens = Lexer.fromString(input)
     assertEquals(expected, collectTokens(tokens))
   }
 
@@ -49,7 +49,7 @@ class TypeHandlingTests {
       Token(";", "PUNCTUATION", Position(1, 43))
     )
 
-    val tokens = Lexer.create(input)
+    val tokens = Lexer.fromString(input)
     assertEquals(expected, collectTokens(tokens))
   }
 }

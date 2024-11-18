@@ -4,11 +4,9 @@ class TokenGenerator(private val version: String) {
 
   fun generateToken(
     value: String,
-    row: Int,
-    symbolIndex: Int
+    position: Position
   ): Token {
     val type = getTypeFromValue(value)
-    val position = Position(row, symbolIndex)
 
     if (type == "UNKNOWN") {
       throw IllegalArgumentException("Unknown symbol $value in line ${position.line} index ${position.symbolIndex}")

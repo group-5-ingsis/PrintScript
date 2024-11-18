@@ -11,7 +11,8 @@ class TokenGeneratorTest {
   fun testGenerateTokenDeclarationKeyword() {
     val input = "let"
     val expected = Token("let", "DECLARATION_KEYWORD", Position(1, 1))
-    val actual = tokenGenerator.generateToken(input, 1, 1)
+    val position = Position(1, 1)
+    val actual = tokenGenerator.generateToken(input, position)
     assertEquals(expected, actual)
   }
 
@@ -19,7 +20,8 @@ class TokenGeneratorTest {
   fun testGenerateTokenIdentifier() {
     val input = "x"
     val expected = Token("x", "IDENTIFIER", Position(1, 1))
-    val actual = tokenGenerator.generateToken(input, 1, 1)
+    val position = Position(1, 1)
+    val actual = tokenGenerator.generateToken(input, position)
     assertEquals(expected, actual)
   }
 
@@ -27,7 +29,8 @@ class TokenGeneratorTest {
   fun testGenerateTokenNumber() {
     val input = "10"
     val expected = Token("10", "NUMBER", Position(1, 1))
-    val actual = tokenGenerator.generateToken(input, 1, 1)
+    val position = Position(1, 1)
+    val actual = tokenGenerator.generateToken(input, position)
     assertEquals(expected, actual)
   }
 
@@ -35,7 +38,8 @@ class TokenGeneratorTest {
   fun testGenerateTokenStringWithQuotes() {
     val input = "\"hello\""
     val expected = Token("hello", "STRING", Position(1, 1))
-    val actual = tokenGenerator.generateToken(input, 1, 1)
+    val position = Position(1, 1)
+    val actual = tokenGenerator.generateToken(input, position)
     assertEquals(expected, actual)
   }
 
@@ -43,7 +47,8 @@ class TokenGeneratorTest {
   fun testGenerateTokenAssignment() {
     val input = "="
     val expected = Token("=", "ASSIGNMENT", Position(1, 1))
-    val actual = tokenGenerator.generateToken(input, 1, 1)
+    val position = Position(1, 1)
+    val actual = tokenGenerator.generateToken(input, position)
     assertEquals(expected, actual)
   }
 }

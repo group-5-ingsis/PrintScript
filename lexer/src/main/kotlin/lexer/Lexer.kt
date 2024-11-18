@@ -1,5 +1,6 @@
 package lexer
 
+import token.Position
 import token.Token
 import token.TokenGenerator
 import java.io.InputStream
@@ -60,14 +61,16 @@ class Lexer(inputSource: InputSource, version: String = "1.1") : Iterator<Token>
 
       if (currentChar.isQuote()) {
         if (isInsideQuote && currentQuoteChar == currentChar) {
-          tokens += tokenGenerator.generateToken(buffer, state.currentRow, currentIndex - buffer.length)
+          val position = Position(state.currentRow, currentIndex - buffer.length - 1)
+          tokens += tokenGenerator.generateToken(buffer, position)
           buffer = ""
           isInsideQuote = false
         } else if (!isInsideQuote) {
           isInsideQuote = true
           currentQuoteChar = currentChar
           if (buffer.isNotEmpty()) {
-            tokens += tokenGenerator.generateToken(buffer, state.currentRow, currentIndex - buffer.length)
+            val position = Position(state.currentRow, currentIndex - buffer.length - 1)
+            tokens += tokenGenerator.generateToken(buffer, position)
             buffer = ""
           }
         }
@@ -96,7 +99,8 @@ class Lexer(inputSource: InputSource, version: String = "1.1") : Iterator<Token>
     currentIndex: Int
   ) {
     if (buffer.isNotEmpty()) {
-      tokens += tokenGenerator.generateToken(buffer, state.currentRow, currentIndex - buffer.length)
+      val position = Position(state.currentRow, currentIndex - buffer.length - 1)
+      tokens += tokenGenerator.generateToken(buffer, position)
     }
   }
 
@@ -107,9 +111,11 @@ class Lexer(inputSource: InputSource, version: String = "1.1") : Iterator<Token>
     currentIndex: Int
   ): String {
     if (buffer.isNotEmpty()) {
-      tokens += tokenGenerator.generateToken(buffer, state.currentRow, currentIndex - buffer.length)
+      val position = Position(state.currentRow, currentIndex - buffer.length - 1)
+      tokens += tokenGenerator.generateToken(buffer, position)
     }
-    tokens += tokenGenerator.generateToken(currentChar.toString(), state.currentRow, currentIndex - 1)
+    val position = Position(state.currentRow, currentIndex - 1)
+    tokens += tokenGenerator.generateToken(currentChar.toString(), position)
     return ""
   }
 }
