@@ -1,4 +1,0 @@
-OPERATOR :: \+, \-, \*, /
-DECLARATION_KEYWORD :: let
-VARIABLE_TYPE :: string, number
-METHOD_CALL :: println
