@@ -133,7 +133,7 @@ class Lexer(inputSource: InputSource, version: String = "1.1") : Iterator<Token>
       return token
     }
 
-    return handleSeparator(currentChar, currentRow, currentIndex)
+    return handleSeparator(currentChar, currentRow, currentIndex - 1)
   }
 
   private fun accumulateBuffer(currentChar: Char) {

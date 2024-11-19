@@ -36,12 +36,12 @@ class BasicSyntaxTests {
   fun testLexMultiLineVariableDeclaration() {
     val input = "let x = 10;\nlet y = 20;"
     val expected = listOf(
-      Token("let", "LET", Position(1, 1)),
-      Token("x", "IDENTIFIER", Position(1, 5)),
-      Token("=", "ASSIGNMENT", Position(1, 7)),
-      Token("10", "NUMBER", Position(1, 9)),
+      Token("let", "DECLARATION_KEYWORD", Position(1, 0)),
+      Token("x", "IDENTIFIER", Position(1, 4)),
+      Token("=", "ASSIGNMENT", Position(1, 6)),
+      Token("10", "NUMBER", Position(1, 8)),
       Token(";", "PUNCTUATION", Position(1, 10)),
-      Token("let", "LET", Position(2, 1)),
+      Token("let", "LET", Position(2, 0)),
       Token("y", "IDENTIFIER", Position(2, 5)),
       Token("=", "ASSIGNMENT", Position(2, 7)),
       Token("20", "NUMBER", Position(2, 9)),

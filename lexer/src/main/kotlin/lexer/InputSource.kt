@@ -3,7 +3,7 @@ package lexer
 import java.io.BufferedReader
 import java.io.InputStream
 
-interface InputSource {
+sealed interface InputSource {
   fun toBufferedReader(): BufferedReader
 }
 
