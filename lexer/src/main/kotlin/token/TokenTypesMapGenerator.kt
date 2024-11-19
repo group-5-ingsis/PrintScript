@@ -14,7 +14,7 @@ object TokenTypesMapGenerator {
       "=" to "ASSIGNMENT",
       """^-?\d+(\.\d+)?$""" to "NUMBER",
       """^(['"]).*\1$""" to "STRING",
-      """^[,;.(){}:\"\']$""" to "PUNCTUATION"
+      """^[,;.():\"\']$""" to "PUNCTUATION"
     )
   }
 
@@ -22,15 +22,16 @@ object TokenTypesMapGenerator {
     return when (version) {
       "1.0" -> mapOf(
         """[+\-*/]""" to "OPERATOR",
-        """let""" to "DECLARATION_KEYWORD",
+        """let""" to "DECLARATION",
         """string|number""" to "VARIABLE_TYPE",
         """println""" to "METHOD"
       )
       "1.1" -> mapOf(
         """[+\-*/]""" to "OPERATOR",
-        """let|const""" to "DECLARATION_KEYWORD",
+        """let|const""" to "DECLARATION",
         """string|number|boolean""" to "VARIABLE_TYPE",
         """println|readInput""" to "METHOD",
+        """true|false""" to "BOOLEAN",
         """if|else""" to "CONDITIONAL",
         """\{|\}""" to "SCOPE"
       )

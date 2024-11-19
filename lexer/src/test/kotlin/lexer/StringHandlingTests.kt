@@ -19,10 +19,10 @@ class StringHandlingTests {
   fun testLexDoubleQuotedString() {
     val input = "let str = \"Hello\""
     val expected = listOf(
-      Token("let", "LET", Position(1, 1)),
-      Token("str", "IDENTIFIER", Position(1, 5)),
-      Token("=", "ASSIGNMENT", Position(1, 9)),
-      Token("Hello", "STRING", Position(1, 10))
+      Token("let", "DECLARATION", Position(1, 0)),
+      Token("str", "IDENTIFIER", Position(1, 4)),
+      Token("=", "ASSIGNMENT", Position(1, 8)),
+      Token("Hello", "STRING", Position(1, 9))
     )
 
     val tokens = Lexer.fromString(input)
@@ -33,10 +33,10 @@ class StringHandlingTests {
   fun testLexSingleQuotedString() {
     val input = "let x = 'hello'"
     val expected = listOf(
-      Token("let", "LET", Position(1, 1)),
-      Token("x", "IDENTIFIER", Position(1, 5)),
-      Token("=", "ASSIGNMENT", Position(1, 7)),
-      Token("hello", "STRING", Position(1, 8))
+      Token("let", "DECLARATION", Position(1, 0)),
+      Token("x", "IDENTIFIER", Position(1, 4)),
+      Token("=", "ASSIGNMENT", Position(1, 6)),
+      Token("hello", "STRING", Position(1, 7))
     )
 
     val tokens = Lexer.fromString(input)

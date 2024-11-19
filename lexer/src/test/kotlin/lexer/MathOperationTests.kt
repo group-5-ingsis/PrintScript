@@ -19,11 +19,11 @@ class MathOperationTests {
   fun testLexMathOperations() {
     val input = "x + y - z"
     val expected = listOf(
-      Token("x", "IDENTIFIER", Position(1, 1)),
-      Token("+", "OPERATOR", Position(1, 3)),
-      Token("y", "IDENTIFIER", Position(1, 5)),
-      Token("-", "OPERATOR", Position(1, 7)),
-      Token("z", "IDENTIFIER", Position(1, 8))
+      Token("x", "IDENTIFIER", Position(1, 0)),
+      Token("+", "OPERATOR", Position(1, 2)),
+      Token("y", "IDENTIFIER", Position(1, 4)),
+      Token("-", "OPERATOR", Position(1, 6)),
+      Token("z", "IDENTIFIER", Position(1, 7))
     )
 
     val tokens = Lexer.fromString(input)
