@@ -1,31 +1,28 @@
 package parser
 
-import environment.Environment
+import environment.EnvironmentCreator
 import exception.AllowedException
 import nodes.Statement
 import parser.semantic.SemanticParser
 import parser.syntactic.SyntacticParser
 import token.Token
 import utils.InputProvider
-import utils.PrintScriptInputProvider
 
-class Parser(
-  private val lexer: Iterator<Token>,
-  private val version: String = "1.1",
-  private var readInput: InputProvider = PrintScriptInputProvider(),
-  private var environment: Environment = Environment()
-) : Iterator<Statement> {
+class Parser(private val tokenIterator: Iterator<Token>, private val version: String = "1.1") : Iterator<Statement> {
+
+  private var readInput: InputProvider = InputProvider()
+  private val environment = EnvironmentCreator.create(System.getenv())
 
   override fun hasNext(): Boolean {
-    return lexer.hasNext()
+    return tokenIterator.hasNext()
   }
 
   override fun next(): Statement {
     var tokens: List<Token> = listOf()
     var lastException: Exception? = null
 
-    while (lexer.hasNext()) {
-      val nextToken = lexer.next()
+    while (tokenIterator.hasNext()) {
+      val nextToken = tokenIterator.next()
       tokens = tokens + nextToken
 
       try {
@@ -35,7 +32,7 @@ class Parser(
 
         return statement
       } catch (e: Exception) {
-        if (!lexer.hasNext()) {
+        if (!tokenIterator.hasNext()) {
           throw e
         }
         if (e !is AllowedException) {

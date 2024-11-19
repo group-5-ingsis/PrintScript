@@ -3,7 +3,6 @@ package interpreter
 import environment.Environment
 import nodes.Statement
 import utils.InputProvider
-import utils.PrintScriptInputProvider
 
 typealias statementVisitorResult = Pair<StringBuilder, Environment>
 
@@ -13,7 +12,7 @@ object Interpreter {
     statement: Statement,
     version: String = "1.1",
     scope: Environment,
-    inputProvider: InputProvider = PrintScriptInputProvider()
+    inputProvider: InputProvider = InputProvider()
   ): statementVisitorResult {
     var outputHandler = StringBuilder()
     val interpreterVisitor = InterpreterVisitor(scope, version, inputProvider)

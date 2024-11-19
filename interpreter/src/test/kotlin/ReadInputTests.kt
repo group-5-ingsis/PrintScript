@@ -8,7 +8,7 @@ import org.junit.Assert.assertThrows
 import org.junit.Test
 import parser.Parser
 import token.Position
-import utils.PrintScriptInputProvider
+import utils.InputProvider
 
 class ReadInputTests {
   private val version = "1.1"
@@ -20,7 +20,7 @@ class ReadInputTests {
 
     val tokens = Lexer(fileContents, version)
 
-    val inputProvider = PrintScriptInputProvider(mapOf("Name:" to input))
+    val inputProvider = InputProvider(mapOf("Name:" to input))
     val asts = Parser(tokens, version, inputProvider)
     var outputBuilder = StringBuilder()
     var currentEnvironment = createEnvironmentFromMap(System.getenv())
@@ -48,7 +48,7 @@ class ReadInputTests {
     val inputs = mapOf("First Name:" to "John", "Last Name:" to "Doe")
 
     val tokens = Lexer(fileContents, version)
-    val inputProvider = PrintScriptInputProvider(inputs)
+    val inputProvider = InputProvider(inputs)
     val asts = Parser(tokens, version, inputProvider)
 
     var outputBuilder = StringBuilder()
@@ -70,7 +70,7 @@ class ReadInputTests {
     val input = "notANumber"
 
     val tokens = Lexer(fileContents, version)
-    val inputProvider = PrintScriptInputProvider(mapOf("Age:" to input))
+    val inputProvider = InputProvider(mapOf("Age:" to input))
     val asts = Parser(tokens, version, inputProvider)
 
     var outputBuilder = StringBuilder()
@@ -95,7 +95,7 @@ class ReadInputTests {
     val input = "true"
 
     val tokens = Lexer(fileContents, version)
-    val inputProvider = PrintScriptInputProvider(mapOf("Do you want to proceed?" to input))
+    val inputProvider = InputProvider(mapOf("Do you want to proceed?" to input))
     val asts = Parser(tokens, version, inputProvider)
 
     var outputBuilder = StringBuilder()
@@ -117,7 +117,7 @@ class ReadInputTests {
     val input = "hello"
 
     val tokens = Lexer(fileContents, version)
-    val inputProvider = PrintScriptInputProvider(mapOf("Enter a string:" to input))
+    val inputProvider = InputProvider(mapOf("Enter a string:" to input))
     val asts = Parser(tokens, version, inputProvider)
 
     var outputBuilder = StringBuilder()
@@ -144,7 +144,7 @@ class ReadInputTests {
     )
 
     val tokens = Lexer(fileContents, version)
-    val inputProvider = PrintScriptInputProvider(inputs)
+    val inputProvider = InputProvider(inputs)
     val asts = Parser(tokens, version, inputProvider)
 
     var outputBuilder = StringBuilder()
@@ -166,7 +166,7 @@ class ReadInputTests {
     val input = "a".repeat(1000000) // 1 million characters
 
     val tokens = Lexer(fileContents, version)
-    val inputProvider = PrintScriptInputProvider(mapOf("Long input:" to input))
+    val inputProvider = InputProvider(mapOf("Long input:" to input))
     val asts = Parser(tokens, version, inputProvider)
 
     var outputBuilder = StringBuilder()
@@ -195,7 +195,7 @@ class ReadInputTests {
     )
 
     val tokens = Lexer(fileContents, version)
-    val inputProvider = PrintScriptInputProvider(inputs)
+    val inputProvider = InputProvider(inputs)
     val asts = Parser(tokens, version, inputProvider)
 
     var outputBuilder = StringBuilder()

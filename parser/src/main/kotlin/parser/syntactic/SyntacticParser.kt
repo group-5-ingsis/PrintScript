@@ -6,9 +6,8 @@ import token.Token
 object SyntacticParser {
 
   fun parse(tokens: List<Token>, version: String): Statement {
-    val tokenManager = TokenManager(tokens)
-    val statementParser = ParserFactory.createStatementParser(tokenManager, version)
-    val statement = statementParser.parse(tokenManager)
+    val statementParser = ParserFactory.createStatementParser(tokens, version)
+    val statement = statementParser.parse(tokens)
     return statement
   }
 }

@@ -5,11 +5,10 @@ import nodes.Expression
 import nodes.Statement
 import utils.BinaryOperator
 import utils.InputProvider
-import utils.PrintScriptInputProvider
 import visitor.Visitor
 import visitor.VisitorResult
 
-class InterpreterVisitor(private val environment: Environment = Environment(), val version: String = "1.1", val inputProvider: InputProvider = PrintScriptInputProvider()) :
+class InterpreterVisitor(private val environment: Environment = Environment(), val version: String = "1.1", val inputProvider: InputProvider = InputProvider()) :
   Visitor<VisitorResult> {
 
   val readInput = ""

@@ -4,12 +4,14 @@ import exception.SemanticErrorException
 import nodes.Statement
 import parser.syntactic.ParserFactory
 import parser.syntactic.TokenManager
+import token.Token
 
 class DeclarationParser(private val version: String) : StatementParser {
 
-  override fun parse(manager: TokenManager): Statement {
+  override fun parse(tokens: List<Token>): Statement {
+    val manager = TokenManager(tokens)
     val declarationType = parseDeclarationType(manager)
-    var tokenManager = manager.consumeType("DECLARATION_KEYWORD")
+    var tokenManager = manager.consumeType("DECLARATION")
 
     val identifier = parseIdentifier(tokenManager)
     tokenManager = tokenManager.consumeType("IDENTIFIER")
@@ -28,7 +30,7 @@ class DeclarationParser(private val version: String) : StatementParser {
 
     tokenManager = tokenManager.consumeValue(";")
 
-    val position = manager.getPosition()
+    val position = tokenManager.getPosition()
     return Statement.Variable(declarationType, identifier, initializer, dataType, position)
   }
 

@@ -5,7 +5,7 @@ import environment.EnvironmentCreator
 import interpreter.Interpreter
 import lexer.Lexer
 import parser.Parser
-import utils.PrintScriptInputProvider
+import utils.InputProvider
 import utils.ProgressTracker
 
 class ExecuteCommand(
@@ -37,7 +37,7 @@ class ExecuteCommand(
     while (astNodes.hasNext()) {
       currentEnv = astNodes.setEnv(currentEnv)
       val statement = astNodes.next()
-      val (outPut, updatedEnv) = Interpreter.interpret(statement, version, currentEnv, PrintScriptInputProvider())
+      val (outPut, updatedEnv) = Interpreter.interpret(statement, version, currentEnv, InputProvider())
       outputEmitter = outPut
       currentEnv = updatedEnv
 
