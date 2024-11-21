@@ -1,9 +1,10 @@
 #!/bin/bash
 
-HOOKS_DIR="scripts/git-hooks/sh"
-GIT_HOOKS_DIR=".git/hooks"
+SCRIPT_DIR=$(dirname "$(realpath "$0")")
 
-# Copy hooks to .git/hooks
+HOOKS_DIR="$SCRIPT_DIR"
+GIT_HOOKS_DIR="$(git rev-parse --git-dir)/hooks"
+
 for hook in "$HOOKS_DIR"/*; do
   hook_name=$(basename "$hook")
   cp "$hook" "$GIT_HOOKS_DIR/$hook_name"

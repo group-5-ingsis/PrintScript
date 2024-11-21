@@ -6,27 +6,27 @@ import position.nodes.Type
 import token.Token
 
 class Factor(private val parseInferiorFunction: ExpressionParser) : ExpressionParser {
-    override fun parse(tokens: List<Token>, parsedShouldBeOfType: Type): ParseResult {
-        var (remainingTokens, expression) = parseInferiorFunction.parse(tokens, parsedShouldBeOfType)
-        val tokenMng = TokenManager(remainingTokens)
+  override fun parse(tokens: List<Token>, parsedShouldBeOfType: Type): ParseResult {
+    var (remainingTokens, expression) = parseInferiorFunction.parse(tokens, parsedShouldBeOfType)
+    val tokenMng = TokenManager(remainingTokens)
 
-        fun isMultiplicationOrDivision(): Boolean {
-            return if (tokenMng.isNotTheEndOfTokens()) {
-                (tokenMng.isValue("*") || tokenMng.isValue("/"))
-            } else {
-                false
-            }
-        }
-
-        while (isMultiplicationOrDivision()) {
-            val tokenOperator = tokenMng.peek().value
-            val position = tokenMng.getPosition()
-            tokenMng.advance()
-
-            val (remainingTokens2, rightExpression) = this.parse(tokenMng.getTokens())
-            remainingTokens = remainingTokens2
-            expression = Expression.Binary(expression, tokenOperator, rightExpression, position)
-        }
-        return Pair(remainingTokens, expression)
+    fun isMultiplicationOrDivision(): Boolean {
+      return if (tokenMng.isNotTheEndOfTokens()) {
+        (tokenMng.isValue("*") || tokenMng.isValue("/"))
+      } else {
+        false
+      }
     }
+
+    while (isMultiplicationOrDivision()) {
+      val tokenOperator = tokenMng.peek().value
+      val position = tokenMng.getPosition()
+      tokenMng.advance()
+
+      val (remainingTokens2, rightExpression) = this.parse(tokenMng.getTokens())
+      remainingTokens = remainingTokens2
+      expression = Expression.Binary(expression, tokenOperator, rightExpression, position)
+    }
+    return Pair(remainingTokens, expression)
+  }
 }
