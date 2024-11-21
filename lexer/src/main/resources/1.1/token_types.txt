@@ -1,0 +1,12 @@
+OPERATOR :: \+, \-, \*, /
+LET :: let
+VARIABLE_TYPE :: string,number,boolean
+PRINT :: println
+BOOLEAN :: true,false
+CONST :: const
+IF :: if
+ELSE :: else
+LEFT_BRACE :: \{
+RIGHT_BRACE :: \}
+READ_INPUT :: readInput
+READ_ENV :: readEnv

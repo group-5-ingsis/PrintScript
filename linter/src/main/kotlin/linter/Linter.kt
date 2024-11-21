@@ -1,47 +1,28 @@
 package linter
 
-import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.JsonObject
-import kotlinx.serialization.json.jsonObject
-import parser.SyntacticParser
-import visitor.LinterVisitor
-import java.nio.file.Files
-import java.nio.file.Paths
+import nodes.StatementType
+import rules.LinterRules
 
-class Linter {
-    fun lint(rootAstNode: SyntacticParser.RootNode): LinterResult {
-        val linterRulesMap = getLinterRules()
-        val linterVisitor = LinterVisitor(linterRulesMap)
-        try {
-            rootAstNode.accept(linterVisitor)
-            return LinterResult(true, "No errors found")
-        } catch (e: Exception) {
-            return LinterResult(false, e.message ?: "Unknown error")
-        }
+object Linter {
+
+  fun lint(statement: StatementType, rules: LinterRules, version: String): LinterResult {
+    val errors = mutableListOf<LinterResult>()
+    val linterVisitor = LinterVisitor(rules)
+
+    statement.accept(linterVisitor)
+    val linterResult = linterVisitor.getLinterResult()
+
+    if (!linterResult.isValid()) {
+      errors.add(linterResult)
     }
 
-    private fun loadJsonFromResources(fileName: String): String {
-        val resource = javaClass.getResource("/$fileName")
-        if (resource != null) {
-            return Files.readString(Paths.get(resource.toURI()))
-        }
-        throw IllegalArgumentException("Resource not found: $fileName")
-    }
+    val validStatement = errors.isEmpty()
 
-    private fun jsonToMap(jsonString: String): Map<String, Any> {
-        val jsonElement = Json.parseToJsonElement(jsonString)
-        return jsonElement.jsonObject.toMap()
+    return if (validStatement) {
+      LinterResult(true, "No errors found")
+    } else {
+      val errorMessages = errors.joinToString("\n") { it.message }
+      LinterResult(false, "Errors found:\n$errorMessages")
     }
-
-    private fun JsonObject.toMap(): Map<String, Any> = mapValues { entry ->
-        when (val jsonElement = entry.value) {
-            is JsonObject -> jsonElement.toMap()
-            else -> jsonElement.toString()
-        }
-    }
-
-    private fun getLinterRules(): Map<String, Any> {
-        val jsonString = loadJsonFromResources("linter-rules.json")
-        return jsonToMap(jsonString)
-    }
+  }
 }

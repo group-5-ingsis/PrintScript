@@ -1,13 +1,24 @@
 package interpreter
 
-import parser.SyntacticParser
-import visitor.NodeVisitor
+import environment.Environment
+import nodes.StatementType
+import visitor.InputProvider
+import visitor.PrintScriptInputProvider
+import visitor.StatementVisitor
+import visitor.statementVisitorResult
 
 object Interpreter {
 
-    fun interpret(rootAstNode: SyntacticParser.RootNode): String {
-        rootAstNode.accept(NodeVisitor)
-        val output = NodeVisitor.getOutput()
-        return output
-    }
+  fun interpret(
+    statement: StatementType,
+    version: String = "1.1",
+    scope: Environment,
+    inputProvider: InputProvider = PrintScriptInputProvider()
+  ): statementVisitorResult {
+    val nodeVisitor = StatementVisitor(inputProvider)
+    val result = statement.acceptVisitor(nodeVisitor, scope, StringBuilder())
+    val printOutput = result.first
+    val newScope = result.second
+    return Pair(printOutput, newScope)
+  }
 }

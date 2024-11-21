@@ -1,13 +1,16 @@
 package formatter
 
-import composite.Node
+import nodes.StatementType
 import rules.FormattingRules
 
 object Formatter {
 
-    fun format(node: Node, rules: FormattingRules): String {
-        val visitor = FormattingVisitor(rules)
-        node.accept(visitor)
-        return visitor.getFormattedOutput()
-    }
+  fun format(statement: StatementType, rules: FormattingRules, version: String = "1.1"): String {
+    val formattedResult = StringBuilder()
+    val visitor = FormatterVisitor(rules, version)
+    statement.accept(visitor)
+    val formattedOutput = visitor.getFormattedOutput()
+    formattedResult.append(formattedOutput)
+    return formattedResult.toString()
+  }
 }

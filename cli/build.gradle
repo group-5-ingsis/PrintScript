@@ -1,11 +1,11 @@
 plugins {
-    id 'printScript.applications'
+    id 'printScript.common'
 }
 
 dependencies {
+    implementation('com.fasterxml.jackson.module:jackson-module-kotlin:2.12.3')
     implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.15.0")
     implementation project(':lexer')
-    implementation project(':shared')
     implementation project(':parser')
     implementation project(':interpreter')
     implementation project(':formatter')
@@ -20,4 +20,11 @@ koverReport {
             packages('application')
         }
     }
+}
+
+test {
+    environment "SECRET_KEY", 123
+    environment "BEST_FOOTBALL_CLUB", "San Lorenzo"
+    environment "TRUE", true
+    useJUnit()
 }

@@ -3,7 +3,12 @@ plugins {
 }
 
 dependencies {
-    implementation project(':shared')
     implementation project(':lexer')
     implementation project(':parser')
+}
+
+test {
+    environment "BEST_FOOTBALL_CLUB", "San Lorenzo"
+    environment "NAME", "WORLD"
+    useJUnit()
 }

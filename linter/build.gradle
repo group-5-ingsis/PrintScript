@@ -4,7 +4,7 @@ plugins {
 
 
 dependencies {
-    implementation project(':shared')
+    implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.15.0")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.1")
     implementation project(":parser")
     implementation project(":lexer")

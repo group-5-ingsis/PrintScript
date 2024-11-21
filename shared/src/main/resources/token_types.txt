@@ -1,5 +1,0 @@
-OPERATOR :: \+, \-, \*, /
-DECLARATION_KEYWORD :: let,const
-VARIABLE_TYPE :: String,Number
-PREDEF_METHOD :: println
-

@@ -1,8 +1,3 @@
 plugins {
     id 'printScript.common'
 }
-
-
-dependencies {
-    implementation project(':shared')
-}

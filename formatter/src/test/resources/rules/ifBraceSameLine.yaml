@@ -1,0 +1,6 @@
+spaceBeforeColon: false
+spaceAfterColon: true
+spaceAroundAssignment: true
+newlineAfterPrintln: 0
+blockIndentation: 4
+ifBraceSameLine: true

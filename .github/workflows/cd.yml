@@ -1,0 +1,15 @@
+name: Continuos Delivery
+
+on:
+  push:
+    branches: [ "main" ]
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  ci:
+    uses: group-5-ingsis/workflows/.github/workflows/cd-packages.yml@main
+
+    
