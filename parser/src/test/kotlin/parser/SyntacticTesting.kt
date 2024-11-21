@@ -9,7 +9,7 @@ class SyntacticTesting {
 
   @Test
   fun testDeclarationWithoutSemicolonShouldFail() {
-    val lexer = Lexer("let a: string")
+    val lexer = Lexer.fromString("let a: string")
     val parser = Parser(lexer)
     assertFailsWith(InvalidSyntaxException::class) {
       println(parser.next())
@@ -18,7 +18,7 @@ class SyntacticTesting {
 
   @Test
   fun testDeclarationWithParenthesisShouldFail() {
-    val lexer = Lexer("let a: string(")
+    val lexer = Lexer.fromString("let a: string(")
     val parser = Parser(lexer)
     assertFailsWith(InvalidSyntaxException::class) {
       println(parser.next())
@@ -27,7 +27,7 @@ class SyntacticTesting {
 
   @Test
   fun testDeclarationShouldPass() {
-    val lexer = Lexer("let a: string; const b: string = \"hello world\";")
+    val lexer = Lexer.fromString("let a: string; const b: string = \"hello world\";")
     val parser = Parser(lexer)
     println(parser.next())
     println(parser.next())

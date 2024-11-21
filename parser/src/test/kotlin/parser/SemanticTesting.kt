@@ -9,8 +9,7 @@ class SemanticTesting {
 
   @Test
   fun testConstDeclarationShouldFail() {
-    /* Declaration of const. */
-    val lexer = Lexer("const a: string;")
+    val lexer = Lexer.fromString("const a: string;")
     val parser = Parser(lexer)
     assertFailsWith(SemanticErrorException::class) {
       parser.next()
@@ -19,14 +18,14 @@ class SemanticTesting {
 
   @Test
   fun testAssignationShouldPass() {
-    val lexer = Lexer("let a: string; a = \"testing\";")
+    val lexer = Lexer.fromString("let a: string; a = \"testing\";")
     val parser = Parser(lexer)
     println(parser.next())
   }
 
   @Test
   fun testAssignationToDifferentTypeShouldFail() {
-    val lexer = Lexer("let a: string; a = 22;")
+    val lexer = Lexer.fromString("let a: string; a = 22;")
     val parser = Parser(lexer)
     assertFailsWith(SemanticErrorException::class) {
       parser.next()
@@ -36,7 +35,7 @@ class SemanticTesting {
 
   @Test
   fun testAssignationOfConstShouldFail() {
-    val lexer = Lexer("const a: string = \"test\"; a = \"testing\";")
+    val lexer = Lexer.fromString("const a: string = \"test\"; a = \"testing\";")
     val parser = Parser(lexer)
     assertFailsWith(Exception::class) {
       parser.next()
@@ -45,8 +44,8 @@ class SemanticTesting {
   }
 
   @Test
-  fun testAssignationToInexistentVariableShouldFail() {
-    val lexer = Lexer("let a: string; a = b;")
+  fun testAssignationToInExistentVariableShouldFail() {
+    val lexer = Lexer.fromString("let a: string; a = b;")
     val parser = Parser(lexer)
     assertFailsWith(Error::class) {
       parser.next()
@@ -55,8 +54,8 @@ class SemanticTesting {
   }
 
   @Test
-  fun testAssignationOfInexistentVariableShouldFail() {
-    val lexer = Lexer("b = 23;")
+  fun testAssignationOfInExistentVariableShouldFail() {
+    val lexer = Lexer.fromString("b = 23;")
     val parser = Parser(lexer)
     assertFailsWith(Error::class) {
       parser.next()
@@ -65,14 +64,14 @@ class SemanticTesting {
 
   @Test
   fun testAssignDeclareShouldPass() {
-    val lexer = Lexer("let b: number = 23; let b: string;")
+    val lexer = Lexer.fromString("let b: number = 23; let b: string;")
     val parser = Parser(lexer)
     println(parser.next())
   }
 
   @Test
   fun testAssignDeclareShouldFail() {
-    val lexer = Lexer("const b: string = 23;")
+    val lexer = Lexer.fromString("const b: string = 23;")
     val parser = Parser(lexer)
     assertFailsWith(SemanticErrorException::class) {
       parser.next()
@@ -81,51 +80,51 @@ class SemanticTesting {
 
   @Test
   fun testPrintlnCorrect() {
-    val lexer = Lexer("let b: string = 23; println(b)")
-    val parser = Parser(lexer)
+    val lexer = Lexer.fromString("let b: string = 23; println(b)")
+    Parser(lexer)
   }
 
   @Test
   fun testPrintlnMultipleArguments() {
-    val lexer = Lexer("let b: string = 23; println(b, 2)")
-    val parser = Parser(lexer)
+    val lexer = Lexer.fromString("let b: string = 23; println(b, 2)")
+    Parser(lexer)
   }
 
   @Test
   fun testPrintlnUnknownVariable() {
-    val tokens = Lexer("let something: string; println(something);")
+    val tokens = Lexer.fromString("let something: string; println(something);")
     val parser = Parser(tokens)
     assertFailsWith(SemanticErrorException::class) {
-      val next = parser.next()
-      val next2 = parser.next()
+      parser.next()
+      parser.next()
     }
   }
 
   @Test
   fun testPrintVariable() {
-    val tokens = Lexer("let something: number = 23; println(something);")
+    val tokens = Lexer.fromString("let something: number = 23; println(something);")
     val parser = Parser(tokens)
-    val next = parser.next()
-    val next2 = parser.next()
+    parser.next()
+    parser.next()
   }
 
   @Test
   fun testPrintNumber() {
-    val tokens = Lexer("println(1);")
+    val tokens = Lexer.fromString("println(1);")
     val parser = Parser(tokens)
     parser.next()
   }
 
   @Test
   fun testPrintString() {
-    val tokens = Lexer("println(\"Hello World!\");")
+    val tokens = Lexer.fromString("println(\"Hello World!\");")
     val parser = Parser(tokens)
     parser.next()
   }
 
   @Test
   fun testPrintSum() {
-    val tokens = Lexer("println(3 + 4);")
+    val tokens = Lexer.fromString("println(3 + 4);")
     val parser = Parser(tokens)
     parser.next()
   }

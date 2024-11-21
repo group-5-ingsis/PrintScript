@@ -11,16 +11,16 @@ class ParserTester {
 
   @Test
   fun testOperation() {
-    val lexer = Lexer("let a : number = 3 + 5;", "1.0")
+    val lexer = Lexer.fromString("let a : number = 3 + 5;", "1.0")
     val parser = Parser(lexer, "1.0")
 
     val ast1 = parser.next()
 
     val expectedAssignment = Expression.Binary(
-      Expression.Literal(3, Position(1, 18)), // Adjusted for actual symbol index
+      Expression.Literal(3, Position(1, 18)),
       "+",
-      Expression.Literal(5, Position(1, 22)), // Adjusted for actual symbol index
-      Position(1, 20) // Adjusted for actual symbol index
+      Expression.Literal(5, Position(1, 22)),
+      Position(1, 20)
     )
 
     val expectedNode = StatementType.Variable(
@@ -28,7 +28,7 @@ class ParserTester {
       "a",
       expectedAssignment,
       "number",
-      Position(1, 5) // Adjusted for actual symbol index
+      Position(1, 5)
     )
 
     val actualNode = ast1 as StatementType.Variable
@@ -44,7 +44,7 @@ class ParserTester {
 
   @Test
   fun testStringOperation() {
-    val lexer = Lexer("let a: string = 'Hello' + 'World';", "1.0")
+    val lexer = Lexer.fromString("let a: string = 'Hello' + 'World';", "1.0")
     val parser = Parser(lexer, "1.0")
 
     val ast1 = parser.next()
@@ -78,7 +78,7 @@ class ParserTester {
 
   @Test
   fun mathOperation() {
-    val lexer = Lexer("let a: number = 5 + 4 * 3 / 2;", "1.0")
+    val lexer = Lexer.fromString("let a: number = 5 + 4 * 3 / 2;", "1.0")
     val parser = Parser(lexer, "1.0")
 
     val ast1 = parser.next()
@@ -86,7 +86,7 @@ class ParserTester {
 
   @Test
   fun testBuildDeclarationAST() {
-    val lexer = Lexer("let a: number;", "1.0")
+    val lexer = Lexer.fromString("let a: number;", "1.0")
     val parser = Parser(lexer, "1.0")
 
     val ast1 = parser.next()
@@ -94,7 +94,7 @@ class ParserTester {
     val expectedNode = StatementType.Variable(
       "let",
       "a",
-      null, // No initializer
+      null,
       "number",
       Position(1, 1)
     )
@@ -109,7 +109,7 @@ class ParserTester {
 
   @Test
   fun testBuildAssignationAST() {
-    val lexer = Lexer("let x : number = 3; x = 4;", "1.0")
+    val lexer = Lexer.fromString("let x : number = 3; x = 4;", "1.0")
     val parser = Parser(lexer, "1.0")
 
     val declaration = parser.next() as StatementType.Variable
@@ -133,7 +133,7 @@ class ParserTester {
 
   @Test
   fun testDeclarationWithoutColonShouldFail() {
-    val lexer = Lexer("let a number;", "1.0")
+    val lexer = Lexer.fromString("let a number;", "1.0")
     val parser = Parser(lexer, "1.0")
 
     val exception = assertFailsWith<InvalidSyntaxException> {
@@ -145,7 +145,7 @@ class ParserTester {
 
   @Test
   fun statementSumElements() {
-    val lexer = Lexer("let a: number = 5 + 3 + 4 / (6 + 6); println(a);", "1.0")
+    val lexer = Lexer.fromString("let a: number = 5 + 3 + 4 / (6 + 6); println(a);", "1.0")
     val parser = Parser(lexer, "1.0")
 
     val firstStatement = parser.next() as StatementType.Variable
