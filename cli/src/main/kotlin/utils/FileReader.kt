@@ -36,7 +36,7 @@ object FileReader {
     }
   }
 
-  fun getFileLocation(
+  private fun getFileLocation(
     file: String,
     version: String
   ): String {

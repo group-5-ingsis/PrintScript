@@ -22,7 +22,7 @@ object FileWriter {
   }
 
   private fun getFileLocation(file: String, version: String): String {
-    val baseDirectory = "src/main/resources/ps/$version/"
+    val baseDirectory = "cli/src/main/resources/ps/$version/"
     return "$baseDirectory$file"
   }
 }
