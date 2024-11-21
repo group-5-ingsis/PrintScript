@@ -18,7 +18,7 @@ class ReadEnvTests {
       "const name: string = readEnv(\"NAME\"); " +
         "println(\"Hello \" + name + 22);\n"
 
-    val tokens = Lexer(input, version)
+    val tokens = Lexer.fromString(input, version)
     val asts = Parser(tokens, version)
 
     var outputBuilder = StringBuilder()
@@ -43,12 +43,11 @@ class ReadEnvTests {
         "const lastName: string = readEnv(\"LAST_NAME\"); " +
         "println(\"Hello \" + firstName + \" \" + lastName);\n"
 
-    val tokens = Lexer(input, version)
+    val tokens = Lexer.fromString(input, version)
     val asts = Parser(tokens, version)
 
     var outputBuilder = StringBuilder()
 
-    // Definimos múltiples variables en el `Environment`
     var currentEnvironment = Environment()
       .define(createVariable("FIRST_NAME", "John"))
       .define(createVariable("LAST_NAME", "Doe"))
@@ -72,7 +71,7 @@ class ReadEnvTests {
       "const age: number = readEnv(\"AGE\"); " +
         "println(age);\n"
 
-    val tokens = Lexer(input, version)
+    val tokens = Lexer.fromString(input, version)
     val asts = Parser(tokens, version)
 
     var outputBuilder = StringBuilder()
@@ -99,12 +98,11 @@ class ReadEnvTests {
       "let a: number = readEnv(\"NUMERO\"); " +
         "println(a);\n"
 
-    val tokens = Lexer(input, version)
+    val tokens = Lexer.fromString(input, version)
     val asts = Parser(tokens, version)
 
     var outputBuilder = StringBuilder()
 
-    // Definimos "NUMERO" como un string no convertible a número
     var currentEnvironment = Environment().define(createVariable("NUMERO", "hola"))
 
     try {
@@ -121,33 +119,7 @@ class ReadEnvTests {
     }
   }
 
-//    TODO Esto no se puede hacer, no se permiten readEnv adetnro de prints, igualmente no hay tiempo para arreglo
-//    @Test
-//    fun testReadEnvInOperations() {
-//        val input = "println(readEnv(\"COUNT\") + 10);"
-//
-//        val tokens = Lexer(input, version)
-//        val asts = Parser(tokens, version)
-//
-//        var outputBuilder = StringBuilder()
-//
-//        // Definimos "COUNT" como el número 20
-//        var currentEnvironment = Environment().define(createVariable("COUNT", "20"))
-//
-//        while (asts.hasNext()) {
-//            asts.setEnv(currentEnvironment)
-//            val statement = asts.next()
-//            val result = Interpreter.interpret(statement, version, currentEnvironment)
-//            outputBuilder = result.first
-//            currentEnvironment = result.second
-//            asts.setEnv(currentEnvironment)
-//        }
-//
-//        // Se espera que el output sea "30" (20 + 10)
-//        assertEquals("30", outputBuilder.toString().trim())
-//    }
-
-  fun createVariable(name: String, value: String): StatementType.Variable {
+  private fun createVariable(name: String, value: String): StatementType.Variable {
     return StatementType.Variable(
       designation = "const",
       identifier = name,

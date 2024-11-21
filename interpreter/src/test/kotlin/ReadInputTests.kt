@@ -19,7 +19,7 @@ class ReadInputTests {
     val fileContents = "const name: string = readInput(\"Name:\"); println(\"Hello \" + name + \"!\");"
     val input = "world"
 
-    val tokens = Lexer(fileContents, version)
+    val tokens = Lexer.fromString(fileContents, version)
 
     val inputProvider = PrintScriptInputProvider(mapOf("Name:" to input))
     val asts = Parser(tokens, version, inputProvider)
@@ -48,7 +48,7 @@ class ReadInputTests {
     """.trimIndent()
     val inputs = mapOf("First Name:" to "John", "Last Name:" to "Doe")
 
-    val tokens = Lexer(fileContents, version)
+    val tokens = Lexer.fromString(fileContents, version)
     val inputProvider = PrintScriptInputProvider(inputs)
     val asts = Parser(tokens, version, inputProvider)
 
@@ -70,7 +70,7 @@ class ReadInputTests {
     val fileContents = "const age: number = readInput(\"Age:\"); println(age);"
     val input = "notANumber"
 
-    val tokens = Lexer(fileContents, version)
+    val tokens = Lexer.fromString(fileContents, version)
     val inputProvider = PrintScriptInputProvider(mapOf("Age:" to input))
     val asts = Parser(tokens, version, inputProvider)
 
@@ -95,7 +95,7 @@ class ReadInputTests {
     """.trimIndent()
     val input = "true"
 
-    val tokens = Lexer(fileContents, version)
+    val tokens = Lexer.fromString(fileContents, version)
     val inputProvider = PrintScriptInputProvider(mapOf("Do you want to proceed?" to input))
     val asts = Parser(tokens, version, inputProvider)
 
@@ -117,7 +117,7 @@ class ReadInputTests {
     val fileContents = "const value: number = readInput(\"Enter a string:\");"
     val input = "hello"
 
-    val tokens = Lexer(fileContents, version)
+    val tokens = Lexer.fromString(fileContents, version)
     val inputProvider = PrintScriptInputProvider(mapOf("Enter a string:" to input))
     val asts = Parser(tokens, version, inputProvider)
 
@@ -144,7 +144,7 @@ class ReadInputTests {
       "Enter string again:" to "true"
     )
 
-    val tokens = Lexer(fileContents, version)
+    val tokens = Lexer.fromString(fileContents, version)
     val inputProvider = PrintScriptInputProvider(inputs)
     val asts = Parser(tokens, version, inputProvider)
 
@@ -166,7 +166,7 @@ class ReadInputTests {
     val fileContents = "const longString: string = readInput(\"Long input:\"); println(longString);"
     val input = "a".repeat(1000000) // 1 million characters
 
-    val tokens = Lexer(fileContents, version)
+    val tokens = Lexer.fromString(fileContents, version)
     val inputProvider = PrintScriptInputProvider(mapOf("Long input:" to input))
     val asts = Parser(tokens, version, inputProvider)
 
@@ -195,7 +195,7 @@ class ReadInputTests {
       "Enter the second number:" to "5"
     )
 
-    val tokens = Lexer(fileContents, version)
+    val tokens = Lexer.fromString(fileContents, version)
     val inputProvider = PrintScriptInputProvider(inputs)
     val asts = Parser(tokens, version, inputProvider)
 

@@ -15,7 +15,7 @@ class InterpreterTest {
   @Test
   fun testDeclarationWithNumber() {
     val input = "let a: number;"
-    val tokens = Lexer(input, version)
+    val tokens = Lexer.fromString(input, version)
     val asts = Parser(tokens, version)
 
     val outputBuilder = StringBuilder()
@@ -28,7 +28,6 @@ class InterpreterTest {
       currentEnvironment = result.second
     }
 
-    // Check that the variable 'a' was declared, but has no value
     val variable = currentEnvironment.getValue("a")
     assertEquals(null, variable)
   }
@@ -36,7 +35,7 @@ class InterpreterTest {
   @Test
   fun testPrintOperation() {
     val input = "let numberResult: number = 5 * 5 - 8; println(numberResult);"
-    val tokens = Lexer(input, "1.0")
+    val tokens = Lexer.fromString(input, "1.0")
     val asts = Parser(tokens, "1.0")
 
     val outputBuilder = StringBuilder()
@@ -55,7 +54,7 @@ class InterpreterTest {
   @Test
   fun testStringAndNumberConcat() {
     val input = "let someNumber: number = 1; let someString: string = \"hello world \";\n println(someString + someNumber);\n"
-    val tokens = Lexer(input, version)
+    val tokens = Lexer.fromString(input, version)
     val asts = Parser(tokens, version)
 
     val outputBuilder = StringBuilder()
@@ -74,7 +73,7 @@ class InterpreterTest {
   @Test
   fun testDeclarationWithString() {
     val input = "let a: string;"
-    val tokens = Lexer(input, version)
+    val tokens = Lexer.fromString(input, version)
     val asts = Parser(tokens, version)
 
     val outputBuilder = StringBuilder()
@@ -95,7 +94,7 @@ class InterpreterTest {
   @Test
   fun testAssignationWithString() {
     val input = "let a: string = \"Hello World\";"
-    val tokens = Lexer(input, version)
+    val tokens = Lexer.fromString(input, version)
     val asts = Parser(tokens, version)
 
     val outputBuilder = StringBuilder()
@@ -117,7 +116,7 @@ class InterpreterTest {
   @Test
   fun testSumNumber() {
     val input = "let a: number = 6 + 2 + 6;"
-    val tokens = Lexer(input, version)
+    val tokens = Lexer.fromString(input, version)
     val asts = Parser(tokens, version)
 
     val outputBuilder = StringBuilder()
@@ -130,7 +129,6 @@ class InterpreterTest {
       currentEnvironment = result.second
     }
 
-    // Check that the variable 'a' has the expected value
     val variable = currentEnvironment.getValue("a")
 
     assertEquals(14, variable)
@@ -139,7 +137,7 @@ class InterpreterTest {
   @Test
   fun testBinaryOperationString() {
     val input = "let a: string = 'Hello' + ' World';"
-    val tokens = Lexer(input, version)
+    val tokens = Lexer.fromString(input, version)
     val asts = Parser(tokens, version)
 
     val outputBuilder = StringBuilder()
@@ -152,7 +150,6 @@ class InterpreterTest {
       currentEnvironment = result.second
     }
 
-    // Check that the variable 'a' has the expected concatenated value
     val variable = currentEnvironment.getValue("a")
 
     assertEquals("Hello World", variable)
@@ -161,7 +158,7 @@ class InterpreterTest {
   @Test
   fun testAddingAssignations() {
     val input = "let a: number = 7; let b: number = 8; let c: number = a + 3 + b;"
-    val tokens = Lexer(input, version)
+    val tokens = Lexer.fromString(input, version)
     val asts = Parser(tokens, version)
 
     val outputBuilder = StringBuilder()
@@ -174,7 +171,6 @@ class InterpreterTest {
       currentEnvironment = result.second
     }
 
-    // Check that the variable 'c' has the expected value
     val variable = currentEnvironment.getValue("c")
 
     assertEquals(18, variable)
@@ -183,7 +179,7 @@ class InterpreterTest {
   @Test
   fun testSinglePrint() {
     val input = "println(\"Hello, World!\");"
-    val tokens = Lexer(input, version)
+    val tokens = Lexer.fromString(input, version)
     val asts = Parser(tokens, version)
 
     val outputBuilder = StringBuilder()
@@ -196,14 +192,13 @@ class InterpreterTest {
       currentEnvironment = result.second
     }
 
-    // Check that the output matches the expected print result
     assertEquals("Hello, World!\n", outputBuilder.toString())
   }
 
   @Test
   fun testMultiplePrintStatements() {
     val fileContents = "println(\"First print\"); println(\"Second print\");"
-    val tokens = Lexer(fileContents, version)
+    val tokens = Lexer.fromString(fileContents, version)
     val asts = Parser(tokens, version)
 
     var outputBuilder = StringBuilder()
@@ -224,7 +219,7 @@ class InterpreterTest {
   @Test
   fun testPrintExpressionAndVariable() {
     val input = "let a: number = 42; println(a); println(a + 8);"
-    val tokens = Lexer(input, version)
+    val tokens = Lexer.fromString(input, version)
     val asts = Parser(tokens, version)
 
     var outputBuilder = StringBuilder()
@@ -245,7 +240,7 @@ class InterpreterTest {
   @Test
   fun testDivisionNumber() {
     val input = "let a: number = 6 / 2;"
-    val tokens = Lexer(input, version)
+    val tokens = Lexer.fromString(input, version)
     val asts = Parser(tokens, version)
 
     val outputBuilder = StringBuilder()
@@ -267,7 +262,7 @@ class InterpreterTest {
   @Test
   fun testComplexExpression() {
     val input = "let a: number = 6 / (2 + 5) - 5 * 6;"
-    val tokens = Lexer(input, version)
+    val tokens = Lexer.fromString(input, version)
     val asts = Parser(tokens, version)
 
     val outputBuilder = StringBuilder()
@@ -289,7 +284,7 @@ class InterpreterTest {
   @Test
   fun testSumWithIdentifier() {
     val input = "let a: number = 6; let b: number = a + 2;"
-    val tokens = Lexer(input, version)
+    val tokens = Lexer.fromString(input, version)
     val asts = Parser(tokens, version)
 
     val outputBuilder = StringBuilder()
@@ -311,7 +306,7 @@ class InterpreterTest {
   @Test
   fun testValidConstDeclaration() {
     val input = "const b: string = \"this should be valid in 1.1\";"
-    val tokens = Lexer(input, version)
+    val tokens = Lexer.fromString(input, version)
     val asts = Parser(tokens, version)
 
     val outputBuilder = StringBuilder()
@@ -328,7 +323,7 @@ class InterpreterTest {
   @Test
   fun testValidLetDeclaration() {
     val input = "let b: string = \"this should be valid in 1.1\";"
-    val tokens = Lexer(input, version)
+    val tokens = Lexer.fromString(input, version)
     val asts = Parser(tokens, version)
 
     val outputBuilder = StringBuilder()
@@ -352,7 +347,7 @@ class InterpreterTest {
     println("outside of conditional");
     """.trimIndent()
 
-    val tokens = Lexer(input, version)
+    val tokens = Lexer.fromString(input, version)
     val asts = Parser(tokens, version)
 
     val outputBuilder = StringBuilder()
@@ -392,7 +387,7 @@ class InterpreterTest {
       "const name: string = readEnv(\"BEST_FOOTBALL_CLUB\"); " +
         "println(\"What is the best football club?\"); " +
         "println(name);\n"
-    val tokens = Lexer(input, version)
+    val tokens = Lexer.fromString(input, version)
     val asts = Parser(tokens, version)
 
     var currentEnvironment = createEnvironmentFromMap(System.getenv())
@@ -412,7 +407,7 @@ class InterpreterTest {
   @Test
   fun print() {
     val input = "println(1 + 1 + 1);"
-    val tokens = Lexer(input, version)
+    val tokens = Lexer.fromString(input, version)
     val asts = Parser(tokens, version)
 
     val outputBuilder = StringBuilder()
@@ -432,7 +427,7 @@ class InterpreterTest {
   @Test
   fun testIncrementCoverage() {
     val input = "let x: number;"
-    val tokens = Lexer(input, version)
+    val tokens = Lexer.fromString(input, version)
     val asts = Parser(tokens, version)
 
     val outputBuilder = StringBuilder()
@@ -451,7 +446,7 @@ class InterpreterTest {
   @Test
   fun testPrinter() {
     val input = "let a : number = 1; println(a);" // Si vos le agregas un espacio al final del string, el hasNext() del lexer tira -> True cuando deberia ser false
-    val tokens = Lexer(input, version)
+    val tokens = Lexer.fromString(input, version)
     val asts = Parser(tokens, version)
 
     var outputBuilder = StringBuilder()
