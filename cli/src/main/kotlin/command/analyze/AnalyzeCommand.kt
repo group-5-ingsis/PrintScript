@@ -39,7 +39,7 @@ class AnalyzeCommand(
     var currentEnv = EnvironmentCreator.create(System.getenv())
 
     while (astNodes.hasNext()) {
-      currentEnv = astNodes.setEnv(currentEnv)
+      astNodes.setEnv(currentEnv)
       val statement = astNodes.next()
       val lintResult = Linter.lint(statement, linterRules, version)
 
@@ -52,7 +52,7 @@ class AnalyzeCommand(
       processedChars = ProgressTracker.updateProgress(lexer, processedChars, totalChars)
     }
 
-    processedChars = ProgressTracker.updateProgress(lexer, totalChars, totalChars)
+    ProgressTracker.updateProgress(lexer, totalChars, totalChars)
 
     return lintingResult(errorList)
   }

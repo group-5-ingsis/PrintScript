@@ -31,12 +31,12 @@ class ValidationCommand(private val file: String, private val version: String) :
     var currentEnv = EnvironmentCreator.create(System.getenv())
 
     while (astNodes.hasNext()) {
-      currentEnv = astNodes.setEnv(currentEnv)
+      astNodes.setEnv(currentEnv)
       astNodes.next()
       currentEnv = astNodes.getEnv()
       processedChars = ProgressTracker.updateProgress(lexer, processedChars, totalChars)
     }
 
-    processedChars = ProgressTracker.updateProgress(lexer, totalChars, totalChars)
+    ProgressTracker.updateProgress(lexer, totalChars, totalChars)
   }
 }

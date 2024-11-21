@@ -44,7 +44,7 @@ class FormatCommand(
     var currentEnv = EnvironmentCreator.create(System.getenv())
 
     while (astNodes.hasNext()) {
-      currentEnv = astNodes.setEnv(currentEnv)
+      astNodes.setEnv(currentEnv)
       val statement = astNodes.next()
       val formattedStatement = Formatter.format(statement, formattingRules, version)
 
@@ -55,7 +55,7 @@ class FormatCommand(
       processedChars = ProgressTracker.updateProgress(lexer, processedChars, totalChars)
     }
 
-    processedChars = ProgressTracker.updateProgress(lexer, totalChars, totalChars)
+    ProgressTracker.updateProgress(lexer, totalChars, totalChars)
 
     return outputEmitter.toString().trim()
   }
