@@ -11,3 +11,5 @@ permissions:
 jobs:
   ci:
     uses: group-5-ingsis/workflows/.github/workflows/cd-packages.yml@main
+
+    
