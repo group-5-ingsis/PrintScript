@@ -2,8 +2,8 @@ package parser.syntactic.statements
 import ExpressionType
 import nodes.Expression
 import nodes.StatementType
+import nodes.Type
 import parser.syntactic.TokenManager
-import position.nodes.Type
 import token.Token
 
 class LetDeclarationParser(private val expressionEvaluator: ExpressionType) : StatementParser {

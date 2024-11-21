@@ -4,8 +4,8 @@ import ExpressionType
 import exception.SemanticErrorException
 import nodes.Expression
 import nodes.StatementType
+import nodes.Type
 import parser.syntactic.TokenManager
-import position.nodes.Type
 import token.Token
 
 class ConstDeclarationParser(private val expressionEvaluator: ExpressionType) : StatementParser {

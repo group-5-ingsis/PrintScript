@@ -1,8 +1,8 @@
 package parser.syntactic.expressions
 
 import nodes.Expression
+import nodes.Type
 import parser.syntactic.TokenManager
-import position.nodes.Type
 import token.Token
 
 class Factor(private val parseInferiorFunction: ExpressionParser) : ExpressionParser {

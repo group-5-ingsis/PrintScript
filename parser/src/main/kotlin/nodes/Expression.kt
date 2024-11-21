@@ -1,7 +1,6 @@
 package nodes
 
 import environment.Environment
-import position.nodes.Type
 import position.visitor.VisitorResultExpressions
 import token.Position
 import visitor.ExpressionVisitor

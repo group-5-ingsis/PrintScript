@@ -1,6 +1,7 @@
 package parser
 
 import environment.Environment
+import environment.EnvironmentCreator
 import lexer.Lexer
 import nodes.Expression
 import nodes.StatementType
@@ -19,6 +20,7 @@ class ParserNewVersionTesting {
   fun testIfStm() {
     val lexer1 = Lexer.fromString("if (true) { println(3); }", "1.1")
     val parser1 = Parser(lexer1, "1.1")
+    parser1.setEnv(EnvironmentCreator.create(System.getenv()))
 
     val ast1 = parser1.next()
 

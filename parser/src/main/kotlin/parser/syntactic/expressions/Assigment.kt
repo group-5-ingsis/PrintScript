@@ -2,8 +2,8 @@ package parser.syntactic.expressions
 
 import exception.InvalidSyntaxException
 import nodes.Expression
+import nodes.Type
 import parser.syntactic.TokenManager
-import position.nodes.Type
 import token.Token
 
 class Assigment(private val parseInferiorFunction: ExpressionParser) : ExpressionParser {

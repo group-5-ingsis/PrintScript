@@ -1,4 +1,4 @@
-package position.nodes
+package nodes
 
 enum class Type {
   ANY,

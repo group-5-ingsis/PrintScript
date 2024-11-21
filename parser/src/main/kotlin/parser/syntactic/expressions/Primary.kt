@@ -2,8 +2,8 @@ package parser.syntactic.expressions
 
 import exception.UnknownExpressionException
 import nodes.Expression
+import nodes.Type
 import parser.syntactic.TokenManager
-import position.nodes.Type
 import token.Token
 
 class Primary(val version: String) : ExpressionParser {

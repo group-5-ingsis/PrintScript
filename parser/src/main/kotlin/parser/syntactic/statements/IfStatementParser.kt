@@ -2,8 +2,8 @@ package parser.syntactic.statements
 
 import ExpressionType
 import nodes.StatementType
+import nodes.Type
 import parser.syntactic.TokenManager
-import position.nodes.Type
 import token.Token
 
 class IfStatementParser(private val expresionEvaluatorV_1_1: ExpressionType, val statementEvaluator: () -> StatementParser) : StatementParser {
