@@ -18,8 +18,8 @@ object CommandLineInterface {
 
     val commandBuilder = commandBuilders[operation] ?: return "Unknown command: $command"
 
-    val command = commandBuilder.build(file, arguments, version)
-    val result = command.execute()
+    val commandToExecute = commandBuilder.build(file, arguments, version)
+    val result = commandToExecute.execute()
 
     return result
   }

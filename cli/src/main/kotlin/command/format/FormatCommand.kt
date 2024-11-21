@@ -19,7 +19,7 @@ class FormatCommand(
   override fun execute(): String {
     return try {
       val fileContent = FileReader.getFileContents(file, version)
-      val tokens = Lexer(fileContent)
+      val tokens = Lexer.fromString(fileContent)
       val astNodes = Parser(tokens)
 
       val formattedResult = formatFile(astNodes, tokens, formattingRules, fileContent)

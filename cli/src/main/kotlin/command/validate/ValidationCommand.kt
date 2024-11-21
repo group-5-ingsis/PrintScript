@@ -14,7 +14,7 @@ class ValidationCommand(private val file: String, private val version: String) :
     val totalChars = fileContent.length
 
     return try {
-      val tokens = Lexer(fileContent)
+      val tokens = Lexer.fromString(fileContent)
       val astNodes = Parser(tokens)
 
       validateNodes(astNodes, tokens, totalChars)

@@ -15,7 +15,7 @@ class ExecuteCommand(
 
   override fun execute(): String {
     return try {
-      val lexer = Lexer(fileContent, version)
+      val lexer = Lexer.fromString(fileContent, version)
       val astNodes = Parser(lexer, version)
       return executeFile(astNodes, lexer, fileContent)
     } catch (e: Exception) {

@@ -17,7 +17,7 @@ class AnalyzeCommand(
 
   override fun execute(): String {
     return try {
-      val tokens = Lexer(fileContent, version)
+      val tokens = Lexer.fromString(fileContent, version)
       val astNodes = Parser(tokens, version)
       val result = analyzeFile(astNodes, tokens, rules)
       return result
