@@ -5,17 +5,21 @@ import environment.EnvironmentCreator
 import lexer.Lexer
 import nodes.Expression
 import nodes.StatementType
+import nodes.Type
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertThrows
 import org.junit.Test
 import token.Position
 import token.Token
+import visitor.ExpressionVisitor
 import visitor.PrintScriptInputProvider
 import kotlin.test.assertFalse
 import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
 
 class ParserNewVersionTesting {
+
+  private val visitor = ExpressionVisitor()
 
   @Test
   fun testIfStm() {
@@ -218,5 +222,23 @@ class ParserNewVersionTesting {
     assertThrows(NoSuchElementException::class.java) {
       parser.next()
     }
+  }
+
+  @Test
+  fun `convertInput should parse valid Boolean inputs`() {
+    assertEquals(true, visitor.convertInput(Type.BOOLEAN, "true", Position(1, 1)))
+    assertEquals(false, visitor.convertInput(Type.BOOLEAN, "false", Position(1, 1)))
+  }
+
+  @Test
+  fun `convertInput should parse valid Number inputs`() {
+    assertEquals(42, visitor.convertInput(Type.NUMBER, "42", Position(3, 2)))
+    assertEquals(3.14, visitor.convertInput(Type.NUMBER, "3.14", Position(3, 2)))
+  }
+
+  @Test
+  fun `convertInput should handle String inputs`() {
+    assertEquals("hello", visitor.convertInput(Type.STRING, "hello", Position(6, 1)))
+    assertEquals("", visitor.convertInput(Type.STRING, "", Position(6, 2)))
   }
 }

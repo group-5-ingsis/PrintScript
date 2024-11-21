@@ -22,7 +22,7 @@ class ExpressionVisitor(private val inputProvider: InputProvider = PrintScriptIn
     val rightObject = evaluateExpression(exp.right, environment)
     return when (exp.operator) {
       "-" -> {
-        val result = -convertToDouble(rightObject)
+        val result = -BinaryOperator.convertToDouble(rightObject)
         Pair(result, environment)
       }
       else -> throw IllegalArgumentException("Unsupported types for ${exp.operator} in Unary operation: $rightObject")
@@ -34,10 +34,10 @@ class ExpressionVisitor(private val inputProvider: InputProvider = PrintScriptIn
     val (right, rightScope) = evaluateExpression(exp.right, leftScope)
 
     return when {
-      (left is Number && right is Number) -> solveNumberAndNumber(left, right, exp.operator) to rightScope
+      (left is Number && right is Number) -> BinaryOperator.solveNumberAndNumber(left, right, exp.operator) to rightScope
       (left is String && right is String) -> solveStringAndString(left, right, exp.operator) to rightScope
-      (left is String && right is Number) -> solveStringAndNumber(left, right, exp.operator) to rightScope
-      (left is Number && right is String) -> solveNumberAndString(left, right, exp.operator) to rightScope
+      (left is String && right is Number) -> BinaryOperator.solveStringAndNumber(left, right, exp.operator) to rightScope
+      (left is Number && right is String) -> BinaryOperator.solveNumberAndString(left, right, exp.operator) to rightScope
       else -> throw IllegalArgumentException("Unsupported operand types: ${left!!::class} and ${right!!::class}")
     }
   }
@@ -46,33 +46,6 @@ class ExpressionVisitor(private val inputProvider: InputProvider = PrintScriptIn
     return when (operator) {
       "+" -> left + right
       else -> throw IllegalArgumentException("Unsupported string operation: $operator")
-    }
-  }
-
-  private fun solveStringAndNumber(left: String, right: Number, operator: String): String {
-    return when (operator) {
-      "+" -> left.removeSurrounding("\"") + right.toString()
-      else -> throw IllegalArgumentException("Unsupported operation between String and Number: $operator")
-    }
-  }
-
-  private fun solveNumberAndString(left: Number, right: String, operator: String): String {
-    return when (operator) {
-      "+" -> left.toString() + right.removeSurrounding("\"")
-      else -> throw IllegalArgumentException("Unsupported operation between Number and String: $operator")
-    }
-  }
-
-  private fun solveNumberAndNumber(left: Number, right: Number, operator: String): Number {
-    val leftValue = if (left is Int) left else left.toDouble()
-    val rightValue = if (right is Int) right else right.toDouble()
-
-    return when (operator) {
-      "+" -> if (leftValue is Int && rightValue is Int) leftValue + rightValue else (leftValue.toDouble() + rightValue.toDouble())
-      "-" -> if (leftValue is Int && rightValue is Int) leftValue - rightValue else (leftValue.toDouble() - rightValue.toDouble())
-      "*" -> if (leftValue is Int && rightValue is Int) leftValue * rightValue else (leftValue.toDouble() * rightValue.toDouble())
-      "/" -> if (leftValue is Int && rightValue is Int) leftValue / rightValue else (leftValue.toDouble() / rightValue.toDouble())
-      else -> throw IllegalArgumentException("Unsupported number operation: $operator")
     }
   }
 
@@ -140,16 +113,5 @@ class ExpressionVisitor(private val inputProvider: InputProvider = PrintScriptIn
 
   fun visitIdentifierExp(exp: Expression.IdentifierExpression, environment: Environment): VisitorResultExpressions {
     return Pair(exp, environment)
-  }
-
-  private fun convertToDouble(value: Any?): Double {
-    return when (value) {
-      is Double -> value
-      is Float -> value.toDouble()
-      is Int -> value.toDouble()
-      is Long -> value.toDouble()
-      is String -> value.toDoubleOrNull() ?: throw IllegalArgumentException("Cannot convert String to Double: $value")
-      else -> throw IllegalArgumentException("Unsupported type: $value")
-    }
   }
 }
