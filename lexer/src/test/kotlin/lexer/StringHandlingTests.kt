@@ -25,7 +25,7 @@ class StringHandlingTests {
       Token("Hello", "STRING", Position(1, 10))
     )
 
-    val tokens = Lexer(input)
+    val tokens = Lexer.fromString(input)
     assertEquals(expected, collectTokens(tokens))
   }
 
@@ -39,7 +39,7 @@ class StringHandlingTests {
       Token("hello", "STRING", Position(1, 8))
     )
 
-    val tokens = Lexer(input)
+    val tokens = Lexer.fromString(input)
     assertEquals(expected, collectTokens(tokens))
   }
 }

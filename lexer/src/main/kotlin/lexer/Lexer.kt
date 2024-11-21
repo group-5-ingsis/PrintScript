@@ -1,14 +1,11 @@
 package lexer
 
-import lexer.LexerUtils.isQuote
-import lexer.LexerUtils.isSeparator
 import token.Token
 import token.TokenGenerator
-import java.io.BufferedReader
 import java.io.InputStream
-import java.io.InputStreamReader
 
-class Lexer(reader: BufferedReader, version: String = "1.1") : Iterator<Token> {
+class Lexer(inputSource: InputSource, version: String = "1.1") : Iterator<Token> {
+  private val reader = inputSource.toBufferedReader()
   private val linesIterator = reader.lineSequence().iterator()
   private var currentLine: String = ""
   private var lineIterator = currentLine.iterator()
@@ -21,8 +18,17 @@ class Lexer(reader: BufferedReader, version: String = "1.1") : Iterator<Token> {
 
   private var processedCharacters = 0
 
-  constructor(input: String, version: String = "1.1") : this(BufferedReader(input.reader()), version)
-  constructor(inputStream: InputStream, version: String = "1.1") : this(BufferedReader(InputStreamReader(inputStream)), version)
+  companion object {
+    fun fromString(input: String, version: String = "1.1"): Lexer {
+      val inputSource = StringInputSource(input)
+      return Lexer(inputSource, version)
+    }
+
+    fun fromInputStream(inputStream: InputStream, version: String = "1.1"): Lexer {
+      val inputSource = InputStreamInputSource(inputStream)
+      return Lexer(inputSource, version)
+    }
+  }
 
   override fun hasNext(): Boolean {
     return state.nextToken != null || linesIterator.hasNext() || lineIterator.hasNext() || state.buffer.isNotEmpty()
@@ -133,7 +139,7 @@ class Lexer(reader: BufferedReader, version: String = "1.1") : Iterator<Token> {
     state = state.copy(buffer = "")
   }
 
-  fun handleSeparator(currentChar: Char, row: Int, index: Int): Token {
+  private fun handleSeparator(currentChar: Char, row: Int, index: Int): Token {
     return tokenGenerator.generateToken(currentChar.toString(), row, index)
   }
 
