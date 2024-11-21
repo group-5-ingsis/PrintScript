@@ -4,6 +4,7 @@ import environment.EnvironmentCreator
 import lexer.Lexer
 import parser.Parser
 import rules.LinterRules
+import java.io.ByteArrayInputStream
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -18,7 +19,7 @@ class LinterTests {
       "println(6 + 6);"
 
     val version = "1.0"
-    val tokens = Lexer(input, version)
+    val tokens = Lexer.fromString(input, version)
     val asts = Parser(tokens, version)
     val rules = LinterRules(version, "camel-case", false)
 
@@ -50,7 +51,7 @@ class LinterTests {
   fun testPrintlnCallValid() {
     val input = "println(6 + 6);"
     val version = "1.0"
-    val tokens = Lexer(input, version)
+    val tokens = Lexer.fromString(input, version)
     val asts = Parser(tokens, version)
     val rules = LinterRules(version, "camel-case", true)
 
@@ -77,7 +78,7 @@ class LinterTests {
   fun testPrintlnCallValidWithIdentifier() {
     val input = "let a : string = 'hello'; println(a);"
     val version = "1.0"
-    val tokens = Lexer(input, version)
+    val tokens = Lexer.fromString(input, version)
     val asts = Parser(tokens, version)
     val rules = LinterRules(version, "camel-case", false)
 
@@ -104,7 +105,7 @@ class LinterTests {
   fun testDeclarationOffValid() {
     val input = "let aA : string = 'hello'; let a_b : string = 'hello';"
     val version = "1.0"
-    val tokens = Lexer(input, version)
+    val tokens = Lexer.fromString(input, version)
     val asts = Parser(tokens, version)
     val rules = LinterRules(version, "off", false)
 
@@ -131,7 +132,7 @@ class LinterTests {
   fun testDeclarationSnake_CaseInvalid() {
     val input = "let aA : string = 'hello'; let a_b : string = 'hello';"
     val version = "1.0"
-    val tokens = Lexer(input, version)
+    val tokens = Lexer.fromString(input, version)
     val asts = Parser(tokens, version)
     val rules = LinterRules(version, "snake-case", false)
 
@@ -162,7 +163,7 @@ class LinterTests {
   fun testDeclarationSnake_CaseValid() {
     val input = "let a_b : string = 'hello';"
     val version = "1.0"
-    val tokens = Lexer(input, version)
+    val tokens = Lexer.fromString(input, version)
     val asts = Parser(tokens, version)
     val rules = LinterRules(version, "snake-case", true)
 
@@ -189,7 +190,7 @@ class LinterTests {
   fun testDeclarationCamelCaseValid() {
     val input = "let aA : string = 'hello';"
     val version = "1.0"
-    val tokens = Lexer(input, version)
+    val tokens = Lexer.fromString(input, version)
     val asts = Parser(tokens, version)
     val rules = LinterRules(version, "camel-case", true)
 
@@ -216,7 +217,7 @@ class LinterTests {
   fun testDeclarationCamelCaseInvalid() {
     val input = "let aA : string = 'hello'; let a_b : string = 'hello';"
     val version = "1.0"
-    val tokens = Lexer(input, version)
+    val tokens = Lexer.fromString(input, version)
     val asts = Parser(tokens, version)
     val rules = LinterRules(version, "camel-case", false)
 
@@ -248,7 +249,7 @@ class LinterTests {
   fun testBlocks() {
     val input = "let a : boolean = true; if (a) { let c : string = 'hello'; } else { let a_b : string = 'bye'; };"
     val version = "1.1"
-    val tokens = Lexer(input, version)
+    val tokens = Lexer.fromString(input, version)
     val asts = Parser(tokens, version)
     val rules = LinterRules(version, "camel-case", false)
 
@@ -273,9 +274,13 @@ class LinterTests {
 
   @Test
   fun testReadInputCallInvalid() {
+    val simulatedInput = "mocked input"
+
+    System.setIn(ByteArrayInputStream(simulatedInput.toByteArray()))
+
     val input = "let input: string = readInput(\"Enter\" + \"something\");"
     val version = "1.1"
-    val tokens = Lexer(input, version)
+    val tokens = Lexer.fromString(input, version)
     val asts = Parser(tokens, version)
     val rules = LinterRules(version, "camel-case", false, false)
 
@@ -298,16 +303,16 @@ class LinterTests {
     assertEquals(1, errorList.size)
     assertEquals(
       "Errors found:\n" +
-        "readInput() statements must receive a literal or identifier, not an expression. At Line 1, symbol 21, got BINARY_EXPRESSION.",
+        "readInput() statements must receive a literal or identifier, not an expression. At Line 1, symbol 29, got BINARY_EXPRESSION.",
       errorList[0].message
     )
   }
 
   @Test
   fun testReadInputCallValid() {
-    val input = "let salame: string = 'hola'; readInput(6 + 6); readEnv('salame');"
+    val input = "let salame: string = 'hola'; readEnv('salame');"
     val version = "1.1"
-    val tokens = Lexer(input, version)
+    val tokens = Lexer.fromString(input, version)
     val asts = Parser(tokens, version)
     val rules = LinterRules(version, "camel-case", false, true)
 
