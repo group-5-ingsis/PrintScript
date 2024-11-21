@@ -22,6 +22,11 @@ class ParserNewVersionTesting {
   private val visitor = ExpressionVisitor()
 
   @Test
+  fun rompe() {
+    assertEquals(3, 4)
+  }
+
+  @Test
   fun testIfStm() {
     val lexer1 = Lexer.fromString("if (true) { println(3); }", "1.1")
     val parser1 = Parser(lexer1, "1.1")
