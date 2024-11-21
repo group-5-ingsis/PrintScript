@@ -1,5 +1,5 @@
 #!/bin/sh
 
-./gradlew ktlintFormat
+./gradlew clean build
 
 git add .

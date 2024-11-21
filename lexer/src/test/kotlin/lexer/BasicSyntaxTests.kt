@@ -16,6 +16,11 @@ class BasicSyntaxTests {
   }
 
   @Test
+  fun testQueRompe() {
+    assertEquals(3, 4)
+  }
+
+  @Test
   fun testLexSimpleVariableDeclaration() {
     val input = "let x = 10;"
     val expected = listOf(
