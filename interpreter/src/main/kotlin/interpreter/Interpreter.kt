@@ -2,10 +2,7 @@ package interpreter
 
 import environment.Environment
 import nodes.StatementType
-import visitor.InputProvider
-import visitor.PrintScriptInputProvider
-import visitor.StatementVisitor
-import visitor.statementVisitorResult
+import visitor.*
 
 object Interpreter {
 
