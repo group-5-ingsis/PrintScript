@@ -8,8 +8,8 @@ import kotlin.test.BeforeTest
 
 abstract class FormatterTestBase {
 
-  protected lateinit var testRules: FormattingRules
-  protected val version = "1.1"
+  private lateinit var testRules: FormattingRules
+  private val version = "1.1"
 
   @BeforeTest
   fun setUp() {
@@ -21,7 +21,7 @@ abstract class FormatterTestBase {
   }
 
   fun formatCode(input: String): String {
-    val tokens = Lexer(input, version)
+    val tokens = Lexer.fromString(input, version)
     val astNodes = Parser(tokens, version)
     val formattedOutput = StringBuilder()
     while (astNodes.hasNext()) {

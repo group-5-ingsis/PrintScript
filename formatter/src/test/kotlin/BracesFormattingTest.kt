@@ -9,11 +9,11 @@ import kotlin.test.assertEquals
 
 class BracesFormattingTest {
 
-  lateinit var testRules: FormattingRules
-  val version = "1.1"
+  private lateinit var testRules: FormattingRules
+  private val version = "1.1"
 
-  fun formatCode(input: String): String {
-    val tokens = Lexer(input, version)
+  private fun formatCode(input: String): String {
+    val tokens = Lexer.fromString(input, version)
     val astNodes = Parser(tokens, version)
     val formattedOutput = StringBuilder()
     while (astNodes.hasNext()) {
