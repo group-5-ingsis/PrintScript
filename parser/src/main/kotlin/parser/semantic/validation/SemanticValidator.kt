@@ -4,7 +4,7 @@ import environment.Environment
 import nodes.StatementType
 import visitor.InputProvider
 
-class SemanticValidator(private val inputProvider: InputProvider) {
+class SemanticValidator(inputProvider: InputProvider) {
   private val validatorsForTypes: Map<String, Validator<out StatementType>> =
     mapOf(
       "VARIABLE_STATEMENT" to VariableStatementValidator(inputProvider),

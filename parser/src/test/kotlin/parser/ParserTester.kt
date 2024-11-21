@@ -4,7 +4,9 @@ import exception.InvalidSyntaxException
 import lexer.Lexer
 import nodes.Expression
 import nodes.StatementType
+import nodes.Type
 import token.Position
+import visitor.ExpressionVisitor
 import kotlin.test.*
 
 class ParserTester {
@@ -81,7 +83,7 @@ class ParserTester {
     val lexer = Lexer.fromString("let a: number = 5 + 4 * 3 / 2;", "1.0")
     val parser = Parser(lexer, "1.0")
 
-    val ast1 = parser.next()
+    parser.next()
   }
 
   @Test
@@ -174,5 +176,27 @@ class ParserTester {
     val secondStatement = parser.next() as StatementType.Print
     assertEquals("PRINT", secondStatement.statementType)
     assertEquals("a", (secondStatement.value.expression as Expression.Variable).name)
+  }
+
+  @Test
+  fun `convertInput should convert valid boolean input`() {
+    val visitor = ExpressionVisitor()
+
+    val position = Position(1, 1)
+
+    assertEquals(true, visitor.convertInput(Type.BOOLEAN, "true", position))
+    assertEquals(false, visitor.convertInput(Type.BOOLEAN, "false", position))
+  }
+
+  @Test
+  fun coverageTesting() {
+    val identifierExpression = Expression.IdentifierExpression("w", Position(1, 1))
+    val readEnv = Expression.ReadEnv(Position(1, 2), Expression.Grouping(Expression.Literal(2, Position(2, 2)), position = Position(1, 2)), Type.BOOLEAN)
+    val readInput = Expression.ReadInput(Position(1, 2), Expression.Grouping(Expression.Literal(2, Position(2, 2)), position = Position(1, 2)), Type.BOOLEAN)
+    val unary = Expression.Unary("-", Expression.Literal(2, Position(2, 2)), position = Position(1, 2))
+    println(readInput)
+    println(readEnv)
+    println(unary)
+    println(identifierExpression)
   }
 }

@@ -20,7 +20,8 @@ class SemanticTesting {
   fun testAssignationShouldPass() {
     val lexer = Lexer.fromString("let a: string; a = \"testing\";")
     val parser = Parser(lexer)
-    println(parser.next())
+    val statementType = parser.next()
+    println(statementType)
   }
 
   @Test

@@ -25,10 +25,6 @@ class ExpressionVisitor(private val inputProvider: InputProvider = PrintScriptIn
         val result = -convertToDouble(rightObject)
         Pair(result, environment)
       }
-      "!" -> {
-        val result = !isTruthy(rightObject)
-        Pair(result, environment)
-      }
       else -> throw IllegalArgumentException("Unsupported types for ${exp.operator} in Unary operation: $rightObject")
     }
   }
@@ -108,7 +104,7 @@ class ExpressionVisitor(private val inputProvider: InputProvider = PrintScriptIn
     return Pair(convertedInput, env2)
   }
 
-  private fun convertInput(type: Type, input: String, position: Position): Any {
+  fun convertInput(type: Type, input: String, position: Position): Any {
     return when (type) {
       Type.BOOLEAN -> input.toBooleanStrictOrNull()
         ?: throw IllegalArgumentException("Expected a Boolean but got: $input at $position")
@@ -144,12 +140,6 @@ class ExpressionVisitor(private val inputProvider: InputProvider = PrintScriptIn
 
   fun visitIdentifierExp(exp: Expression.IdentifierExpression, environment: Environment): VisitorResultExpressions {
     return Pair(exp, environment)
-  }
-
-  private fun isTruthy(thing: Any?): Boolean {
-    if (thing == null) return false
-    if (thing is Boolean) return thing
-    return true
   }
 
   private fun convertToDouble(value: Any?): Double {

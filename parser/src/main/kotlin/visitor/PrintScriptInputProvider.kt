@@ -4,7 +4,6 @@ class PrintScriptInputProvider(private val inputMap: Map<String, String> = empty
   override fun input(name: String?): String {
     var input = inputMap[name]
     if (input == null) {
-      println(name)
       input = readln()
     }
     return input

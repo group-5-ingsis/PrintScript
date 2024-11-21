@@ -10,6 +10,7 @@ import org.junit.Assert.assertThrows
 import org.junit.Test
 import token.Position
 import token.Token
+import visitor.PrintScriptInputProvider
 import kotlin.test.assertFalse
 import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
@@ -91,6 +92,15 @@ class ParserNewVersionTesting {
     val lexer = Lexer.fromString("let b : string  = \"hola \" ; print(\" b \" + \" Buenos dias! \"); if (true) { \n let a: boolean = true; \n if (a) {println(\" Hola! \"); }  } \n  else { println(0); }", "1.1")
     val parser = Parser(lexer, "1.1")
     parser.next()
+  }
+
+  @Test
+  fun `input returns value from inputMap when key exists`() {
+    val inputMap = mapOf("key1" to "value1", "key2" to "value2")
+    val provider = PrintScriptInputProvider(inputMap)
+
+    val result = provider.input("key1")
+    assertEquals("value1", result)
   }
 
   @Test

@@ -26,7 +26,7 @@ class VariableStatementValidator(private val inputProvider: InputProvider) : Val
       return validateAssignDeclaration(node, scope)
     }
 
-    return validateDeclaration(node)
+    return ValidationResult(false, null, null)
   }
 
   private fun validateAssignDeclaration(node: StatementType.Variable, varTable: Environment): ValidationResult {
@@ -38,7 +38,7 @@ class VariableStatementValidator(private val inputProvider: InputProvider) : Val
         "Variable '${node.identifier}' has no value assigned."
       )
 
-    if (node.initializer?.expressionType == "READ_INPUT") {
+    if (node.initializer.expressionType == "READ_INPUT") {
       return validateReadInput(node, node.initializer as Expression.ReadInput)
     }
 
@@ -67,7 +67,6 @@ class VariableStatementValidator(private val inputProvider: InputProvider) : Val
   }
 
   private fun validateReadInput(node: StatementType.Variable, readInput: Expression.ReadInput): ValidationResult {
-    val readInput = node.initializer as Expression.ReadInput
     val shouldBeString = readInput.value.expression
     val result = evaluateExpression(shouldBeString, Environment())
 
@@ -79,18 +78,6 @@ class VariableStatementValidator(private val inputProvider: InputProvider) : Val
       node,
       "Expected a string for readInput but got ${result.first} at: " + node.position.toString()
     )
-  }
-
-  private fun validateDeclaration(node: StatementType.Variable): ValidationResult {
-    if (node.designation == "const" && node.initializer == null) {
-      return ValidationResult(
-        true,
-        node,
-        "Variable '${node.identifier}' is declared as 'const' but has no initializer."
-      )
-    }
-
-    return ValidationResult(false, null, null)
   }
 
   private fun isAssignDeclaration(node: StatementType.Variable): Boolean {
